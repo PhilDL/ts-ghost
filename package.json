@@ -1,26 +1,29 @@
 {
   "name": "ghost-blog-buster",
   "private": true,
+  "author": "Philippe L'ATTENTION <https://github.com/PhilDL>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PhilDL/ghost-blog-buster"
+  },
   "version": "0.0.2",
-  "main": "./dist/ghost-blog-buster.cjs",
-  "module": "./dist/ghost-blog-buster.mjs",
+  "type": "module",
+  "main": "./dist/cli.js",
   "exports": {
-    ".": {
-      "require": "./dist/ghost-blog-buster.cjs",
-      "import": "./dist/ghost-blog-buster.mjs"
-    }
+    ".": "./dist/cli.js"
+  },
+  "bin": {
+    "ghost-blog-buster": "./dist/cli.js"
   },
   "scripts": {
-    "start": "jiti ./src/index.ts",
-    "dev": "vite --host",
-    "build": "tsc && vite build && dts-bundle-generator --config ./dts-bundle-generator.config.ts",
+    "start": "jiti ./src/cli.ts",
+    "build": "tsup ./src/cli.ts --format esm --dts",
     "test": "vitest",
     "test:watch": "vitest",
     "test:coverage": "vitest --coverage",
     "lint:scripts": "eslint . --ext .ts",
-    "lint:styles": "stylelint ./**/*.{css,scss}",
     "format:scripts": "prettier . --write",
-    "format:styles": "stylelint ./**/*.{css,scss} --fix",
     "format": "pnpm run format:scripts && pnpm run format:styles",
     "prepare": "husky install && husky set .husky/pre-commit 'npx lint-staged' && git add .husky/pre-commit",
     "uninstall-husky": "pnpm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky"
@@ -29,21 +32,16 @@
     "@types/configstore": "^6.0.0",
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.14.0",
-    "@types/tryghost__content-api": "^1.3.11",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
-    "dts-bundle-generator": "^7.2.0",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "jiti": "^1.17.1",
-    "lint-staged": "^13.1.2",
     "prettier": "^2.8.4",
-    "stylelint": "^14.16.1",
-    "stylelint-config-recommended": "^9.0.0",
-    "stylelint-config-sass-guidelines": "^9.0.1",
     "ts-node": "^10.9.1",
+    "tsup": "^6.6.3",
     "typescript": "^4.9.5",
     "vite": "^4.1.3",
     "vitest": "^0.28.5"
@@ -53,6 +51,9 @@
     "@clack/prompts": "^0.4.5",
     "@tryghost/content-api": "^1.11.5",
     "configstore": "^6.0.0",
-    "node-html-markdown": "^1.3.0"
+    "node-fetch": "^3.3.0",
+    "node-html-markdown": "^1.3.0",
+    "picocolors": "^1.0.0",
+    "zod": "^3.20.6"
   }
 }

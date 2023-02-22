@@ -15,8 +15,9 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client", "node", "vitest"]
+    "types": ["vite/client", "node", "vitest"],
+    "typeRoots": ["./types", "./node_modules/@types", ]
   },
   "include": ["src"],
-  "exclude": ["**/*.test.ts", "node_modules", "test/**", ".history/**"]
+  "exclude": ["**/*.test.ts", "node_modules", "test/**", ".history/**", "./types"]
 }

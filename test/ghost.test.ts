@@ -1,4 +1,4 @@
-import { Ghost } from "../src/ghost";
+import { Ghost } from "../src/app/ghost";
 import { describe, it, expect } from "vitest";
 
 const ghost = new Ghost("https://myblog.com", "eazoidjoaizd939390ec3");

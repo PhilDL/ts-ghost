@@ -1,4 +1,4 @@
-import { frontMatterGenerator } from "../src/frontMatter";
+import { frontMatterGenerator } from "../src/app/markdown-converter";
 import { describe, it, expect } from "vitest";
 
 describe("frontMatterGenerator", () => {
