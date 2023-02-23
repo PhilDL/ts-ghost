@@ -14,6 +14,7 @@ import {
   promptCredentialsLoop,
   tagsExportAll,
   tiersExportAll,
+  authorsExportAll,
 } from "./commands";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,6 +44,7 @@ async function main() {
         },
         { value: "export-tags", label: "Tags" },
         { value: "export-tiers", label: "Tiers" },
+        { value: "export-authors", label: "Authors" },
         { value: "disconnect", label: "Disconnect from that blog", hint: "This will close the current session." },
         { value: "quit", label: "Quit" },
       ],
@@ -84,6 +86,9 @@ async function main() {
         break;
       case "export-tiers":
         await tiersExportAll(ghost, siteName);
+        break;
+      case "export-authors":
+        await authorsExportAll(ghost, siteName);
         break;
       case "disconnect": {
         const shouldDisconnect = await confirm({

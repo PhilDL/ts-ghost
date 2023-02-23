@@ -210,7 +210,7 @@ declare module "@tryghost/content-api" {
     ): Promise<T>;
   }
 
-  interface BrowseResults<T> extends Array<T> {
+  export interface BrowseResults<T> extends Array<T> {
     meta: { pagination: Pagination };
   }
 

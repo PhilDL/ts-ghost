@@ -62,7 +62,7 @@ export const tiersExportAll = async (ghost: Ghost, siteName: string) => {
         console.log(err);
       }
     });
+    note(`${tiers.length} tiers converted to Json file and saved to ${output}/tiers.json`, "Success");
   }
-  note(`${tiers.length} tiers converted to Json file and saved to ${output}/tiers.json`, "Success");
   return;
 };
