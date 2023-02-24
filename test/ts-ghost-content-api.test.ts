@@ -1,17 +1,13 @@
-import { describe, test, expect } from "vitest";
-import {
-  BrowseEndpoint,
-  TSGhostContentAPI,
-  BrowseEndpointType,
-  InternalApiSchema,
-  type InternalApi,
-} from "../src/app/ts-ghost-content-api";
+import { describe, test, expect, vi, afterEach } from "vitest";
+import { BrowseEndpointType, InternalApiSchema, AuthorAPI } from "../src/app/ts-ghost-content-api";
 import { AuthorSchema } from "../src/app/zod-schemas";
 import fetch from "node-fetch";
-import { z } from "zod";
 
 describe("ts-ghost-content-api", () => {
-  test("Browse endpoint should work", async () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+  test("New API", async () => {
     const testApi = {
       endpoint: BrowseEndpointType.authors,
       fetch: fetch,
@@ -20,55 +16,42 @@ describe("ts-ghost-content-api", () => {
       url: "https://codingdodo.com",
     } as const;
     const api = InternalApiSchema.parse(testApi);
-    const authors = new BrowseEndpoint(AuthorSchema, api);
+    const authors = new AuthorAPI(AuthorSchema, AuthorSchema, {}, api);
     expect(authors).not.toBeUndefined();
-    const browseAuthors = authors.browse({
-      order: "name ASC",
-      limit: 2,
-      page: 3,
-      filter: "name:-foo+website:-codingdodo",
-    } as const);
-    expect(browseAuthors).not.toBeUndefined();
-    expect(browseAuthors.browseArgs?.filter).toBe("name:-foo+website:-codingdodo");
-    expect(browseAuthors.browseArgs?.order).toBe("name ASC");
-    expect(browseAuthors.browseArgs?.limit).toBe("2");
-    expect(browseAuthors.browseArgs?.page).toBe("3");
-    expect(browseAuthors.browseUrlSearchParams).toBe(
-      "order=name+ASC&limit=2&page=3&filter=name%3A-foo%2Bwebsite%3A-codingdodo"
-    );
-    const authorsName = browseAuthors.fields({
-      name: true,
-    });
-    expect(authorsName.browseUrlSearchParams).toBe(
-      "order=name+ASC&limit=2&page=3&filter=name%3A-foo%2Bwebsite%3A-codingdodo&fields=name"
-    );
-    // const test = await authorsName.fetch();
-  });
 
-  test("TSGhostContentAPI should work", async () => {
-    const api = new TSGhostContentAPI();
-    expect(api).not.toBeUndefined();
-    const browseTags = api.tiers.browse({
-      page: 1,
-      filter: "visibility:public",
-    } as const);
-    expect(browseTags).not.toBeUndefined();
-    expect(browseTags.browseUrlSearchParams).toBe("page=1&filter=visibility%3Apublic");
-    const tagsWithNameAndDescr = browseTags.fields({
-      name: true,
-      description: true,
-    });
-    expect(tagsWithNameAndDescr.browseUrlSearchParams).toBe(
-      "page=1&filter=visibility%3Apublic&fields=name%2Cdescription"
-    );
-  });
+    const browseQuery = authors.browse({ page: 2 } as const, { name: true, id: true });
+    expect(browseQuery).not.toBeUndefined();
+    expect(browseQuery.browseArgs?.page).toBe("2");
+    expect(browseQuery.browseUrlSearchParams).toBe("page=2&key=foobarbaz&fields=name%2Cid");
 
-  test("TSGhostContentAPI fetch", async () => {
-    const api = new TSGhostContentAPI();
-    const test = await api.posts
-      .browse({ limit: 15, page: 1, order: "title DESC" } as const)
-      .fields({ title: true, slug: true })
-      .getApi().endpoint;
-    console.log("test");
+    const spy = vi.spyOn(browseQuery, "_fetch");
+    expect(spy.getMockName()).toEqual("_fetch");
+    // @ts-expect-error - mockResolvedValueOnce is expecting undefined because the class is abstract
+    spy.mockImplementationOnce(() => {
+      return {
+        authors: [
+          {
+            name: "foo",
+            id: "eaoizdjoa1321123",
+          },
+        ],
+        meta: {
+          pagination: {
+            page: 1,
+            limit: 15,
+            pages: 1,
+            total: 1,
+            next: null,
+            prev: null,
+          },
+        },
+      };
+    });
+    const result = await browseQuery.fetch();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(result).not.toBeUndefined();
+    expect(result.authors.length).toBe(1);
+    expect(result.authors[0].name).toBe("foo");
+    expect(result.authors[0].id).toBe("eaoizdjoa1321123");
   });
 });
