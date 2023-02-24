@@ -18,6 +18,6 @@
     "types": ["vite/client", "node", "vitest"],
     "typeRoots": ["./types", "./node_modules/@types", ]
   },
-  "include": ["src"],
+  "include": ["src", "test/ts-ghost-content-api.test.ts"],
   "exclude": ["**/*.test.ts", "node_modules", "test/**", ".history/**", "./types"]
 }
