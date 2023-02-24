@@ -54,10 +54,69 @@ export type BrowseArgs<P, Shape> = P extends { order: infer Order }
 
 const browseArgsSchema = z.object({
   order: z.string().optional(),
-  limit: z.coerce.string().optional(),
-  page: z.coerce.string().optional(),
+  limit: z.coerce
+    .number()
+    .refine((n) => n && n > 0 && n < 15, {
+      message: "Limit must be between 1 and 15",
+    })
+    .transform((n) => n?.toString() || undefined)
+    .optional(),
+  page: z.coerce
+    .number()
+    .refine((n) => n && n > 1, {
+      message: "Page must be greater than 1",
+    })
+    .transform((n) => n?.toString() || undefined)
+    .optional(),
   filter: z.string().optional(),
 });
+export const parseBrowseArgs = <P, Shape extends z.ZodRawShape>(args: P, schema: z.ZodObject<Shape>) => {
+  const keys = schema.keyof().options as string[];
+  const augmentedSchema = browseArgsSchema.merge(
+    z.object({
+      order: z
+        .string()
+        .superRefine((val, ctx) => {
+          const orderPredicates = val.split(",");
+          for (const orderPredicate of orderPredicates) {
+            const [field, direction] = orderPredicate.split(" ");
+            if (!keys.includes(field)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Field "${field}" is not a valid field`,
+                fatal: true,
+              });
+            }
+            if (direction && !(direction.toUpperCase() === "ASC" || direction.toUpperCase() === "DESC")) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Order direction must be ASC or DESC",
+                fatal: true,
+              });
+            }
+          }
+        })
+        .optional(),
+      filter: z
+        .string()
+        .superRefine((val, ctx) => {
+          const filterPredicates = val.split(/[+(,]+/);
+          for (const filterPredicate of filterPredicates) {
+            const field = filterPredicate.split(":")[0].split(".")[0];
+            if (!keys.includes(field)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Field "${field}" is not a valid field`,
+                fatal: true,
+              });
+            }
+          }
+        })
+        .optional(),
+    })
+  );
+  return augmentedSchema.parse(args);
+};
 export type BrowseArgsSchema = z.infer<typeof browseArgsSchema>;
 
 const authorsIncludeSchema = z.literal("count.posts").optional();
@@ -74,26 +133,27 @@ export enum BrowseEndpointType {
 export const EndpointsSchema = z.enum(["authors", "tiers", "posts", "pages", "tags"]);
 export type Endpoints = z.infer<typeof EndpointsSchema>;
 
+export const VersionsSchema = z.enum(["v5.0", "v2", "v3", "v4", "canary"]).default("v5.0");
+export type Versions = z.infer<typeof VersionsSchema>;
+
 export const InternalApiSchema = z.object({
-  endpoint: z.enum(["authors", "tiers", "posts", "pages", "tags"]),
-  fetch: z.function(),
+  endpoint: EndpointsSchema,
   key: z.string(),
-  version: z.enum(["v5", "canary"]),
-  url: z.string(),
+  version: VersionsSchema,
+  url: z.string().url(),
 });
 
 export type InternalApi = z.infer<typeof InternalApiSchema>;
 
 export class TSGhostContentAPI {
-  constructor(protected readonly _fetch: (url: string) => Promise<unknown> = fetch) {}
+  constructor(protected readonly url: string, protected readonly key: string, protected readonly version: Versions) {}
 
   _getApi = (endpoint: Endpoints) => {
     const apiIn = {
       endpoint,
-      fetch: this._fetch,
-      key: "foobarbaz",
-      version: "v5",
-      url: "https://codingdodo.com",
+      key: this.key,
+      version: this.version,
+      url: this.url,
     } as const;
     return InternalApiSchema.parse(apiIn);
   };
@@ -130,13 +190,13 @@ export abstract class BaseAPI<Shape extends ZodRawShape, OutputShape extends Zod
    * @returns
    */
   browse = <
-    P extends { order?: string; limit?: number; page?: number; filter?: string },
+    P extends { order?: string; limit?: number | string; page?: number | string; filter?: string },
     Fields extends z.objectKeyMask<OutputShape>
   >(
     browseArgs: BrowseArgs<P, Shape>,
     mask?: z.noUnrecognized<Fields, OutputShape>
   ) => {
-    const args = browseArgsSchema.parse(browseArgs);
+    const args = parseBrowseArgs(browseArgs, this.schema);
     return new AuthorAPI(
       this.schema,
       this.output.pick(mask || ({} as z.noUnrecognized<Fields, OutputShape>)),
