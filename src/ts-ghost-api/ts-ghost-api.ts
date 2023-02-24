@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 import { z, ZodRawShape } from "zod";
 import { ContentAPICredentials, AuthorAPI } from "./ts-ghost-content-api";
 import { BrowseParamsSchema, BrowseParams, parseBrowseParams } from "./browse-params";
+import { schemaWithPickedFields } from "./fields";
 
 export abstract class BaseAPI<
   Shape extends ZodRawShape,
@@ -9,38 +10,20 @@ export abstract class BaseAPI<
   B extends BrowseParamsSchema
 > {
   constructor(
-    private readonly schema: z.ZodObject<Shape>,
+    protected readonly schema: z.ZodObject<Shape>,
     public output: z.ZodObject<OutputShape>,
     public browseParams: B | undefined = undefined,
     protected _api: ContentAPICredentials
   ) {}
 
-  /**
-   * Browse function
-   * @param browseParams
-   * @param mask
-   * @returns
-   */
-  browse = <
-    P extends { order?: string; limit?: number | string; page?: number | string; filter?: string },
-    Fields extends z.objectKeyMask<OutputShape>
-  >(
-    browseParams: BrowseParams<P, Shape>,
-    fields?: z.noUnrecognized<Fields, OutputShape>
-  ) => {
-    const args = parseBrowseParams(browseParams, this.schema);
-    return new AuthorAPI(
-      this.schema,
-      this.output.pick(fields || ({} as z.noUnrecognized<Fields, OutputShape>)),
-      args,
-      this._api
-    );
-  };
+  get outputFields() {
+    return this.output.keyof().options as string[];
+  }
 
   get browseUrlSearchParams() {
     const inputKeys = this.schema.keyof().options as string[];
     const outputKeys = this.output.keyof().options as string[];
-    if (inputKeys.length !== outputKeys.length) {
+    if (inputKeys.length !== outputKeys.length && outputKeys.length > 0) {
       const params = {
         ...this.browseParams,
         key: this._api.key,

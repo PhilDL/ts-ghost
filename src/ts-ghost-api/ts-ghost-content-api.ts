@@ -2,7 +2,8 @@ import { AuthorSchema, TierSchema, PostSchema, PageSchema, TagSchema } from "../
 import { GhostMetaSchema } from "../app/zod-schemas";
 import { z, ZodRawShape } from "zod";
 import { BaseAPI } from "./ts-ghost-api";
-import { BrowseParamsSchema } from "./browse-params";
+import { BrowseParamsSchema, BrowseParams, parseBrowseParams } from "./browse-params";
+import { schemaWithPickedFields } from "./fields";
 
 const authorsIncludeSchema = z.set(z.literal("count.posts")).optional();
 export type AuthorsIncludeSchema = z.infer<typeof authorsIncludeSchema>;
@@ -80,6 +81,27 @@ export class AuthorAPI<
   OutputShape extends ZodRawShape,
   B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
+  /**
+   * Browse function
+   * @param browseParams
+   * @param mask
+   * @returns
+   */
+  browse = <
+    P extends { order?: string; limit?: number | string; page?: number | string; filter?: string },
+    Fields extends z.objectKeyMask<OutputShape>
+  >(
+    browseParams: BrowseParams<P, Shape>,
+    fields?: z.noUnrecognized<Fields, OutputShape>
+  ) => {
+    return new AuthorAPI(
+      this.schema,
+      schemaWithPickedFields(this.output, fields || ({} as z.noUnrecognized<Fields, OutputShape>)),
+      parseBrowseParams(browseParams, this.schema),
+      this._api
+    );
+  };
+
   fetch = async () => {
     const result = this._fetch();
     const browseSchema = z.object({
@@ -95,6 +117,27 @@ export class TiersApi<
   OutputShape extends ZodRawShape,
   B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
+  /**
+   * Browse function
+   * @param browseParams
+   * @param mask
+   * @returns
+   */
+  browse = <
+    P extends { order?: string; limit?: number | string; page?: number | string; filter?: string },
+    Fields extends z.objectKeyMask<OutputShape>
+  >(
+    browseParams: BrowseParams<P, Shape>,
+    fields?: z.noUnrecognized<Fields, OutputShape>
+  ) => {
+    return new TiersApi(
+      this.schema,
+      schemaWithPickedFields(this.output, fields || ({} as z.noUnrecognized<Fields, OutputShape>)),
+      parseBrowseParams(browseParams, this.schema),
+      this._api
+    );
+  };
+
   fetch = async () => {
     const result = this._fetch();
     const browseSchema = z.object({
@@ -110,6 +153,27 @@ export class PostsApi<
   OutputShape extends ZodRawShape,
   B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
+  /**
+   * Browse function
+   * @param browseParams
+   * @param mask
+   * @returns
+   */
+  browse = <
+    P extends { order?: string; limit?: number | string; page?: number | string; filter?: string },
+    Fields extends z.objectKeyMask<OutputShape>
+  >(
+    browseParams: BrowseParams<P, Shape>,
+    fields?: z.noUnrecognized<Fields, OutputShape>
+  ) => {
+    return new PostsApi(
+      this.schema,
+      schemaWithPickedFields(this.output, fields || ({} as z.noUnrecognized<Fields, OutputShape>)),
+      parseBrowseParams(browseParams, this.schema),
+      this._api
+    );
+  };
+
   fetch = async () => {
     const result = this._fetch();
     const browseSchema = z.object({
@@ -125,6 +189,27 @@ export class PagesApi<
   OutputShape extends ZodRawShape,
   B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
+  /**
+   * Browse function
+   * @param browseParams
+   * @param mask
+   * @returns
+   */
+  browse = <
+    P extends { order?: string; limit?: number | string; page?: number | string; filter?: string },
+    Fields extends z.objectKeyMask<OutputShape>
+  >(
+    browseParams: BrowseParams<P, Shape>,
+    fields?: z.noUnrecognized<Fields, OutputShape>
+  ) => {
+    return new PagesApi(
+      this.schema,
+      schemaWithPickedFields(this.output, fields || ({} as z.noUnrecognized<Fields, OutputShape>)),
+      parseBrowseParams(browseParams, this.schema),
+      this._api
+    );
+  };
+
   fetch = async () => {
     const result = this._fetch();
     const browseSchema = z.object({
@@ -140,6 +225,27 @@ export class TagsApi<
   OutputShape extends ZodRawShape,
   B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
+  /**
+   * Browse function
+   * @param browseParams
+   * @param mask
+   * @returns
+   */
+  browse = <
+    P extends { order?: string; limit?: number | string; page?: number | string; filter?: string },
+    Fields extends z.objectKeyMask<OutputShape>
+  >(
+    browseParams: BrowseParams<P, Shape>,
+    fields?: z.noUnrecognized<Fields, OutputShape>
+  ) => {
+    return new TagsApi(
+      this.schema,
+      schemaWithPickedFields(this.output, fields || ({} as z.noUnrecognized<Fields, OutputShape>)),
+      parseBrowseParams(browseParams, this.schema),
+      this._api
+    );
+  };
+
   fetch = async () => {
     const result = this._fetch();
     const browseSchema = z.object({
