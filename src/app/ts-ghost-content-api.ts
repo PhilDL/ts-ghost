@@ -3,11 +3,22 @@ import fetch from "node-fetch";
 import { GhostMetaSchema } from "./zod-schemas";
 import { z, ZodRawShape } from "zod";
 
-// type Split<Str, Separator extends string> = Str extends `${infer Start}${Separator}${infer Rest}`
-//   ? [Start, ...Split<Rest, Separator>]
-//   : [Str];
+type Split<Str, Separator extends string> = Str extends `${infer Start}${Separator}${infer Rest}`
+  ? [Start, ...Split<Rest, Separator>]
+  : [Str];
 
-export type BrowseOrder<S, Shape> = S extends string
+export type BrowseOrder<S, Shape> = S extends [infer Head, ...infer Tail]
+  ? Tail extends []
+    ? OrderPredicate<Head, Shape>
+    : `${OrderPredicate<Head, Shape>},${BrowseOrder<Tail, Shape>}`
+  : S extends string
+  ? OrderPredicate<S, Shape>
+  : never;
+
+// This ASC DESC asc desc is probably NOT the best way to do this
+// as union is distributive and will create a lot of types
+// TODO: find a better way to do this
+export type OrderPredicate<S, Shape> = S extends string
   ? S extends `${infer Field} ${infer Direction}`
     ? Field extends keyof Shape
       ? Direction extends "ASC" | "DESC" | "asc" | "desc"
@@ -18,7 +29,6 @@ export type BrowseOrder<S, Shape> = S extends string
     ? `${S}`
     : never
   : never;
-
 export type FilterQuerySeparator = "+" | "," | "(" | ")";
 export type FilterQueryOperators =
   | `-${string}`
@@ -34,25 +44,39 @@ export type BrowseFilter<S, Shape> = S extends string
       ? Operation extends FilterQueryOperators
         ? `${Field}:${Operation}${FilterQuerySeparator}${BrowseFilter<Rest, Shape>}`
         : never
+      : Field extends `${infer Fa}.${infer SubField}`
+      ? Fa extends keyof Shape
+        ? Operation extends FilterQueryOperators
+          ? `${Fa}.${SubField}:${Operation}${FilterQuerySeparator}${BrowseFilter<Rest, Shape>}`
+          : never
+        : never
       : never
     : S extends `${infer Field}:${infer Operation}`
     ? Field extends keyof Shape
       ? Operation extends FilterQueryOperators
         ? S
         : never
+      : Field extends `${infer Fa}.${infer SubField}`
+      ? Fa extends keyof Shape
+        ? Operation extends FilterQueryOperators
+          ? `${Fa}.${SubField}:${Operation}`
+          : never
+        : never
       : never
     : never
   : never;
 
-export type BrowseArgs<P, Shape> = P extends { order: infer Order }
+export type BrowseParams<P, Shape> = P extends { order: infer Order }
   ? P extends { filter: infer Filter }
-    ? Omit<P, "order" | "filter"> & { order: BrowseOrder<Order, Shape> } & { filter: BrowseFilter<Filter, Shape> }
-    : Omit<P, "order"> & { order: BrowseOrder<Order, Shape> }
+    ? Omit<P, "order" | "filter"> & { order: BrowseOrder<Split<Order, ",">, Shape> } & {
+        filter: BrowseFilter<Filter, Shape>;
+      }
+    : Omit<P, "order"> & { order: BrowseOrder<Split<Order, ",">, Shape> }
   : P extends { filter: infer Filter }
   ? Omit<P, "filter"> & { filter: BrowseFilter<Filter, Shape> }
   : P;
 
-const browseArgsSchema = z.object({
+const browseParamsSchema = z.object({
   order: z.string().optional(),
   limit: z.coerce
     .number()
@@ -70,9 +94,9 @@ const browseArgsSchema = z.object({
     .optional(),
   filter: z.string().optional(),
 });
-export const parseBrowseArgs = <P, Shape extends z.ZodRawShape>(args: P, schema: z.ZodObject<Shape>) => {
+export const parseBrowseParams = <P, Shape extends z.ZodRawShape>(args: P, schema: z.ZodObject<Shape>) => {
   const keys = schema.keyof().options as string[];
-  const augmentedSchema = browseArgsSchema.merge(
+  const augmentedSchema = browseParamsSchema.merge(
     z.object({
       order: z
         .string()
@@ -117,7 +141,7 @@ export const parseBrowseArgs = <P, Shape extends z.ZodRawShape>(args: P, schema:
   );
   return augmentedSchema.parse(args);
 };
-export type BrowseArgsSchema = z.infer<typeof browseArgsSchema>;
+export type BrowseParamsSchema = z.infer<typeof browseParamsSchema>;
 
 const authorsIncludeSchema = z.literal("count.posts").optional();
 export type AuthorsIncludeSchema = z.infer<typeof authorsIncludeSchema>;
@@ -130,32 +154,36 @@ export enum BrowseEndpointType {
   tags = "tags",
 }
 
-export const EndpointsSchema = z.enum(["authors", "tiers", "posts", "pages", "tags"]);
-export type Endpoints = z.infer<typeof EndpointsSchema>;
+export const ContentAPIEndpointsSchema = z.enum(["authors", "tiers", "posts", "pages", "tags"]);
+export type ContentAPIEndpoints = z.infer<typeof ContentAPIEndpointsSchema>;
 
 export const VersionsSchema = z.enum(["v5.0", "v2", "v3", "v4", "canary"]).default("v5.0");
-export type Versions = z.infer<typeof VersionsSchema>;
+export type ContentAPIVersions = z.infer<typeof VersionsSchema>;
 
-export const InternalApiSchema = z.object({
-  endpoint: EndpointsSchema,
+export const ContentAPICredentialsSchema = z.object({
+  endpoint: ContentAPIEndpointsSchema,
   key: z.string(),
   version: VersionsSchema,
   url: z.string().url(),
 });
 
-export type InternalApi = z.infer<typeof InternalApiSchema>;
+export type ContentAPICredentials = z.infer<typeof ContentAPICredentialsSchema>;
 
 export class TSGhostContentAPI {
-  constructor(protected readonly url: string, protected readonly key: string, protected readonly version: Versions) {}
+  constructor(
+    protected readonly url: string,
+    protected readonly key: string,
+    protected readonly version: ContentAPIVersions
+  ) {}
 
-  _getApi = (endpoint: Endpoints) => {
+  _getApi = (endpoint: ContentAPIEndpoints) => {
     const apiIn = {
       endpoint,
       key: this.key,
       version: this.version,
       url: this.url,
     } as const;
-    return InternalApiSchema.parse(apiIn);
+    return ContentAPICredentialsSchema.parse(apiIn);
   };
 
   get authors() {
@@ -175,17 +203,21 @@ export class TSGhostContentAPI {
   }
 }
 
-export abstract class BaseAPI<Shape extends ZodRawShape, OutputShape extends ZodRawShape, B extends BrowseArgsSchema> {
+export abstract class BaseAPI<
+  Shape extends ZodRawShape,
+  OutputShape extends ZodRawShape,
+  B extends BrowseParamsSchema
+> {
   constructor(
     private readonly schema: z.ZodObject<Shape>,
     public output: z.ZodObject<OutputShape>,
-    public browseArgs: B | undefined = undefined,
-    protected _api: InternalApi
+    public browseParams: B | undefined = undefined,
+    protected _api: ContentAPICredentials
   ) {}
 
   /**
    * Browse function
-   * @param browseArgs
+   * @param browseParams
    * @param mask
    * @returns
    */
@@ -193,10 +225,10 @@ export abstract class BaseAPI<Shape extends ZodRawShape, OutputShape extends Zod
     P extends { order?: string; limit?: number | string; page?: number | string; filter?: string },
     Fields extends z.objectKeyMask<OutputShape>
   >(
-    browseArgs: BrowseArgs<P, Shape>,
+    browseParams: BrowseParams<P, Shape>,
     mask?: z.noUnrecognized<Fields, OutputShape>
   ) => {
-    const args = parseBrowseArgs(browseArgs, this.schema);
+    const args = parseBrowseParams(browseParams, this.schema);
     return new AuthorAPI(
       this.schema,
       this.output.pick(mask || ({} as z.noUnrecognized<Fields, OutputShape>)),
@@ -210,14 +242,14 @@ export abstract class BaseAPI<Shape extends ZodRawShape, OutputShape extends Zod
     const outputKeys = this.output.keyof().options as string[];
     if (inputKeys.length !== outputKeys.length) {
       const params = {
-        ...this.browseArgs,
+        ...this.browseParams,
         key: this._api.key,
         fields: outputKeys.join(","),
       };
       return new URLSearchParams(params).toString();
     }
     const params = {
-      ...this.browseArgs,
+      ...this.browseParams,
       key: this._api.key,
     };
     return new URLSearchParams(params).toString();
@@ -248,7 +280,7 @@ export abstract class BaseAPI<Shape extends ZodRawShape, OutputShape extends Zod
 export class AuthorAPI<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,
-  B extends BrowseArgsSchema
+  B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
   fetch = async () => {
     const result = this._fetch();
@@ -263,7 +295,7 @@ export class AuthorAPI<
 export class TiersApi<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,
-  B extends BrowseArgsSchema
+  B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
   fetch = async () => {
     const result = this._fetch();
@@ -278,7 +310,7 @@ export class TiersApi<
 export class PostsApi<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,
-  B extends BrowseArgsSchema
+  B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
   fetch = async () => {
     const result = this._fetch();
@@ -293,7 +325,7 @@ export class PostsApi<
 export class PagesApi<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,
-  B extends BrowseArgsSchema
+  B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
   fetch = async () => {
     const result = this._fetch();
@@ -308,7 +340,7 @@ export class PagesApi<
 export class TagsApi<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,
-  B extends BrowseArgsSchema
+  B extends BrowseParamsSchema
 > extends BaseAPI<Shape, OutputShape, B> {
   fetch = async () => {
     const result = this._fetch();
