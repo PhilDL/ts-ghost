@@ -1,15 +1,9 @@
-import type { Expect, Equal } from "../src/app/type-utils";
+import type { Expect, Equal } from "../app/type-utils";
 import { describe, test, expect, vi, afterEach } from "vitest";
-import {
-  BrowseEndpointType,
-  ContentAPICredentialsSchema,
-  AuthorAPI,
-  TSGhostContentAPI,
-  parseBrowseParams,
-  type BrowseOrder,
-  type BrowseFilter,
-} from "../src/app/ts-ghost-content-api";
-import { AuthorSchema, PostSchema } from "../src/app/zod-schemas";
+import { BrowseEndpointType, ContentAPICredentialsSchema, AuthorAPI, TSGhostContentAPI } from "./ts-ghost-content-api";
+
+import { parseBrowseParams, type BrowseOrder, type BrowseFilter } from "./browse-params";
+import { AuthorSchema, PostSchema } from "../app/zod-schemas";
 import fetch from "node-fetch";
 import { z } from "zod";
 
@@ -37,7 +31,7 @@ describe("Isolated Types", () => {
 });
 
 describe("ContentApi.browse() Args Type-safety", () => {
-  const api = new TSGhostContentAPI("https://codingdodo.com", "foobarbaz", "v5.0");
+  const api = new TSGhostContentAPI("https://my-ghost-blog.com", "93fa6b1e07090ecdf686521b7e", "v5.0");
   test(".browse() params shouldnt accept invalid params", () => {
     // @ts-expect-error - shouldnt accept invalid params
     api.authors.browse({ pp: 2 });
@@ -107,9 +101,9 @@ describe("ts-ghost-content-api", () => {
     const testApi = {
       endpoint: BrowseEndpointType.authors,
       fetch: fetch,
-      key: "foobarbaz",
+      key: "93fa6b1e07090ecdf686521b7e",
       version: "v5.0",
-      url: "https://codingdodo.com",
+      url: "https://my-ghost-blog.com",
     } as const;
     const api = ContentAPICredentialsSchema.parse(testApi);
     const authors = new AuthorAPI(AuthorSchema, AuthorSchema, {}, api);
@@ -118,7 +112,7 @@ describe("ts-ghost-content-api", () => {
     const browseQuery = authors.browse({ page: 2 } as const, { name: true, id: true });
     expect(browseQuery).not.toBeUndefined();
     expect(browseQuery.browseParams?.page).toBe("2");
-    expect(browseQuery.browseUrlSearchParams).toBe("page=2&key=foobarbaz&fields=name%2Cid");
+    expect(browseQuery.browseUrlSearchParams).toBe("page=2&key=93fa6b1e07090ecdf686521b7e&fields=name%2Cid");
 
     const spy = vi.spyOn(browseQuery, "_fetch");
     expect(spy.getMockName()).toEqual("_fetch");

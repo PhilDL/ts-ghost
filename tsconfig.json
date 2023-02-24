@@ -16,8 +16,11 @@
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["vite/client", "node", "vitest"],
-    "typeRoots": ["./types", "./node_modules/@types", ]
+    "typeRoots": ["./types", "./node_modules/@types", ],
+    "paths": {
+      "~/*": ["./app/*"],
+    }
   },
-  "include": ["src", "test/ts-ghost-content-api.test.ts"],
+  "include": ["src", "src/ts-ghost-api/ts-ghost-content-api.test.ts"],
   "exclude": ["**/*.test.ts", "node_modules", "test/**", ".history/**", "./types"]
 }

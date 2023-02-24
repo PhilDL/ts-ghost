@@ -26,7 +26,8 @@
     "format:scripts": "prettier . --write",
     "format": "pnpm run format:scripts && pnpm run format:styles",
     "prepare": "husky install && husky set .husky/pre-commit 'npx lint-staged' && git add .husky/pre-commit",
-    "uninstall-husky": "pnpm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky"
+    "uninstall-husky": "pnpm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky",
+    "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@types/configstore": "^6.0.0",
@@ -45,6 +46,7 @@
     "tsup": "^6.6.3",
     "typescript": "4.9.5",
     "vite": "^4.1.3",
+    "vite-tsconfig-paths": "^4.0.5",
     "vitest": "^0.28.5"
   },
   "dependencies": {

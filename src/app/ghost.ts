@@ -1,9 +1,8 @@
 import type { GhostAPI } from "@tryghost/content-api";
-import { Tag, Author, AuthorSchema } from "./zod-schemas";
+import { Tag, Author } from "./zod-schemas";
 import GhostContentAPI from "@tryghost/content-api";
 import fetch from "node-fetch";
-import { GhostFetchTiersSchema, GhostFetchAuthorsSchema, filterSchema } from "./zod-schemas";
-import { z } from "zod";
+import { GhostFetchTiersSchema, GhostFetchAuthorsSchema } from "./zod-schemas";
 
 export type Endpoints = "tiers" | "posts" | "tags" | "settings" | "pages" | "authors";
 
