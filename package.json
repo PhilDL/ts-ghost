@@ -1,62 +1,34 @@
 {
   "name": "ghost-blog-buster",
-  "private": true,
   "author": "Philippe L'ATTENTION <https://github.com/PhilDL>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilDL/ghost-blog-buster"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "config-packages/*"
+  ],
   "version": "0.0.2",
-  "type": "module",
-  "main": "./dist/cli.js",
-  "exports": {
-    ".": "./dist/cli.js"
-  },
-  "bin": {
-    "ghost-blog-buster": "./dist/cli.js"
-  },
   "scripts": {
-    "start": "jiti ./src/cli.ts",
-    "build": "tsup ./src/cli.ts --format esm --dts",
-    "test": "vitest",
-    "test:watch": "vitest",
-    "test:coverage": "vitest --coverage",
-    "lint:scripts": "eslint . --ext .ts",
-    "format:scripts": "prettier . --write",
-    "format": "pnpm run format:scripts && pnpm run format:styles",
-    "prepare": "husky install && husky set .husky/pre-commit 'npx lint-staged' && git add .husky/pre-commit",
-    "uninstall-husky": "pnpm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky",
-    "typecheck": "tsc --project ./tsconfig.json --noEmit"
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:coverage": "turbo run test:coverage",
+    "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "@types/configstore": "^6.0.0",
-    "@types/jsdom": "^20.0.1",
-    "@types/node": "^18.14.0",
-    "@typescript-eslint/eslint-plugin": "^5.53.0",
-    "@typescript-eslint/parser": "^5.53.0",
-    "eslint": "^8.34.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "husky": "^8.0.3",
-    "jiti": "^1.17.1",
+    "eslint-config-custom": "*",
     "prettier": "^2.8.4",
-    "ts-node": "^10.9.1",
-    "ts-toolbelt": "^9.6.0",
-    "tsup": "^6.6.3",
-    "typescript": "4.9.5",
-    "vite": "^4.1.3",
-    "vite-tsconfig-paths": "^4.0.5",
-    "vitest": "^0.28.5"
+    "turbo": "^1.7.4"
   },
-  "dependencies": {
-    "@clack/core": "^0.1.9",
-    "@clack/prompts": "^0.4.5",
-    "@tryghost/content-api": "^1.11.5",
-    "configstore": "^6.0.0",
-    "node-fetch": "^3.3.0",
-    "node-html-markdown": "^1.3.0",
-    "picocolors": "^1.0.0",
-    "zod": "^3.20.6"
-  }
+  "engines": {
+    "node": ">=16.15.0",
+    "pnpm": ">= 7.12.2"
+  },
+  "packageManager": "pnpm@7.23.0"
 }

@@ -31,54 +31,97 @@ describe("ContentApi.browse() Args Type-safety", () => {
   const api = new TSGhostContentAPI("https://my-ghost-blog.com", "93fa6b1e07090ecdf686521b7e", "v5.0");
   test(".browse() params shouldnt accept invalid params", () => {
     // @ts-expect-error - shouldnt accept invalid params
-    api.authors.browse({ pp: 2 });
+    api.authors.browse({ input: { pp: 2 } });
     expect(api.authors.browseParams).toStrictEqual({});
   });
 
   test(".browse() 'order' params should ony accept fields values", () => {
     // @ts-expect-error - order should ony contain field
-    expect(() => api.authors.browse({ order: "foo ASC" } as const)).toThrow();
+    expect(() => api.authors.browse({ input: { order: "foo ASC" } } as const)).toThrow();
     // valid
-    expect(api.authors.browse({ order: "name ASC" } as const).browseParams).toStrictEqual({ order: "name ASC" });
-    expect(api.authors.browse({ order: "name ASC,slug DESC" } as const).browseParams).toStrictEqual({
+    expect(api.authors.browse({ input: { order: "name ASC" } } as const).browseParams).toStrictEqual({
+      order: "name ASC",
+    });
+    expect(api.authors.browse({ input: { order: "name ASC,slug DESC" } } as const).browseParams).toStrictEqual({
       order: "name ASC,slug DESC",
     });
-    expect(api.posts.browse({ order: "title ASC,slug DESC,authors ASC" } as const).browseParams).toStrictEqual({
+    expect(
+      api.posts.browse({ input: { order: "title ASC,slug DESC,authors ASC" } } as const).browseParams
+    ).toStrictEqual({
       order: "title ASC,slug DESC,authors ASC",
     });
     // @ts-expect-error - order should ony contain field
-    expect(() => api.posts.browse({ order: "title ASC,slug DESC,authrs ASC" } as const)).toThrow();
+    expect(() => api.posts.browse({ input: { order: "title ASC,slug DESC,authrs ASC" } } as const)).toThrow();
   });
 
   test(".browse() 'filter' params should ony accept valid field", () => {
-    // @ts-expect-error - order should ony contain field
-    expect(() => api.authors.browse({ filter: "foo:bar" } as const)).toThrow();
-    expect(api.authors.browse({ filter: "name:bar" } as const).browseParams).toStrictEqual({
+    expect(() =>
+      // @ts-expect-error - order should ony contain field
+      api.authors.browse({
+        input: { filter: "foo:bar" },
+      } as const)
+    ).toThrow();
+    expect(
+      api.authors.browse({
+        input: { filter: "name:bar" },
+      } as const).browseParams
+    ).toStrictEqual({
       filter: "name:bar",
     });
-    expect(api.authors.browse({ filter: "name:bar+slug:-test" } as const).browseParams).toStrictEqual({
+    expect(
+      api.authors.browse({
+        input: { filter: "name:bar+slug:-test" },
+      } as const).browseParams
+    ).toStrictEqual({
       filter: "name:bar+slug:-test",
     });
-    expect(api.posts.browse({ filter: "authors:bar" } as const).browseParams).toStrictEqual({
+    expect(api.posts.browse({ input: { filter: "authors:bar" } } as const).browseParams).toStrictEqual({
       filter: "authors:bar",
     });
-    expect(api.posts.browse({ filter: "authors.slug:bar" } as const).browseParams).toStrictEqual({
+    expect(api.posts.browse({ input: { filter: "authors.slug:bar" } } as const).browseParams).toStrictEqual({
       filter: "authors.slug:bar",
     });
-    expect(api.posts.browse({ filter: "authors.slug:bar,title:foo" } as const).browseParams).toStrictEqual({
+    expect(api.posts.browse({ input: { filter: "authors.slug:bar,title:foo" } } as const).browseParams).toStrictEqual({
       filter: "authors.slug:bar,title:foo",
     });
-    // @ts-expect-error - order should ony contain field
-    expect(() => api.posts.browse({ filter: "author.slug:bar" } as const)).toThrow();
-    // @ts-expect-error - order should ony contain field
-    expect(() => api.posts.browse({ filter: "title:foo+author.slug:bar" } as const)).toThrow();
+
+    expect(() =>
+      // @ts-expect-error - order should ony contain field
+      api.posts.browse({
+        input: { filter: "author.slug:bar" },
+      } as const)
+    ).toThrow();
+    expect(() =>
+      // @ts-expect-error - order should ony contain field
+      api.posts.browse({
+        input: { filter: "title:foo+author.slug:bar" },
+      } as const)
+    ).toThrow();
   });
 
   test(".browse 'fields' argument should ony accept valid fields", () => {
-    // @ts-expect-error - order should ony contain field
-    expect(api.authors.browse({}, { foo: true } as const).outputFields).toEqual([]);
-    expect(api.posts.browse({}, { title: true } as const).outputFields).toEqual(["title"]);
-    expect(api.authors.browse({}, { name: true, website: true } as const).outputFields).toEqual(["name", "website"]);
+    expect(
+      api.authors.browse({
+        output: {
+          // @ts-expect-error - order should ony contain field
+          fields: { foo: true },
+        },
+      } as const).outputFields
+    ).toEqual([]);
+    expect(
+      api.posts.browse({
+        output: {
+          fields: { title: true },
+        },
+      } as const).outputFields
+    ).toEqual(["title"]);
+    expect(
+      api.authors.browse({
+        output: {
+          fields: { name: true, website: true },
+        },
+      } as const).outputFields
+    ).toEqual(["name", "website"]);
   });
 });
 describe("parseBrowseArgs()", () => {

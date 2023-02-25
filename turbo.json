@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".cache"]
+    },
+    "start": {
+      "dependsOn": ["^build"],
+      "outputs": ["public/build/**"]
+    },
+    "dev": {
+      "cache": false
+    },
+    "lint": {
+      "outputs": []
+    },
+    "test": {
+      "outputs": []
+    },
+    "test:watch": {
+      "outputs": []
+    },
+    "typecheck": {
+      "outputs": []
+    }
+  },
+  "globalDependencies": [".env"],
+  "globalEnv": ["NODE_ENV"]
+}

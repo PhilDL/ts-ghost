@@ -75,19 +75,17 @@ export type BrowseParams<P, Shape> = P extends { order: infer Order }
 
 export const browseParamsSchema = z.object({
   order: z.string().optional(),
-  limit: z.coerce
+  limit: z
     .number()
-    .refine((n) => n && n > 0 && n < 15, {
+    .refine((n) => n && n > 0 && n <= 15, {
       message: "Limit must be between 1 and 15",
     })
-    .transform((n) => n?.toString() || undefined)
     .optional(),
-  page: z.coerce
+  page: z
     .number()
-    .refine((n) => n && n > 1, {
+    .refine((n) => n && n >= 1, {
       message: "Page must be greater than 1",
     })
-    .transform((n) => n?.toString() || undefined)
     .optional(),
   filter: z.string().optional(),
 });
