@@ -107,8 +107,8 @@ describe("ContentApi.browse() Args Type-safety", () => {
   const api = new TSGhostContentAPI(url, key, "v5.0");
   test(".browse() params shouldnt accept invalid params", () => {
     // @ts-expect-error - shouldnt accept invalid params
-    api.authors.browse({ input: { pp: 2 } });
-    expect(api.authors.getBrowseParams()).toStrictEqual({});
+    const browse = api.authors.browse({ input: { pp: 2 } });
+    expect(browse.getBrowseParams()).toStrictEqual({});
   });
 
   test(".browse() 'order' params should ony accept fields values", () => {
@@ -211,7 +211,6 @@ describe("authors endpoint", () => {
         output: AuthorSchema,
         include: authorsIncludeSchema,
       },
-      {},
       api
     );
     expect(authors).not.toBeUndefined();

@@ -8,7 +8,7 @@ import { PostsAPI } from "./posts/api";
 import { PostSchema, postsIncludeSchema } from "./posts/schemas";
 import { TiersAPI } from "./tiers/api";
 import { TierSchema, tiersIncludeSchema } from "./tiers/schemas";
-import { ContentAPICredentialsSchema, ContentAPIEndpoints, ContentAPIVersions } from "@ts-ghost/core-api";
+import { ContentAPICredentialsSchema, BaseQueryBuilder, ContentAPIVersions } from "@ts-ghost/core-api";
 
 export enum BrowseEndpointType {
   authors = "authors",
@@ -37,13 +37,12 @@ export class TSGhostContentAPI {
       version: ContentAPIVersions;
       url: string;
     };
-    return new AuthorsAPI(
+    return new BaseQueryBuilder(
       {
         schema: AuthorSchema,
         output: AuthorSchema,
         include: authorsIncludeSchema,
       },
-      {},
       api
     );
   }
@@ -59,7 +58,7 @@ export class TSGhostContentAPI {
       version: ContentAPIVersions;
       url: string;
     };
-    return new TiersAPI({ schema: TierSchema, output: TierSchema, include: tiersIncludeSchema }, {}, api);
+    return new TiersAPI({ schema: TierSchema, output: TierSchema, include: tiersIncludeSchema }, api);
   }
   get posts() {
     const api = ContentAPICredentialsSchema.parse({
@@ -79,7 +78,6 @@ export class TSGhostContentAPI {
         output: PostSchema,
         include: postsIncludeSchema,
       },
-      {},
       api
     );
   }
@@ -101,7 +99,6 @@ export class TSGhostContentAPI {
         output: PageSchema,
         include: pagesIncludeSchema,
       },
-      {},
       api
     );
   }
@@ -117,6 +114,6 @@ export class TSGhostContentAPI {
       version: ContentAPIVersions;
       url: string;
     };
-    return new TagsAPI({ schema: TagSchema, output: TagSchema, include: tagsIncludeSchema }, {}, api);
+    return new TagsAPI({ schema: TagSchema, output: TagSchema, include: tagsIncludeSchema }, api);
   }
 }

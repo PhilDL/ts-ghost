@@ -6,6 +6,5 @@ export class PagesAPI<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,
   IncludeShape extends ZodRawShape,
-  B extends BrowseParamsSchema,
   Api extends ContentAPICredentials
-> extends BaseQueryBuilder<Shape, OutputShape, IncludeShape, B, Api> {}
+> extends BaseQueryBuilder<Shape, OutputShape, IncludeShape, Api> {}

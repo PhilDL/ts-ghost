@@ -1,5 +1,4 @@
 export * from "./content-api";
-export * from "./schemas";
 export * from "./authors";
 export * from "./pages";
 export * from "./posts";
