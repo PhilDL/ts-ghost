@@ -1,8 +1,5 @@
 import { describe, test, expect, vi, afterEach, beforeEach } from "vitest";
-import { BrowseEndpointType, TSGhostContentAPI } from "../content-api";
-import { contentAPICredentialsSchema } from "@ts-ghost/core-api";
-import { AuthorsAPI } from "./api";
-import { authorsIncludeSchema, authorsSchema } from "./schemas";
+import { TSGhostContentAPI } from "../content-api";
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
 const key = process.env.VITE_GHOST_CONTENT_API_KEY || "93fa6b1e07090ecdf686521b7e";
 
@@ -104,21 +101,8 @@ describe("authors endpoint", () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
-  test("New API", async () => {
-    const api = contentAPICredentialsSchema.parse({
-      endpoint: BrowseEndpointType.authors,
-      key: "93fa6b1e07090ecdf686521b7e",
-      version: "v5.0",
-      url: "https://my-ghost-blog.com",
-    });
-    const authors = new AuthorsAPI(
-      {
-        schema: authorsSchema,
-        output: authorsSchema,
-        include: authorsIncludeSchema,
-      },
-      api
-    );
+  test("aouthors should be fetched correctly", async () => {
+    const authors = api.authors;
     expect(authors).not.toBeUndefined();
     const browseQuery = authors.browse({
       input: { page: 2 },

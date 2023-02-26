@@ -29,6 +29,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/index.ts"),
       name: getPackageNameCamelCase(),
       formats,
+      // @ts-expect-error
       fileName: (format) => fileName[format],
     },
   },

@@ -8,8 +8,8 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     globals: true,
-    include: ["./src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts}", "./test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts}"],
-    watchExclude: [".*\\/node_modules\\/.*", ".*\\/build\\/.*", ".*\\/dist\\/.*"],
-    exclude: ["node_modules", "dist", ".idea", ".git", ".cache", ".pnpm", ".turbo", "build", "public"],
+    include: ["./**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    watchExclude: [".*\\/node_modules\\/.*", ".*\\/build\\/.*"],
+    exclude: ["node_modules", "dist", ".idea", ".git", ".cache"],
   },
 });

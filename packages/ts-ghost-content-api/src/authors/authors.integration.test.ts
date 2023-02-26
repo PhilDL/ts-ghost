@@ -5,19 +5,20 @@ const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
 const key = process.env.VITE_GHOST_CONTENT_API_KEY || "93fa6b1e07090ecdf686521b7e";
 
 const stub = {
-  slug: "coding-dodo",
   id: "1",
+  name: "PhilDL",
+  slug: "phildl",
+  profile_image: "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp",
+  cover_image: null,
+  bio: null,
+  website: "https://github.com/PhilDL",
+  location: null,
+  facebook: null,
+  twitter: null,
   meta_title: null,
   meta_description: null,
-  name: "PhilDL",
-  profile_image: "https://codingdodo.com/content/images/2021/04/small-logo-1.png",
-  cover_image: "https://codingdodo.com/content/images/2021/04/Coding-Dodo-1.png",
-  bio: "Creator of CodingDodo, I am a Software Architect that loves Python, JavaScript, TypeScript, and Software Architecture in general. I like to share the things I learn through teaching them!",
-  website: "https://bio.link/codingdodo",
-  location: "Reunion Island",
-  facebook: "CodingDodo/",
-  twitter: "@_philDL",
-  url: "https://codingdodo.com/author/coding-dodo/",
+  count: [Object],
+  url: "https://astro-starter.digitalpress.blog/author/phildl/",
 };
 describe("authors integration tests browse", () => {
   let api: TSGhostContentAPI;
@@ -54,10 +55,6 @@ describe("authors integration tests browse", () => {
   });
 
   test("authors.browse() with output", async () => {
-    const test = api.authors.browse({
-      input: { page: 1, filter: "name:test" },
-      output: { fields: { id: true, name: true, slug: true, count: true }, include: { "count.posts": true } },
-    } as const);
     const result = await api.authors
       .browse({
         output: { fields: { id: true, name: true, slug: true, count: true }, include: { "count.posts": true } },
@@ -100,7 +97,7 @@ describe("authors integration tests browse", () => {
     expect(author.id).toBe(stub.id);
     expect(author.name).toBe(stub.name);
     expect(author.slug).toBe(stub.slug);
-    expect(author.count?.posts).toBeGreaterThan(10);
+    expect(author.count?.posts).toBeGreaterThan(0);
   });
 });
 

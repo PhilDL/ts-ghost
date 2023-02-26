@@ -1,26 +1,16 @@
 {
+  "extends": "@ts-ghost/tsconfig/node16.json",
+  "include": ["**/*.ts", "tsup.config.ts"],
   "compilerOptions": {
-    "rootDir": "./src",
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
-    "strict": true,
-    "sourceMap": true,
-    "resolveJsonModule": true,
+    "types": ["vitest/globals"],
+    "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client", "node", "vitest"],
-    "typeRoots": ["./types", "./node_modules/@types", ],
+    "module": "ESNext",
+    "target": "ESNext",
     "paths": {
-      "~/*": ["./app/*"],
-    }
+      "@ts-ghost/core-api/*": ["../ts-ghost-core-api/src/*"],
+      "@ts-ghost/core-api": ["../ts-ghost-core-api/src/index"],
+    },
   },
-  "include": ["src", "src/ts-ghost-api/ts-ghost-content-api.test.ts"],
-  "exclude": ["**/*.test.ts", "node_modules", "test/**", ".history/**", "./types"]
+  "exclude": ["node_modules"]
 }

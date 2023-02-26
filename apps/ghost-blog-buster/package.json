@@ -1,6 +1,5 @@
 {
   "name": "@ts-ghost/ghost-blog-buster",
-  "private": true,
   "author": "Philippe L'ATTENTION <https://github.com/PhilDL>",
   "license": "MIT",
   "repository": {
@@ -8,8 +7,9 @@
     "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
   },
   "version": "0.0.2",
-  "type": "module",
   "main": "./dist/cli.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/cli.js"
   },
@@ -18,28 +18,22 @@
   },
   "scripts": {
     "start": "jiti ./src/cli.ts",
-    "build": "tsup ./src/cli.ts --format esm --dts",
-    "test": "vitest",
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "clean": "rimraf .turbo node_modules dist",
+    "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint ./src --fix",
-    "test:coverage": "vitest --coverage",
-    "format:scripts": "prettier . --write",
-    "format": "pnpm run format:scripts && pnpm run format:styles",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@types/configstore": "^6.0.0",
-    "@types/jsdom": "^21.1.0",
     "@types/node": "^18.14.1",
-    "@typescript-eslint/eslint-plugin": "^5.53.0",
-    "@typescript-eslint/parser": "^5.53.0",
-    "eslint": "^8.34.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "@ts-ghost/tsconfig": "*",
+    "eslint-config-vite": "*",
     "jiti": "^1.17.1",
-    "prettier": "^2.8.4",
     "ts-node": "^10.9.1",
-    "ts-toolbelt": "^9.6.0",
     "tsup": "^6.6.3",
     "typescript": "4.9.5",
     "vite": "^4.1.3",
@@ -51,9 +45,9 @@
     "@clack/prompts": "^0.6.0",
     "@tryghost/content-api": "^1.11.5",
     "configstore": "^6.0.0",
-    "node-fetch": "^3.3.0",
     "node-html-markdown": "^1.3.0",
     "picocolors": "^1.0.0",
-    "zod": "^3.20.6"
+    "zod": "^3.20.6",
+    "cross-fetch": "^3.1.5"
   }
 }
