@@ -91,6 +91,12 @@ jobs:
           node-version: 16
           cache: "pnpm"
 
+      - name: 🏄 Copy test env vars
+        run: cp .env.test .env
+
+      - name: 🏄 Copy test env vars to Package
+        run: cp .env.test packages/ts-ghost-content-api/.env
+
       - name: 📥 Download deps
         run: pnpm install --ignore-scripts
 
