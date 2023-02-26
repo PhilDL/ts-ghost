@@ -33,7 +33,7 @@ export abstract class BaseAPI<
     return this._includeFields;
   }
 
-  get urlBrowseParams() {
+  private get urlBrowseParams() {
     if (this.browseParams === undefined) return {};
     let urlBrowseParams: { filter?: string; page?: string; order?: string; limit?: string } = {};
     const { limit, page, ...params } = this.browseParams;

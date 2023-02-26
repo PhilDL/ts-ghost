@@ -19,16 +19,15 @@
     "clean": "rimraf .turbo node_modules dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest --coverage",
-    "lint:scripts": "eslint . --ext .ts",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@ts-ghost/tsconfig": "*",
     "@types/node": "^18.14.1",
+    "@vitest/coverage-c8": "^0.29.1",
     "eslint-config-vite": "*",
-    "ts-toolbelt": "^9.6.0",
-    "tsx": "^3.12.3",
     "tsup": "^6.6.3",
     "typescript": "4.9.5",
     "vite": "^4.1.3",
@@ -36,8 +35,7 @@
     "vitest": "^0.29.1"
   },
   "dependencies": {
-    "node-fetch": "^3.3.0",
-    "zod": "^3.20.6",
-    "@ts-ghost/core-api": "*"
+    "@ts-ghost/core-api": "*",
+    "zod": "^3.20.6"
   }
 }

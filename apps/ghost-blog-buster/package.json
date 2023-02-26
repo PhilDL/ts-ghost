@@ -21,8 +21,8 @@
     "build": "tsup ./src/cli.ts --format esm --dts",
     "test": "vitest",
     "test:watch": "vitest",
+    "lint": "eslint ./src --fix",
     "test:coverage": "vitest --coverage",
-    "lint:scripts": "eslint . --ext .ts",
     "format:scripts": "prettier . --write",
     "format": "pnpm run format:scripts && pnpm run format:styles",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"

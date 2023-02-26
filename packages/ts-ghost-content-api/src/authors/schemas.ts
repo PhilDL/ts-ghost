@@ -12,6 +12,11 @@ export const AuthorSchema = z.object({
   location: z.string().nullable(),
   facebook: z.string().nullable(),
   twitter: z.string().nullable(),
+  count: z
+    .object({
+      posts: z.number(),
+    })
+    .optional(),
   url: z.string(),
 });
 

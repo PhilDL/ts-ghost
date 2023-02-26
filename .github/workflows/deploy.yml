@@ -81,12 +81,6 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: 🏄 Copy test env vars
-        run: cp .env.example .env
-
-      - name: 🏄 Copy test env vars to Package
-        run: cp .env.example packages/database/.env
-
       - uses: pnpm/action-setup@v2.2.4
         with:
           version: 7

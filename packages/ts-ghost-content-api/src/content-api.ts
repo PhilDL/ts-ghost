@@ -1,17 +1,14 @@
-import { z, ZodRawShape } from "zod";
-import type { BrowseParamsSchema, BrowseParams } from "@ts-ghost/core-api";
-import { BaseAPI, schemaWithPickedFields, parseBrowseParams } from "@ts-ghost/core-api";
 import { AuthorsAPI } from "./authors/api";
 import { AuthorSchema, authorsIncludeSchema } from "./authors/schemas";
 import { TagsAPI } from "./tags/api";
 import { TagSchema, tagsIncludeSchema } from "./tags/schemas";
-import { PageSchema, pagesIncludeSchema } from "./pages/schemas";
 import { PagesAPI } from "./pages/api";
-import { PostSchema, postsIncludeSchema } from "./posts/schemas";
+import { PageSchema, pagesIncludeSchema } from "./pages/schemas";
 import { PostsAPI } from "./posts/api";
-import { TierSchema, tiersIncludeSchema } from "./tiers/schemas";
+import { PostSchema, postsIncludeSchema } from "./posts/schemas";
 import { TiersAPI } from "./tiers/api";
-import { ContentAPICredentialsSchema, ContentAPIEndpoints, ContentAPIVersions } from "./schemas";
+import { TierSchema, tiersIncludeSchema } from "./tiers/schemas";
+import { ContentAPICredentialsSchema, ContentAPIEndpoints, ContentAPIVersions } from "@ts-ghost/core-api";
 
 export enum BrowseEndpointType {
   authors = "authors",
@@ -28,17 +25,18 @@ export class TSGhostContentAPI {
     protected readonly version: ContentAPIVersions
   ) {}
 
-  _getApi = (endpoint: ContentAPIEndpoints) => {
-    const apiIn = {
-      endpoint,
+  get authors() {
+    const api = ContentAPICredentialsSchema.parse({
+      endpoint: "authors",
       key: this.key,
       version: this.version,
       url: this.url,
-    } as const;
-    return ContentAPICredentialsSchema.parse(apiIn);
-  };
-
-  get authors() {
+    }) as {
+      endpoint: "authors";
+      key: string;
+      version: ContentAPIVersions;
+      url: string;
+    };
     return new AuthorsAPI(
       {
         schema: AuthorSchema,
@@ -46,17 +44,35 @@ export class TSGhostContentAPI {
         include: authorsIncludeSchema,
       },
       {},
-      this._getApi("authors")
+      api
     );
   }
   get tiers() {
-    return new TiersAPI(
-      { schema: TierSchema, output: TierSchema, include: tiersIncludeSchema },
-      {},
-      this._getApi("tiers")
-    );
+    const api = ContentAPICredentialsSchema.parse({
+      endpoint: "tiers",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+    }) as {
+      endpoint: "tiers";
+      key: string;
+      version: ContentAPIVersions;
+      url: string;
+    };
+    return new TiersAPI({ schema: TierSchema, output: TierSchema, include: tiersIncludeSchema }, {}, api);
   }
   get posts() {
+    const api = ContentAPICredentialsSchema.parse({
+      endpoint: "posts",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+    }) as {
+      endpoint: "posts";
+      key: string;
+      version: ContentAPIVersions;
+      url: string;
+    };
     return new PostsAPI(
       {
         schema: PostSchema,
@@ -64,10 +80,21 @@ export class TSGhostContentAPI {
         include: postsIncludeSchema,
       },
       {},
-      this._getApi("posts")
+      api
     );
   }
   get pages() {
+    const api = ContentAPICredentialsSchema.parse({
+      endpoint: "pages",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+    }) as {
+      endpoint: "pages";
+      key: string;
+      version: ContentAPIVersions;
+      url: string;
+    };
     return new PagesAPI(
       {
         schema: PageSchema,
@@ -75,10 +102,21 @@ export class TSGhostContentAPI {
         include: pagesIncludeSchema,
       },
       {},
-      this._getApi("pages")
+      api
     );
   }
   get tags() {
-    return new TagsAPI({ schema: TagSchema, output: TagSchema, include: tagsIncludeSchema }, {}, this._getApi("tags"));
+    const api = ContentAPICredentialsSchema.parse({
+      endpoint: "tags",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+    }) as {
+      endpoint: "tags";
+      key: string;
+      version: ContentAPIVersions;
+      url: string;
+    };
+    return new TagsAPI({ schema: TagSchema, output: TagSchema, include: tagsIncludeSchema }, {}, api);
   }
 }

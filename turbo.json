@@ -21,10 +21,21 @@
     "test:watch": {
       "outputs": []
     },
+    "test:coverage": {
+      "outputs": ["coverage"]
+    },
     "typecheck": {
       "outputs": []
     }
   },
   "globalDependencies": [".env"],
-  "globalEnv": ["NODE_ENV"]
+  "globalEnv": [
+    "NODE_ENV",
+    "GHOST_URL",
+    "GHOST_CONTENT_API_KEY",
+    "GHOST_VERSION",
+    "VITE_GHOST_URL",
+    "VITE_GHOST_CONTENT_API_KEY",
+    "VITE_GHOST_VERSION"
+  ]
 }

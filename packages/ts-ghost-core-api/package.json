@@ -20,7 +20,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest --coverage",
-    "lint:scripts": "eslint . --ext .ts",
+    "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
   "devDependencies": {
@@ -28,7 +28,6 @@
     "@types/node": "^18.14.1",
     "eslint-config-vite": "*",
     "ts-toolbelt": "^9.6.0",
-    "tsx": "^3.12.3",
     "tsup": "^6.6.3",
     "typescript": "4.9.5",
     "vite": "^4.1.3",
@@ -36,7 +35,7 @@
     "vitest": "^0.29.1"
   },
   "dependencies": {
-    "node-fetch": "^3.3.0",
+    "cross-fetch": "^3.1.5",
     "zod": "^3.20.6"
   }
 }

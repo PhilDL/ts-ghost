@@ -161,14 +161,14 @@ export class AuthorsAPI<
     return authorsApi;
   };
 
-  fetch = async () => {
+  public async fetch() {
     const result = await this._fetch();
     const browseSchema = z.object({
       meta: GhostMetaSchema,
       authors: z.array(this.config.output),
     });
     return browseSchema.parse(result);
-  };
+  }
 }
 
 export class TiersAPI<
@@ -219,14 +219,14 @@ export class TiersAPI<
     return tiersApi;
   };
 
-  fetch = async () => {
+  public async fetch() {
     const result = await this._fetch();
     const browseSchema = z.object({
       meta: GhostMetaSchema,
       tiers: z.array(this.config.output),
     });
     return browseSchema.parse(result);
-  };
+  }
 }
 
 export class PostsAPI<
@@ -277,14 +277,14 @@ export class PostsAPI<
     return postsApi;
   };
 
-  fetch = async () => {
+  public async fetch() {
     const result = await this._fetch();
     const browseSchema = z.object({
       meta: GhostMetaSchema,
       posts: z.array(this.config.output),
     });
     return browseSchema.parse(result);
-  };
+  }
 }
 
 export class PagesAPI<
@@ -335,14 +335,14 @@ export class PagesAPI<
     return pagesApi;
   };
 
-  fetch = async () => {
+  public async fetch() {
     const result = await this._fetch();
     const browseSchema = z.object({
       meta: GhostMetaSchema,
       pages: z.array(this.config.output),
     });
     return browseSchema.parse(result);
-  };
+  }
 }
 
 export class TagsAPI<
@@ -393,12 +393,12 @@ export class TagsAPI<
     return tagsApi;
   };
 
-  fetch = async () => {
+  public async fetch() {
     const result = await this._fetch();
     const browseSchema = z.object({
       meta: GhostMetaSchema,
       tags: z.array(this.config.output),
     });
     return browseSchema.parse(result);
-  };
+  }
 }
