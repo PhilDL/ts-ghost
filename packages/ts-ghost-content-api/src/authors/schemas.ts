@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { GhostIdentificationSchema, GhostMetaSchema, GhostMetadataSchema } from "@ts-ghost/core-api";
+import { ghostIdentitySchema, ghostMetaSchema, ghostMetadataSchema } from "@ts-ghost/core-api";
 
-export const AuthorSchema = z.object({
-  ...GhostIdentificationSchema.shape,
-  ...GhostMetadataSchema.shape,
+export const authorsSchema = z.object({
+  ...ghostIdentitySchema.shape,
+  ...ghostMetadataSchema.shape,
   name: z.string(),
   profile_image: z.string().nullable(),
   cover_image: z.string().nullable(),
@@ -20,9 +20,11 @@ export const AuthorSchema = z.object({
   url: z.string(),
 });
 
-export const GhostFetchAuthorsSchema = z.object({
-  meta: GhostMetaSchema,
-  authors: z.array(AuthorSchema),
+export type Author = z.infer<typeof authorsSchema>;
+
+export const ghostFetchAuthorsSchema = z.object({
+  meta: ghostMetaSchema,
+  authors: z.array(authorsSchema),
 });
 
 export const authorsIncludeSchema = z.object({

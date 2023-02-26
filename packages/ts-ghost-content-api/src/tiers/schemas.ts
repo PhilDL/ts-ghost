@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { GhostIdentificationSchema, GhostVisibilitySchema } from "@ts-ghost/core-api";
+import { ghostIdentitySchema, ghostVisibilitySchema } from "@ts-ghost/core-api";
 
-export const TierSchema = z.object({
-  ...GhostIdentificationSchema.shape,
+export const tiersSchema = z.object({
+  ...ghostIdentitySchema.shape,
   name: z.string(),
   description: z.string().nullable(),
   active: z.boolean(),
@@ -25,8 +25,10 @@ export const TierSchema = z.object({
     .optional()
     .transform((v) => (v ? v : null)),
   benefits: z.array(z.string()),
-  visibility: GhostVisibilitySchema,
+  visibility: ghostVisibilitySchema,
 });
+
+export type Tier = z.infer<typeof tiersSchema>;
 
 export const tiersIncludeSchema = z.object({
   monthly_price: z.literal(true).optional(),

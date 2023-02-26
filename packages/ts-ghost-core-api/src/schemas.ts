@@ -1,11 +1,34 @@
 import { z } from "zod";
 
-export const GhostIdentificationSchema = z.object({
-  slug: z.string(),
-  id: z.string(),
+export const ghostIdentitySchema = z.object({
+  slug: z.string().optional(),
+  id: z.string().optional(),
 });
 
-export const GhostMetaSchema = z.object({
+export const queryIdentitySchema = z
+  .object({
+    slug: z.string().optional(),
+    id: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.slug === undefined && data.id === undefined) {
+        return {
+          message: "Either slug or id must be provided",
+          path: [],
+        };
+      }
+      return true;
+    },
+    {
+      message: "Either slug or id must be provided",
+      path: [],
+    }
+  );
+
+export type GhostIdentity = z.infer<typeof ghostIdentitySchema>;
+
+export const ghostMetaSchema = z.object({
   pagination: z.object({
     pages: z.number(),
     page: z.number(),
@@ -16,83 +39,83 @@ export const GhostMetaSchema = z.object({
   }),
 });
 
-export const GhostExcerptSchema = z.object({
+export const ghostExcerptSchema = z.object({
   excerpt: z.string().optional(),
   custom_excerpt: z.string().optional(),
 });
 
-export const GhostCodeInjectionSchema = z.object({
+export const ghostCodeInjectionSchema = z.object({
   codeinjection_head: z.string().nullable(),
   codeinjection_foot: z.string().nullable(),
 });
 
-export const GhostFacebookSchema = z.object({
+export const ghostFacebookSchema = z.object({
   og_image: z.string().nullable(),
   og_title: z.string().nullable(),
   og_description: z.string().nullable(),
 });
 
-export const GhostTwitterSchema = z.object({
+export const ghostTwitterSchema = z.object({
   twitter_image: z.string().nullable(),
   twitter_title: z.string().nullable(),
   twitter_description: z.string().nullable(),
 });
 
-export const GhostSocialMediaSchema = z.object({
-  ...GhostFacebookSchema.shape,
-  ...GhostTwitterSchema.shape,
+export const ghostSocialMediaSchema = z.object({
+  ...ghostFacebookSchema.shape,
+  ...ghostTwitterSchema.shape,
 });
 
-export const GhostMetadataSchema = z.object({
+export const ghostMetadataSchema = z.object({
   meta_title: z.string().nullable(),
   meta_description: z.string().nullable(),
 });
 
-export const GhostVisibilitySchema = z.union([z.literal("public"), z.literal("members"), z.literal("none")]);
+export const ghostVisibilitySchema = z.union([z.literal("public"), z.literal("members"), z.literal("none")]);
 
-export const ContentAPIEndpointsSchema = z.union([
+export const contentAPIEndpointsSchema = z.union([
   z.literal("authors"),
   z.literal("tiers"),
   z.literal("posts"),
   z.literal("pages"),
   z.literal("tags"),
 ]);
-export type ContentAPIEndpoints = z.infer<typeof ContentAPIEndpointsSchema>;
+export type ContentAPIEndpoints = z.infer<typeof contentAPIEndpointsSchema>;
 
-export const VersionsSchema = z.enum(["v5.0", "v2", "v3", "v4", "canary"]).default("v5.0");
-export type ContentAPIVersions = z.infer<typeof VersionsSchema>;
+export const apiVersionsSchema = z.enum(["v5.0", "v2", "v3", "v4", "canary"]).default("v5.0");
+export type ContentAPIVersions = z.infer<typeof apiVersionsSchema>;
 
-export const ContentAPICredentialsSchema = z.discriminatedUnion("endpoint", [
+export const contentAPICredentialsSchema = z.discriminatedUnion("endpoint", [
   z.object({
     endpoint: z.literal("authors"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: VersionsSchema,
+    version: apiVersionsSchema,
     url: z.string().url(),
   }),
   z.object({
     endpoint: z.literal("tiers"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: VersionsSchema,
+    version: apiVersionsSchema,
     url: z.string().url(),
   }),
   z.object({
     endpoint: z.literal("pages"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: VersionsSchema,
+    version: apiVersionsSchema,
     url: z.string().url(),
   }),
   z.object({
     endpoint: z.literal("posts"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: VersionsSchema,
+    version: apiVersionsSchema,
     url: z.string().url(),
   }),
   z.object({
     endpoint: z.literal("tags"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: VersionsSchema,
+    version: apiVersionsSchema,
     url: z.string().url(),
   }),
 ]);
 
-export type ContentAPICredentials = z.infer<typeof ContentAPICredentialsSchema>;
+export type ContentAPICredentials = z.infer<typeof contentAPICredentialsSchema>;

@@ -1,26 +1,30 @@
 import fetch from "cross-fetch";
-import { BrowseParamsSchema } from "./helpers/browse-params";
 import { z, ZodRawShape } from "zod";
-import { GhostMetaSchema, ContentAPICredentials } from "./schemas";
+import { type ContentAPICredentials, type GhostIdentity } from "../schemas";
 
-export class BaseFetcher<
-  Shape extends ZodRawShape,
+export class ReadFetcher<
+  Fields extends z.objectKeyMask<OutputShape>,
+  BaseShape extends ZodRawShape,
   OutputShape extends ZodRawShape,
   IncludeShape extends ZodRawShape,
-  B extends BrowseParamsSchema,
   Api extends ContentAPICredentials
 > {
   protected _urlParams: Record<string, string> = {};
   protected _URL: URL | undefined = undefined;
   protected _includeFields: (keyof IncludeShape)[] = [];
   protected readonly _endpoint: Api["endpoint"];
+
   constructor(
     protected config: {
-      schema: z.ZodObject<Shape>;
+      schema: z.ZodObject<BaseShape>;
       output: z.ZodObject<OutputShape>;
       include: z.ZodObject<IncludeShape>;
     },
-    private _browseParams: B | undefined = undefined,
+    private _params: {
+      identity: GhostIdentity;
+      include?: (keyof IncludeShape)[];
+      fields?: Fields;
+    },
     protected _api: Api
   ) {
     this._buildUrlParams();
@@ -31,8 +35,8 @@ export class BaseFetcher<
     return this._endpoint;
   }
 
-  public getBrowseParams() {
-    return this._browseParams;
+  public getParams() {
+    return this._params;
   }
 
   public getOutputFields() {
@@ -43,14 +47,8 @@ export class BaseFetcher<
     return this._URL;
   }
 
-  public getIncludeFields() {
+  public getIncludes() {
     return this._includeFields;
-  }
-
-  setIncludeFields(fields: z.infer<z.ZodObject<IncludeShape>>) {
-    const parsedIncludeFields = this.config.include.parse(fields);
-    this._includeFields = Object.keys(parsedIncludeFields);
-    this._buildUrlParams();
   }
 
   private _buildUrlParams() {
@@ -58,44 +56,32 @@ export class BaseFetcher<
     const outputKeys = this.config.output.keyof().options as string[];
     this._urlParams = {
       key: this._api.key,
-      ...this._urlBrowseParams(),
     };
     if (inputKeys.length !== outputKeys.length && outputKeys.length > 0) {
       this._urlParams.fields = outputKeys.join(",");
     }
-    if (this.getIncludeFields().length > 0) {
-      this._urlParams.include = this.getIncludeFields().join(",");
+    if (this._params.include && this._params.include.length > 0) {
+      this._urlParams.include = this._params.include.join(",");
     }
     const url = new URL(this._api.url);
-    url.pathname = `/ghost/api/content/${this._api.endpoint}/`;
+    if (this._params.identity.id) {
+      url.pathname = `/ghost/api/content/${this._api.endpoint}/${this._params.identity.id}/`;
+    } else if (this._params.identity.slug) {
+      url.pathname = `/ghost/api/content/${this._api.endpoint}/slug/${this._params.identity.slug}/`;
+    } else {
+      throw new Error("Identity is not defined");
+    }
     for (const [key, value] of Object.entries(this._urlParams)) {
       url.searchParams.append(key, value);
     }
     this._URL = url;
   }
 
-  private _urlBrowseParams() {
-    if (this._browseParams === undefined) return {};
-    let urlBrowseParams: { filter?: string; page?: string; order?: string; limit?: string } = {};
-    const { limit, page, ...params } = this._browseParams;
-    urlBrowseParams = {
-      ...params,
-    };
-    if (limit) {
-      urlBrowseParams.limit = limit.toString();
-    }
-    if (page) {
-      urlBrowseParams.page = page.toString();
-    }
-    return urlBrowseParams;
-  }
-
   public async fetch() {
     const res = z.discriminatedUnion("status", [
       z.object({
-        status: z.literal("ok"),
-        meta: GhostMetaSchema,
-        data: z.array(this.config.output),
+        status: z.literal("success"),
+        data: this.config.output,
       }),
       z.object({
         status: z.literal("error"),
@@ -114,9 +100,8 @@ export class BaseFetcher<
       data.errors = result.errors;
     } else {
       data = {
-        status: "ok",
-        meta: result.meta,
-        data: result[this._endpoint],
+        status: "success",
+        data: result[this._endpoint][0],
       };
     }
     return res.parse(data);

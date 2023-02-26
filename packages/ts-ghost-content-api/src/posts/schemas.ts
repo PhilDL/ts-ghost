@@ -1,16 +1,16 @@
 import { z } from "zod";
 import {
-  GhostIdentificationSchema,
-  GhostMetadataSchema,
-  GhostCodeInjectionSchema,
-  GhostSocialMediaSchema,
+  ghostIdentitySchema,
+  ghostMetadataSchema,
+  ghostCodeInjectionSchema,
+  ghostSocialMediaSchema,
 } from "@ts-ghost/core-api";
-import { AuthorSchema } from "../authors/schemas";
-import { TagSchema } from "../tags/schemas";
+import { authorsSchema } from "../authors/schemas";
+import { tagsSchema } from "../tags/schemas";
 
-export const PostSchema = z.object({
-  ...GhostIdentificationSchema.shape,
-  ...GhostMetadataSchema.shape,
+export const postsSchema = z.object({
+  ...ghostIdentitySchema.shape,
+  ...ghostMetadataSchema.shape,
   title: z.string(),
   html: z.string(),
   comment_id: z.string().nullable(),
@@ -19,17 +19,19 @@ export const PostSchema = z.object({
   feature_image_caption: z.string().nullable(),
   featured: z.boolean(),
   custom_excerpt: z.string().nullable(),
-  ...GhostCodeInjectionSchema.shape,
-  ...GhostSocialMediaSchema.shape,
+  ...ghostCodeInjectionSchema.shape,
+  ...ghostSocialMediaSchema.shape,
   custom_template: z.string().nullable(),
   canonical_url: z.string().nullable(),
-  authors: z.array(AuthorSchema).nullable(),
-  tags: z.array(TagSchema).nullable(),
-  primary_author: AuthorSchema,
-  primary_tag: TagSchema.nullable(),
+  authors: z.array(authorsSchema).nullable(),
+  tags: z.array(tagsSchema).nullable(),
+  primary_author: authorsSchema,
+  primary_tag: tagsSchema.nullable(),
   url: z.string(),
   excerpt: z.string(),
 });
+
+export type Post = z.infer<typeof postsSchema>;
 
 export const postsIncludeSchema = z.object({
   authors: z.literal(true).optional(),

@@ -1,14 +1,13 @@
-import { AuthorsAPI } from "./authors/api";
-import { AuthorSchema, authorsIncludeSchema } from "./authors/schemas";
+import { authorsSchema, authorsIncludeSchema } from "./authors/schemas";
 import { TagsAPI } from "./tags/api";
-import { TagSchema, tagsIncludeSchema } from "./tags/schemas";
+import { tagsSchema, tagsIncludeSchema } from "./tags/schemas";
 import { PagesAPI } from "./pages/api";
-import { PageSchema, pagesIncludeSchema } from "./pages/schemas";
+import { pagesSchema, pagesIncludeSchema } from "./pages/schemas";
 import { PostsAPI } from "./posts/api";
-import { PostSchema, postsIncludeSchema } from "./posts/schemas";
+import { postsSchema, postsIncludeSchema } from "./posts/schemas";
 import { TiersAPI } from "./tiers/api";
-import { TierSchema, tiersIncludeSchema } from "./tiers/schemas";
-import { ContentAPICredentialsSchema, BaseQueryBuilder, ContentAPIVersions } from "@ts-ghost/core-api";
+import { tiersSchema, tiersIncludeSchema } from "./tiers/schemas";
+import { contentAPICredentialsSchema, QueryBuilder, ContentAPIVersions } from "@ts-ghost/core-api";
 
 export enum BrowseEndpointType {
   authors = "authors",
@@ -26,7 +25,7 @@ export class TSGhostContentAPI {
   ) {}
 
   get authors() {
-    const api = ContentAPICredentialsSchema.parse({
+    const api = contentAPICredentialsSchema.parse({
       endpoint: "authors",
       key: this.key,
       version: this.version,
@@ -37,17 +36,17 @@ export class TSGhostContentAPI {
       version: ContentAPIVersions;
       url: string;
     };
-    return new BaseQueryBuilder(
+    return new QueryBuilder(
       {
-        schema: AuthorSchema,
-        output: AuthorSchema,
+        schema: authorsSchema,
+        output: authorsSchema,
         include: authorsIncludeSchema,
       },
       api
     );
   }
   get tiers() {
-    const api = ContentAPICredentialsSchema.parse({
+    const api = contentAPICredentialsSchema.parse({
       endpoint: "tiers",
       key: this.key,
       version: this.version,
@@ -58,10 +57,10 @@ export class TSGhostContentAPI {
       version: ContentAPIVersions;
       url: string;
     };
-    return new TiersAPI({ schema: TierSchema, output: TierSchema, include: tiersIncludeSchema }, api);
+    return new TiersAPI({ schema: tiersSchema, output: tiersSchema, include: tiersIncludeSchema }, api);
   }
   get posts() {
-    const api = ContentAPICredentialsSchema.parse({
+    const api = contentAPICredentialsSchema.parse({
       endpoint: "posts",
       key: this.key,
       version: this.version,
@@ -74,15 +73,15 @@ export class TSGhostContentAPI {
     };
     return new PostsAPI(
       {
-        schema: PostSchema,
-        output: PostSchema,
+        schema: postsSchema,
+        output: postsSchema,
         include: postsIncludeSchema,
       },
       api
     );
   }
   get pages() {
-    const api = ContentAPICredentialsSchema.parse({
+    const api = contentAPICredentialsSchema.parse({
       endpoint: "pages",
       key: this.key,
       version: this.version,
@@ -95,15 +94,15 @@ export class TSGhostContentAPI {
     };
     return new PagesAPI(
       {
-        schema: PageSchema,
-        output: PageSchema,
+        schema: pagesSchema,
+        output: pagesSchema,
         include: pagesIncludeSchema,
       },
       api
     );
   }
   get tags() {
-    const api = ContentAPICredentialsSchema.parse({
+    const api = contentAPICredentialsSchema.parse({
       endpoint: "tags",
       key: this.key,
       version: this.version,
@@ -114,6 +113,6 @@ export class TSGhostContentAPI {
       version: ContentAPIVersions;
       url: string;
     };
-    return new TagsAPI({ schema: TagSchema, output: TagSchema, include: tagsIncludeSchema }, api);
+    return new TagsAPI({ schema: tagsSchema, output: tagsSchema, include: tagsIncludeSchema }, api);
   }
 }
