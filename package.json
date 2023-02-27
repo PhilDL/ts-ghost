@@ -2,6 +2,7 @@
   "name": "ghost-blog-buster",
   "author": "Philippe L'ATTENTION <https://github.com/PhilDL>",
   "license": "MIT",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilDL/ghost-blog-buster"
