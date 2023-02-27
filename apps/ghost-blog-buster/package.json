@@ -2,11 +2,12 @@
   "name": "@ts-ghost/ghost-blog-buster",
   "author": "Philippe L'ATTENTION <https://github.com/PhilDL>",
   "license": "MIT",
+  "access": "public",
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
   },
-  "version": "0.0.2",
+  "version": "0.0.1",
   "main": "./dist/cli.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

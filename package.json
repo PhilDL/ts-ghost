@@ -11,7 +11,7 @@
     "packages/*",
     "config-packages/*"
   ],
-  "version": "0.0.2",
+  "version": "0.0.1",
   "scripts": {
     "dev": "turbo run dev",
     "start": "pnpm --filter=@ts-ghost/ghost-blog-buster start",
