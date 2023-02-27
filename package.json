@@ -25,6 +25,7 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.0",
     "eslint-config-custom": "*",
     "prettier": "^2.8.4",
     "turbo": "^1.7.4"
