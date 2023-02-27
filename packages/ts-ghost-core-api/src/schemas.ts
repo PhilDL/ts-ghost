@@ -83,6 +83,7 @@ export const ghostVisibilitySchema = z.union([
   z.literal("members"),
   z.literal("none"),
   z.literal("internal"),
+  z.literal("paid"),
 ]);
 
 export const contentAPIEndpointsSchema = z.union([
