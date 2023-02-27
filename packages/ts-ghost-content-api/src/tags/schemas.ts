@@ -19,6 +19,11 @@ export const tagsSchema = z.object({
   canonical_url: z.string().nullable(),
   accent_color: z.string().nullable(),
   url: z.string(),
+  count: z
+    .object({
+      posts: z.number(),
+    })
+    .optional(),
 });
 
 export type Tag = z.infer<typeof tagsSchema>;
