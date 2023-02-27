@@ -17,6 +17,7 @@
     "start": "pnpm --filter=@ts-ghost/ghost-blog-buster start",
     "build": "turbo run build",
     "test": "turbo run test",
+    "test:integration": "turbo run test:integration",
     "lint": "turbo run lint",
     "test:watch": "turbo run test:watch",
     "test:coverage": "turbo run test:coverage",

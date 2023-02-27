@@ -91,6 +91,35 @@ jobs:
           node-version: 16
           cache: "pnpm"
 
+      - name: 📥 Download deps
+        run: pnpm install --ignore-scripts
+
+      - name: ⚡ Run vitest
+        run: pnpm run test
+
+  vitest-integration:
+    name: ⚡ Vitest Integration tests
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+
+      - name: ⎔ Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "pnpm"
+
       - name: 🏄 Copy test env vars
         run: cp .env.test .env
 
@@ -101,4 +130,4 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: ⚡ Run vitest
-        run: pnpm run test
+        run: pnpm run test:integration

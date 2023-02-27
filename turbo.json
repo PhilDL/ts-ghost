@@ -18,6 +18,9 @@
     "test": {
       "outputs": []
     },
+    "test:integration": {
+      "outputs": []
+    },
     "test:watch": {
       "outputs": []
     },
