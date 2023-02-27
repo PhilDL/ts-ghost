@@ -14,7 +14,7 @@
   "version": "0.0.2",
   "scripts": {
     "dev": "turbo run dev",
-    "start": "turbo run start",
+    "start": "pnpm --filter=@ts-ghost/ghost-blog-buster start",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",

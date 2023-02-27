@@ -9,6 +9,9 @@ import {
 import { authorsSchema } from "../authors/schemas";
 import { tagsSchema } from "../tags/schemas";
 
+const postsAuthorSchema = authorsSchema.extend({
+  url: z.string().nullish(),
+});
 export const postsSchema = z.object({
   ...ghostIdentitySchema.shape,
   ...ghostMetadataSchema.shape,
@@ -25,9 +28,9 @@ export const postsSchema = z.object({
   visibility: ghostVisibilitySchema,
   custom_template: z.string().nullable(),
   canonical_url: z.string().nullable(),
-  authors: z.array(authorsSchema).optional(),
+  authors: z.array(postsAuthorSchema).optional(),
   tags: z.array(tagsSchema).optional(),
-  primary_author: authorsSchema.optional(),
+  primary_author: postsAuthorSchema,
   primary_tag: tagsSchema.optional(),
   url: z.string(),
   excerpt: z.string(),

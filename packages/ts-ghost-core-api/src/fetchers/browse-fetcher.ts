@@ -138,7 +138,6 @@ export class BrowseFetcher<
     } catch (e) {
       console.log("error", e);
     }
-    console.log("result", result);
     return result;
   }
 }

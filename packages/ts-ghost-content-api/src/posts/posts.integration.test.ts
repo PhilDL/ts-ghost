@@ -99,8 +99,8 @@ describe("posts integration tests browse", () => {
     }
   });
 
-  test.only("posts.browse() include authors and tags", async () => {
-    const result = await api.posts.browse({ output: { include: { authors: true } } }).fetch();
+  test("posts.browse() include authors and tags", async () => {
+    const result = await api.posts.browse({ output: { include: { authors: true, tags: true } } }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -117,10 +117,120 @@ describe("posts integration tests browse", () => {
       expect(post.primary_author).toBeDefined();
       expect(post.primary_author).not.toBeNull();
       expect(post.primary_author?.slug).toBe("phildl");
+      expect(post.tags).toBeDefined();
+      expect(post.tags).toHaveLength(1);
+      expect(post.primary_tag?.name).toBe("News");
+    }
+  });
+
+  test("posts.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
+    const result = await api.posts
+      .browse({
+        output: {
+          fields: { slug: true, title: true },
+        },
+      })
+      .fetch();
+    expect(result).not.toBeUndefined();
+    expect(result).not.toBeNull();
+    if (result.status === "error") {
+      expect(result.errors).toBeDefined();
+      expect(result.errors).toHaveLength(1);
+    } else {
+      expect(result.data).toHaveLength(1);
+      const post = result.data[0];
+      expect(post).toBeDefined();
+      expect(post.title).toBe(stub.title);
+      expect(post.slug).toBe(stub.slug);
+      // @ts-expect-error
+      expect(post.id).toBeUndefined();
+      // @ts-expect-error
+      expect(post.authors).toBeUndefined();
+    }
+  });
+
+  test("posts.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
+    const result = await api.posts
+      .browse({
+        output: {
+          fields: { slug: true, title: true, primary_author: true },
+          include: { authors: true },
+        },
+      })
+      .fetch();
+    expect(result).not.toBeUndefined();
+    expect(result).not.toBeNull();
+    if (result.status === "error") {
+      expect(result.errors).toBeDefined();
+      expect(result.errors).toHaveLength(1);
+    } else {
+      expect(result.data).toHaveLength(1);
+      const post = result.data[0];
+      expect(post).toBeDefined();
+      expect(post.title).toBe(stub.title);
+      expect(post.slug).toBe(stub.slug);
+      expect(post.primary_author).toBeDefined();
+      expect(post.primary_author.slug).toBe("phildl");
+      // @ts-expect-error
+      expect(post.id).toBeUndefined();
+      // @ts-expect-error
+      expect(post.authors).toBeUndefined();
     }
   });
 });
 
 describe("posts integration tests read", () => {
-  const api = new TSGhostContentAPI(url, key, "v5.0");
+  let api: TSGhostContentAPI;
+  beforeEach(() => {
+    api = new TSGhostContentAPI(url, key, "v5.0");
+  });
+
+  test("posts.browse() include authors and tags", async () => {
+    const result = await api.posts.read({ input: { id: "63887bd07f2cf30001fec812" } }).fetch();
+    expect(result).not.toBeUndefined();
+    expect(result).not.toBeNull();
+    if (result.status === "error") {
+      expect(result.errors).toBeDefined();
+      expect(result.errors).toHaveLength(1);
+    } else {
+      expect(result.data).toBeDefined();
+      const post = result.data;
+      expect(post).toBeDefined();
+      expect(post.id).toBe(stub.id);
+      expect(post.title).toBe(stub.title);
+      expect(post.slug).toBe(stub.slug);
+      expect(post.html).toBe(stub.html);
+      expect(post.comment_id).toBe(stub.comment_id);
+      expect(post.feature_image).toBe(stub.feature_image);
+      expect(post.featured).toBe(stub.featured);
+      expect(post.visibility).toBe(stub.visibility);
+      expect(post.created_at).toBe(stub.created_at);
+      expect(post.updated_at).toBe(stub.updated_at);
+      expect(post.published_at).toBe(stub.published_at);
+      expect(post.custom_excerpt).toBe(stub.custom_excerpt);
+      expect(post.codeinjection_head).toBe(stub.codeinjection_head);
+      expect(post.codeinjection_foot).toBe(stub.codeinjection_foot);
+      expect(post.custom_template).toBe(stub.custom_template);
+      expect(post.canonical_url).toBe(stub.canonical_url);
+      expect(post.url).toBe(stub.url);
+      expect(post.excerpt).toBe(stub.excerpt);
+      expect(post.reading_time).toBe(stub.reading_time);
+      expect(post.access).toBe(stub.access);
+      expect(post.comments).toBe(stub.comments);
+      expect(post.og_image).toBe(stub.og_image);
+      expect(post.og_title).toBe(stub.og_title);
+      expect(post.og_description).toBe(stub.og_description);
+      expect(post.twitter_image).toBe(stub.twitter_image);
+      expect(post.twitter_title).toBe(stub.twitter_title);
+      expect(post.twitter_description).toBe(stub.twitter_description);
+      expect(post.meta_title).toBe(stub.meta_title);
+      expect(post.meta_description).toBe(stub.meta_description);
+      expect(post.feature_image_alt).toBe(stub.feature_image_alt);
+      expect(post.feature_image_caption).toBe(stub.feature_image_caption);
+      expect(post.authors).toBeUndefined();
+      expect(post.primary_author).toBeUndefined();
+      expect(post.primary_tag).toBeUndefined();
+      expect(post.tags).toBeUndefined();
+    }
+  });
 });
