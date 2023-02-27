@@ -29,7 +29,7 @@ describe("settings integration tests browse", () => {
       expect(settings.timezone).toBe("Etc/UTC");
       expect(settings.codeinjection_head).toBeNull();
       expect(settings.codeinjection_foot).toBeNull();
-      expect(settings.members_support_address).toBeNull();
+      expect(settings.members_support_address).toBe("noreply");
     }
   });
 });
