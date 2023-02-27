@@ -4,6 +4,7 @@
   "license": "MIT",
   "access": "public",
   "private": false,
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
@@ -21,7 +22,7 @@
   "scripts": {
     "start": "jiti ./src/cli.ts",
     "dev": "tsup --watch",
-    "build": "tsup",
+    "build": "tsup ./src/cli.ts --format esm --dts",
     "clean": "rimraf .turbo node_modules dist",
     "test": "vitest run",
     "test:watch": "vitest",
