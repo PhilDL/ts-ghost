@@ -4,7 +4,7 @@ import { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
 import { intro, outro, cancel, note, select, confirm } from "@clack/prompts";
 import * as fs from "fs";
-import path from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import Configstore from "configstore";
 import {
@@ -16,9 +16,10 @@ import {
   tiersExportAll,
   authorsExportAll,
 } from "./commands";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "package.json"), "utf8"));
+
+const _dirname = typeof __dirname !== "undefined" ? __dirname : dirname(fileURLToPath(import.meta.url));
+
+const packageJson = JSON.parse(fs.readFileSync(path.join(_dirname, "..", "package.json"), "utf8"));
 import color from "picocolors";
 
 async function main() {
