@@ -3,6 +3,7 @@
   "author": "Philippe L'ATTENTION <https://github.com/PhilDL>",
   "license": "MIT",
   "access": "public",
+  "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
@@ -38,5 +39,8 @@
   "dependencies": {
     "cross-fetch": "^3.1.5",
     "zod": "^3.20.6"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
