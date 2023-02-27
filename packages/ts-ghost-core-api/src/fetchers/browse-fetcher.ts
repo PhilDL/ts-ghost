@@ -109,7 +109,6 @@ export class BrowseFetcher<
       }),
     ]);
     const result = await this._fetch();
-    // console.log("result", result);
     let data: any = {};
     if (result.errors) {
       data.status = "error";

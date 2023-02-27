@@ -26,6 +26,8 @@ export const tiersSchema = z.object({
     .transform((v) => (v ? v : null)),
   benefits: z.array(z.string()),
   visibility: ghostVisibilitySchema,
+  currency: z.string().nullish(),
+  trial_days: z.number().default(0),
 });
 
 export type Tier = z.infer<typeof tiersSchema>;

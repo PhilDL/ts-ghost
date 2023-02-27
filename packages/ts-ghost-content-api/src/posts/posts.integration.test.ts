@@ -170,7 +170,7 @@ describe("posts integration tests browse", () => {
       expect(post.title).toBe(stub.title);
       expect(post.slug).toBe(stub.slug);
       expect(post.primary_author).toBeDefined();
-      expect(post.primary_author.slug).toBe("phildl");
+      expect(post.primary_author?.slug).toBe("phildl");
       // @ts-expect-error
       expect(post.id).toBeUndefined();
       // @ts-expect-error

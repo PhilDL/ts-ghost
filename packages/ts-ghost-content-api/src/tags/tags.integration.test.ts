@@ -141,7 +141,7 @@ describe("tags integration tests browse", () => {
   });
 });
 
-describe.only("tags integration tests read", () => {
+describe("tags integration tests read", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
     api = new TSGhostContentAPI(url, key, "v5.0");
