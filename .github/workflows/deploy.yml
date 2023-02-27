@@ -62,8 +62,11 @@ jobs:
           node-version: 16
           cache: "pnpm"
 
+      - name: 👷 Build
+        run: pnpm run build
+
       - name: 📥 Download deps
-        run: pnpm install --ignore-scripts
+        run: pnpm install
 
       - name: 🔎 Type check
         run: pnpm run typecheck
