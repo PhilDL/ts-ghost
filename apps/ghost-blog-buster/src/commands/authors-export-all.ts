@@ -1,10 +1,10 @@
-import type { Ghost } from "../app/ghost";
+import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
 import { text, cancel, note, spinner, select } from "@clack/prompts";
 import * as fs from "fs";
 import path from "path";
 
-export const authorsExportAll = async (ghost: Ghost, siteName: string) => {
+export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: string) => {
   const s = spinner();
   const outputType = await select({
     message: "Select the output type.",
@@ -46,13 +46,25 @@ export const authorsExportAll = async (ghost: Ghost, siteName: string) => {
   }
 
   s.start(`Fetching Authors...`);
-  const authors = (await ghost.fetchAllAuthors()).authors;
-  if (!authors || authors.length === 0) {
+  const authors = await ghost.authors
+    .browse({
+      output: {
+        include: {
+          "count.posts": true,
+        },
+      },
+    })
+    .fetch();
+  if (authors.status === "error") {
+    note(`Error while fetching authors from "${siteName}."`, "Error while fetching authors");
+    return;
+  }
+  if (!authors || authors.data.length === 0) {
     note(`No authors were found on "${siteName}.".`, "No authors found");
     return;
   }
-  s.stop(`🏷️ Found ${authors.length} Authors...`);
-  const content = JSON.stringify(authors, null, 2);
+  s.stop(`🏷️ Found ${authors.data.length} Authors...`);
+  const content = JSON.stringify(authors.data, null, 2);
   if (outputType === "stdout") {
     // process.stdout.write(content);
     note(content, "Sucess");
@@ -62,7 +74,7 @@ export const authorsExportAll = async (ghost: Ghost, siteName: string) => {
         console.log(err);
       }
     });
-    note(`${authors.length} authors converted to Json file and saved to ${output}/authors.json`, "Success");
+    note(`${authors.data.length} authors converted to Json file and saved to ${output}/authors.json`, "Success");
   }
   return;
 };

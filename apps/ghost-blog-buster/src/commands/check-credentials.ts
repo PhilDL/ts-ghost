@@ -1,4 +1,4 @@
-import { Ghost } from "../app/ghost";
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { spinner, note } from "@clack/prompts";
 
 import Configstore from "configstore";
@@ -10,15 +10,16 @@ export const checkCredentials = async (config: Configstore) => {
     note(`Let's set your ghost URL and API key`, "Welcome");
   } else {
     try {
-      const ghost = new Ghost(config.get("ghostUrl"), config.get("ghostContentApiKey"));
+      const ghost = new TSGhostContentAPI(config.get("ghostUrl"), config.get("ghostContentApiKey"), "v5.0");
       s.start("Connecting to your blog...");
-      const settings = await ghost.fetchSettings();
-      if (settings && settings.title) {
-        config.set("siteName", settings.title);
-        s.stop(`✅ Connected to "${settings.title}"`);
-        validSettings = true;
-      } else {
+      const res = await ghost.settings.fetch();
+      if (res.status === "error") {
         s.stop(`❌ Credentials not valid...`);
+        note(`There was an error trying to connect to your credentials: \n${res.errors.join("\n")}`, "Error");
+      } else {
+        config.set("siteName", res.data.title);
+        s.stop(`✅ Connected to "${res.data.title}"`);
+        validSettings = true;
       }
     } catch (error: unknown) {
       note(`There was an error trying to connect to your credentials: \n${error}`, "Error");

@@ -1,19 +1,20 @@
-import type { Ghost } from "../app/ghost";
+import type { TSGhostContentAPI } from "@ts-ghost/content-api";
+import { fetchAllBlogPosts } from "./helpers";
 import { isCancel } from "@clack/core";
 import { multiselect, text, cancel, note, spinner } from "@clack/prompts";
-import { createMarkdownFile } from "../app/markdown-converter";
+import { createMarkdownFile } from "../convert/markdown-converter";
 import * as fs from "fs";
 import path from "path";
 
-export async function postsExportSelection(ghost: Ghost, siteName: string) {
+export async function postsExportSelection(ghost: TSGhostContentAPI, siteName: string) {
   const s = spinner();
   s.start("Fetching your blog posts");
-  const posts = await ghost.fetchAllBlogPosts();
-  s.stop(`📚 Fetched ${posts?.length} posts...`);
+  const posts = await fetchAllBlogPosts(ghost);
   if (!posts || posts.length === 0) {
-    note(`No post were found on "${siteName}.".`, "No posts found");
+    s.stop(`No post were found on "${siteName}.".`);
     return;
   }
+  s.stop(`📚 Fetched ${posts?.length} posts...`);
 
   const blogPostsSelection = await multiselect({
     message: "Select wich one to convert.",

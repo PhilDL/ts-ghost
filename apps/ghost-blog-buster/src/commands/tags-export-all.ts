@@ -1,10 +1,10 @@
-import type { Ghost } from "../app/ghost";
+import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
 import { text, cancel, note, spinner, select } from "@clack/prompts";
 import * as fs from "fs";
 import path from "path";
 
-export const tagsExportAll = async (ghost: Ghost, siteName: string) => {
+export const tagsExportAll = async (ghost: TSGhostContentAPI, siteName: string) => {
   const s = spinner();
   const outputType = await select({
     message: "Select the output type.",
@@ -46,11 +46,12 @@ export const tagsExportAll = async (ghost: Ghost, siteName: string) => {
   }
 
   s.start(`Fetching Tags...`);
-  const tags = await ghost.fetchAllTags();
-  if (!tags || tags.length === 0) {
+  const res = await ghost.tags.browse().fetch();
+  if (res.status === "error" || res.data.length === 0) {
     note(`No tags were found on "${siteName}.".`, "No tags found");
     return;
   }
+  const tags = res.data;
   s.stop(`🏷️ Found ${tags.length} Tags...`);
   const content = JSON.stringify(tags, null, 2);
   if (outputType === "stdout") {

@@ -1,9 +1,16 @@
 import { z } from "zod";
 
 export const ghostIdentitySchema = z.object({
+  slug: z.string(),
+  id: z.string(),
+});
+
+export const ghostIdentityInputSchema = z.object({
   slug: z.string().optional(),
   id: z.string().optional(),
 });
+
+export type GhostIdentityInput = z.infer<typeof ghostIdentityInputSchema>;
 
 export const queryIdentitySchema = z
   .object({
@@ -71,7 +78,12 @@ export const ghostMetadataSchema = z.object({
   meta_description: z.string().nullable(),
 });
 
-export const ghostVisibilitySchema = z.union([z.literal("public"), z.literal("members"), z.literal("none")]);
+export const ghostVisibilitySchema = z.union([
+  z.literal("public"),
+  z.literal("members"),
+  z.literal("none"),
+  z.literal("internal"),
+]);
 
 export const contentAPIEndpointsSchema = z.union([
   z.literal("authors"),
@@ -79,6 +91,7 @@ export const contentAPIEndpointsSchema = z.union([
   z.literal("posts"),
   z.literal("pages"),
   z.literal("tags"),
+  z.literal("settings"),
 ]);
 export type ContentAPIEndpoints = z.infer<typeof contentAPIEndpointsSchema>;
 
@@ -112,6 +125,12 @@ export const contentAPICredentialsSchema = z.discriminatedUnion("endpoint", [
   }),
   z.object({
     endpoint: z.literal("tags"),
+    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+  }),
+  z.object({
+    endpoint: z.literal("settings"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
     version: apiVersionsSchema,
     url: z.string().url(),

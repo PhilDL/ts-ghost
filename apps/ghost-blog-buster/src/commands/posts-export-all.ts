@@ -1,12 +1,11 @@
-import type { PostsOrPages } from "@tryghost/content-api";
-import type { Ghost } from "../app/ghost";
+import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
 import { text, cancel, note, spinner } from "@clack/prompts";
-import { createMarkdownFile } from "../app/markdown-converter";
+import { createMarkdownFile } from "../convert/markdown-converter";
 import * as fs from "fs";
 import path from "path";
 
-export async function postsExportAll(ghost: Ghost, siteName: string) {
+export async function postsExportAll(ghost: TSGhostContentAPI, siteName: string) {
   const s = spinner();
   const outputFolder = await text({
     message: "Select the destination folder.",
@@ -35,18 +34,32 @@ export async function postsExportAll(ghost: Ghost, siteName: string) {
   let currentPage = 1;
   let pages = 1;
   let postsCount = 0;
-  let posts: PostsOrPages | void;
 
   while (currentPage <= pages) {
     s.start(`Fetching Blog Posts, page ${currentPage} ${postsCount > 0 ? "of pages " + String(pages) : ""}...`);
-    posts = await ghost.fetchBlogPosts(currentPage);
-    if (!posts || posts.length === 0) {
+
+    const res = await ghost.posts
+      .browse({
+        input: {
+          page: currentPage,
+        },
+        output: {
+          include: {
+            authors: true,
+            tags: true,
+          },
+        },
+      })
+      .fetch();
+    if (res.status === "error" || res.data.length === 0) {
       note(`No post were found on "${siteName}.".`, "No posts found");
       return;
     }
-    pages = posts?.meta?.pagination?.pages || 1;
-    postsCount += posts?.length || 0;
+    const posts = res.data;
+    pages = res.meta.pagination.pages || 1;
+    postsCount += posts.length || 0;
     posts.forEach((p) => createMarkdownFile(p, outputFolder.toString() || "."));
+
     s.stop(`📚 Converted ${postsCount} posts!`);
     currentPage += 1;
   }

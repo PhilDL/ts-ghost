@@ -1,1 +1,1 @@
-export { convertPostToMarkdown, createMarkdownFile } from "./app/markdown-converter";
+export { convertPostToMarkdown, createMarkdownFile } from "./convert/markdown-converter";

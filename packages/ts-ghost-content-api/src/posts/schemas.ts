@@ -17,6 +17,7 @@ export const postsSchema = z.object({
   ...ghostMetadataSchema.shape,
   title: z.string(),
   html: z.string(),
+  plaintext: z.string().nullish(),
   comment_id: z.string().nullable(),
   feature_image: z.string().nullable(),
   feature_image_alt: z.string().nullable(),
@@ -40,6 +41,7 @@ export const postsSchema = z.object({
   published_at: z.string(),
   access: z.boolean(),
   comments: z.boolean(),
+  email_subject: z.string().nullish(),
 });
 
 export type Post = z.infer<typeof postsSchema>;

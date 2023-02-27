@@ -21,6 +21,9 @@
     "test:integration": {
       "outputs": []
     },
+    "test:integration:watch": {
+      "outputs": []
+    },
     "test:watch": {
       "outputs": []
     },

@@ -1,15 +1,6 @@
 import { NodeHtmlMarkdown } from "node-html-markdown";
-import type { PostOrPage, Tag, TagVisibility } from "@tryghost/content-api";
+import type { Post } from "@ts-ghost/content-api";
 import * as fs from "fs";
-
-type ITag = Omit<Tag, "visibility"> & {
-  visibility?: string | TagVisibility;
-};
-type Post = Omit<PostOrPage, "tags" | "primary_tag" | "custom_excerpt"> & {
-  tags?: ITag[];
-  primary_tag?: ITag | null;
-  custom_excerpt?: null | string;
-};
 
 export const frontMatterGenerator = (post: Post): string => {
   if (!post) return "";

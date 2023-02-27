@@ -1,10 +1,10 @@
-import type { Ghost } from "../app/ghost";
+import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
 import { text, cancel, note, spinner, select } from "@clack/prompts";
 import * as fs from "fs";
 import path from "path";
 
-export const tiersExportAll = async (ghost: Ghost, siteName: string) => {
+export const tiersExportAll = async (ghost: TSGhostContentAPI, siteName: string) => {
   const s = spinner();
   const outputType = await select({
     message: "Select the output type.",
@@ -46,11 +46,12 @@ export const tiersExportAll = async (ghost: Ghost, siteName: string) => {
   }
 
   s.start(`Fetching Tiers...`);
-  const tiers = (await ghost.fetchAllTiers()).tiers;
-  if (!tiers || tiers.length === 0) {
+  const res = await ghost.tiers.browse().fetch();
+  if (res.status === "error" || res.data.length === 0) {
     note(`No tiers were found on "${siteName}.".`, "No tiers found");
     return;
   }
+  const tiers = res.data;
   s.stop(`🏷️ Found ${tiers.length} Tiers...`);
   const content = JSON.stringify(tiers, null, 2);
   if (outputType === "stdout") {

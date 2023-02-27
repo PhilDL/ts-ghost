@@ -1,11 +1,11 @@
+import type { Post } from "@ts-ghost/content-api";
 import { frontMatterGenerator } from "./markdown-converter";
 import { describe, it, expect } from "vitest";
 
 describe("frontMatterGenerator", () => {
-  const post = {
+  const post: Post = {
     slug: "odoo-15-javascript-reference",
     id: "6166e323f7a43a65054cd234",
-    uuid: "86702748-ecbc-4d1e-bbb5-4e3c190343f7",
     title: "Odoo 15 JavaScript Reference: OWL Views, WebClient, Services, and hooks.",
     html: '<p>Odoo 15 is out, and with that comes a big rewrite of the WebClient, a new Odoo JavaScript module ES6-like system, registries, hooks, new Model, and the possibility to write new Views as OWL Component. </p><p>This article will go over some of the biggest additions, give a quick overview or full analysis, and some basic usage examples.</p><h2 id="odoo-module-es6-like-syntax">Odoo module ES6-like syntax</h2><p>Odoo 15 introduced a new way of defining our JavaScript module instead of the usual ',
     comment_id: "6166e323f7a43a65054cd234",
@@ -189,7 +189,6 @@ describe("frontMatterGenerator", () => {
     meta_description:
       "Odoo 15 JavaScript Reference guide for OWL Views, the new WebClient, ES6 Modules, Hooks, Services registry, new Models, Layout Component, and more.",
     email_subject: null,
-    frontmatter: null,
     feature_image_alt: "Odoo 15 JavaScript Reference: OWL Views, WebClient, Services, Hooks, and Models",
     feature_image_caption: null,
   };

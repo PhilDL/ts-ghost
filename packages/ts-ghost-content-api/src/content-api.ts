@@ -8,6 +8,8 @@ import { postsSchema, postsIncludeSchema } from "./posts/schemas";
 import { TiersAPI } from "./tiers/api";
 import { tiersSchema, tiersIncludeSchema } from "./tiers/schemas";
 import { contentAPICredentialsSchema, QueryBuilder, ContentAPIVersions } from "@ts-ghost/core-api";
+import { BasicFetcher } from "@ts-ghost/core-api";
+import { settingsSchema } from "./settings/schemas";
 
 export enum BrowseEndpointType {
   authors = "authors",
@@ -15,6 +17,7 @@ export enum BrowseEndpointType {
   posts = "posts",
   pages = "pages",
   tags = "tags",
+  settings = "settings",
 }
 
 export class TSGhostContentAPI {
@@ -114,5 +117,20 @@ export class TSGhostContentAPI {
       url: string;
     };
     return new TagsAPI({ schema: tagsSchema, output: tagsSchema, include: tagsIncludeSchema }, api);
+  }
+
+  get settings() {
+    const api = contentAPICredentialsSchema.parse({
+      endpoint: "settings",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+    }) as {
+      endpoint: "settings";
+      key: string;
+      version: ContentAPIVersions;
+      url: string;
+    };
+    return new BasicFetcher({ output: settingsSchema }, api);
   }
 }

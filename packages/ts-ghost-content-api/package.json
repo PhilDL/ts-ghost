@@ -22,6 +22,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:integration": "vitest run -c ./vitest.config.integration.ts",
+    "test:integration:watch": "vitest -c ./vitest.config.integration.ts",
     "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },

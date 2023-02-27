@@ -1,42 +1,24 @@
 import fetch from "cross-fetch";
 import { z, ZodRawShape } from "zod";
-import { type ContentAPICredentials, type GhostIdentityInput } from "../schemas";
+import type { ContentAPICredentials } from "../schemas";
 
-export class ReadFetcher<
-  Fields extends z.objectKeyMask<OutputShape>,
-  BaseShape extends ZodRawShape,
-  OutputShape extends ZodRawShape,
-  IncludeShape extends ZodRawShape,
-  Api extends ContentAPICredentials
-> {
+export class BasicFetcher<OutputShape extends ZodRawShape, Api extends ContentAPICredentials> {
   protected _urlParams: Record<string, string> = {};
   protected _URL: URL | undefined = undefined;
-  protected _includeFields: (keyof IncludeShape)[] = [];
   protected readonly _endpoint: Api["endpoint"];
 
   constructor(
     protected config: {
-      schema: z.ZodObject<BaseShape>;
       output: z.ZodObject<OutputShape>;
-      include: z.ZodObject<IncludeShape>;
-    },
-    private _params: {
-      identity: GhostIdentityInput;
-      include?: (keyof IncludeShape)[];
-      fields?: Fields;
     },
     protected _api: Api
   ) {
-    this._buildUrlParams();
+    this._buildUrl();
     this._endpoint = _api.endpoint;
   }
 
   public getEndpoint() {
     return this._endpoint;
-  }
-
-  public getParams() {
-    return this._params;
   }
 
   public getOutputFields() {
@@ -47,30 +29,12 @@ export class ReadFetcher<
     return this._URL;
   }
 
-  public getIncludes() {
-    return this._includeFields;
-  }
-
-  private _buildUrlParams() {
-    const inputKeys = this.config.schema.keyof().options as string[];
-    const outputKeys = this.config.output.keyof().options as string[];
+  private _buildUrl() {
     this._urlParams = {
       key: this._api.key,
     };
-    if (inputKeys.length !== outputKeys.length && outputKeys.length > 0) {
-      this._urlParams.fields = outputKeys.join(",");
-    }
-    if (this._params.include && this._params.include.length > 0) {
-      this._urlParams.include = this._params.include.join(",");
-    }
     const url = new URL(this._api.url);
-    if (this._params.identity.id) {
-      url.pathname = `/ghost/api/content/${this._api.endpoint}/${this._params.identity.id}/`;
-    } else if (this._params.identity.slug) {
-      url.pathname = `/ghost/api/content/${this._api.endpoint}/slug/${this._params.identity.slug}/`;
-    } else {
-      throw new Error("Identity is not defined");
-    }
+    url.pathname = `/ghost/api/content/${this._api.endpoint}/`;
     for (const [key, value] of Object.entries(this._urlParams)) {
       url.searchParams.append(key, value);
     }
@@ -101,7 +65,7 @@ export class ReadFetcher<
     } else {
       data = {
         status: "success",
-        data: result[this._endpoint][0],
+        data: result[this._endpoint],
       };
     }
     return res.parse(data);

@@ -1,4 +1,4 @@
-import { Ghost } from "../app/ghost";
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
 import { spinner, text, cancel, note } from "@clack/prompts";
 import Configstore from "configstore";
@@ -44,10 +44,11 @@ export const promptCredentialsLoop = async (config: Configstore) => {
       process.exit(0);
     }
     try {
-      const ghost = new Ghost(`${url.protocol}//${url.hostname}`, ghostContentApiKey);
+      const ghost = new TSGhostContentAPI(`${url.protocol}//${url.hostname}`, ghostContentApiKey, "v5.0");
       s.start("Validating credentials");
-      const settings = await ghost.fetchSettings();
-      if (settings && settings.title) {
+      const res = await ghost.settings.fetch();
+      if (res.status === "success") {
+        const settings = res.data;
         config.set("ghostUrl", `${url.protocol}//${url.hostname}`);
         config.set("ghostContentApiKey", ghostContentApiKey);
         config.set("siteName", settings.title);

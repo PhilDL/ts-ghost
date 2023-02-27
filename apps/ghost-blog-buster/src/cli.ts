@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Ghost } from "./app/ghost";
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
 import { intro, outro, cancel, note, select, confirm } from "@clack/prompts";
 import * as fs from "fs";
@@ -30,7 +30,7 @@ async function main() {
     await promptCredentialsLoop(config);
   }
 
-  const ghost = new Ghost(config.get("ghostUrl"), config.get("ghostContentApiKey"));
+  const ghost = new TSGhostContentAPI(config.get("ghostUrl"), config.get("ghostContentApiKey"), "v5.0");
   const siteName = config.get("siteName");
 
   const quit = false;

@@ -8,8 +8,8 @@
     "module": "ESNext",
     "target": "ESNext",
     "paths": {
-      "@ts-ghost/core-api/*": ["../ts-ghost-core-api/src/*"],
-      "@ts-ghost/core-api": ["../ts-ghost-core-api/src/index"],
+      "@ts-ghost/content-api/*": ["../ts-ghost-content-api/src/*"],
+      "@ts-ghost/content-api": ["../ts-ghost-content-api/src/index"],
     },
   },
   "exclude": ["node_modules"]
