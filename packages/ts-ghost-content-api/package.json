@@ -36,11 +36,13 @@
     "typescript": "4.9.5",
     "vite": "^4.1.3",
     "vite-tsconfig-paths": "^4.0.5",
-    "vitest": "^0.29.1"
-  },
-  "dependencies": {
+    "vitest": "^0.29.1",
     "@ts-ghost/core-api": "*",
     "zod": "^3.20.6"
+  },
+  "peerDependencies": {
+    "@ts-ghost/core-api": "*",
+    "zod": "^3.x"
   },
   "publishConfig": {
     "access": "public"
