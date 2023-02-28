@@ -9,10 +9,10 @@
     <img src="https://user-images.githubusercontent.com/4941205/221607740-28ce02cb-da96-4e34-a40d-8163bb7c668f.png" alt="Logo" width="auto" height="80">
   </a>
 
-  <h3 align="center">`@ts-ghost/content-api`</h3>
+  <h3 align="center"><code>@ts-ghost/content-api</code></h3>
 
   <p align="center">
-    `@ts-ghost/content-api` is a strongly-typed TypeScript client to interract with the Ghost Content API.
+    <code>@ts-ghost/content-api</code> is a strongly-typed TypeScript client to interract with the Ghost Content API.
     <br/>
     <br/>
   </p>
@@ -84,5 +84,5 @@ Distributed under the MIT License. See [LICENSE](https://github.com/PhilDL/ts-gh
 
 ## Acknowledgements
 
-* [https://ghost.org/](Ghost) is the best platform for blogging 💖 and have a good JS Client library that was a real inspiration.
+* [Ghost](https://ghost.org/) is the best platform for blogging 💖 and have a good JS Client library that was a real inspiration.
 * [Zod](https://github.com/colinhacks/zod) is a TypeScript-first library for data validation and schema building.

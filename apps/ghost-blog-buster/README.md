@@ -37,7 +37,7 @@ Ghost Blog Buster is an interactive CLI allowing you to interact with your Ghost
 
 - [TypeScript](https://github.com/microsoft/TypeScript)
 - [Clack](https://github.com/natemoo-re/clack) to build beautiful prompts.
-- [@ts-ghost/content-api](https://github.com/PhilDL/ts-ghost/packages/content-api) for TypeSafe 🦾 interaction with the Ghost Content API.
+- [@ts-ghost/content-api](https://www.npmjs.com/package/@ts-ghost/content-api) for TypeSafe 🦾 interaction with the Ghost Content API.
 
 ### Installation
 
@@ -81,5 +81,5 @@ Distributed under the MIT License. See [LICENSE](https://github.com/PhilDL/ts-gh
 
 ## Acknowledgements
 
-* [https://ghost.org/](Ghost) is the best platform for blogging 💖.
+* [Ghost](https://ghost.org/) is the best platform for blogging 💖.
 * [Clack](https://github.com/natemoo-re/clack) to build beautiful prompts.

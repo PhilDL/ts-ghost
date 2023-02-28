@@ -9,10 +9,10 @@
     <img src="https://user-images.githubusercontent.com/4941205/221607740-28ce02cb-da96-4e34-a40d-8163bb7c668f.png" alt="Logo" width="auto" height="80">
   </a>
 
-  <h3 align="center">`@ts-ghost/core-api`</h3>
+  <h3 align="center"><code>@ts-ghost/core-api</code></h3>
 
   <p align="center">
-    `@ts-ghost/core-api` is a building block used by the `@ts-ghost/content-api` it contains the Type-safe logic of Query Builder and Fetchers.
+    <code>@ts-ghost/core-api</code> is a building block used by the `@ts-ghost/content-api` it contains the Type-safe logic of Query Builder and Fetchers.
     <br/>
     <br/>
   </p>
@@ -59,5 +59,5 @@ Distributed under the MIT License. See [LICENSE](https://github.com/PhilDL/ts-gh
 
 ## Acknowledgements
 
-* [https://ghost.org/](Ghost) is the best platform for blogging 💖 and have a good JS Client library that was a real inspiration.
+* [Ghost](https://ghost.org/) is the best platform for blogging 💖 and have a good JS Client library that was a real inspiration.
 * [Zod](https://github.com/colinhacks/zod) is a TypeScript-first library for data validation and schema building.

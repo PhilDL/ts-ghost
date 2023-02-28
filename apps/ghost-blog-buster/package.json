@@ -7,7 +7,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
+    "url": "https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster"
   },
   "version": "0.0.3",
   "main": "./dist/cli.js",

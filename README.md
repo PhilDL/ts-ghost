@@ -96,6 +96,6 @@ Distributed under the MIT License. See [LICENSE](https://github.com/PhilDL/ts-gh
 
 ## Acknowledgements
 
-* [https://ghost.org/](Ghost) is the best platform for blogging 💖 and have a good JS Client library that was a real inspiration.
+* [Ghost](https://ghost.org/) is the best platform for blogging 💖 and have a good JS Client library that was a real inspiration.
 * [Zod](https://github.com/colinhacks/zod) is a TypeScript-first library for data validation and schema building.
 * [Clack](https://github.com/natemoo-re/clack) to build beautiful prompts.
