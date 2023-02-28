@@ -95,7 +95,7 @@ jobs:
           cache: "pnpm"
 
       - name: 📥 Download deps
-        run: pnpm install --ignore-scripts
+        run: pnpm install --no-frozen-lockfile --ignore-scripts
 
       - name: ⚡ Run vitest
         run: pnpm run test
@@ -130,7 +130,7 @@ jobs:
         run: cp .env.test packages/ts-ghost-content-api/.env
 
       - name: 📥 Download deps
-        run: pnpm install --ignore-scripts
+        run: pnpm install --no-frozen-lockfile --ignore-scripts
 
       - name: ⚡ Run vitest
         run: pnpm run test:integration

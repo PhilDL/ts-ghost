@@ -18,7 +18,7 @@ importers:
     specifiers:
       '@clack/core': ^0.3.0
       '@clack/prompts': ^0.6.0
-      '@ts-ghost/content-api': ^0.x
+      '@ts-ghost/content-api': ^0.0.5
       '@ts-ghost/tsconfig': '*'
       '@types/configstore': ^6.0.0
       '@types/node': ^18.14.1
@@ -92,7 +92,7 @@ importers:
 
   packages/ts-ghost-content-api:
     specifiers:
-      '@ts-ghost/core-api': ^0.x
+      '@ts-ghost/core-api': ^0.0.5
       '@ts-ghost/tsconfig': '*'
       '@types/node': ^18.14.1
       '@vitest/coverage-c8': ^0.29.1
