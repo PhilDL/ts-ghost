@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
   },
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -41,7 +41,7 @@
     "zod": "^3.20.6"
   },
   "dependencies": {
-    "@ts-ghost/core-api": "^0.x",
+    "@ts-ghost/core-api": "^0.0.5",
     "zod": "^3.20.6"
   },
   "publishConfig": {
