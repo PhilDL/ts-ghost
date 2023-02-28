@@ -5,6 +5,7 @@
   "access": "public",
   "private": false,
   "type": "module",
+  "description": "Elegant interactive CLI to export your Ghost Blog Content to a static website, format in Markdown, JSON...",
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster"
