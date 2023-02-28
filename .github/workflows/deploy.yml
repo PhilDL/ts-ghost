@@ -34,7 +34,7 @@ jobs:
           cache: "pnpm"
 
       - name: 📥 Download deps
-        run: pnpm install --ignore-scripts
+        run: pnpm install --ignore-scripts --no-frozen-lockfile
 
       - name: 🔬 Lint
         run: npm run lint
@@ -63,7 +63,7 @@ jobs:
           cache: "pnpm"
 
       - name: 📥 Download deps
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: 👷 Build
         run: pnpm run build
