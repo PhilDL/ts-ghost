@@ -21,7 +21,7 @@
 ## Install
 
 ```shell
-npx @ts-ghost/core-api
+pnpm i @ts-ghost/core-api
 ```
 
 ## Basic Usage

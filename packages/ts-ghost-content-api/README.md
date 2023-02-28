@@ -21,7 +21,7 @@
 ## Install
 
 ```shell
-npx @ts-ghost/content-api
+pnpm i @ts-ghost/content-api
 ```
 
 ## Basic Usage
