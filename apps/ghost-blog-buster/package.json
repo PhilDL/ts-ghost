@@ -46,7 +46,7 @@
   "dependencies": {
     "@clack/core": "^0.3.0",
     "@clack/prompts": "^0.6.0",
-    "@ts-ghost/content-api": "*",
+    "@ts-ghost/content-api": "^0.x",
     "configstore": "^6.0.0",
     "node-html-markdown": "^1.3.0",
     "picocolors": "^1.0.0",
