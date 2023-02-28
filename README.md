@@ -9,10 +9,10 @@
     <img src="https://user-images.githubusercontent.com/4941205/221607740-28ce02cb-da96-4e34-a40d-8163bb7c668f.png" alt="Logo" width="auto" height="80">
   </a>
 
-  <h3 align="center">`ts-ghost`</h3>
+  <h3 align="center"><code>ts-ghost</code></h3>
 
   <p align="center">
-    `ts-ghost` is a collection of tools written in TypeScript to interract with a Ghost Blog. Strongly 🦾 typed Content-Api, Cli tools, and more coming!
+    <code>@ts-ghost</code> is a collection of tools written in TypeScript to interract with a Ghost Blog. Strongly 🦾 typed Content-Api, Cli tools, and more coming!
     <br/>
     <br/>
   </p>
@@ -26,7 +26,7 @@
 
 Here you will find links to the different packages of the `ts-ghost` suite.
 
-## [Ghost blog Buster](https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster)
+## [💻 Ghost blog Buster](https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster)
 
 An elegant cli 🤖 to interact with your Ghost Blog directly via the Ghost Content API and export posts in Markdown format. From the cli you will be able to:
 
@@ -45,7 +45,7 @@ npm install -g @ts-ghost/ghost-blog-buster
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster)
 
 
-## [TS Ghost Content API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api)
+## [📦 TS Ghost Content API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api)
 
 A strongly 🦾 typed TypeScript library to interact with the Ghost Content API:
 
@@ -59,7 +59,7 @@ npm install @ts-ghost/content-api
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api)
 
 
-## [TS Ghost Core API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api)
+## [📦 TS Ghost Core API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api)
 
 The base building block containing QueryBuilders and Fetchers (Browse / Read) accepting Zod Schemas.
 
