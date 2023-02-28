@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 0.0.6
+
+### Patch Changes
+
+- 86e5730: update READMEs and packages descriptions.
+
 ## 0.0.5
 
 ### Patch Changes
