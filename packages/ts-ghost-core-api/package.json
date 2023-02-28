@@ -34,13 +34,11 @@
     "typescript": "4.9.5",
     "vite": "^4.1.3",
     "vite-tsconfig-paths": "^4.0.5",
-    "vitest": "^0.29.1",
+    "vitest": "^0.29.1"
+  },
+  "dependencies": {
     "cross-fetch": "^3.1.5",
     "zod": "^3.20.6"
-  },
-  "peerDependencies": {
-    "cross-fetch": "^3.x",
-    "zod": "^3.x"
   },
   "publishConfig": {
     "access": "public"

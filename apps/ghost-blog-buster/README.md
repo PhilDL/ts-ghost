@@ -1,9 +1,3 @@
-<!-- Warning about Beta status of the package -->
-<!-- <p align="center">
-  <img src="https://img.shields.io/badge/status-beta-orange.svg" alt="Status: Beta" />
-</p> -->
-
-<br/>
 <p align="center">
   <a href="https://github.com/PhilDL/ts-ghost">
     <img src="https://user-images.githubusercontent.com/4941205/221596772-398ca6b9-45c4-40e2-9cfc-d85b2da04cc7.png" alt="Logo" width="140" height="90">

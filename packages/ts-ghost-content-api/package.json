@@ -40,9 +40,9 @@
     "@ts-ghost/core-api": "*",
     "zod": "^3.20.6"
   },
-  "peerDependencies": {
-    "@ts-ghost/core-api": "*",
-    "zod": "^3.x"
+  "dependencies": {
+    "@ts-ghost/core-api": "^0.x",
+    "zod": "^3.20.6"
   },
   "publishConfig": {
     "access": "public"
