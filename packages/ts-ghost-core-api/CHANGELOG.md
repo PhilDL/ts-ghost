@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 0.0.5
+
+### Patch Changes
+
+- e03e0e5: fix dependencies...
+
 ## 0.0.4
 
 ### Patch Changes
