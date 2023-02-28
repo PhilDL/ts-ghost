@@ -77,7 +77,7 @@ Distributed under the MIT License. See [LICENSE](https://github.com/PhilDL/ts-gh
 
 ## Authors
 
-* **Philippe L'ATTENTION** - *Loves coding* - [Philippe L'ATTENTION](https://github.com/PhilDL) - *Creator*
+* **[PhilDL](https://github.com/PhilDL)** - *Creator*
 
 ## Acknowledgements
 
