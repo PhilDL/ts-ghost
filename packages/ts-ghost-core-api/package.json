@@ -4,6 +4,7 @@
   "license": "MIT",
   "access": "public",
   "private": false,
+  "description": "TypeScript utilities to build type-safe queries and fetchers for the Ghost API based on Zod schemas.",
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"

@@ -1,6 +1,9 @@
-<p align="center">
+<br/>
+<br/>
+
+<div align="center">
   <a href="https://github.com/PhilDL/ts-ghost">
-    <img src="https://user-images.githubusercontent.com/4941205/221596772-398ca6b9-45c4-40e2-9cfc-d85b2da04cc7.png" alt="Logo" width="140" height="90">
+    <img src="https://user-images.githubusercontent.com/4941205/221596772-398ca6b9-45c4-40e2-9cfc-d85b2da04cc7.png" alt="Logo" width="auto" height="90">
   </a>
 
   <h3 align="center">Ghost Blog Buster</h3>
@@ -13,7 +16,7 @@
     .
     <a href="https://github.com/PhilDL/ts-ghost/issues">Request Feature</a>
   </p>
-</p>
+</div>
 
 ![License](https://img.shields.io/github/license/PhilDL/ts-ghost) 
 

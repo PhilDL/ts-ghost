@@ -1,4 +1,7 @@
-<p align="center">
+<br/>
+<br/>
+
+<div align="center">
   <a href="https://github.com/PhilDL/ts-ghost">
     <img src="https://user-images.githubusercontent.com/4941205/221607740-28ce02cb-da96-4e34-a40d-8163bb7c668f.png" alt="Logo" width="auto" height="80">
   </a>
@@ -10,7 +13,7 @@
     <br/>
     <br/>
   </p>
-</p>
+</div>
 
 ![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img src="https://img.shields.io/badge/status-beta-orange.svg" alt="Status: Beta" />
 
