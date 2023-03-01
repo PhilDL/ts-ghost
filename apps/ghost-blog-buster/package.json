@@ -42,7 +42,8 @@
     "typescript": "4.9.5",
     "vite": "^4.1.3",
     "vite-tsconfig-paths": "^4.0.5",
-    "vitest": "^0.29.1"
+    "vitest": "^0.29.1",
+    "@ts-ghost/content-api": "workspace:*"
   },
   "dependencies": {
     "@clack/core": "^0.3.0",

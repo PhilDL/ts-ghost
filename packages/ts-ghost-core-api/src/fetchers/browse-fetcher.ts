@@ -91,8 +91,8 @@ export class BrowseFetcher<
     return urlBrowseParams;
   }
 
-  public async fetch() {
-    const res = z.discriminatedUnion("status", [
+  private _getResultSchema() {
+    return z.discriminatedUnion("status", [
       z.object({
         status: z.literal("success"),
         meta: ghostMetaSchema,
@@ -108,6 +108,10 @@ export class BrowseFetcher<
         ),
       }),
     ]);
+  }
+
+  public async fetch() {
+    const resultSchema = this._getResultSchema();
     const result = await this._fetch();
     let data: any = {};
     if (result.errors) {
@@ -120,7 +124,51 @@ export class BrowseFetcher<
         data: result[this._endpoint],
       };
     }
-    return res.parse(data);
+    return resultSchema.parse(data);
+  }
+
+  public async paginate() {
+    if (!this._params.browseParams?.page) {
+      this._params.browseParams = {
+        ...this._params.browseParams,
+        page: 1,
+      } as Params;
+      this._buildUrlParams();
+    }
+
+    const resultSchema = this._getResultSchema();
+    const result = await this._fetch();
+    let data: any = {};
+    if (result.errors) {
+      data.status = "error";
+      data.errors = result.errors;
+    } else {
+      data = {
+        status: "success",
+        meta: result.meta,
+        data: result[this._endpoint],
+      };
+    }
+    const response: {
+      current: z.infer<typeof resultSchema>;
+      next: BrowseFetcher<Params, Fields, BaseShape, OutputShape, IncludeShape, Api> | undefined;
+    } = {
+      current: resultSchema.parse(data),
+      next: undefined,
+    };
+    if (response.current.status === "error") return response;
+    const { meta } = response.current;
+    if (meta.pagination.pages <= 1 || meta.pagination.page === meta.pagination.pages) return response;
+    const params = {
+      ...this._params,
+      browseParams: {
+        ...this._params.browseParams,
+        page: meta.pagination.page + 1,
+      },
+    };
+    const next = new BrowseFetcher(this.config, params, this._api);
+    response.next = next;
+    return response;
   }
 
   async _fetch() {

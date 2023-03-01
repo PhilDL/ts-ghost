@@ -46,6 +46,8 @@ export const ghostMetaSchema = z.object({
   }),
 });
 
+export type GhostMeta = z.infer<typeof ghostMetaSchema>;
+
 export const ghostExcerptSchema = z.object({
   excerpt: z.string().optional(),
   custom_excerpt: z.string().optional(),

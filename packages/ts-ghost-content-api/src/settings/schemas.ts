@@ -36,3 +36,5 @@ export const settingsSchema = z.object({
   members_support_address: z.string(),
   url: z.string(),
 });
+
+export type Settings = z.infer<typeof settingsSchema>;
