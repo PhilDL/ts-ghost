@@ -38,15 +38,13 @@ import { TSGhostContentAPI } from "@ts-ghost/content-api";
 import type { Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
-let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
-// The instantiation is validated through a Schema so the URL should be correct and the 
-// key should be in the right format corresponding to the Ghost Content API (26 Hex chars)
+let key = "22444f78447824223cefc48062"; // Content API KEY should be in the right format corresponding to the Ghost Content API (26 Hex chars)
+const api = new TSGhostContentAPI(url, key, "v5.0"); // The instantiation is validated through a zod Schema
 
 // Browse posts
 const res = await api.posts.browse().fetch();
 if (res.status === "success") {
-  const posts = res.data; // Typed Array of Posts
+  const posts = res.data;
   const meta = res.meta; 
   //     ^? GhostMeta Type containing pagination info
   for (const post of posts) {
@@ -167,7 +165,7 @@ You can submit **both** `id` and `slug`, but the fetcher will then chose the `id
 Output is the same for both `browse` and `read` methods and gives you 2 keys to play with
 
 ### `fields` 
-The `fields` key lets you change the output of the result to have only your selected fields:
+The `fields` key lets you change the output of the result to have only your selected fields, it works by giving the key and the value `true` to the field you want to keep. Under the hood it will use the `zod.pick` method to pick only the fields you want.
 
 ```typescript
 let result = await api.posts.read({
@@ -281,7 +279,6 @@ const result: {
 
 #### Browse `.paginate()`
 ```typescript
-// example for the browse query (the data is an array of objects)
 const result: {
     status: "success";
     data: Post[];
@@ -295,14 +292,14 @@ const result: {
             next: number | null;
         };
     };
-    next: BrowseFetcher | undefined;
+    next: BrowseFetcher | undefined; // the next page fetcher if it is defined
 } | {
     status: "error";
     errors: {
         message: string;
         type: string;
     }[];
-    next: undefined;
+    next: undefined; // the next page fetcher is undefined here
 }
 ```
 
