@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 0.0.7
+
+### Patch Changes
+
+- bbb5706: Feature/improve usability and documentation
+
 ## 0.0.6
 
 ### Patch Changes

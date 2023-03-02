@@ -1,5 +1,13 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.0.6
+
+### Patch Changes
+
+- bbb5706: Feature/improve usability and documentation
+- Updated dependencies [bbb5706]
+  - @ts-ghost/content-api@0.0.7
+
 ## 0.0.5
 
 ### Patch Changes
