@@ -11,6 +11,8 @@ import { contentAPICredentialsSchema, QueryBuilder, ContentAPIVersions } from "@
 import { BasicFetcher } from "@ts-ghost/core-api";
 import { settingsSchema } from "./settings/schemas";
 
+export type { ContentAPICredentials, ContentAPIVersions } from "@ts-ghost/core-api";
+
 export enum BrowseEndpointType {
   authors = "authors",
   tiers = "tiers",

@@ -7,6 +7,17 @@ import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
 import { queryIdentitySchema } from "../schemas";
 
+// Write documentation for that class and its methods
+/**
+ * QueryBuilder class
+ * @param {ZodRawShape} Shape
+ * @param {ZodRawShape} OutputShape
+ * @param {ZodRawShape} IncludeShape
+ * @param {ContentAPICredentials} Api
+ *
+ * @returns {QueryBuilder} QueryBuilder
+ *
+ */
 export class QueryBuilder<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,

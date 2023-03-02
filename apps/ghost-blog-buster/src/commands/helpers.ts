@@ -2,27 +2,20 @@ import type { Post, TSGhostContentAPI } from "@ts-ghost/content-api";
 
 export const fetchAllBlogPosts = async (ghost: TSGhostContentAPI) => {
   const posts: Post[] = [];
-  let currentPage = 1;
-  let pages = 1;
-  while (currentPage <= pages) {
-    const res = await ghost.posts
-      .browse({
-        input: {
-          page: currentPage,
+  let cursor = await ghost.posts
+    .browse({
+      output: {
+        include: {
+          authors: true,
+          tags: true,
         },
-        output: {
-          include: {
-            authors: true,
-            tags: true,
-          },
-        },
-      })
-      .fetch();
-    if (res.status === "success") {
-      posts.push(...(res.data || []));
-      pages = res.meta.pagination.pages || 1;
-    }
-    currentPage++;
+      },
+    })
+    .paginate();
+  if (cursor.current.status === "success") posts.push(...cursor.current.data);
+  while (cursor.next) {
+    cursor = await cursor.next.paginate();
+    if (cursor.current.status === "success") posts.push(...cursor.current.data);
   }
   return posts;
 };

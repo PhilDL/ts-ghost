@@ -18,7 +18,7 @@
   </p>
 </div>
 
-![License](https://img.shields.io/github/license/PhilDL/ts-ghost) 
+![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/PhilDL/ts-ghost?filename=apps%2Fghost-blog-buster%2Fpackage.json">
 
 ![Screen Shot](https://user-images.githubusercontent.com/4941205/221599018-60f66258-9cfa-459a-928d-907c2df01f0e.gif)
 

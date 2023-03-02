@@ -15,7 +15,7 @@
   </p>
 </div>
 
-![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img src="https://img.shields.io/badge/status-beta-orange.svg" alt="Status: Beta" />
+![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img src="https://img.shields.io/badge/status-beta-orange.svg" alt="Status: Beta" /> <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/PhilDL/ts-ghost?filename=packages%2Fts-ghost-core-api%2Fpackage.json">
 
 ## About The Project
 
@@ -27,9 +27,14 @@
 pnpm i @ts-ghost/core-api
 ```
 
-## Basic Usage
+## Query Builders
 
-To do...
+### Global instantiation 
+
+Dependeing on the Fetcher you want to use, the instantiation may be a bit different
+
+### `BrowseQueryBuilder`
+
 
 
 ## Roadmap
