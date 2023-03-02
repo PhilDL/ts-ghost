@@ -320,19 +320,20 @@ let key = "22444f78447824223cefc48062"; // Content API KEY
 const api = new TSGhostContentAPI(url, key, "v5.0");
 
 const posts: Post[] = [];
-let query = api.posts.browse({
-  output: {
-    include: {
-      authors: true,
-      tags: true,
+let cursor = await api.posts
+  .browse({
+    output: {
+      include: {
+        authors: true,
+        tags: true,
+      },
     },
-  },
-} as const);
-let cursor: typeof query | undefined = query;
-while (cursor) {
-  let result = await cursor.paginate();
-  if (result.current.status === "success") posts.push(...result.current.data);
-  cursor = result.next;
+  })
+  .paginate();
+if (cursor.current.status === "success") posts.push(...cursor.current.data);
+while (cursor.next) {
+  cursor = await cursor.next.paginate();
+  if (cursor.current.status === "success") posts.push(...cursor.current.data);
 }
 return posts;
 ```
