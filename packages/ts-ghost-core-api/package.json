@@ -7,7 +7,7 @@
   "description": "TypeScript utilities to build type-safe queries and fetchers for the Ghost API based on Zod schemas.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
+    "url": "https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api"
   },
   "version": "0.0.7",
   "main": "./dist/index.js",

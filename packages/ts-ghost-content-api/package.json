@@ -7,7 +7,7 @@
   "description": "TypeScript library for the Ghost Content API with Input and Output type-safety.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
+    "url": "https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api"
   },
   "version": "0.0.7",
   "main": "./dist/index.js",
