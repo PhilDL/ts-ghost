@@ -1,10 +1,10 @@
 import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
-import { text, cancel, note, spinner, select } from "@clack/prompts";
+import { text, cancel, note, spinner, select, log } from "@clack/prompts";
 import * as fs from "fs";
 import path from "path";
 
-export const tiersExportAll = async (ghost: TSGhostContentAPI, siteName: string) => {
+export const tagsExportAll = async (ghost: TSGhostContentAPI, siteName: string) => {
   const s = spinner();
   const outputType = await select({
     message: "Select the output type.",
@@ -45,25 +45,24 @@ export const tiersExportAll = async (ghost: TSGhostContentAPI, siteName: string)
     }
   }
 
-  s.start(`Fetching Tiers...`);
-  const res = await ghost.tiers.browse().fetch();
+  s.start(`Fetching Tags...`);
+  const res = await ghost.tags.browse().fetch();
   if (res.status === "error" || res.data.length === 0) {
-    note(`No tiers were found on "${siteName}.".`, "No tiers found");
+    note(`No tags were found on "${siteName}.".`, "No tags found");
     return;
   }
-  const tiers = res.data;
-  s.stop(`🏷️ Found ${tiers.length} Tiers...`);
-  const content = JSON.stringify(tiers, null, 2);
+  const tags = res.data;
+  s.stop(`🏷️ Found ${tags.length} Tags...`);
+  const content = JSON.stringify(tags, null, 2);
   if (outputType === "stdout") {
-    // process.stdout.write(content);
-    note(content, "Sucess");
+    process.stdout.write(`${content} \n`);
   } else {
-    fs.writeFile(path.join(output, "tiers.json"), content, "utf8", (err) => {
+    fs.writeFile(path.join(output, "tags.json"), content, "utf8", (err) => {
       if (err) {
-        console.log(err);
+        log.error(err.toString());
       }
     });
-    note(`${tiers.length} tiers converted to Json file and saved to ${output}/tiers.json`, "Success");
+    note(`${tags.length} tags converted to Json file and saved to ${output}/tags.json`, "Success");
   }
   return;
 };

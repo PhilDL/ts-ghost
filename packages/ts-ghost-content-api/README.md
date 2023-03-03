@@ -358,8 +358,8 @@ if (result.status === "success") {
 
 ## Roadmap
 
-- Write more docs
-- Better handling of weird Ghost "include" params in API call
+- [x] Write more docs
+- [ ] Better handling of weird Ghost "include" params in API call
 
 ## Contributing
 

@@ -84,7 +84,15 @@ export class BasicFetcher<OutputShape extends ZodRawShape, Api extends ContentAP
         })
       ).json();
     } catch (e) {
-      console.log("error", e);
+      return {
+        status: "error",
+        errors: [
+          {
+            type: "FetchError",
+            message: (e as Error).toString(),
+          },
+        ],
+      };
     }
     return result;
   }

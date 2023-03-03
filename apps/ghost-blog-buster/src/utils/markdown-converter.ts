@@ -31,3 +31,8 @@ export const createMarkdownFile = (post: Post, outputFolder: string): void => {
     }
   });
 };
+
+export const syncCreateMarkdownFile = (post: Post, outputFolder: string) => {
+  const content = convertPostToMarkdown(post);
+  fs.writeFileSync(`${outputFolder}/${post.slug}.md`, content);
+};

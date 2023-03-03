@@ -1,5 +1,5 @@
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
-import { spinner, note } from "@clack/prompts";
+import { spinner, note, log } from "@clack/prompts";
 
 import Configstore from "configstore";
 
@@ -15,7 +15,7 @@ export const checkCredentials = async (config: Configstore) => {
       const res = await ghost.settings.fetch();
       if (res.status === "error") {
         s.stop(`❌ Credentials not valid...`);
-        note(`There was an error trying to connect to your credentials: \n${res.errors.join("\n")}`, "Error");
+        log.error(`There was an error trying to connect to your credentials: \n${res.errors.join("\n")}`);
       } else {
         config.set("siteName", res.data.title);
         s.stop(`✅ Connected to "${res.data.title}"`);

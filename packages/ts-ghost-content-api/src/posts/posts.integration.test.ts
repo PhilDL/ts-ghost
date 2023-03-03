@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
+import { BrowseOrder } from "@ts-ghost/core-api";
 
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
 const key = process.env.VITE_GHOST_CONTENT_API_KEY || "93fa6b1e07090ecdf686521b7e";
