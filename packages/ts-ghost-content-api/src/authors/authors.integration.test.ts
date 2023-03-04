@@ -191,7 +191,6 @@ describe("authors integration tests read", () => {
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     assert(result.status === "error");
-    expect(result.errors).toStrictEqual([]);
     expect(result.errors).toBeDefined();
     expect(result.errors).toHaveLength(1);
     expect(result.errors[0].message).toContain("author");
