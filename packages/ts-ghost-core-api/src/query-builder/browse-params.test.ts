@@ -81,6 +81,19 @@ describe("parseBrowseParams", () => {
     ).toThrow();
   });
 
+  test("should throw if order direction contains invalid string", () => {
+    expect(() =>
+      parseBrowseParams(
+        {
+          limit: 15,
+          page: 1,
+          order: "foo BAR",
+        },
+        simplifiedSchema
+      )
+    ).toThrow();
+  });
+
   test("should throw if filter contains invalid fields", () => {
     expect(() =>
       parseBrowseParams(

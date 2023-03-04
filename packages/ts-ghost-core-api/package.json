@@ -23,6 +23,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest --coverage",
+    "test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
     "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },

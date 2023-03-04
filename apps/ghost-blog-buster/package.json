@@ -27,6 +27,7 @@
     "clean": "rimraf .turbo node_modules dist",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"

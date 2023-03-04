@@ -229,12 +229,37 @@ describe("QueryBuilder", () => {
           },
         } as const)
       ).toBeInstanceOf(BrowseFetcher);
+      expect(
+        qb.read({
+          input: { id: "abc" },
+          output: {
+            include: {
+              count: true,
+            },
+          },
+        } as const)
+      ).toBeInstanceOf(ReadFetcher);
     });
 
     test("include params should only accept key from the include schema", () => {
       expect(
         qb
           .browse({
+            output: {
+              include: {
+                // @ts-expect-error - invalid field
+                foobarbaz: true,
+              },
+            },
+          } as const)
+          .getIncludes()
+      ).toStrictEqual([]);
+      expect(
+        qb
+          .read({
+            input: {
+              id: "abc",
+            },
             output: {
               include: {
                 // @ts-expect-error - invalid field
@@ -260,12 +285,41 @@ describe("QueryBuilder", () => {
           } as const)
           .getOutputFields()
       ).toStrictEqual(["foo"]);
+
+      expect(
+        qb
+          .read({
+            input: {
+              id: "abc",
+            },
+            output: {
+              fields: {
+                foo: true,
+              },
+            },
+          } as const)
+          .getOutputFields()
+      ).toStrictEqual(["foo"]);
     });
 
     test("fields params should only accept key from the fields schema", () => {
       expect(
         qb
           .browse({
+            output: {
+              fields: {
+                // @ts-expect-error - invalid field
+                foobarbaz: true,
+              },
+            },
+          } as const)
+          .getOutputFields()
+      ).toStrictEqual([]);
+
+      expect(
+        qb
+          .read({
+            input: { id: "abc" },
             output: {
               fields: {
                 // @ts-expect-error - invalid field

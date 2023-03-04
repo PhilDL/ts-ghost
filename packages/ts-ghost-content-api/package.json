@@ -25,6 +25,7 @@
     "test:coverage": "vitest run --coverage",
     "test:integration": "vitest run -c ./vitest.config.integration.ts",
     "test:integration:watch": "vitest -c ./vitest.config.integration.ts",
+    "test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
     "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
