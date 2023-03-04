@@ -186,4 +186,127 @@ describe("QueryBuilder", () => {
       ).toThrow();
     });
   });
+
+  describe("identity read fields input", () => {
+    test("identity read fields params should only accept key from the identity read schema", () => {
+      expect(
+        qb.read({
+          input: {
+            id: "abc",
+          },
+        } as const)
+      ).toBeInstanceOf(ReadFetcher);
+
+      expect(
+        qb.read({
+          input: {
+            slug: "foo-bar",
+          },
+        } as const)
+      ).toBeInstanceOf(ReadFetcher);
+    });
+
+    test("identity read fields params should only accept key from the identity read schema", () => {
+      expect(() =>
+        qb.read({
+          input: {
+            // @ts-expect-error - invalid field
+            foo: "foobarbaz",
+          },
+        } as const)
+      ).toThrow();
+    });
+  });
+
+  describe("include output", () => {
+    test("include params should only accept key from the include schema", () => {
+      expect(
+        qb.browse({
+          output: {
+            include: {
+              count: true,
+            },
+          },
+        } as const)
+      ).toBeInstanceOf(BrowseFetcher);
+    });
+
+    test("include params should only accept key from the include schema", () => {
+      expect(
+        qb
+          .browse({
+            output: {
+              include: {
+                // @ts-expect-error - invalid field
+                foobarbaz: true,
+              },
+            },
+          } as const)
+          .getIncludes()
+      ).toStrictEqual([]);
+    });
+  });
+
+  describe("fields output", () => {
+    test("fields params should only accept key from the fields schema", () => {
+      expect(
+        qb
+          .browse({
+            output: {
+              fields: {
+                foo: true,
+              },
+            },
+          } as const)
+          .getOutputFields()
+      ).toStrictEqual(["foo"]);
+    });
+
+    test("fields params should only accept key from the fields schema", () => {
+      expect(
+        qb
+          .browse({
+            output: {
+              fields: {
+                // @ts-expect-error - invalid field
+                foobarbaz: true,
+              },
+            },
+          } as const)
+          .getOutputFields()
+      ).toStrictEqual([]);
+    });
+
+    test("fields should be okay with separate declaration", () => {
+      const outputFields = {
+        foo: true,
+      } satisfies { [k in keyof z.infer<typeof simplifiedSchema>]?: true | undefined };
+      expect(
+        qb
+          .browse({
+            output: {
+              fields: outputFields,
+            },
+          } as const)
+          .getOutputFields()
+      ).toStrictEqual(["foo"]);
+    });
+
+    test("fields should be parsed even with type-safety overriden with as", () => {
+      const fields = ["slug", "title", "foo"] as const;
+      const unknownOriginFields = fields.reduce((acc, k) => {
+        acc[k as keyof z.infer<typeof simplifiedSchema>] = true;
+        return acc;
+      }, {} as { [k in keyof z.infer<typeof simplifiedSchema>]?: true | undefined });
+      expect(
+        qb
+          .browse({
+            output: {
+              fields: unknownOriginFields,
+            },
+          } as const)
+          .getOutputFields()
+      ).toStrictEqual(["foo"]);
+    });
+  });
 });
