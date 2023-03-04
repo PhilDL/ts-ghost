@@ -181,4 +181,19 @@ describe("authors integration tests read", () => {
       expect(result.data.count?.posts).toBe(1);
     }
   });
+
+  test("should catch the case where author is not found", async () => {
+    const readQuery = api.authors.read({ input: { id: "32" } });
+    expect(readQuery).not.toBeUndefined();
+    expect(readQuery.getParams().fields).toBeUndefined();
+    expect(readQuery.getURL()?.searchParams.toString()).toBeDefined();
+    expect(readQuery.getURL()?.searchParams.toString()).toContain("key=");
+    const result = await readQuery.fetch();
+    expect(result).not.toBeUndefined();
+    assert(result.status === "error");
+    expect(result.errors).toStrictEqual([]);
+    expect(result.errors).toBeDefined();
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].message).toContain("author");
+  });
 });
