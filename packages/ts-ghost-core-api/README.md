@@ -27,7 +27,11 @@
 pnpm i @ts-ghost/core-api
 ```
 
-## Query Builders
+## QueryBuilder
+
+A QueryBuilder is a class that helps you build a query based on a a combinations of ZodSchema. This QueryBuilder exposes 2 methods `read` to fetch a single record and `browse` to fetch multiple records. `read` and `browse` gives you back the appropriate `Fetcher` instance that will handle the actual request to the API with the correct parameters.
+
+`QueryBuilder` will handle type-safety of the query parameters and will return the appropriate type based on the `ZodSchema` you pass to it. eg: if you pass the `fields` parameters that "select" fields you want to be present on the response instead of the whole object, then the output schema of the QueryBuilder will change. And then passed to the fetcher to validate data.
 
 ### Global instantiation 
 

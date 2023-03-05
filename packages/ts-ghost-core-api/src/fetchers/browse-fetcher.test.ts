@@ -1,3 +1,5 @@
+import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
+import fetch from "cross-fetch";
 import type { ContentAPICredentials } from "../schemas";
 import { expect, test, describe, assert } from "vitest";
 import { BrowseFetcher } from "./browse-fetcher";
@@ -22,6 +24,17 @@ describe("BrowseFetcher", () => {
     count: z.literal(true).optional(),
   });
 
+  beforeEach(() => {
+    vi.mock("cross-fetch", async () => {
+      return {
+        default: createFetchMock(vi),
+      };
+    });
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test("should return a BrowseFetcher instance", () => {
     const browseFetcher = new BrowseFetcher(
       {
@@ -37,6 +50,28 @@ describe("BrowseFetcher", () => {
     expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
     expect(browseFetcher.getIncludes()).toEqual([]);
     expect(browseFetcher.getParams()).toStrictEqual({});
+    expect(browseFetcher.getURL()?.toString()).toBe("https://ghost.org/ghost/api/content/posts/?key=1234");
+  });
+
+  test("should return a BrowseFetcher instance with undefined browse params", () => {
+    const browseFetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      undefined,
+      api
+    );
+    expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
+    expect(browseFetcher.getEndpoint()).toBe("posts");
+    expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
+    expect(browseFetcher.getIncludes()).toEqual([]);
+    expect(browseFetcher.getParams()).toStrictEqual({
+      browseParams: {},
+      fields: {},
+      include: [],
+    });
     expect(browseFetcher.getURL()?.toString()).toBe("https://ghost.org/ghost/api/content/posts/?key=1234");
   });
 
@@ -70,7 +105,7 @@ describe("BrowseFetcher", () => {
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getEndpoint()).toBe("posts");
     expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "count"]);
-    expect(browseFetcher.getIncludes()).toEqual([]);
+    expect(browseFetcher.getIncludes()).toEqual(["count"]);
     expect(browseFetcher.getParams()).toStrictEqual({
       browseParams: {
         limit: 10,
@@ -86,11 +121,8 @@ describe("BrowseFetcher", () => {
     expect(browseFetcher.getURL()?.toString()).toBe(
       "https://ghost.org/ghost/api/content/posts/?key=1234&order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count"
     );
-
-    const spy = vi.spyOn(browseFetcher, "_fetch");
-    // @ts-expect-error - mockResolvedValueOnce is expecting undefined because the class is abstract
-    spy.mockImplementationOnce(() => {
-      return {
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
         posts: [
           {
             title: "title",
@@ -108,8 +140,8 @@ describe("BrowseFetcher", () => {
             prev: null,
           },
         },
-      };
-    });
+      })
+    );
     const result = await browseFetcher.fetch();
     expect(result.status).toBe("success");
     if (result.status === "success") {
@@ -153,10 +185,8 @@ describe("BrowseFetcher", () => {
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
 
-    const spy = vi.spyOn(browseFetcher, "_fetch");
-    // @ts-expect-error - mockResolvedValueOnce is expecting undefined because the class is abstract
-    spy.mockImplementationOnce(() => {
-      return {
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
         posts: [
           {
             title: "title",
@@ -175,8 +205,8 @@ describe("BrowseFetcher", () => {
             prev: null,
           },
         },
-      };
-    });
+      })
+    );
     const result = await browseFetcher.paginate();
     assert(result.current.status === "success");
     expect(result.current.data[0].slug).toBe("first-page-blog-post");
@@ -188,10 +218,8 @@ describe("BrowseFetcher", () => {
         page: 2,
       },
     });
-    const spy2 = vi.spyOn(result.next, "_fetch");
-    // @ts-expect-error - mockResolvedValueOnce is expecting undefined because the class is abstract
-    spy2.mockImplementationOnce(() => {
-      return {
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
         posts: [
           {
             title: "second page blog post",
@@ -210,11 +238,87 @@ describe("BrowseFetcher", () => {
             prev: null,
           },
         },
-      };
-    });
+      })
+    );
     const nextResult = await result.next.paginate();
     assert(nextResult.current.status === "success");
     expect(nextResult.current.data[0].slug).toBe("second-page-blog-post");
     expect(nextResult.next).toBeUndefined();
+  });
+
+  test("_fetch failed, errors were caught in the fetch", async () => {
+    const browseFetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        browseParams: {
+          limit: 1,
+        },
+      },
+      api
+    );
+    expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
+    (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
+
+    const result = await browseFetcher.fetch();
+    expect(result.status).toBe("error");
+    if (result.status === "error") {
+      expect(result.errors).toStrictEqual([
+        {
+          type: "FetchError",
+          message: "Fake Fetch Error",
+        },
+      ]);
+    }
+  });
+
+  test("_fetch failed, errors were caught in the paginate", async () => {
+    const browseFetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        browseParams: {
+          limit: 1,
+        },
+      },
+      api
+    );
+    expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
+    (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
+
+    const result = await browseFetcher.paginate();
+    expect(result.current.status).toBe("error");
+    if (result.current.status === "error") {
+      expect(result.current.errors).toStrictEqual([
+        {
+          type: "FetchError",
+          message: "Fake Fetch Error",
+        },
+      ]);
+    }
+  });
+
+  test("expect BrowseFetcher _fetch to throw if _URL is not defined", async () => {
+    const fetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      api
+    );
+    // @ts-expect-error - _URL is private
+    fetcher._URL = undefined;
+    await expect(fetcher.fetch()).rejects.toThrowError("URL is undefined");
+    // @ts-expect-error - _params is private
+    fetcher._params = undefined;
+    expect(fetcher.getIncludes()).toEqual([]);
   });
 });

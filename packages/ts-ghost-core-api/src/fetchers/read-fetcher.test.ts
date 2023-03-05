@@ -1,3 +1,5 @@
+import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
+import fetch from "cross-fetch";
 import type { ContentAPICredentials } from "../schemas";
 import { describe, test, expect, assert } from "vitest";
 import { ReadFetcher } from "./read-fetcher";
@@ -20,6 +22,17 @@ describe("ReadFetcher", () => {
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),
+  });
+
+  beforeEach(() => {
+    vi.mock("cross-fetch", async () => {
+      return {
+        default: createFetchMock(vi),
+      };
+    });
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   test("should return a ReadFetcher instance using id", () => {
@@ -117,10 +130,8 @@ describe("ReadFetcher", () => {
       "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234&fields=title%2Cslug%2Ccount&include=count"
     );
 
-    const spy = vi.spyOn(readFetcher, "_fetch");
-    // @ts-expect-error - mockResolvedValueOnce is expecting undefined because the class is abstract
-    spy.mockImplementationOnce(() => {
-      return {
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
         posts: [
           {
             title: "title",
@@ -128,8 +139,8 @@ describe("ReadFetcher", () => {
             count: 1,
           },
         ],
-      };
-    });
+      })
+    );
     const result = await readFetcher.fetch();
     assert(result.status === "success");
     expect(result.data).toStrictEqual({
@@ -159,6 +170,7 @@ describe("ReadFetcher", () => {
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getEndpoint()).toBe("posts");
     expect(readFetcher.getOutputFields()).toEqual(["title", "slug", "count"]);
+    expect(readFetcher.getIncludes()).toEqual(["count"]);
     expect(readFetcher.getParams()).toStrictEqual({
       identity: { slug: "this-is-a-slug" },
       fields: { title: true, slug: true, count: true },
@@ -168,17 +180,63 @@ describe("ReadFetcher", () => {
       "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234&fields=title%2Cslug%2Ccount&include=count"
     );
 
-    const spy = vi.spyOn(readFetcher, "_fetch");
-    // @ts-expect-error - mockResolvedValueOnce is expecting undefined because the class is abstract
-    spy.mockImplementationOnce(() => {
-      return {
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
         errors: [{ message: "Validation error, cannot read author.", type: "ValidationError" }],
-      };
-    });
+      })
+    );
+
     const result = await readFetcher.fetch();
     assert(result.status === "error");
     expect(result.errors).toStrictEqual([
       { message: "Validation error, cannot read author.", type: "ValidationError" },
     ]);
+  });
+
+  test("_fetch failed, errors were caught in the fetch", async () => {
+    const readFetcher = new ReadFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        identity: { slug: "this-is-a-slug" },
+      },
+      api
+    );
+    expect(readFetcher).toBeInstanceOf(ReadFetcher);
+    (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
+
+    const result = await readFetcher.fetch();
+    expect(result.status).toBe("error");
+    if (result.status === "error") {
+      expect(result.errors).toStrictEqual([
+        {
+          type: "FetchError",
+          message: "Fake Fetch Error",
+        },
+      ]);
+    }
+  });
+
+  test("expect ReadFetcher _fetch to throw if _URL is not defined", async () => {
+    const fetcher = new ReadFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        identity: { slug: "this-is-a-slug" },
+      },
+      api
+    );
+    // @ts-expect-error - _URL is private
+    fetcher._URL = undefined;
+    await expect(fetcher.fetch()).rejects.toThrowError("URL is undefined");
+    // @ts-expect-error - _params is private
+    fetcher._params = undefined;
+    expect(fetcher.getIncludes()).toEqual([]);
   });
 });

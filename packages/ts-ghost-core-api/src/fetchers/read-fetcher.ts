@@ -48,7 +48,7 @@ export class ReadFetcher<
   }
 
   public getIncludes() {
-    return this._includeFields;
+    return this._params?.include || [];
   }
 
   private _buildUrlParams() {

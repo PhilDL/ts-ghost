@@ -1,4 +1,4 @@
-import createFetchMock, { FetchMock } from "vitest-fetch-mock";
+import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
 import { test, describe, expect, vi, afterEach } from "vitest";
 import { BasicFetcher } from "./basic-fetcher";

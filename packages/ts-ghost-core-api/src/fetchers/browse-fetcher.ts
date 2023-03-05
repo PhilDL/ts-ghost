@@ -50,7 +50,7 @@ export class BrowseFetcher<
   }
 
   public getIncludes() {
-    return this._includeFields;
+    return this._params?.include || [];
   }
 
   private _buildUrlParams() {
@@ -75,7 +75,6 @@ export class BrowseFetcher<
   }
 
   private _urlBrowseParams() {
-    if (this._params === undefined) return {};
     let urlBrowseParams: { filter?: string; page?: string; order?: string; limit?: string } = {};
     if (this._params.browseParams === undefined) return {};
     const { limit, page, ...params } = this._params.browseParams;
