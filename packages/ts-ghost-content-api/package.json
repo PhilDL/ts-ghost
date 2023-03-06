@@ -9,7 +9,7 @@
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api"
   },
-  "version": "0.0.7",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -43,7 +43,7 @@
     "zod": "^3.20.6"
   },
   "dependencies": {
-    "@ts-ghost/core-api": "^0.0.7",
+    "@ts-ghost/core-api": "^0.1.0",
     "zod": "^3.20.6"
   },
   "publishConfig": {

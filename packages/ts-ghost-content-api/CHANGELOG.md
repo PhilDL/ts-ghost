@@ -1,5 +1,16 @@
 # @ts-ghost/content-api
 
+## 0.1.0
+
+### Minor Changes
+
+- e1970a1: First public beta version of the packages
+
+### Patch Changes
+
+- Updated dependencies [e1970a1]
+  - @ts-ghost/core-api@0.1.0
+
 ## 0.0.7
 
 ### Patch Changes
