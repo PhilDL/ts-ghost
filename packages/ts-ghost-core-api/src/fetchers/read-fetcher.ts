@@ -48,7 +48,7 @@ export class ReadFetcher<
   }
 
   public getIncludes() {
-    return this._includeFields;
+    return this._params?.include || [];
   }
 
   private _buildUrlParams() {
@@ -120,7 +120,15 @@ export class ReadFetcher<
         })
       ).json();
     } catch (e) {
-      console.log("error", e);
+      return {
+        status: "error",
+        errors: [
+          {
+            type: "FetchError",
+            message: (e as Error).toString(),
+          },
+        ],
+      };
     }
     return result;
   }

@@ -1,0 +1,34 @@
+
+> ghost-blog-buster@0.0.4 start /Users/philippelattention/Code/ts-ghost
+> pnpm --filter=@ts-ghost/ghost-blog-buster start "export" "tags" "-h=https://astro-starter.digitalpress.blog" "-k=e9b414c5d95a5456a647ff04ab"
+
+
+> @ts-ghost/ghost-blog-buster@0.0.6 start /Users/philippelattention/Code/ts-ghost/apps/ghost-blog-buster
+> jiti ./src/cli.ts "export" "tags" "-h=https://astro-starter.digitalpress.blog" "-k=e9b414c5d95a5456a647ff04ab"
+
+[
+  {
+    "slug": "news",
+    "id": "63887bd07f2cf30001fec7a5",
+    "meta_title": null,
+    "meta_description": null,
+    "codeinjection_head": null,
+    "codeinjection_foot": null,
+    "og_image": null,
+    "og_title": null,
+    "og_description": null,
+    "twitter_image": null,
+    "twitter_title": null,
+    "twitter_description": null,
+    "name": "News",
+    "description": null,
+    "feature_image": null,
+    "visibility": "public",
+    "canonical_url": null,
+    "accent_color": null,
+    "url": "https://astro-starter.digitalpress.blog/tag/news/",
+    "count": {
+      "posts": 1
+    }
+  }
+]

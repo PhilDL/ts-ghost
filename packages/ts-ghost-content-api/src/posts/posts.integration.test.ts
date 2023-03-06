@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
+import type { Post } from "./schemas";
 
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
 const key = process.env.VITE_GHOST_CONTENT_API_KEY || "93fa6b1e07090ecdf686521b7e";
@@ -124,10 +125,14 @@ describe("posts integration tests browse", () => {
   });
 
   test("posts.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
+    const outputFields = {
+      slug: true,
+      title: true,
+    } satisfies { [k in keyof Post]?: true | undefined };
     const result = await api.posts
       .browse({
         output: {
-          fields: { slug: true, title: true },
+          fields: outputFields,
         },
       })
       .fetch();

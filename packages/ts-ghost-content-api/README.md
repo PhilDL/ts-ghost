@@ -356,10 +356,70 @@ if (result.status === "success") {
 }
 ```
 
+### Unknown inputs and outputs
+
+Let's imagine an example where you don't control what's gonna arrive in the `output.fields` for example.
+You can avoid the type error by casting with `as`.
+
+```typescript
+// `fieldsKeys` comes from outside
+const outputFields = fieldsKeys.reduce((acc, k) => {
+  acc[k as keyof Post] = true;
+  return acc;
+}, {} as { [k in keyof Post]?: true | undefined });
+const result = await api.posts
+  .browse({
+    output: {
+      fields: outputFields,
+    },
+  })
+  .fetch();
+```
+
+But you will lose the type-safety of the output, in Type land, `Post` will contains **all** the fields, not only the ones you selected.
+(In user land, the fields you selected are still gonna be parsed and the unknwown fields **are gonna be ignored**)
+
+#### Pre-declare the output and keep Type-Safety with `satisfies`
+If you would like to pre-declare the output, you can like so:
+
+```typescript
+const outputFields = {
+  slug: true,
+  title: true,
+} satisfies { [k in keyof Post]?: true | undefined };
+
+let test = api.posts.browse({
+  output: {
+    fields: outputFields,
+  },
+});
+```
+In that case you will **keep type-safety** and the output will be of type `Post` with only the fields you selected.
+
+#### Unknown order string with `as` to force the type
+
+If you don't control the content of the `order` field in the `input`. 
+You can force typeSafety with `as`.
+
+```typescript
+import type { BrowseParams } from "@ts-ghost/core-api";
+import type { Post } from "@ts-ghost/content-api";
+
+const order = "foobar DESC";
+const input = { order } as BrowseParams<{ order: string }, Post>;
+const result = await api.posts
+  .browse({
+    input: {
+      order,
+    },
+  })
+  .fetch();
+```
+
 ## Roadmap
 
-- Write more docs
-- Better handling of weird Ghost "include" params in API call
+- [x] Write more docs
+- [ ] Better handling of weird Ghost "include" params in API call
 
 ## Contributing
 

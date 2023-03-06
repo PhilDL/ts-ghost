@@ -1,10 +1,10 @@
 import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
-import { text, cancel, note, spinner, select } from "@clack/prompts";
+import { text, cancel, note, spinner, select, log } from "@clack/prompts";
 import * as fs from "fs";
 import path from "path";
 
-export const tagsExportAll = async (ghost: TSGhostContentAPI, siteName: string) => {
+export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: string) => {
   const s = spinner();
   const outputType = await select({
     message: "Select the output type.",
@@ -45,25 +45,35 @@ export const tagsExportAll = async (ghost: TSGhostContentAPI, siteName: string) 
     }
   }
 
-  s.start(`Fetching Tags...`);
-  const res = await ghost.tags.browse().fetch();
-  if (res.status === "error" || res.data.length === 0) {
-    note(`No tags were found on "${siteName}.".`, "No tags found");
+  s.start(`Fetching Authors...`);
+  const authors = await ghost.authors
+    .browse({
+      output: {
+        include: {
+          "count.posts": true,
+        },
+      },
+    })
+    .fetch();
+  if (authors.status === "error") {
+    log.error(`Error while fetching authors from "${siteName}."`);
     return;
   }
-  const tags = res.data;
-  s.stop(`🏷️ Found ${tags.length} Tags...`);
-  const content = JSON.stringify(tags, null, 2);
+  if (!authors || authors.data.length === 0) {
+    log.warn(`No authors were found on "${siteName}.".`);
+    return;
+  }
+  s.stop(`🏷️ Found ${authors.data.length} Authors...`);
+  const content = JSON.stringify(authors.data, null, 2);
   if (outputType === "stdout") {
-    // process.stdout.write(content);
-    note(content, "Sucess");
+    process.stdout.write(`${content} \n`);
   } else {
-    fs.writeFile(path.join(output, "tags.json"), content, "utf8", (err) => {
+    fs.writeFile(path.join(output, "authors.json"), content, "utf8", (err) => {
       if (err) {
-        console.log(err);
+        log.error(err.toString());
       }
     });
-    note(`${tags.length} tags converted to Json file and saved to ${output}/tags.json`, "Success");
+    note(`${authors.data.length} authors converted to Json file and saved to ${output}/authors.json`, "Success");
   }
   return;
 };

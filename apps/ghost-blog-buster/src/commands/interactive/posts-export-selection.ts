@@ -2,7 +2,7 @@ import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { fetchAllBlogPosts } from "./helpers";
 import { isCancel } from "@clack/core";
 import { multiselect, text, cancel, note, spinner } from "@clack/prompts";
-import { createMarkdownFile } from "../convert/markdown-converter";
+import { createMarkdownFile } from "../../utils/markdown-converter";
 import * as fs from "fs";
 import path from "path";
 

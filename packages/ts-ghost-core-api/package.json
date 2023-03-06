@@ -7,7 +7,7 @@
   "description": "TypeScript utilities to build type-safe queries and fetchers for the Ghost API based on Zod schemas.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/PhilDL/ts-ghost/apps/ghost-blog-buster"
+    "url": "https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api"
   },
   "version": "0.0.7",
   "main": "./dist/index.js",
@@ -23,6 +23,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest --coverage",
+    "test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
     "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
@@ -35,7 +36,8 @@
     "typescript": "4.9.5",
     "vite": "^4.1.3",
     "vite-tsconfig-paths": "^4.0.5",
-    "vitest": "^0.29.1"
+    "vitest": "^0.29.1",
+    "vitest-fetch-mock": "^0.2.2"
   },
   "dependencies": {
     "cross-fetch": "^3.1.5",

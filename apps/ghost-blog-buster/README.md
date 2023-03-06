@@ -36,7 +36,7 @@ Ghost Blog Buster is an interactive CLI allowing you to interact with your Ghost
 - [Clack](https://github.com/natemoo-re/clack) to build beautiful prompts.
 - [@ts-ghost/content-api](https://www.npmjs.com/package/@ts-ghost/content-api) for TypeSafe 🦾 interaction with the Ghost Content API.
 
-### Installation
+## Basic usage
 
 Use directly with `npx`
 ```sh
@@ -53,11 +53,51 @@ Then, in a new SHELL session, launch with
 ghost-blog-buster
 ```
 
+## Advanced usage
+
+If you want to bypass the interactive prompts, you can use the CLI with pipeable commands. 
+
+
+### Export content
+
+For example if we already configured the URL and the Content API key, we can export all the posts to the `./posts` folder with the following command:
+
+```sh
+ghost-blog-buster export posts --output ./posts
+```
+
+#### Options available
+
+- `--host` or `-h`: The URL of the blog
+- `--key` or `-k`: The Content API key
+- `--output` or `-o`: The destination folder. If no output is provided, content will go to stdout.
+
+Full example:
+
+```sh
+ghost-blog-buster export posts --host https://astro-starter.digitalpress.blog --key e9b414c5d95a5436a647ff04ab --output ./posts
+```
+
+Available export 
+
+### Display help
+```sh
+ghost-blog-buster --help
+```
+
+### Example piping commands
+
+You can use `>` to pipe the content into a file or something else.
+
+```sh
+ghost-blog-buster export authors --host https://astro-starter.digitalpress.blog --key e9b414c5d95a5436a647ff04ab > authors.json
+```
+
 ## Roadmap
 
-- Interact with more content
-- Customize the frontmatter output
-- Usage without interactive prompts, pipeable cmds
+- [ ] Interact with more content
+- [ ] Customize the frontmatter output
+- [x] Usage without interactive prompts, pipeable cmds
 
 ## Contributing
 
@@ -66,7 +106,6 @@ Contributions are what make the open source community such an amazing place to b
 * Please make sure you check your spelling and grammar.
 * Create individual PR for each suggestion.
 * Please also read through the [Code Of Conduct](https://github.com/PhilDL/ts-ghost/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
-
 
 ## License
 

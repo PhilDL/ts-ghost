@@ -7,6 +7,8 @@ import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
 import { queryIdentitySchema } from "../schemas";
 
+type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
+
 // Write documentation for that class and its methods
 /**
  * QueryBuilder class
@@ -39,16 +41,20 @@ export class QueryBuilder<
    * @returns
    */
   public browse<
+    Fields extends z.objectKeyMask<OutputShape>,
+    Include extends z.objectKeyMask<IncludeShape>,
+    Order extends OrderObjectKeyMask<Shape>,
     P extends {
       order?: string;
       limit?: number | string;
       page?: number | string;
       filter?: string;
-    },
-    Fields extends z.objectKeyMask<OutputShape>,
-    Include extends z.objectKeyMask<IncludeShape>
+      _unstable_order?: Order;
+    }
   >(options?: {
-    input?: BrowseParams<P, Shape>;
+    input?: BrowseParams<P, Shape> & {
+      _unstable_order?: z.noUnrecognized<Order, Shape>;
+    };
     output?: {
       fields?: z.noUnrecognized<Fields, OutputShape>;
       include?: z.noUnrecognized<Include, IncludeShape>;

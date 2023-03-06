@@ -2,7 +2,7 @@
   "extends": "@ts-ghost/tsconfig/node16.json",
   "include": ["**/*.ts", "tsup.config.ts"],
   "compilerOptions": {
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "vitest-fetch-mock"],
     "isolatedModules": true,
     "esModuleInterop": true,
   },

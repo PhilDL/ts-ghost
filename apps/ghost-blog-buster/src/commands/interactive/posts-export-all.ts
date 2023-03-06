@@ -1,7 +1,7 @@
 import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
-import { text, cancel, note, spinner } from "@clack/prompts";
-import { createMarkdownFile } from "../convert/markdown-converter";
+import { text, cancel, note, spinner, log } from "@clack/prompts";
+import { createMarkdownFile } from "../../utils/markdown-converter";
 import * as fs from "fs";
 import path from "path";
 
@@ -52,7 +52,7 @@ export async function postsExportAll(ghost: TSGhostContentAPI, siteName: string)
       })
       .fetch();
     if (res.status === "error" || res.data.length === 0) {
-      note(`No post were found on "${siteName}.".`, "No posts found");
+      log.warn(`No post were found on "${siteName}.".`);
       return;
     }
     const posts = res.data;
