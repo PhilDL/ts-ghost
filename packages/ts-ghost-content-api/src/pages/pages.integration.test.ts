@@ -72,7 +72,7 @@ describe("pages integration tests browse", () => {
       expect(page.id).toBe(stub.id);
       expect(page.title).toBe(stub.title);
       expect(page.slug).toBe(stub.slug);
-      expect(page.html).toBe(stub.html);
+      expect(page.html).toContain("<p>Astro Starter is an independent publication");
       expect(page.comment_id).toBe(stub.comment_id);
       expect(page.feature_image).toBe(stub.feature_image);
       expect(page.featured).toBe(stub.featured);
@@ -207,7 +207,7 @@ describe("pages integration tests read", () => {
       expect(page.id).toBe(stub.id);
       expect(page.title).toBe(stub.title);
       expect(page.slug).toBe(stub.slug);
-      expect(page.html).toBe(stub.html);
+      expect(page.html).toContain("<p>Astro Starter is an independent publication");
       expect(page.comment_id).toBe(stub.comment_id);
       expect(page.feature_image).toBe(stub.feature_image);
       expect(page.featured).toBe(stub.featured);

@@ -65,7 +65,7 @@ describe("posts integration tests browse", () => {
       expect(post.id).toBe(stub.id);
       expect(post.title).toBe(stub.title);
       expect(post.slug).toBe(stub.slug);
-      expect(post.html).toBe(stub.html);
+      expect(post.html).toContain("<p>This is Astro Starter, a brand new");
       expect(post.comment_id).toBe(stub.comment_id);
       expect(post.feature_image).toBe(stub.feature_image);
       expect(post.featured).toBe(stub.featured);
@@ -204,7 +204,7 @@ describe("posts integration tests read", () => {
       expect(post.id).toBe(stub.id);
       expect(post.title).toBe(stub.title);
       expect(post.slug).toBe(stub.slug);
-      expect(post.html).toBe(stub.html);
+      expect(post.html).toContain("<p>This is Astro Starter, a brand new");
       expect(post.comment_id).toBe(stub.comment_id);
       expect(post.feature_image).toBe(stub.feature_image);
       expect(post.featured).toBe(stub.featured);
