@@ -19,7 +19,7 @@ import { getConfig } from "../config";
 export const command = "$0";
 export const desc = "Interactive CLI";
 export const builder = {};
-export const handler = async function (argv: Arguments) {
+export const handler = async function (_argv: Arguments) {
   const config = getConfig();
   intro(`${color.bgYellow(color.black(" ghost-blog-buster "))}`);
 

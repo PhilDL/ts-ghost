@@ -6,25 +6,25 @@
     <img src="https://user-images.githubusercontent.com/4941205/221607740-28ce02cb-da96-4e34-a40d-8163bb7c668f.png" alt="Logo" width="auto" height="80">
   </a>
 
-  <h3 align="center"><code>@ts-ghost/content-api</code></h3>
+  <h3 align="center"><code>@ts-ghost/admin-api</code></h3>
 
   <p align="center">
-    <code>@ts-ghost/content-api</code> is a strongly-typed TypeScript client to interract with the Ghost Content API.
+    <code>@ts-ghost/admin-api</code> is a strongly-typed TypeScript client to interract with the Ghost Admin API.
     <br/>
     <br/>
   </p>
 </div>
 
-![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img src="https://img.shields.io/badge/status-beta-orange.svg" alt="Status: Beta" /> <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/PhilDL/ts-ghost?filename=packages%2Fts-ghost-content-api%2Fpackage.json">
+![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img src="https://img.shields.io/badge/status-beta-orange.svg" alt="Status: Beta" /> <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/PhilDL/ts-ghost?filename=packages%2Fts-ghost-admin-api%2Fpackage.json">
 
 ## About The Project
 
-`@ts-ghost/content-api` provides a strongly-typed TypeScript client to interract with the Ghost Content API based on [Zod](https://github.com/colinhacks/zod) schemas passed through a QueryBuilder and then a Fetcher.
+`@ts-ghost/admin-api` provides a strongly-typed TypeScript client to interract with the Ghost Admin API based on [Zod](https://github.com/colinhacks/zod) schemas passed through a QueryBuilder and then a Fetcher.
 
 ## Install
 
 ```shell
-pnpm i @ts-ghost/content-api
+pnpm i @ts-ghost/admin-api
 ```
 
 ## Basic Usage
@@ -34,12 +34,12 @@ This is a quick example of how to use the library.
 ### Browse multiple posts 
 
 ```typescript
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
-import type { Post } from "@ts-ghost/content-api";
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+import type { Post } from "@ts-ghost/admin-api";
 
 let url = "https://demo.ghost.io";
-let key = "22444f78447824223cefc48062"; // Content API KEY should be in the right format corresponding to the Ghost Content API (26 Hex chars)
-const api = new TSGhostContentAPI(url, key, "v5.0"); // The instantiation is validated through a zod Schema
+let key = "22444f78447824223cefc48062"; // Admin API KEY should be in the right format corresponding to the Ghost Admin API (26 Hex chars)
+const api = new TSGhostAdminAPI(url, key, "v5.0"); // The instantiation is validated through a zod Schema
 
 // Browse posts
 const res = await api.posts.browse().fetch();
@@ -59,11 +59,11 @@ if (res.status === "success") {
 ### Read one Post by slug
 
 ```typescript
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
+import { TSGhostAdminAPI } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
-let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
+let key = "22444f78447824223cefc48062"; // Admin API KEY
+const api = new TSGhostAdminAPI(url, key, "v5.0");
 
 const res = await api.posts.read({
   input: {
@@ -86,7 +86,7 @@ new instance of a QueryBuilder containing two methods `read` and `browse`.
 This instance is already built with the associated Schema for that resource so any operation 
 you will do from that point will be typed against the asociated schema.
 
-`browse` and `read` methods accept a config object with 2 properties: `input` and an `output`. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
+`browse` and `read` methods accept a config object with 2 properties: `input` and an `output`. These params mimic the way Ghost API Admin is built but with the power of Zod and TypeScript they are type-safe here.
 
 ```typescript
 let query = api.posts.browse({
@@ -107,7 +107,7 @@ let query = api.posts.browse({
 - `input` will accept browse parameters like `page`, `limit`, `order`, `filter`. And read parameters are `id` or `slug`.
 - `output` is the same for both methods and let you specify `fields` to output (to not have the full object) and some Schema specific `include`. For example getting the posts including their Authors.
 
-*Ghost Content API doesn't work well when you mix `fields` and `include` output, so in most case you shouldn't*
+*Ghost Admin API doesn't work well when you mix `fields` and `include` output, so in most case you shouldn't*
 
 ## `input`
 
@@ -313,11 +313,11 @@ Here you can use the `next` property to get the next page fetcher if it is defin
 Here we will use the `paginate` function of the fetcher to get the next page fetcher directly if it is defined.
 
 ```typescript
-import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
+import { TSGhostAdminAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
-let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
+let key = "22444f78447824223cefc48062"; // Admin API KEY
+const api = new TSGhostAdminAPI(url, key, "v5.0");
 
 const posts: Post[] = [];
 let cursor = await api.posts
@@ -343,11 +343,11 @@ return posts;
 Settings is a specific resource, you cannot build query against it like the other resources. You can only fetch the settings, so calling `api.settings` will directly give you a fetcher.
 
 ```typescript
-import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
+import { TSGhostAdminAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
-let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
+let key = "22444f78447824223cefc48062"; // Admin API KEY
+const api = new TSGhostAdminAPI(url, key, "v5.0");
 
 let result = await api.settings.fetch();
 if (result.status === "success") {

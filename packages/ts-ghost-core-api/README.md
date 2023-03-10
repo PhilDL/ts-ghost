@@ -44,7 +44,7 @@ const api: ContentAPICredentials = {
   url: "https://ghost.org",
   key: "7d2d15d7338526d43c2fadc47c",
   version: "v5.0",
-  endpoint: "posts",
+  resource: "posts",
 };
 
 const simplifiedSchema = z.object({
@@ -54,7 +54,7 @@ const simplifiedSchema = z.object({
 });
 
 // the "include" schema is used to validate the "include" parameters of the API call
-// it is specific to the Ghost API endpoint from resource to resource.
+// it is specific to the Ghost API resource from resource to resource.
 // The format is always { 'name_of_the_field': true }
 const simplifiedIncludeSchema = z.object({
   count: z.literal(true).optional(),
@@ -77,7 +77,7 @@ The `browse` and `read` methods accept a config object with 2 properties: `input
 ```typescript
 import { QueryBuilder, type ContentAPICredentials } from "@ts-ghost/core-api";
 import { z } from "zod";
-const api: ContentAPICredentials = { url: "https://ghost.org", key: "7d2d15d7338526d43c2fadc47c", version: "v5.0", endpoint: "posts",};
+const api: ContentAPICredentials = { url: "https://ghost.org", key: "7d2d15d7338526d43c2fadc47c", version: "v5.0", resource: "posts",};
 
 const simplifiedSchema = z.object({
   title: z.string(),
@@ -203,7 +203,7 @@ if (result.status === 'success') {
 The **output schema** will be modified to only have the fields you selected and TypeScript will pick up on that to warn you if you access non-existing fields.
 
 ### `include`
-The `include` key lets you include some additionnal data that the Ghost API doesn't give you by default. This `include` key is specific to each endpoint and is defined in the `Schema` of the endpoint. You will have to let TypeScript guide you to know what you can include.
+The `include` key lets you include some additionnal data that the Ghost API doesn't give you by default. This `include` key is specific to each resource and is defined in the `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
 
 ```typescript
 const qb = new QueryBuilder(

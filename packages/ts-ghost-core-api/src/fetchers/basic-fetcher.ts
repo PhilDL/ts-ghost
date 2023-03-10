@@ -1,11 +1,11 @@
-import fetch from "cross-fetch";
 import { z, ZodRawShape } from "zod";
-import type { ContentAPICredentials } from "../schemas";
+import type { APICredentials } from "../schemas";
+import { _fetch } from "./helpers";
 
-export class BasicFetcher<OutputShape extends ZodRawShape, Api extends ContentAPICredentials> {
+export class BasicFetcher<OutputShape extends ZodRawShape, Api extends APICredentials> {
   protected _urlParams: Record<string, string> = {};
   protected _URL: URL | undefined = undefined;
-  protected readonly _endpoint: Api["endpoint"];
+  protected readonly _resource: Api["resource"];
 
   constructor(
     protected config: {
@@ -14,11 +14,11 @@ export class BasicFetcher<OutputShape extends ZodRawShape, Api extends ContentAP
     protected _api: Api
   ) {
     this._buildUrl();
-    this._endpoint = _api.endpoint;
+    this._resource = _api.resource;
   }
 
-  public getEndpoint() {
-    return this._endpoint;
+  public getResource() {
+    return this._resource;
   }
 
   public getOutputFields() {
@@ -30,11 +30,13 @@ export class BasicFetcher<OutputShape extends ZodRawShape, Api extends ContentAP
   }
 
   private _buildUrl() {
-    this._urlParams = {
-      key: this._api.key,
-    };
+    if (this._api.endpoint === "content") {
+      this._urlParams = {
+        key: this._api.key,
+      };
+    }
     const url = new URL(this._api.url);
-    url.pathname = `/ghost/api/content/${this._api.endpoint}/`;
+    url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/`;
     for (const [key, value] of Object.entries(this._urlParams)) {
       url.searchParams.append(key, value);
     }
@@ -57,7 +59,7 @@ export class BasicFetcher<OutputShape extends ZodRawShape, Api extends ContentAP
         ),
       }),
     ]);
-    const result = await this._fetch();
+    const result = await _fetch(this._URL, this._api);
     let data: any = {};
     if (result.errors) {
       data.status = "error";
@@ -65,35 +67,9 @@ export class BasicFetcher<OutputShape extends ZodRawShape, Api extends ContentAP
     } else {
       data = {
         status: "success",
-        data: result[this._endpoint],
+        data: result[this._resource],
       };
     }
     return res.parse(data);
-  }
-
-  async _fetch() {
-    if (this._URL === undefined) throw new Error("URL is undefined");
-    let result = undefined;
-    try {
-      result = await (
-        await fetch(this._URL.toString(), {
-          headers: {
-            "Content-Type": "application/json",
-            "Accept-Version": this._api.version,
-          },
-        })
-      ).json();
-    } catch (e) {
-      return {
-        status: "error",
-        errors: [
-          {
-            type: "FetchError",
-            message: (e as Error).toString(),
-          },
-        ],
-      };
-    }
-    return result;
   }
 }

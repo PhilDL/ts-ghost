@@ -3,7 +3,7 @@ import { z } from "zod";
 /**
  * Parse a Fields object and generate a new Output Schema
  *
- * @param schema Base Endpoint Schema
+ * @param schema Base Resource Schema
  * @param fields Object containing fields to be picked with true as value
  * @returns new schema with only the fields specified in the fields object
  */

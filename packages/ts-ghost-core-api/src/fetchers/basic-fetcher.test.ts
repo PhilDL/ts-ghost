@@ -21,18 +21,19 @@ describe("BasicFetcher", () => {
       url: "https://ghost.org" as const,
       key: "1234",
       version: "v5.0",
-      endpoint: "posts",
+      resource: "posts",
+      endpoint: "content",
     } as const;
     const outputSchema = z.object({
       foo: z.string(),
       bar: z.string(),
     });
     const fetcher = new BasicFetcher({ output: outputSchema }, api);
-    expect(fetcher.getEndpoint()).toBe("posts");
+    expect(fetcher.getResource()).toBe("posts");
     expect(fetcher.getOutputFields()).toEqual(["foo", "bar"]);
     expect(fetcher.getURL()?.searchParams.toString()).toBe(`key=${api.key}`);
-    expect(fetcher.getURL()?.pathname).toBe(`/ghost/api/content/${api.endpoint}/`);
-    expect(fetcher.getURL()?.toString()).toBe(`${api.url}/ghost/api/content/${api.endpoint}/?key=${api.key}`);
+    expect(fetcher.getURL()?.pathname).toBe(`/ghost/api/content/${api.resource}/`);
+    expect(fetcher.getURL()?.toString()).toBe(`${api.url}/ghost/api/content/${api.resource}/?key=${api.key}`);
   });
 
   test("fetch", async () => {
@@ -40,7 +41,8 @@ describe("BasicFetcher", () => {
       url: "https://ghost.org" as const,
       key: "1234",
       version: "v5.0",
-      endpoint: "posts",
+      resource: "posts",
+      endpoint: "content",
     } as const;
     const outputSchema = z.object({
       foo: z.string(),
@@ -70,7 +72,8 @@ describe("BasicFetcher", () => {
       url: "https://ghost.org" as const,
       key: "1234",
       version: "v5.0",
-      endpoint: "posts",
+      resource: "posts",
+      endpoint: "content",
     } as const;
     const outputSchema = z.object({
       foo: z.string(),
@@ -113,7 +116,8 @@ describe("BasicFetcher", () => {
       url: "https://ghost.org" as const,
       key: "1234",
       version: "v5.0",
-      endpoint: "posts",
+      resource: "posts",
+      endpoint: "content",
     } as const;
     const outputSchema = z.object({
       foo: z.string(),
@@ -130,7 +134,8 @@ describe("BasicFetcher", () => {
       url: "https://ghost.org" as const,
       key: "1234",
       version: "v5.0",
-      endpoint: "posts",
+      resource: "posts",
+      endpoint: "content",
     } as const;
     const outputSchema = z.object({
       foo: z.string(),

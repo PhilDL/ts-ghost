@@ -1,7 +1,7 @@
-import fetch from "cross-fetch";
 import { BrowseParamsSchema } from "../query-builder/browse-params";
 import { z, ZodRawShape } from "zod";
-import { ghostMetaSchema, type ContentAPICredentials } from "../schemas";
+import { ghostMetaSchema, type APICredentials } from "../schemas";
+import { _fetch } from "./helpers";
 
 export class BrowseFetcher<
   Params extends BrowseParamsSchema,
@@ -9,12 +9,12 @@ export class BrowseFetcher<
   BaseShape extends ZodRawShape,
   OutputShape extends ZodRawShape,
   IncludeShape extends ZodRawShape,
-  Api extends ContentAPICredentials
+  Api extends APICredentials
 > {
   protected _urlParams: Record<string, string> = {};
   protected _URL: URL | undefined = undefined;
   protected _includeFields: (keyof IncludeShape)[] = [];
-  protected readonly _endpoint: Api["endpoint"];
+  protected readonly _resource: Api["resource"];
 
   constructor(
     protected config: {
@@ -26,15 +26,16 @@ export class BrowseFetcher<
       browseParams?: Params;
       include?: (keyof IncludeShape)[];
       fields?: Fields;
+      formats?: string[];
     } = { browseParams: {} as Params, include: [], fields: {} as z.noUnrecognized<Fields, OutputShape> },
     protected _api: Api
   ) {
     this._buildUrlParams();
-    this._endpoint = _api.endpoint;
+    this._resource = _api.resource;
   }
 
-  public getEndpoint() {
-    return this._endpoint;
+  public getResource() {
+    return this._resource;
   }
 
   public getParams() {
@@ -56,18 +57,28 @@ export class BrowseFetcher<
   private _buildUrlParams() {
     const inputKeys = this.config.schema.keyof().options as string[];
     const outputKeys = this.config.output.keyof().options as string[];
-    this._urlParams = {
-      key: this._api.key,
-      ...this._urlBrowseParams(),
-    };
+    if (this._api.endpoint === "content") {
+      this._urlParams = {
+        key: this._api.key,
+        ...this._urlBrowseParams(),
+      };
+    } else {
+      this._urlParams = {
+        ...this._urlBrowseParams(),
+      };
+    }
+
     if (inputKeys.length !== outputKeys.length && outputKeys.length > 0) {
       this._urlParams.fields = outputKeys.join(",");
     }
     if (this._params.include && this._params.include.length > 0) {
       this._urlParams.include = this._params.include.join(",");
     }
+    if (this._params.formats && this._params.formats.length > 0) {
+      this._urlParams.formats = this._params.formats.join(",");
+    }
     const url = new URL(this._api.url);
-    url.pathname = `/ghost/api/content/${this._api.endpoint}/`;
+    url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/`;
     for (const [key, value] of Object.entries(this._urlParams)) {
       url.searchParams.append(key, value);
     }
@@ -111,7 +122,7 @@ export class BrowseFetcher<
 
   public async fetch() {
     const resultSchema = this._getResultSchema();
-    const result = await this._fetch();
+    const result = await _fetch(this._URL, this._api);
     let data: any = {};
     if (result.errors) {
       data.status = "error";
@@ -120,7 +131,7 @@ export class BrowseFetcher<
       data = {
         status: "success",
         meta: result.meta,
-        data: result[this._endpoint],
+        data: result[this._resource],
       };
     }
     return resultSchema.parse(data);
@@ -136,7 +147,7 @@ export class BrowseFetcher<
     }
 
     const resultSchema = this._getResultSchema();
-    const result = await this._fetch();
+    const result = await _fetch(this._URL, this._api);
     let data: any = {};
     if (result.errors) {
       data.status = "error";
@@ -145,7 +156,7 @@ export class BrowseFetcher<
       data = {
         status: "success",
         meta: result.meta,
-        data: result[this._endpoint],
+        data: result[this._resource],
       };
     }
     const response: {
@@ -168,31 +179,5 @@ export class BrowseFetcher<
     const next = new BrowseFetcher(this.config, params, this._api);
     response.next = next;
     return response;
-  }
-
-  async _fetch() {
-    if (this._URL === undefined) throw new Error("URL is undefined");
-    let result = undefined;
-    try {
-      result = await (
-        await fetch(this._URL.toString(), {
-          headers: {
-            "Content-Type": "application/json",
-            "Accept-Version": this._api.version,
-          },
-        })
-      ).json();
-    } catch (e) {
-      return {
-        status: "error",
-        errors: [
-          {
-            type: "FetchError",
-            message: (e as Error).toString(),
-          },
-        ],
-      };
-    }
-    return result;
   }
 }

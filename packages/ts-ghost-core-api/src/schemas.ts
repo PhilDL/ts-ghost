@@ -88,56 +88,83 @@ export const ghostVisibilitySchema = z.union([
   z.literal("paid"),
 ]);
 
-export const contentAPIEndpointsSchema = z.union([
-  z.literal("authors"),
-  z.literal("tiers"),
-  z.literal("posts"),
-  z.literal("pages"),
-  z.literal("tags"),
-  z.literal("settings"),
-]);
-export type ContentAPIEndpoints = z.infer<typeof contentAPIEndpointsSchema>;
-
 export const apiVersionsSchema = z.enum(["v5.0", "v2", "v3", "v4", "canary"]).default("v5.0");
 export type ContentAPIVersions = z.infer<typeof apiVersionsSchema>;
+export type AdminAPIVersions = z.infer<typeof apiVersionsSchema>;
 
-export const contentAPICredentialsSchema = z.discriminatedUnion("endpoint", [
+export const contentAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
-    endpoint: z.literal("authors"),
+    resource: z.literal("authors"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
     version: apiVersionsSchema,
     url: z.string().url(),
+    endpoint: z.literal("content"),
   }),
   z.object({
-    endpoint: z.literal("tiers"),
+    resource: z.literal("tiers"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
     version: apiVersionsSchema,
     url: z.string().url(),
+    endpoint: z.literal("content"),
   }),
   z.object({
-    endpoint: z.literal("pages"),
+    resource: z.literal("pages"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
     version: apiVersionsSchema,
     url: z.string().url(),
+    endpoint: z.literal("content"),
   }),
   z.object({
-    endpoint: z.literal("posts"),
+    resource: z.literal("posts"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
     version: apiVersionsSchema,
     url: z.string().url(),
+    endpoint: z.literal("content"),
   }),
   z.object({
-    endpoint: z.literal("tags"),
+    resource: z.literal("tags"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
     version: apiVersionsSchema,
     url: z.string().url(),
+    endpoint: z.literal("content"),
   }),
   z.object({
-    endpoint: z.literal("settings"),
+    resource: z.literal("settings"),
     key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
     version: apiVersionsSchema,
     url: z.string().url(),
+    endpoint: z.literal("content"),
   }),
 ]);
 
 export type ContentAPICredentials = z.infer<typeof contentAPICredentialsSchema>;
+
+export type APICredentials = {
+  resource: "pages" | "posts" | "settings" | "authors" | "tiers" | "tags";
+  key: string;
+  version: ContentAPIVersions;
+  url: string;
+  endpoint: "admin" | "content";
+};
+
+export const adminAPIEndpointsSchema = z.union([z.literal("posts"), z.literal("pages")]);
+export type AdminAPIEndpoints = z.infer<typeof adminAPIEndpointsSchema>;
+
+export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
+  z.object({
+    resource: z.literal("pages"),
+    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
+  z.object({
+    resource: z.literal("posts"),
+    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
+]);
+
+export type AdminAPICredentials = z.infer<typeof adminAPICredentialsSchema>;

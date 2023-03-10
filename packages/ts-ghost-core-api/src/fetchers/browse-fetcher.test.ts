@@ -1,6 +1,6 @@
 import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
-import type { ContentAPICredentials } from "../schemas";
+import type { ContentAPICredentials, AdminAPICredentials } from "../schemas";
 import { expect, test, describe, assert } from "vitest";
 import { BrowseFetcher } from "./browse-fetcher";
 import { z } from "zod";
@@ -10,7 +10,16 @@ describe("BrowseFetcher", () => {
     url: "https://ghost.org" as const,
     key: "1234",
     version: "v5.0",
-    endpoint: "posts",
+    resource: "posts",
+    endpoint: "content",
+  } as const;
+
+  const adminApi: AdminAPICredentials = {
+    url: "https://ghost.org" as const,
+    key: "1234",
+    version: "v5.0",
+    resource: "posts",
+    endpoint: "admin",
   } as const;
 
   const simplifiedSchema = z.object({
@@ -46,11 +55,29 @@ describe("BrowseFetcher", () => {
       api
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
-    expect(browseFetcher.getEndpoint()).toBe("posts");
+    expect(browseFetcher.getResource()).toBe("posts");
     expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
     expect(browseFetcher.getIncludes()).toEqual([]);
     expect(browseFetcher.getParams()).toStrictEqual({});
     expect(browseFetcher.getURL()?.toString()).toBe("https://ghost.org/ghost/api/content/posts/?key=1234");
+  });
+
+  test("should return a BrowseFetcher instance with Admin API", () => {
+    const browseFetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      adminApi
+    );
+    expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
+    expect(browseFetcher.getResource()).toBe("posts");
+    expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
+    expect(browseFetcher.getIncludes()).toEqual([]);
+    expect(browseFetcher.getParams()).toStrictEqual({});
+    expect(browseFetcher.getURL()?.toString()).toBe("https://ghost.org/ghost/api/admin/posts/");
   });
 
   test("should return a BrowseFetcher instance with undefined browse params", () => {
@@ -64,7 +91,7 @@ describe("BrowseFetcher", () => {
       api
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
-    expect(browseFetcher.getEndpoint()).toBe("posts");
+    expect(browseFetcher.getResource()).toBe("posts");
     expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
     expect(browseFetcher.getIncludes()).toEqual([]);
     expect(browseFetcher.getParams()).toStrictEqual({
@@ -103,7 +130,7 @@ describe("BrowseFetcher", () => {
       api
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
-    expect(browseFetcher.getEndpoint()).toBe("posts");
+    expect(browseFetcher.getResource()).toBe("posts");
     expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "count"]);
     expect(browseFetcher.getIncludes()).toEqual(["count"]);
     expect(browseFetcher.getParams()).toStrictEqual({
@@ -167,6 +194,76 @@ describe("BrowseFetcher", () => {
       // @ts-expect-error - published is not in the output schema
       expect(result.data[0].published).toBeUndefined();
     }
+  });
+
+  test("creating a Admin API BrowseFetcher with params", async () => {
+    const pick = {
+      title: true,
+      slug: true,
+      count: true,
+    } as const;
+    const output = simplifiedSchema.pick(pick);
+    const browseFetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        browseParams: {
+          order: "title DESC",
+          limit: 10,
+        },
+        include: ["count"],
+        fields: {
+          title: true,
+          slug: true,
+          count: true,
+        },
+      },
+      adminApi
+    );
+    expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
+    expect(browseFetcher.getResource()).toBe("posts");
+    expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "count"]);
+    expect(browseFetcher.getIncludes()).toEqual(["count"]);
+    expect(browseFetcher.getParams()).toStrictEqual({
+      browseParams: {
+        limit: 10,
+        order: "title DESC",
+      },
+      fields: {
+        slug: true,
+        count: true,
+        title: true,
+      },
+      include: ["count"],
+    });
+    expect(browseFetcher.getURL()?.toString()).toBe(
+      "https://ghost.org/ghost/api/admin/posts/?order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count"
+    );
+  });
+
+  test("creating a BrowseFetcher with formats", async () => {
+    const browseFetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        formats: ["html", "plaintext"],
+      },
+      api
+    );
+    expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
+    expect(browseFetcher.getResource()).toBe("posts");
+    expect(browseFetcher.getParams()).toStrictEqual({
+      formats: ["html", "plaintext"],
+    });
+    expect(browseFetcher.getURL()?.toString()).toBe(
+      "https://ghost.org/ghost/api/content/posts/?key=1234&formats=html%2Cplaintext"
+    );
   });
 
   test("creating a BrowseFetcher that paginates", async () => {
