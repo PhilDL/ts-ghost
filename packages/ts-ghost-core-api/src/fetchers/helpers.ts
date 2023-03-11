@@ -40,6 +40,5 @@ export async function _fetch(URL: URL | undefined, api: APICredentials) {
       ],
     };
   }
-  console.log("result", result.posts[0]);
   return result;
 }
