@@ -2,7 +2,7 @@ import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
 import { test, describe, expect, vi, afterEach } from "vitest";
 import { BasicFetcher } from "./basic-fetcher";
-import type { ContentAPICredentials } from "../schemas";
+import type { ContentAPICredentials } from "../schemas/shared";
 import { z } from "zod";
 
 describe("BasicFetcher", () => {

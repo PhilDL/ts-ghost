@@ -1,6 +1,6 @@
 import fetch from "cross-fetch";
 import jwt from "jsonwebtoken";
-import type { APICredentials } from "../schemas";
+import type { APICredentials } from "../schemas/shared";
 
 export function getJWT(key: string) {
   const [id, secret] = key.split(":");
@@ -40,5 +40,6 @@ export async function _fetch(URL: URL | undefined, api: APICredentials) {
       ],
     };
   }
+  console.log("result", result.posts[0]);
   return result;
 }

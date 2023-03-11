@@ -1,6 +1,6 @@
 import { BrowseParamsSchema } from "../query-builder/browse-params";
 import { z, ZodRawShape } from "zod";
-import { ghostMetaSchema, type APICredentials } from "../schemas";
+import { ghostMetaSchema, type APICredentials } from "../schemas/shared";
 import { _fetch } from "./helpers";
 
 export class BrowseFetcher<

@@ -1,5 +1,5 @@
 import { z, ZodRawShape } from "zod";
-import type { APICredentials } from "../schemas";
+import type { APICredentials } from "../schemas/shared";
 import { _fetch } from "./helpers";
 
 export class BasicFetcher<OutputShape extends ZodRawShape, Api extends APICredentials> {

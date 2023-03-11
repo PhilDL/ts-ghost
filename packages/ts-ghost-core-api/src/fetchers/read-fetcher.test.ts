@@ -1,6 +1,6 @@
 import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
-import type { ContentAPICredentials, AdminAPICredentials } from "../schemas";
+import type { ContentAPICredentials, AdminAPICredentials } from "../schemas/shared";
 import { describe, test, expect, assert } from "vitest";
 import { ReadFetcher } from "./read-fetcher";
 import { z } from "zod";

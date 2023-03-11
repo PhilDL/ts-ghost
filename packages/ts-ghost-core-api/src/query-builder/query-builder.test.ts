@@ -1,5 +1,5 @@
 import { BrowseFetcher, ReadFetcher } from "../fetchers";
-import type { ContentAPICredentials } from "../schemas";
+import type { ContentAPICredentials } from "../schemas/shared";
 import type { BrowseParams } from "./browse-params";
 import { QueryBuilder } from "./query-builder";
 import { test, expect, describe } from "vitest";

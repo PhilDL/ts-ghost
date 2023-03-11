@@ -1,11 +1,11 @@
 import { parseBrowseParams } from "./browse-params";
 import type { BrowseParams } from "./browse-params";
-import type { APICredentials } from "../schemas";
+import type { APICredentials } from "../schemas/shared";
 import { z, ZodEnum, ZodRawShape } from "zod";
 import { schemaWithPickedFields } from "./fields";
 import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
-import { queryIdentitySchema } from "../schemas";
+import { queryIdentitySchema } from "../schemas/shared";
 
 type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
 
