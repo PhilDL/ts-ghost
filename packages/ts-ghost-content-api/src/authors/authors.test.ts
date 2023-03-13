@@ -3,7 +3,7 @@ import fetch from "cross-fetch";
 import { describe, test, expect, vi, afterEach, beforeEach } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
-const key = process.env.VITE_GHOST_CONTENT_API_KEY || "93fa6b1e07090ecdf686521b7e";
+const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
 
 describe("authors api .browse() Args Type-safety", () => {
   const api = new TSGhostContentAPI(url, key, "v5.0");
@@ -98,7 +98,7 @@ describe("authors resource mocked", () => {
   let api: TSGhostContentAPI;
 
   beforeEach(() => {
-    api = new TSGhostContentAPI("https://my-ghost-blog.com", "93fa6b1e07090ecdf686521b7e", "v5.0");
+    api = new TSGhostContentAPI("https://my-ghost-blog.com", "59d4bf56c73c04a18c867dc3ba", "v5.0");
     vi.mock("cross-fetch", async () => {
       return {
         default: createFetchMock(vi),
@@ -127,7 +127,7 @@ describe("authors resource mocked", () => {
       id: true,
     });
     expect(browseQuery.getURL()?.searchParams.toString()).toBe(
-      "key=93fa6b1e07090ecdf686521b7e&page=2&fields=name%2Cid"
+      "key=59d4bf56c73c04a18c867dc3ba&page=2&fields=name%2Cid"
     );
 
     (fetch as FetchMock).doMockOnce(

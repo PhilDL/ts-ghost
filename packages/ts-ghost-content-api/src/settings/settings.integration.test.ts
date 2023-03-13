@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
 
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
-const key = process.env.VITE_GHOST_CONTENT_API_KEY || "93fa6b1e07090ecdf686521b7e";
+const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
 
 describe("settings integration tests browse", () => {
   let api: TSGhostContentAPI;
