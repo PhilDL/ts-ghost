@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ghostIdentitySchema, ghostMetadataSchema } from "./shared";
 
-export const authorsSchema = z.object({
+export const baseAuthorsSchema = z.object({
   ...ghostIdentitySchema.shape,
   ...ghostMetadataSchema.shape,
   name: z.string(),

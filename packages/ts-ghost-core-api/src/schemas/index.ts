@@ -5,3 +5,7 @@ export * from "./settings";
 export * from "./shared";
 export * from "./tags";
 export * from "./tiers";
+export * from "./email";
+export * from "./offers";
+export * from "./members";
+export * from "./newsletter";

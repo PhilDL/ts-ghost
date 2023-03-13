@@ -1,13 +1,13 @@
 import { parseBrowseParams } from "./browse-params";
 import type { BrowseParams } from "./browse-params";
-import type { APICredentials } from "../schemas/shared";
+import type { APICredentials } from "../schemas";
 import { z, ZodEnum, ZodRawShape } from "zod";
 import { schemaWithPickedFields } from "./fields";
 import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
-import { queryIdentitySchema } from "../schemas/shared";
+import { queryIdentitySchema } from "../schemas";
 
-type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
+export type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
 
 // const formats = z.array(z.enum(["Salmon", "Tuna", "Trout"]));
 // type t = z.infer<typeof formats>;

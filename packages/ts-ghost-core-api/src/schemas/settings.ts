@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const settingsSchema = z.object({
+export const baseSettingsSchema = z.object({
   title: z.string(),
   description: z.string(),
   logo: z.string().nullable(),

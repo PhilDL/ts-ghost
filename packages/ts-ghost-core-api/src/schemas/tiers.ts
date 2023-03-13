@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ghostIdentitySchema, ghostVisibilitySchema } from "./shared";
 
-export const tiersSchema = z.object({
+export const baseTiersSchema = z.object({
   ...ghostIdentitySchema.shape,
   name: z.string(),
   description: z.string().nullable(),
@@ -24,7 +24,7 @@ export const tiersSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => (v ? v : null)),
-  benefits: z.array(z.string()),
+  benefits: z.array(z.string()).nullish(),
   visibility: ghostVisibilitySchema,
   currency: z.string().nullish(),
   trial_days: z.number().default(0),

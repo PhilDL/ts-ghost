@@ -6,18 +6,17 @@ import {
   ghostSocialMediaSchema,
   ghostVisibilitySchema,
 } from "./shared";
-import { authorsSchema } from "./authors";
-import { tagsSchema } from "./tags";
+import { baseAuthorsSchema } from "./authors";
+import { baseTagsSchema } from "./tags";
 
-const postsAuthorSchema = authorsSchema.extend({
+const postsAuthorSchema = baseAuthorsSchema.extend({
   url: z.string().nullish(),
 });
-export const postsSchema = z.object({
+export const basePostsSchema = z.object({
   ...ghostIdentitySchema.shape,
   ...ghostMetadataSchema.shape,
   title: z.string(),
   html: z.string().nullish(),
-  mobiledoc: z.string().nullish(),
   plaintext: z.string().nullish(),
   comment_id: z.string().nullable(),
   feature_image: z.string().nullable(),
@@ -31,9 +30,9 @@ export const postsSchema = z.object({
   custom_template: z.string().nullable(),
   canonical_url: z.string().nullable(),
   authors: z.array(postsAuthorSchema).optional(),
-  tags: z.array(tagsSchema).optional(),
+  tags: z.array(baseTagsSchema).optional(),
   primary_author: postsAuthorSchema.nullish(),
-  primary_tag: tagsSchema.nullish(),
+  primary_tag: baseTagsSchema.nullish(),
   url: z.string(),
   excerpt: z.string(),
   reading_time: z.number().optional().default(0),
