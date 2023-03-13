@@ -1,4 +1,4 @@
-import { postsSchema, postsIncludeSchema } from "./posts/schemas";
+import { adminPostsSchema } from "./schemas/posts";
 import { adminAPICredentialsSchema, QueryBuilder, AdminAPIVersions } from "@ts-ghost/core-api";
 import { z } from "zod";
 
@@ -24,12 +24,16 @@ export class TSGhostAdminAPI {
       url: string;
       endpoint: "admin";
     };
+    const postsIncludeSchema = z.object({
+      authors: z.literal(true).optional(),
+      tags: z.literal(true).optional(),
+    });
     return new QueryBuilder(
       {
-        schema: postsSchema,
-        output: postsSchema,
+        schema: adminPostsSchema,
+        output: adminPostsSchema,
         include: postsIncludeSchema,
-        formats: z.array(z.enum(["html", "mobiledoc"])),
+        formats: z.array(z.enum(["html", "mobiledoc", "plaintext"])),
       },
       api
     );
