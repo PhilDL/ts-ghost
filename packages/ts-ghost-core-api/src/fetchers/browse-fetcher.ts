@@ -1,3 +1,4 @@
+import { schemaWithPickedFields } from "../query-builder/fields";
 import { BrowseParamsSchema } from "../query-builder/browse-params";
 import { z, ZodRawShape } from "zod";
 import { ghostMetaSchema, type APICredentials } from "../schemas/shared";
@@ -32,6 +33,48 @@ export class BrowseFetcher<
   ) {
     this._buildUrlParams();
     this._resource = _api.resource;
+  }
+
+  public _beta_unstable_formats<Formats extends z.objectKeyMask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
+    formats: z.noUnrecognized<Formats, OutputShape>
+  ) {
+    return new BrowseFetcher(
+      {
+        schema: this.config.schema,
+        output: this.config.output.required(formats),
+        include: this.config.include,
+      },
+      this._params,
+      this._api
+    );
+  }
+
+  public _beta_unstable_include<
+    Includes extends z.objectKeyMask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>
+  >(include: z.noUnrecognized<Includes, OutputShape>) {
+    return new BrowseFetcher(
+      {
+        schema: this.config.schema,
+        output: this.config.output.required(include),
+        include: this.config.include,
+      },
+      this._params,
+      this._api
+    );
+  }
+
+  public _beta_unstable_fields<Fields extends z.objectKeyMask<OutputShape>>(
+    fields: z.noUnrecognized<Fields, OutputShape>
+  ) {
+    return new BrowseFetcher(
+      {
+        schema: this.config.schema,
+        output: this.config.output.pick(fields),
+        include: this.config.include,
+      },
+      this._params,
+      this._api
+    );
   }
 
   public getResource() {
