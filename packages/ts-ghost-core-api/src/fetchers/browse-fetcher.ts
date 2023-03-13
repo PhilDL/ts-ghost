@@ -3,10 +3,11 @@ import { BrowseParamsSchema } from "../query-builder/browse-params";
 import { z, ZodRawShape } from "zod";
 import { ghostMetaSchema, type APICredentials } from "../schemas/shared";
 import { _fetch } from "./helpers";
+import type { Mask } from "../utils";
 
 export class BrowseFetcher<
   Params extends BrowseParamsSchema,
-  Fields extends z.objectKeyMask<OutputShape>,
+  Fields extends Mask<OutputShape>,
   BaseShape extends ZodRawShape,
   OutputShape extends ZodRawShape,
   IncludeShape extends ZodRawShape,
@@ -35,8 +36,8 @@ export class BrowseFetcher<
     this._resource = _api.resource;
   }
 
-  public _beta_unstable_formats<Formats extends z.objectKeyMask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
-    formats: z.noUnrecognized<Formats, OutputShape>
+  public _beta_unstable_formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
+    formats: Formats
   ) {
     return new BrowseFetcher(
       {
@@ -50,8 +51,8 @@ export class BrowseFetcher<
   }
 
   public _beta_unstable_include<
-    Includes extends z.objectKeyMask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>
-  >(include: z.noUnrecognized<Includes, OutputShape>) {
+    Includes extends Mask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>
+  >(include: Includes) {
     return new BrowseFetcher(
       {
         schema: this.config.schema,
@@ -63,9 +64,7 @@ export class BrowseFetcher<
     );
   }
 
-  public _beta_unstable_fields<Fields extends z.objectKeyMask<OutputShape>>(
-    fields: z.noUnrecognized<Fields, OutputShape>
-  ) {
+  public _beta_unstable_fields<Fields extends Mask<OutputShape>>(fields: Fields) {
     return new BrowseFetcher(
       {
         schema: this.config.schema,

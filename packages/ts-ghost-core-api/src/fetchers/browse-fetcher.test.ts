@@ -418,4 +418,17 @@ describe("BrowseFetcher", () => {
     fetcher._params = undefined;
     expect(fetcher.getIncludes()).toEqual([]);
   });
+
+  test("beta__unstable tests", async () => {
+    const fetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      api
+    );
+    const res = fetcher._beta_unstable_fields({ count: true })._beta_unstable_include({ count: true }).fetch();
+  });
 });

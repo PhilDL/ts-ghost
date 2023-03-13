@@ -1,9 +1,10 @@
 import { z, ZodRawShape } from "zod";
 import { type APICredentials, type GhostIdentityInput } from "../schemas/shared";
 import { _fetch } from "./helpers";
+import type { Mask } from "../utils";
 
 export class ReadFetcher<
-  Fields extends z.objectKeyMask<OutputShape>,
+  Fields extends Mask<OutputShape>,
   BaseShape extends ZodRawShape,
   OutputShape extends ZodRawShape,
   IncludeShape extends ZodRawShape,

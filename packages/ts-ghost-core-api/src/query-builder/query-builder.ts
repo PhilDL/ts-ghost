@@ -6,30 +6,10 @@ import { schemaWithPickedFields } from "./fields";
 import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
 import { queryIdentitySchema } from "../schemas";
+import type { Mask } from "../utils";
 
 export type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
 
-// const formats = z.array(z.enum(["Salmon", "Tuna", "Trout"]));
-// type t = z.infer<typeof formats>;
-
-// type Outputs<
-//   OutputShape extends ZodRawShape,
-//   IncludeShape extends ZodRawShape,
-//   Fields extends z.objectKeyMask<OutputShape>,
-//   Include extends z.objectKeyMask<IncludeShape>,
-//   Formats
-// > = Formats extends ZodEnum<[string, ...string[]]>
-//   ? {
-//       fields?: z.noUnrecognized<Fields, OutputShape>;
-//       include?: z.noUnrecognized<Include, IncludeShape>;
-//       formats?: readonly z.infer<Formats>[];
-//     }
-//   : {
-//       fields?: z.noUnrecognized<Fields, OutputShape>;
-//       include?: z.noUnrecognized<Include, IncludeShape>;
-//     };
-
-// Write documentation for that class and its methods
 /**
  * QueryBuilder class
  * @param {ZodRawShape} Shape
@@ -63,8 +43,8 @@ export class QueryBuilder<
    * @returns
    */
   public browse<
-    Fields extends z.objectKeyMask<OutputShape>,
-    Include extends z.objectKeyMask<IncludeShape>,
+    Fields extends Mask<OutputShape>,
+    Include extends Mask<IncludeShape>,
     Order extends OrderObjectKeyMask<Shape>,
     P extends {
       order?: string;
@@ -122,8 +102,8 @@ export class QueryBuilder<
           id: string;
         }
       | { slug: string },
-    Fields extends z.objectKeyMask<OutputShape>,
-    Include extends z.objectKeyMask<IncludeShape>
+    Fields extends Mask<OutputShape>,
+    Include extends Mask<IncludeShape>
   >(options: {
     input: Identity;
     output?: {
