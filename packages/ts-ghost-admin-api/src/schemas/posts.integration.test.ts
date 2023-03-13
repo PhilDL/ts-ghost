@@ -339,4 +339,181 @@ describe("posts integration tests browse", () => {
     expect(post.email).toStrictEqual(stubPost.email);
     expect(post.newsletter).toStrictEqual(stubPost.newsletter);
   });
+
+  test("posts.read()", async () => {
+    expect(api.posts).toBeDefined();
+    const result = await api.posts
+      .read({
+        input: { slug: "coming-soon" },
+        output: {
+          formats: ["html", "plaintext"],
+        },
+      })
+      .fetch();
+
+    assert(result.status === "success");
+    const post = result.data;
+    const stubPost = stub.posts[0];
+    expect(post.id).toBe(stubPost.id);
+    expect(post.uuid).toBe(stubPost.uuid);
+    expect(post.slug).toBe(stubPost.slug);
+    expect(post.title).toBe(stubPost.title);
+    expect(post.html).toBeDefined();
+    expect(post.comment_id).toBe(stubPost.comment_id);
+    expect(post.feature_image).toBe(stubPost.feature_image);
+    expect(post.featured).toBe(stubPost.featured);
+    expect(post.status).toBe(stubPost.status);
+    expect(post.visibility).toBe(stubPost.visibility);
+    expect(post.created_at).toBe(stubPost.created_at);
+    expect(post.updated_at).toBe(stubPost.updated_at);
+    expect(post.published_at).toBe(stubPost.published_at);
+    expect(post.custom_excerpt).toBe(stubPost.custom_excerpt);
+    expect(post.codeinjection_head).toBe(stubPost.codeinjection_head);
+    expect(post.codeinjection_foot).toBe(stubPost.codeinjection_foot);
+    expect(post.custom_template).toBe(stubPost.custom_template);
+    expect(post.canonical_url).toBe(stubPost.canonical_url);
+    expect(post.email_segment).toBe(stubPost.email_segment);
+    expect(post.url).toBe(stubPost.url);
+    expect(post.excerpt).toBe(stubPost.excerpt);
+    expect(post.og_image).toBe(stubPost.og_image);
+    expect(post.og_title).toBe(stubPost.og_title);
+    expect(post.og_description).toBe(stubPost.og_description);
+    expect(post.twitter_image).toBe(stubPost.twitter_image);
+    expect(post.twitter_title).toBe(stubPost.twitter_title);
+    expect(post.twitter_description).toBe(stubPost.twitter_description);
+    expect(post.meta_title).toBe(stubPost.meta_title);
+    expect(post.meta_description).toBe(stubPost.meta_description);
+    expect(post.email_subject).toBe(stubPost.email_subject);
+    expect(post.frontmatter).toBe(stubPost.frontmatter);
+    expect(post.feature_image_alt).toBe(stubPost.feature_image_alt);
+    expect(post.feature_image_caption).toBe(stubPost.feature_image_caption);
+    expect(post.email_only).toBe(stubPost.email_only);
+
+    // relationship fields
+    expect(post.tags).toStrictEqual(stubPost.tags);
+
+    // Author
+    const postAuthor = post.authors[0];
+    const stubPostAuthors = stubPost.authors[0];
+    expect(postAuthor.id).toBe(stubPostAuthors.id);
+    expect(postAuthor.slug).toBe(stubPostAuthors.slug);
+    expect(postAuthor.name).toBe(stubPostAuthors.name);
+    expect(postAuthor.profile_image).toBe(stubPostAuthors.profile_image);
+    expect(postAuthor.cover_image).toBe(stubPostAuthors.cover_image);
+    expect(postAuthor.bio).toBe(stubPostAuthors.bio);
+    expect(postAuthor.website).toBe(stubPostAuthors.website);
+    expect(postAuthor.location).toBe(stubPostAuthors.location);
+    expect(postAuthor.facebook).toBe(stubPostAuthors.facebook);
+    expect(postAuthor.twitter).toBe(stubPostAuthors.twitter);
+    expect(postAuthor.meta_title).toBe(stubPostAuthors.meta_title);
+    expect(postAuthor.meta_description).toBe(stubPostAuthors.meta_description);
+    expect(postAuthor.url).toBe(stubPostAuthors.url);
+    expect(postAuthor.created_at).toBeDefined();
+    expect(postAuthor.updated_at).toBeDefined();
+    expect(postAuthor.email).toBe(stubPostAuthors.email);
+    expect(postAuthor.accessibility).toBe(stubPostAuthors.accessibility);
+    expect(postAuthor.roles).toStrictEqual(stubPostAuthors.roles);
+
+    // Tiers
+    expect(post.tiers.length).toBeGreaterThan(1);
+    const postTier = post.tiers[0];
+    const stubPostTier = stubPost.tiers[0];
+    expect(postTier.id).toBe(stubPostTier.id);
+    expect(postTier.name).toBe(stubPostTier.name);
+    expect(postTier.slug).toBe(stubPostTier.slug);
+    expect(postTier.visibility).toBe(stubPostTier.visibility);
+    expect(postTier.trial_days).toBe(stubPostTier.trial_days);
+    expect(postTier.type).toBe(stubPostTier.type);
+    expect(postTier.currency).toBe(stubPostTier.currency);
+    expect(postTier.description).toBe(stubPostTier.description);
+    expect(postTier.currency).toBe(stubPostTier.currency);
+    expect(postTier.monthly_price).toBe(stubPostTier.monthly_price);
+    expect(postTier.monthly_price_id).toBe(stubPostTier.monthly_price_id);
+    expect(postTier.yearly_price).toBe(stubPostTier.yearly_price);
+    expect(postTier.yearly_price_id).toBe(stubPostTier.yearly_price_id);
+
+    // Primary author
+
+    expect(post.primary_author.id).toBe(stubPost.primary_author.id);
+    expect(post.primary_author.slug).toBe(stubPost.primary_author.slug);
+    expect(post.primary_author.name).toBe(stubPost.primary_author.name);
+    expect(post.primary_author.profile_image).toBe(stubPost.primary_author.profile_image);
+    expect(post.primary_author.cover_image).toBe(stubPost.primary_author.cover_image);
+    expect(post.primary_author.bio).toBe(stubPost.primary_author.bio);
+    expect(post.primary_author.website).toBe(stubPost.primary_author.website);
+    expect(post.primary_author.location).toBe(stubPost.primary_author.location);
+    expect(post.primary_author.facebook).toBe(stubPost.primary_author.facebook);
+    expect(post.primary_author.twitter).toBe(stubPost.primary_author.twitter);
+    expect(post.primary_author.meta_title).toBe(stubPost.primary_author.meta_title);
+    expect(post.primary_author.meta_description).toBe(stubPost.primary_author.meta_description);
+    expect(post.primary_author.url).toBe(stubPost.primary_author.url);
+    expect(post.primary_author.created_at).toBeDefined();
+    expect(post.primary_author.updated_at).toBeDefined();
+    expect(post.primary_author.email).toBe(stubPost.primary_author.email);
+    expect(post.primary_author.accessibility).toBe(stubPost.primary_author.accessibility);
+    expect(post.primary_author.roles).toStrictEqual(stubPost.primary_author.roles);
+
+    expect(post.count).toStrictEqual(stubPost.count);
+    expect(post.primary_tag).toStrictEqual(stubPost.primary_tag);
+    expect(post.email).toStrictEqual(stubPost.email);
+    expect(post.newsletter).toStrictEqual(stubPost.newsletter);
+  });
+
+  test("posts api with bad key", async () => {
+    const api = new TSGhostAdminAPI(
+      process.env.VITE_GHOST_URL!,
+      "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
+      "v5.0"
+    );
+    expect(api.posts).toBeDefined();
+    const result = await api.posts
+      .browse({
+        input: { limit: 1 },
+        output: {
+          formats: ["html", "plaintext"],
+        },
+      })
+      .fetch();
+    assert(result.status === "error");
+    expect(result.errors[0].message).toBe("Unknown Admin API Key");
+    const resultR = await api.posts
+      .read({
+        input: { slug: "coming-soon" },
+        output: {
+          formats: ["html", "plaintext"],
+        },
+      })
+      .fetch();
+    assert(resultR.status === "error");
+    expect(resultR.errors[0].message).toBe("Unknown Admin API Key");
+  });
+
+  test("posts api with wrong url", async () => {
+    const api = new TSGhostAdminAPI(
+      "https://codingdodoes.com",
+      "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
+      "v5.0"
+    );
+    expect(api.posts).toBeDefined();
+    const result = await api.posts
+      .browse({
+        input: { limit: 1 },
+        output: {
+          formats: ["html", "plaintext"],
+        },
+      })
+      .fetch();
+    assert(result.status === "error");
+    expect(result.errors[0].message).toContain("FetchError");
+    const resultR = await api.posts
+      .read({
+        input: { slug: "coming-soon" },
+        output: {
+          formats: ["html", "plaintext"],
+        },
+      })
+      .fetch();
+    assert(resultR.status === "error");
+    expect(resultR.errors[0].message).toContain("FetchError");
+  });
 });
