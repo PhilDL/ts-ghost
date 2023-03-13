@@ -106,10 +106,6 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-      VITE_GHOST_URL: $ {{ secrets.VITE_GHOST_URL }}
-      VITE_GHOST_CONTENT_API_KEY: $ {{ secrets.VITE_GHOST_CONTENT_API_KEY }}
-      VITE_GHOST_ADMIN_API_KEY: $ {{ secrets.VITE_GHOST_ADMIN_API_KEY }}
-      VITE_GHOST_VERSION: $ {{ secrets.VITE_GHOST_VERSION }}
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -133,7 +129,7 @@ jobs:
       - name: 🏄 Copy test env vars to Package
         run: cp .env.test packages/ts-ghost-content-api/.env
 
-      - name: 🏄 Copy test env vars to Admin Package
+      - name: 🏄 Copy test env vars to Admgit in Package
         run: cp .env.test packages/ts-ghost-admin-api/.env
 
       - name: 📥 Download deps
