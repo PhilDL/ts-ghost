@@ -216,7 +216,9 @@ describe("posts integration tests browse", () => {
   let api: TSGhostAdminAPI;
   beforeEach(() => {
     const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
-    const key = process.env.VITE_GHOST_ADMIN_API_KEY || "93fa6b1e07090ecdf686521b7e";
+    const key =
+      process.env.VITE_GHOST_ADMIN_API_KEY ||
+      "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
     api = new TSGhostAdminAPI(url, key, "v5.0");
   });
   test("posts.browse()", async () => {
