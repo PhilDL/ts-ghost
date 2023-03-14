@@ -418,6 +418,49 @@ describe("BrowseFetcher", () => {
     fetcher._params = undefined;
     expect(fetcher.getIncludes()).toEqual([]);
   });
+});
+
+describe("BrowseFetcher v2", () => {
+  const api: ContentAPICredentials = {
+    url: "https://ghost.org" as const,
+    key: "1234",
+    version: "v5.0",
+    resource: "posts",
+    endpoint: "content",
+  } as const;
+
+  const adminApi: AdminAPICredentials = {
+    url: "https://ghost.org" as const,
+    key: "1234",
+    version: "v5.0",
+    resource: "posts",
+    endpoint: "admin",
+  } as const;
+
+  const simplifiedSchema = z.object({
+    title: z.string(),
+    slug: z.string(),
+    published: z.boolean().optional(),
+    count: z.number().optional(),
+    html: z.string().optional(),
+    plaintext: z.string().optional(),
+    mobiledoc: z.string().optional(),
+  });
+
+  const simplifiedIncludeSchema = z.object({
+    count: z.literal(true).optional(),
+  });
+
+  beforeEach(() => {
+    vi.mock("cross-fetch", async () => {
+      return {
+        default: createFetchMock(vi),
+      };
+    });
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   test("beta__unstable tests", async () => {
     const fetcher = new BrowseFetcher(
@@ -429,6 +472,52 @@ describe("BrowseFetcher", () => {
       {},
       api
     );
-    const res = fetcher._beta_unstable_fields({ count: true })._beta_unstable_include({ count: true }).fetch();
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
+        posts: [
+          {
+            html: "<h1>Hello world</h1>",
+          },
+        ],
+        meta: {
+          pagination: {
+            page: 1,
+            limit: 10,
+            pages: 1,
+            total: 1,
+            next: null,
+            prev: null,
+          },
+        },
+      })
+    );
+    const res = await fetcher.formats({ html: true }).fields({ html: true }).fetch();
+    assert(res.status === "success");
+    expect(res.data.length).toBe(1);
+    expect(res.data[0].html).toBe("<h1>Hello world</h1>");
+    // @ts-expect-error - plaintext is not defined
+    expect(res.data[0].plaintext).toBeUndefined();
+  });
+
+  test("new formats, fields, and include", async () => {
+    const fetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      api
+    );
+    const res = fetcher
+      .formats({ html: true })
+      .include({ count: true })
+      .fields({ html: true, published: true, count: true });
+    expect(res.getIncludes()).toStrictEqual(["count"]);
+    expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
+    expect(res.getFormats()).toStrictEqual(["html"]);
+    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/", "")).toBe(
+      "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
+    );
   });
 });

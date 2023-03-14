@@ -57,6 +57,9 @@ export class QueryBuilder<
     input?: BrowseParams<P, Shape> & {
       _unstable_order?: z.noUnrecognized<Order, Shape>;
     };
+    /**
+     * @deprecated use .fields(), .include(), and .formats() methods on the fetcher instead to have a better output typing.
+     */
     output?: {
       fields?: z.noUnrecognized<Fields, OutputShape>;
       include?: z.noUnrecognized<Include, IncludeShape>;
@@ -106,6 +109,9 @@ export class QueryBuilder<
     Include extends Mask<IncludeShape>
   >(options: {
     input: Identity;
+    /**
+     * @deprecated use .fields(), .include(), and .formats() methods on the fetcher instead to have a better output typing.
+     */
     output?: {
       fields?: z.noUnrecognized<Fields, OutputShape>;
       include?: z.noUnrecognized<Include, IncludeShape>;

@@ -1,4 +1,3 @@
-import { schemaWithPickedFields } from "../query-builder/fields";
 import { BrowseParamsSchema } from "../query-builder/browse-params";
 import { z, ZodRawShape } from "zod";
 import { ghostMetaSchema, type APICredentials } from "../schemas/shared";
@@ -36,39 +35,69 @@ export class BrowseFetcher<
     this._resource = _api.resource;
   }
 
-  public _beta_unstable_formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
-    formats: Formats
-  ) {
+  /**
+   * Lets you choose output format for the content of Post and Pages resources
+   * The choices are html, mobiledoc or plaintext. It will transform the output of the fetcher to a new shape
+   * with the selected formats required.
+   *
+   * @param formats html, mobiledoc or plaintext
+   * @returns A new Fetcher with the fixed output shape and the formats specified
+   */
+  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(formats: Formats) {
+    const params = {
+      ...this._params,
+      formats: Object.keys(formats),
+    };
     return new BrowseFetcher(
       {
         schema: this.config.schema,
         output: this.config.output.required(formats),
         include: this.config.include,
       },
-      this._params,
+      params,
       this._api
     );
   }
 
-  public _beta_unstable_include<
-    Includes extends Mask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>
-  >(include: Includes) {
+  /**
+   * Let's you include special keys into the Ghost API Query to retrieve complimentary info
+   * The available keys are defined by the Resource include schema, will not care about unknown keys.
+   * Returns a new Fetcher with an Output shape modified with the include keys required.
+   *
+   * @param include Include specific keys from the include shape
+   * @returns A new Fetcher with the fixed output shape and the formats specified
+   */
+  public include<Includes extends Mask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>>(
+    include: Includes
+  ) {
+    const params = {
+      ...this._params,
+      include: Object.keys(include),
+    };
     return new BrowseFetcher(
       {
         schema: this.config.schema,
         output: this.config.output.required(include),
         include: this.config.include,
       },
-      this._params,
+      params,
       this._api
     );
   }
 
-  public _beta_unstable_fields<Fields extends Mask<OutputShape>>(fields: Fields) {
+  /**
+   * Let's you strip the output to only the specified keys of your choice that are in the config Schema
+   * Will not care about unknown keys and return a new Fetcher with an Output shape with only the selected keys.
+   *
+   * @param fields Any keys from the resource Schema
+   * @returns A new Fetcher with the fixed output shape having only the selected Fields
+   */
+  public fields<Fields extends Mask<OutputShape>>(fields: Fields) {
+    const newOutput = this.config.output.pick(fields);
     return new BrowseFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output.pick(fields),
+        output: newOutput,
         include: this.config.include,
       },
       this._params,
@@ -94,6 +123,10 @@ export class BrowseFetcher<
 
   public getIncludes() {
     return this._params?.include || [];
+  }
+
+  public getFormats() {
+    return this._params?.formats || [];
   }
 
   private _buildUrlParams() {

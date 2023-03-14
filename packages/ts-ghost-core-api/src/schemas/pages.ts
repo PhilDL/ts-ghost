@@ -41,4 +41,5 @@ export const basePagesSchema = z.object({
   updated_at: z.string(),
   published_at: z.string(),
   email_subject: z.string().nullish(),
+  is_page: z.boolean().default(true),
 });
