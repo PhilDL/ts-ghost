@@ -1,11 +1,7 @@
 import { authorsSchema, authorsIncludeSchema } from "./authors/schemas";
-import { TagsAPI } from "./tags/api";
 import { tagsSchema, tagsIncludeSchema } from "./tags/schemas";
-import { PagesAPI } from "./pages/api";
 import { pagesSchema, pagesIncludeSchema } from "./pages/schemas";
-import { PostsAPI } from "./posts/api";
 import { postsSchema, postsIncludeSchema } from "./posts/schemas";
-import { TiersAPI } from "./tiers/api";
 import { tiersSchema, tiersIncludeSchema } from "./tiers/schemas";
 import { contentAPICredentialsSchema, QueryBuilder, ContentAPIVersions } from "@ts-ghost/core-api";
 import { BasicFetcher } from "@ts-ghost/core-api";
@@ -31,15 +27,17 @@ export class TSGhostContentAPI {
 
   get authors() {
     const api = contentAPICredentialsSchema.parse({
-      endpoint: "authors",
+      resource: "authors",
       key: this.key,
       version: this.version,
       url: this.url,
+      endpoint: "content",
     }) as {
-      endpoint: "authors";
+      resource: "authors";
       key: string;
       version: ContentAPIVersions;
       url: string;
+      endpoint: "content";
     };
     return new QueryBuilder(
       {
@@ -52,31 +50,35 @@ export class TSGhostContentAPI {
   }
   get tiers() {
     const api = contentAPICredentialsSchema.parse({
-      endpoint: "tiers",
+      resource: "tiers",
       key: this.key,
       version: this.version,
       url: this.url,
+      endpoint: "content",
     }) as {
-      endpoint: "tiers";
+      resource: "tiers";
       key: string;
       version: ContentAPIVersions;
       url: string;
+      endpoint: "content";
     };
-    return new TiersAPI({ schema: tiersSchema, output: tiersSchema, include: tiersIncludeSchema }, api);
+    return new QueryBuilder({ schema: tiersSchema, output: tiersSchema, include: tiersIncludeSchema }, api);
   }
   get posts() {
     const api = contentAPICredentialsSchema.parse({
-      endpoint: "posts",
+      resource: "posts",
       key: this.key,
       version: this.version,
       url: this.url,
+      endpoint: "content",
     }) as {
-      endpoint: "posts";
+      resource: "posts";
       key: string;
       version: ContentAPIVersions;
       url: string;
+      endpoint: "content";
     };
-    return new PostsAPI(
+    return new QueryBuilder(
       {
         schema: postsSchema,
         output: postsSchema,
@@ -87,17 +89,19 @@ export class TSGhostContentAPI {
   }
   get pages() {
     const api = contentAPICredentialsSchema.parse({
-      endpoint: "pages",
+      resource: "pages",
       key: this.key,
       version: this.version,
       url: this.url,
+      endpoint: "content",
     }) as {
-      endpoint: "pages";
+      resource: "pages";
       key: string;
       version: ContentAPIVersions;
       url: string;
+      endpoint: "content";
     };
-    return new PagesAPI(
+    return new QueryBuilder(
       {
         schema: pagesSchema,
         output: pagesSchema,
@@ -108,30 +112,34 @@ export class TSGhostContentAPI {
   }
   get tags() {
     const api = contentAPICredentialsSchema.parse({
-      endpoint: "tags",
+      resource: "tags",
       key: this.key,
       version: this.version,
       url: this.url,
+      endpoint: "content",
     }) as {
-      endpoint: "tags";
+      resource: "tags";
       key: string;
       version: ContentAPIVersions;
       url: string;
+      endpoint: "content";
     };
-    return new TagsAPI({ schema: tagsSchema, output: tagsSchema, include: tagsIncludeSchema }, api);
+    return new QueryBuilder({ schema: tagsSchema, output: tagsSchema, include: tagsIncludeSchema }, api);
   }
 
   get settings() {
     const api = contentAPICredentialsSchema.parse({
-      endpoint: "settings",
+      resource: "settings",
       key: this.key,
       version: this.version,
       url: this.url,
+      endpoint: "content",
     }) as {
-      endpoint: "settings";
+      resource: "settings";
       key: string;
       version: ContentAPIVersions;
       url: string;
+      endpoint: "content";
     };
     return new BasicFetcher({ output: settingsSchema }, api);
   }

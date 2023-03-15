@@ -80,10 +80,10 @@ if (res.status === "success") {
 
 ## Building Queries
 
-Calling any endpoint like `authors`, `posts`, etc (except `settings` endpoint) will give a 
+Calling any resource like `authors`, `posts`, etc (except `settings` resource) will give a 
 new instance of a QueryBuilder containing two methods `read` and `browse`.
 
-This instance is already built with the associated Schema for that endpoint so any operation 
+This instance is already built with the associated Schema for that resource so any operation 
 you will do from that point will be typed against the asociated schema.
 
 `browse` and `read` methods accept a config object with 2 properties: `input` and an `output`. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
@@ -189,7 +189,7 @@ if (result.status === 'success') {
 The **output schema** will be modified to only have the fields you selected and TypeScript will pick up on that to warn you if you access non-existing fields.
 
 ### `include`
-The `include` key lets you include some additionnal data that the Ghost API doesn't give you by default. This `include` key is specific to each endpoint and is defined in the `Schema` of the endpoint. You will have to let TypeScript guide you to know what you can include.
+The `include` key lets you include some additionnal data that the Ghost API doesn't give you by default. This `include` key is specific to each resource and is defined in the `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
 
 ```typescript
 let result = await api.authors.read({
@@ -204,14 +204,14 @@ let result = await api.authors.read({
 } as const).fetch();
 ```
 
-Available keys by endpoint:
+Available keys by resource:
 - Posts & Pages: `authors`, `tags`
 - Authors: `count.posts`
 - Tags: `count.posts`
 - Tiers: `monthly_price`, `yearly_price`, `benefits`
 
 ## Fetching 
-After building your query you can fetch it with the `fetch` method. This method will return a `Promise` that will resolve to a result object that was parsed by the `Zod` Schema of the endpoint. 
+After building your query you can fetch it with the `fetch` method. This method will return a `Promise` that will resolve to a result object that was parsed by the `Zod` Schema of the resource. 
 
 All the results are discriminated unions representing a successful query and an error query. To discriminate the results you can use the `status` key of the result object which is `success` or `error`.
 
@@ -340,7 +340,7 @@ return posts;
 
 ### Fetching the Settings of your Ghost instance
 
-Settings is a specific endpoint, you cannot build query against it like the other endpoints. You can only fetch the settings, so calling `api.settings` will directly give you a fetcher.
+Settings is a specific resource, you cannot build query against it like the other resources. You can only fetch the settings, so calling `api.settings` will directly give you a fetcher.
 
 ```typescript
 import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";

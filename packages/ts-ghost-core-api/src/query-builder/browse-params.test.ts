@@ -1,7 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { parseBrowseParams } from "./browse-params";
 import { z } from "zod";
-import type { BrowseParams } from "./browse-params";
 
 describe("parseBrowseParams", () => {
   const simplifiedSchema = z.object({
