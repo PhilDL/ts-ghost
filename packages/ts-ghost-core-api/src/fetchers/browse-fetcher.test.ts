@@ -429,14 +429,6 @@ describe("BrowseFetcher v2", () => {
     endpoint: "content",
   } as const;
 
-  const adminApi: AdminAPICredentials = {
-    url: "https://ghost.org" as const,
-    key: "1234",
-    version: "v5.0",
-    resource: "posts",
-    endpoint: "admin",
-  } as const;
-
   const simplifiedSchema = z.object({
     title: z.string(),
     slug: z.string(),

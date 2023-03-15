@@ -1,9 +1,8 @@
 import { z } from "zod";
-import { ghostIdentitySchema } from "./shared";
 import { baseNewsletterSchema } from "./newsletter";
 
 export const baseMembersSchema = z.object({
-  ...ghostIdentitySchema.shape,
+  id: z.string(),
   email: z.string({ description: "The email address of the member" }),
   name: z.string({ description: "The name of the member" }),
   note: z.string({ description: "(nullable) A note about the member" }).nullish(),

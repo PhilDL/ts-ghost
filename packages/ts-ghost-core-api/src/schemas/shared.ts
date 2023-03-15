@@ -140,7 +140,7 @@ export const contentAPICredentialsSchema = z.discriminatedUnion("resource", [
 export type ContentAPICredentials = z.infer<typeof contentAPICredentialsSchema>;
 
 export type APICredentials = {
-  resource: "pages" | "posts" | "settings" | "authors" | "tiers" | "tags";
+  resource: "pages" | "posts" | "settings" | "authors" | "tiers" | "tags" | "members";
   key: string;
   version: ContentAPIVersions;
   url: string;
@@ -153,24 +153,27 @@ export type AdminAPIEndpoints = z.infer<typeof adminAPIEndpointsSchema>;
 export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("pages"),
-    key: z
-      .string()
-      .regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-        message:
-          "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-      }),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
     version: apiVersionsSchema,
     url: z.string().url(),
     endpoint: z.literal("admin"),
   }),
   z.object({
     resource: z.literal("posts"),
-    key: z
-      .string()
-      .regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-        message:
-          "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-      }),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
+  z.object({
+    resource: z.literal("members"),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
     version: apiVersionsSchema,
     url: z.string().url(),
     endpoint: z.literal("admin"),
