@@ -1,21 +1,21 @@
 import type { ArgumentsCamelCase, CommandBuilder } from "yargs";
-import { requireGhostContentAPI } from "../utils/require-ghost-api";
+import { requireGhostAdminAPI } from "../utils/require-ghost-api";
 import * as fs from "fs";
 import path from "path";
 import { syncCreateMarkdownFile, convertPostToMarkdown } from "../utils/markdown-converter";
 import { log } from "@clack/prompts";
 
-export const command = "export <resource>";
+export const command = "export-admin <resource>";
 
-export const desc = "Use the Ghost Content API to export data on resource <resource>.";
+export const desc = "Use the Ghost Admin API to export data on resource <resource>.";
 
 export const builder: CommandBuilder = (yargs) => {
   return yargs
     .positional("resource", {
-      describe: "The name of the resource (e.g. posts, tags, tiers, authors)",
+      describe: "The name of the resource Admin API (e.g. posts, pages, members)",
       type: "string",
     })
-    .choices("resource", ["posts", "pages", "authors", "tags", "tiers"])
+    .choices("resource", ["posts", "pages", "members"])
     .option("host", {
       alias: "h",
       type: "string",
@@ -24,7 +24,7 @@ export const builder: CommandBuilder = (yargs) => {
     .option("key", {
       alias: ["k", "u"],
       type: "string",
-      description: "The API Key of the Ghost Content API",
+      description: "The Ghost Admin API Key",
     })
     .option("output", {
       alias: ["o"],
@@ -34,7 +34,6 @@ export const builder: CommandBuilder = (yargs) => {
 };
 
 export const handler = async function (argv: ArgumentsCamelCase<{ host?: string; key?: string; output?: string }>) {
-  const api = await requireGhostContentAPI(argv);
   let output = argv.output || null;
   if (output) {
     output = path.join(process.cwd(), output.toString());
@@ -47,6 +46,7 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
       await fs.promises.mkdir(output);
     }
   }
+  const api = await requireGhostAdminAPI(argv);
   switch (argv.resource) {
     case "posts": {
       let currentPage = 1;
@@ -58,14 +58,10 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
           .browse({
             input: {
               page: currentPage,
-            },
-            output: {
-              include: {
-                authors: true,
-                tags: true,
-              },
-            },
+              filter: "html:-null",
+            } as const,
           })
+          .formats({ html: true })
           .fetch();
         if (res.status === "error") {
           log.error(
@@ -98,14 +94,10 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
           .browse({
             input: {
               page: currentPage,
-            },
-            output: {
-              include: {
-                authors: true,
-                tags: true,
-              },
-            },
+              filter: "html:-null",
+            } as const,
           })
+          .formats({ html: true })
           .fetch();
         if (res.status === "error") {
           log.error(
@@ -128,102 +120,12 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
       }
       break;
     }
-    case "authors": {
-      const res = await api.authors
-        .browse({
-          output: {
-            include: {
-              "count.posts": true,
-            },
-          },
-        })
-        .fetch();
-      if (res.status === "error") {
-        log.error(
-          `There was an error trying to connect to your Ghost Instance: \n${res.errors
-            .map((m) => m.message)
-            .join("\n")}`
-        );
-        process.exit(0);
-      }
-      const content = JSON.stringify(res.data, null, 2);
-      if (output !== null) {
-        fs.writeFile(path.join(output, "authors.json"), content, "utf8", (err) => {
-          if (err) {
-            log.error(err.toString());
-          }
-        });
-      } else {
-        process.stdout.write(content);
+    default:
+      {
+        process.stdout.write("Not yet implemented");
+        break;
       }
       break;
-    }
-    case "tags": {
-      const res = await api.tags
-        .browse({
-          output: {
-            include: {
-              "count.posts": true,
-            },
-          },
-        })
-        .fetch();
-      if (res.status === "error") {
-        log.error(
-          `There was an error trying to connect to your Ghost Instance: \n${res.errors
-            .map((m) => m.message)
-            .join("\n")}`
-        );
-        process.exit(0);
-      }
-      const content = JSON.stringify(res.data, null, 2);
-      if (output !== null) {
-        fs.writeFile(path.join(output, "tags.json"), content, "utf8", (err) => {
-          if (err) {
-            log.error(err.toString());
-          }
-        });
-      } else {
-        process.stdout.write(content);
-      }
-      break;
-    }
-    case "tiers": {
-      const res = await api.tiers
-        .browse({
-          output: {
-            include: {
-              benefits: true,
-              monthly_price: true,
-              yearly_price: true,
-            },
-          },
-        })
-        .fetch();
-      if (res.status === "error") {
-        log.error(
-          `There was an error trying to connect to your Ghost Instance: \n${res.errors
-            .map((m) => m.message)
-            .join("\n")}`
-        );
-        process.exit(0);
-      }
-      const content = JSON.stringify(res.data, null, 2);
-      if (output !== null) {
-        fs.writeFile(path.join(output, "tiers.json"), content, "utf8", (err) => {
-          if (err) {
-            log.error(err.toString());
-          }
-        });
-      } else {
-        process.stdout.write(content);
-      }
-      break;
-    }
-    default: {
-      process.stdout.write("Not yet implemented");
-      break;
-    }
   }
   process.exit(0);
 };

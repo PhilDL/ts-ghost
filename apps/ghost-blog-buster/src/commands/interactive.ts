@@ -1,121 +1,42 @@
 #!/usr/bin/env node
 import type { Arguments } from "yargs";
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
-import { intro, outro, cancel, note, select, confirm } from "@clack/prompts";
-import {
-  postsExportSelection,
-  postsExportAll,
-  checkCredentials,
-  promptCredentialsLoop,
-  tagsExportAll,
-  tiersExportAll,
-  authorsExportAll,
-} from ".";
+import { intro, outro, cancel, select } from "@clack/prompts";
+import { entrypoint as interactiveContentApiEntrypoint } from "./interactive-content-api";
+import { entrypoint as interactiveAdminApiEntrypoint } from "./interactive-admin-api";
 
 import color from "picocolors";
-import { getConfig } from "../config";
 
 export const command = "$0";
 export const desc = "Interactive CLI";
 export const builder = {};
 export const handler = async function (_argv: Arguments) {
-  const config = getConfig();
-  intro(`${color.bgYellow(color.black(" ghost-blog-buster "))}`);
+  intro(`${color.bgBlack(color.yellow(" 👻 ghost-blog-buster 👻 "))}`);
 
-  const validSettings = await checkCredentials(config);
-  if (!validSettings) {
-    await promptCredentialsLoop(config);
+  const endpoint = await select({
+    message: "📦 Please choose the API you want to interact with. Select an option and press Enter (or CTRL-C to quit)",
+    options: [
+      {
+        value: "content-api",
+        label: "Content API",
+      },
+      { value: "admin-api", label: "Admin API" },
+    ],
+  });
+  if (isCancel(endpoint)) {
+    outro("👋 Goodbye, Thank you for using Ghost Blog Buster.");
+    process.exit(0);
   }
-
-  const ghost = new TSGhostContentAPI(config.get("ghostUrl"), config.get("ghostContentApiKey"), "v5.0");
-  const siteName = config.get("siteName");
-
-  const quit = false;
-  while (!quit) {
-    const action = await select({
-      message: "🤔 What would you like to export. Select an option and press Enter (or CTRL-C to quit)",
-      options: [
-        {
-          value: "export-posts",
-          label: "Posts",
-        },
-        { value: "export-tags", label: "Tags" },
-        { value: "export-tiers", label: "Tiers" },
-        { value: "export-authors", label: "Authors" },
-        { value: "disconnect", label: "Disconnect from that blog", hint: "This will close the current session." },
-        { value: "quit", label: "Quit" },
-      ],
-    });
-    if (isCancel(action)) {
-      cancel("Operation cancelled. Goodbye!");
-      process.exit(0);
+  switch (endpoint) {
+    case "admin-api": {
+      await interactiveAdminApiEntrypoint();
+      break;
     }
-    switch (action) {
-      case "export-posts": {
-        const postsActions = await select({
-          message: "📚 Which posts do you want to export? (or CTRL-C to go back)",
-          options: [
-            { value: "export-all", label: "All Posts" },
-            {
-              value: "export-selection",
-              label: "Select which ones to export",
-            },
-          ],
-        });
-        if (isCancel(postsActions)) {
-          cancel("Operation cancelled.");
-          break;
-        }
-        switch (postsActions) {
-          case "export-all":
-            await postsExportAll(ghost, siteName);
-            break;
-          case "export-selection":
-            await postsExportSelection(ghost, siteName);
-            break;
-          default:
-            break;
-        }
-        break;
-      }
-      case "export-tags":
-        await tagsExportAll(ghost, siteName);
-        break;
-      case "export-tiers":
-        await tiersExportAll(ghost, siteName);
-        break;
-      case "export-authors":
-        await authorsExportAll(ghost, siteName);
-        break;
-      case "disconnect": {
-        const shouldDisconnect = await confirm({
-          message: `Do you want to disconnect from "${siteName}"?`,
-        });
-        if (isCancel(shouldDisconnect)) {
-          cancel("Operation cancelled.");
-          break;
-        }
-        if (shouldDisconnect) {
-          config.set("ghostUrl", "");
-          config.set("ghostContentApiKey", "");
-          config.set("siteName", "");
-          note(
-            `You have been disconnected from ${siteName}. You can reconnect to another blog by running the command again.`,
-            "Disconnected"
-          );
-          process.exit(0);
-        }
-        break;
-      }
-      case "quit":
-        note(`Thank you for using Ghost Blog Buster`, "Goodbye");
-        process.exit(0);
-        break;
-      default:
-        break;
+    case "content-api": {
+      await interactiveContentApiEntrypoint();
+      break;
     }
   }
 
-  outro(`Goodbye!`);
+  outro("👋 Goodbye, Thank you for using Ghost Blog Buster.");
 };

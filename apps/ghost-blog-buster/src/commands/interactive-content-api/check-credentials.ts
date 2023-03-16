@@ -15,14 +15,14 @@ export const checkCredentials = async (config: Configstore) => {
       const res = await ghost.settings.fetch();
       if (res.status === "error") {
         s.stop(`❌ Credentials not valid...`);
-        log.error(`There was an error trying to connect to your credentials: \n${res.errors.join("\n")}`);
+        log.error(`There was an error trying to connect with these credentials: \n${res.errors.join("\n")}`);
       } else {
         config.set("siteName", res.data.title);
         s.stop(`✅ Connected to "${res.data.title}"`);
         validSettings = true;
       }
     } catch (error: unknown) {
-      note(`There was an error trying to connect to your credentials: \n${error}`, "Error");
+      note(`There was an error trying to connect with these credentials: \n${error}`, "Error");
     }
   }
   return validSettings;

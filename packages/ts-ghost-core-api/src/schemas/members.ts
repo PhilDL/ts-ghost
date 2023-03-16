@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { baseNewsletterSchema } from "./newsletter";
+import { baseSubscriptionsSchema } from "./subscriptions";
 
 export const baseMembersSchema = z.object({
   id: z.string(),
   email: z.string({ description: "The email address of the member" }),
-  name: z.string({ description: "The name of the member" }),
+  name: z.string({ description: "The name of the member" }).nullable(),
   note: z.string({ description: "(nullable) A note about the member" }).nullish(),
   geolocation: z.string({ description: "(nullable) The geolocation of the member" }).nullish(),
   created_at: z.string({ description: "The date and time the member was created" }),
@@ -19,7 +20,7 @@ export const baseMembersSchema = z.object({
     }),
     { description: "The labels associated with the member" }
   ),
-  subscriptions: z.array(z.string({ description: "The subscriptions associated with the member" })),
+  subscriptions: z.array(baseSubscriptionsSchema, { description: "The subscriptions associated with the member" }),
   avatar_image: z.string({ description: "The URL of the member's avatar image" }),
   email_count: z.number({ description: "The number of emails sent to the member" }),
   email_opened_count: z.number({ description: "The number of emails opened by the member" }),

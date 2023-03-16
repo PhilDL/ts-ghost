@@ -27,7 +27,8 @@
     "typecheck": "turbo run typecheck",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build && changeset publish"
+    "release": "turbo run build && changeset publish",
+    "validate": "turbo run lint typecheck test"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
