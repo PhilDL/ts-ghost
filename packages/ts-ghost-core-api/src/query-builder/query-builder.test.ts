@@ -1,5 +1,5 @@
 import { BrowseFetcher, ReadFetcher } from "../fetchers";
-import type { ContentAPICredentials } from "../schemas";
+import type { ContentAPICredentials } from "../schemas/shared";
 import type { BrowseParams } from "./browse-params";
 import { QueryBuilder } from "./query-builder";
 import { test, expect, describe } from "vitest";
@@ -10,7 +10,8 @@ describe("QueryBuilder", () => {
     url: "https://ghost.org" as const,
     key: "1234",
     version: "v5.0",
-    endpoint: "posts",
+    resource: "posts",
+    endpoint: "content",
   } as const;
 
   const simplifiedSchema = z.object({
@@ -361,6 +362,28 @@ describe("QueryBuilder", () => {
           } as const)
           .getOutputFields()
       ).toStrictEqual(["foo"]);
+    });
+  });
+
+  describe("formats output", () => {
+    test("fields params should only accept key from the fields schema", () => {
+      const qb = new QueryBuilder(
+        {
+          schema: simplifiedSchema,
+          output: simplifiedSchema,
+          include: simplifiedIncludeSchema,
+          formats: z.array(z.enum(["html", "mobiledoc"])),
+        },
+        api
+      );
+      qb.read({
+        input: {
+          id: "tzojf",
+        },
+        output: {
+          formats: ["html", "mobiledoc"],
+        },
+      });
     });
   });
 });

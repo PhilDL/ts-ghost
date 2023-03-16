@@ -1,21 +1,21 @@
 import { parseBrowseParams } from "./browse-params";
 import type { BrowseParams } from "./browse-params";
-import type { ContentAPICredentials } from "../schemas";
-import { z, ZodRawShape } from "zod";
+import type { APICredentials } from "../schemas";
+import { z, ZodEnum, ZodRawShape } from "zod";
 import { schemaWithPickedFields } from "./fields";
 import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
 import { queryIdentitySchema } from "../schemas";
+import type { Mask } from "../utils";
 
-type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
+export type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
 
-// Write documentation for that class and its methods
 /**
  * QueryBuilder class
  * @param {ZodRawShape} Shape
  * @param {ZodRawShape} OutputShape
  * @param {ZodRawShape} IncludeShape
- * @param {ContentAPICredentials} Api
+ * @param {APICredentials} Api
  *
  * @returns {QueryBuilder} QueryBuilder
  *
@@ -24,13 +24,15 @@ export class QueryBuilder<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,
   IncludeShape extends ZodRawShape,
-  Api extends ContentAPICredentials
+  Api extends APICredentials,
+  Formats extends ZodEnum<[string, ...string[]]>
 > {
   constructor(
     protected config: {
       schema: z.ZodObject<Shape>;
       output: z.ZodObject<OutputShape>;
       include: z.ZodObject<IncludeShape>;
+      formats?: z.ZodArray<Formats, "many">;
     },
     protected _api: Api
   ) {}
@@ -41,8 +43,8 @@ export class QueryBuilder<
    * @returns
    */
   public browse<
-    Fields extends z.objectKeyMask<OutputShape>,
-    Include extends z.objectKeyMask<IncludeShape>,
+    Fields extends Mask<OutputShape>,
+    Include extends Mask<IncludeShape>,
     Order extends OrderObjectKeyMask<Shape>,
     P extends {
       order?: string;
@@ -55,9 +57,13 @@ export class QueryBuilder<
     input?: BrowseParams<P, Shape> & {
       _unstable_order?: z.noUnrecognized<Order, Shape>;
     };
+    /**
+     * @deprecated use .fields(), .include(), and .formats() methods on the fetcher instead to have a better output typing.
+     */
     output?: {
       fields?: z.noUnrecognized<Fields, OutputShape>;
       include?: z.noUnrecognized<Include, IncludeShape>;
+      formats?: z.infer<Formats>[];
     };
   }) {
     let includeFields: (keyof IncludeShape)[] = [];
@@ -79,6 +85,10 @@ export class QueryBuilder<
         browseParams: (options && options.input && parseBrowseParams(options.input, this.config.schema)) || undefined,
         include: includeFields,
         fields: options?.output?.fields || undefined,
+        formats:
+          this.config.formats && options?.output?.formats
+            ? this.config.formats.parse(options.output.formats)
+            : undefined,
       },
       this._api
     );
@@ -95,13 +105,17 @@ export class QueryBuilder<
           id: string;
         }
       | { slug: string },
-    Fields extends z.objectKeyMask<OutputShape>,
-    Include extends z.objectKeyMask<IncludeShape>
+    Fields extends Mask<OutputShape>,
+    Include extends Mask<IncludeShape>
   >(options: {
     input: Identity;
+    /**
+     * @deprecated use .fields(), .include(), and .formats() methods on the fetcher instead to have a better output typing.
+     */
     output?: {
       fields?: z.noUnrecognized<Fields, OutputShape>;
       include?: z.noUnrecognized<Include, IncludeShape>;
+      formats?: z.infer<Formats>[];
     };
   }) {
     let includeFields: (keyof IncludeShape)[] = [];
@@ -123,6 +137,10 @@ export class QueryBuilder<
         identity: queryIdentitySchema.parse(options.input),
         include: includeFields,
         fields: options?.output?.fields || undefined,
+        formats:
+          this.config.formats && options?.output?.formats
+            ? this.config.formats.parse(options.output.formats)
+            : undefined,
       },
       this._api
     );

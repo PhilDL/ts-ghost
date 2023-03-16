@@ -1,7 +1,9 @@
+import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
+import fetch from "cross-fetch";
 import { describe, test, expect, vi, afterEach, beforeEach } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
-const key = process.env.VITE_GHOST_CONTENT_API_KEY || "93fa6b1e07090ecdf686521b7e";
+const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
 
 describe("authors api .browse() Args Type-safety", () => {
   const api = new TSGhostContentAPI(url, key, "v5.0");
@@ -92,15 +94,21 @@ describe("authors api .browse() Args Type-safety", () => {
   });
 });
 
-describe("authors endpoint mocked", () => {
+describe("authors resource mocked", () => {
   let api: TSGhostContentAPI;
-  beforeEach(() => {
-    api = new TSGhostContentAPI("https://my-ghost-blog.com", "93fa6b1e07090ecdf686521b7e", "v5.0");
-  });
 
+  beforeEach(() => {
+    api = new TSGhostContentAPI("https://my-ghost-blog.com", "59d4bf56c73c04a18c867dc3ba", "v5.0");
+    vi.mock("cross-fetch", async () => {
+      return {
+        default: createFetchMock(vi),
+      };
+    });
+  });
   afterEach(() => {
     vi.restoreAllMocks();
   });
+
   test("aouthors should be fetched correctly", async () => {
     const authors = api.authors;
     expect(authors).not.toBeUndefined();
@@ -119,13 +127,11 @@ describe("authors endpoint mocked", () => {
       id: true,
     });
     expect(browseQuery.getURL()?.searchParams.toString()).toBe(
-      "key=93fa6b1e07090ecdf686521b7e&page=2&fields=name%2Cid"
+      "key=59d4bf56c73c04a18c867dc3ba&page=2&fields=name%2Cid"
     );
 
-    const spy = vi.spyOn(browseQuery, "_fetch");
-    // @ts-expect-error - mockResolvedValueOnce is expecting undefined because the class is abstract
-    spy.mockImplementationOnce(() => {
-      return {
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
         authors: [
           {
             name: "foo",
@@ -142,10 +148,10 @@ describe("authors endpoint mocked", () => {
             prev: null,
           },
         },
-      };
-    });
+      })
+    );
     const result = await browseQuery.fetch();
-    expect(spy).toHaveBeenCalledTimes(1);
+    // expect(spy).toHaveBeenCalledTimes(1);
     expect(result).not.toBeUndefined();
     if (result.status === "success") {
       expect(result.data.length).toBe(1);

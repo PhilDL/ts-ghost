@@ -5,17 +5,17 @@ import path from "path";
 import { syncCreateMarkdownFile, convertPostToMarkdown } from "../utils/markdown-converter";
 import { log } from "@clack/prompts";
 
-export const command = "export <endpoint>";
+export const command = "export <resource>";
 
-export const desc = "Export all sources on endpoint <endpoint>.";
+export const desc = "Export all sources on resource <resource>.";
 
 export const builder: CommandBuilder = (yargs) => {
   return yargs
-    .positional("endpoint", {
-      describe: "The name of the endpoint (e.g. posts, tags, tiers, authors)",
+    .positional("resource", {
+      describe: "The name of the resource (e.g. posts, tags, tiers, authors)",
       type: "string",
     })
-    .choices("endpoint", ["posts", "pages", "authors", "tags", "tiers"])
+    .choices("resource", ["posts", "pages", "authors", "tags", "tiers"])
     .option("host", {
       alias: "h",
       type: "string",
@@ -47,7 +47,7 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
       await fs.promises.mkdir(output);
     }
   }
-  switch (argv.endpoint) {
+  switch (argv.resource) {
     case "posts": {
       let currentPage = 1;
       let pages = 1;

@@ -56,6 +56,20 @@ npm install @ts-ghost/content-api
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api)
 
 
+## [📦 TS Ghost Admin API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)
+
+A strongly 🦾 typed TypeScript library to interact with the Ghost Admin API:
+
+```shell
+npm install @ts-ghost/admin-api
+```
+
+- Browse and Read your blog **Posts**, **Pages**, and **Members** (More coming soon)
+- Type-safe Inputs/Outputs.
+- Models schema and run-type safety with [Zod](https://github.com/colinhacks/zod).
+- [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)
+
+
 ## [📦 TS Ghost Core API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api)
 
 The base building block containing QueryBuilders and Fetchers (Browse / Read) accepting Zod Schemas.

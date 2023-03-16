@@ -1,6 +1,6 @@
 import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
-import type { ContentAPICredentials } from "../schemas";
+import type { ContentAPICredentials, AdminAPICredentials } from "../schemas/shared";
 import { describe, test, expect, assert } from "vitest";
 import { ReadFetcher } from "./read-fetcher";
 import { z } from "zod";
@@ -10,7 +10,16 @@ describe("ReadFetcher", () => {
     url: "https://ghost.org" as const,
     key: "1234",
     version: "v5.0",
-    endpoint: "posts",
+    resource: "posts",
+    endpoint: "content",
+  } as const;
+
+  const adminApi: AdminAPICredentials = {
+    url: "https://ghost.org" as const,
+    key: "1234:123123",
+    version: "v5.0",
+    resource: "posts",
+    endpoint: "admin",
   } as const;
 
   const simplifiedSchema = z.object({
@@ -48,13 +57,36 @@ describe("ReadFetcher", () => {
       api
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
-    expect(readFetcher.getEndpoint()).toBe("posts");
+    expect(readFetcher.getResource()).toBe("posts");
     expect(readFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
     expect(readFetcher.getParams()).toStrictEqual({
       identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
     });
     expect(readFetcher.getURL()?.toString()).toBe(
       "https://ghost.org/ghost/api/content/posts/eh873jdLsnaUDj7149DSASJhdqsdj/?key=1234"
+    );
+  });
+
+  test("should return a ReadFetcher with admin API instance using id", () => {
+    const readFetcher = new ReadFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
+      },
+      adminApi
+    );
+    expect(readFetcher).toBeInstanceOf(ReadFetcher);
+    expect(readFetcher.getResource()).toBe("posts");
+    expect(readFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
+    expect(readFetcher.getParams()).toStrictEqual({
+      identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
+    });
+    expect(readFetcher.getURL()?.toString()).toBe(
+      "https://ghost.org/ghost/api/admin/posts/eh873jdLsnaUDj7149DSASJhdqsdj/"
     );
   });
 
@@ -71,7 +103,7 @@ describe("ReadFetcher", () => {
       api
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
-    expect(readFetcher.getEndpoint()).toBe("posts");
+    expect(readFetcher.getResource()).toBe("posts");
     expect(readFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
     expect(readFetcher.getParams()).toStrictEqual({
       identity: { slug: "this-is-a-slug" },
@@ -119,7 +151,7 @@ describe("ReadFetcher", () => {
       api
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
-    expect(readFetcher.getEndpoint()).toBe("posts");
+    expect(readFetcher.getResource()).toBe("posts");
     expect(readFetcher.getOutputFields()).toEqual(["title", "slug", "count"]);
     expect(readFetcher.getParams()).toStrictEqual({
       identity: { slug: "this-is-a-slug" },
@@ -150,6 +182,30 @@ describe("ReadFetcher", () => {
     });
   });
 
+  test("creating a ReadFetcher with formats", async () => {
+    const browseFetcher = new ReadFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        identity: { slug: "this-is-a-slug" },
+        formats: ["html", "plaintext"],
+      },
+      api
+    );
+    expect(browseFetcher).toBeInstanceOf(ReadFetcher);
+    expect(browseFetcher.getResource()).toBe("posts");
+    expect(browseFetcher.getParams()).toStrictEqual({
+      identity: { slug: "this-is-a-slug" },
+      formats: ["html", "plaintext"],
+    });
+    expect(browseFetcher.getURL()?.toString()).toBe(
+      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234&formats=html%2Cplaintext"
+    );
+  });
+
   test("ReadFetcher with no results ", async () => {
     const pick = { title: true, slug: true, count: true } as const;
     const outputSchema = simplifiedSchema.pick(pick);
@@ -168,7 +224,7 @@ describe("ReadFetcher", () => {
       api
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
-    expect(readFetcher.getEndpoint()).toBe("posts");
+    expect(readFetcher.getResource()).toBe("posts");
     expect(readFetcher.getOutputFields()).toEqual(["title", "slug", "count"]);
     expect(readFetcher.getIncludes()).toEqual(["count"]);
     expect(readFetcher.getParams()).toStrictEqual({

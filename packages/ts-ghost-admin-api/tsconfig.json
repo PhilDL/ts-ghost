@@ -1,0 +1,14 @@
+{
+  "extends": "@ts-ghost/tsconfig/node16.json",
+  "include": ["**/*.ts", "tsup.config.ts"],
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@ts-ghost/core-api/*": ["../ts-ghost-core-api/src/*"],
+      "@ts-ghost/core-api": ["../ts-ghost-core-api/src/index"],
+    },
+  },
+  "exclude": ["node_modules"]
+}

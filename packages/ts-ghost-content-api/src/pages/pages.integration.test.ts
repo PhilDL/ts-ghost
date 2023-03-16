@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
 
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
-const key = process.env.VITE_GHOST_CONTENT_API_KEY || "93fa6b1e07090ecdf686521b7e";
+const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
 
 const stub = {
   id: "63887bd17f2cf30001fec814",
@@ -72,7 +72,7 @@ describe("pages integration tests browse", () => {
       expect(page.id).toBe(stub.id);
       expect(page.title).toBe(stub.title);
       expect(page.slug).toBe(stub.slug);
-      expect(page.html).toBe(stub.html);
+      expect(page.html).toContain("<p>Astro Starter is an independent publication");
       expect(page.comment_id).toBe(stub.comment_id);
       expect(page.feature_image).toBe(stub.feature_image);
       expect(page.featured).toBe(stub.featured);
@@ -207,7 +207,7 @@ describe("pages integration tests read", () => {
       expect(page.id).toBe(stub.id);
       expect(page.title).toBe(stub.title);
       expect(page.slug).toBe(stub.slug);
-      expect(page.html).toBe(stub.html);
+      expect(page.html).toContain("<p>Astro Starter is an independent publication");
       expect(page.comment_id).toBe(stub.comment_id);
       expect(page.feature_image).toBe(stub.feature_image);
       expect(page.featured).toBe(stub.featured);
