@@ -34,8 +34,8 @@
     "eslint-config-vite": "*",
     "ts-toolbelt": "^9.6.0",
     "tsup": "^6.6.3",
-    "typescript": "4.9.5",
-    "vite": "^4.1.3",
+    "typescript": "5.0.2",
+    "vite": "^4.2.0",
     "vite-tsconfig-paths": "^4.0.7",
     "vitest": "^0.29.3",
     "vitest-fetch-mock": "^0.2.2"
