@@ -1,7 +1,13 @@
 import { adminPostsSchema } from "./schemas/posts";
 import { adminPagesSchema } from "./schemas/pages";
 import { adminMembersSchema } from "./schemas/members";
-import { adminAPICredentialsSchema, QueryBuilder, AdminAPIVersions } from "@ts-ghost/core-api";
+import {
+  adminAPICredentialsSchema,
+  QueryBuilder,
+  AdminAPIVersions,
+  baseSiteSchema,
+  BasicFetcher,
+} from "@ts-ghost/core-api";
 import { z } from "zod";
 
 export type { AdminAPICredentials, AdminAPIVersions } from "@ts-ghost/core-api";
@@ -93,5 +99,22 @@ export class TSGhostAdminAPI {
       },
       api
     );
+  }
+
+  get site() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "site",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "site";
+      key: string;
+      version: AdminAPIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    return new BasicFetcher({ output: baseSiteSchema }, api);
   }
 }

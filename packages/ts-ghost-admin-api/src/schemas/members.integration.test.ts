@@ -100,7 +100,6 @@ describe("members integration tests browse", () => {
         input: { id: "64113de3e54f8b0001789b4e" },
       })
       .fetch();
-    console.log(result);
     assert(result.status === "success");
     const member = result.data;
     expect(member.id).toBe(stubMember.id);
