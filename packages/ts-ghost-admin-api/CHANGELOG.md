@@ -1,6 +1,6 @@
-# @ts-ghost/core-api
+# @ts-ghost/admin-api
 
-## 0.2.0
+## 0.1.0
 
 ### Minor Changes
 
@@ -18,44 +18,7 @@
   - Zod upgrade
   - New `formats()`, `fields()` and `include()` methods on the Fetchers to have better output type safety. These new methods are intended to replace the `output` options args of the QueryBuilder later. They provide a better typing of the output transforming the schema like removing the `optionnal` effect of a field if it was included in the `include` option of the QueryBuilder.
 
-## 0.1.0
-
-### Minor Changes
-
-- e1970a1: First public beta version of the packages
-
-## 0.0.7
-
 ### Patch Changes
 
-- bbb5706: Feature/improve usability and documentation
-
-## 0.0.6
-
-### Patch Changes
-
-- 86e5730: update READMEs and packages descriptions.
-
-## 0.0.5
-
-### Patch Changes
-
-- e03e0e5: fix dependencies...
-
-## 0.0.4
-
-### Patch Changes
-
-- 011dd4e: changing the way deps are declared and testing CI
-
-## 0.0.3
-
-### Patch Changes
-
-- 4bef6ca: Update readme and licenses
-
-## 0.0.2
-
-### Patch Changes
-
-- 1cb1b2b: First release
+- Updated dependencies [4e95c66]
+  - @ts-ghost/core-api@0.2.0
