@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import type { Arguments } from "yargs";
 import { isCancel } from "@clack/core";
-import { intro, outro, cancel, select } from "@clack/prompts";
+import { intro, outro, select } from "@clack/prompts";
 import { entrypoint as interactiveContentApiEntrypoint } from "./interactive-content-api";
 import { entrypoint as interactiveAdminApiEntrypoint } from "./interactive-admin-api";
 

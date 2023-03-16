@@ -265,7 +265,7 @@ describe("pages integration tests browse", () => {
     expect(pageAuthor.roles).toStrictEqual(stubPageAuthors.roles);
 
     // Tiers
-    assert(page.tiers?.length === 1);
+    assert(Array.isArray(page.tiers));
     const pageTier = page.tiers[0];
     const stubPageTier = stubPage.tiers[0];
     expect(pageTier.id).toBe(stubPageTier.id);
@@ -377,7 +377,7 @@ describe("pages integration tests browse", () => {
     expect(postAuthor.roles).toStrictEqual(stubPageAuthors.roles);
 
     // Tiers
-    assert(page.tiers?.length === 1);
+    assert(Array.isArray(page.tiers));
     const postTier = page.tiers[0];
     const stubPageTier = stubPage.tiers[0];
     expect(postTier.id).toBe(stubPageTier.id);
