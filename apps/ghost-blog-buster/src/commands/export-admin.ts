@@ -60,7 +60,7 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
             input: {
               page: currentPage,
               filter: "html:-null",
-            } as const,
+            },
           })
           .formats({ html: true })
           .fetch();
@@ -96,7 +96,7 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
             input: {
               page: currentPage,
               filter: "html:-null",
-            } as const,
+            },
           })
           .formats({ html: true })
           .fetch();

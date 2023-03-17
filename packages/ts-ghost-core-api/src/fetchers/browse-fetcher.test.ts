@@ -7,20 +7,20 @@ import { z } from "zod";
 
 describe("BrowseFetcher", () => {
   const api: ContentAPICredentials = {
-    url: "https://ghost.org" as const,
+    url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
     resource: "posts",
     endpoint: "content",
-  } as const;
+  };
 
   const adminApi: AdminAPICredentials = {
-    url: "https://ghost.org" as const,
+    url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
     resource: "posts",
     endpoint: "admin",
-  } as const;
+  };
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -422,12 +422,12 @@ describe("BrowseFetcher", () => {
 
 describe("BrowseFetcher v2", () => {
   const api: ContentAPICredentials = {
-    url: "https://ghost.org" as const,
+    url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
     resource: "posts",
     endpoint: "content",
-  } as const;
+  };
 
   const simplifiedSchema = z.object({
     title: z.string(),

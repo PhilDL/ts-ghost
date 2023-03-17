@@ -107,7 +107,7 @@ let query = api.posts.browse({
       tags: true,
     },
   },
-} as const);
+});
 ```
 
 - `input` will accept browse parameters like `page`, `limit`, `order`, `filter`. And read parameters are `id` or `slug`.
@@ -133,12 +133,13 @@ let query = api.posts.browse({
     order: "title DESC"
     //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
   }
-} as const); // notice the `as const` necessary to have type hints of the order and filter.
+});
 ```
 These browse params are then parsed through a `Zod` Schema that will validate all the fields.
 
-#### Type-hint with `as const`
-You should use `as const` for your input if you are playing with `filter` and `order` so TypeScript can analyse the content of the string statically and TypeCheck it.
+#### (Deprecated) Type-hint with `as const`
+~~You should use `as const` for your input if you are playing with `filter` and `order` so TypeScript can analyse the content of the string statically and TypeCheck it.~~
+This is not needed anymore since TypeScript release 5.0 the generics use const inference.
 
 - `page:number` The current page requested
 - `limit:number` Between 0 and 15 (limitation of the Ghost API)
@@ -185,7 +186,7 @@ let result = await api.posts.read({
       title: true
     }
   }
-} as const).fetch();
+}).fetch();
 
 if (result.status === 'success') {
   const post = result.data;

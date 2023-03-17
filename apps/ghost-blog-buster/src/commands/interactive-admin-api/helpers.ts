@@ -8,7 +8,7 @@ export const fetchAllBlogPosts = async (ghost: TSGhostAdminAPI) => {
         filter: "html:-null",
         order: "published_at DESC,updated_at DESC",
       },
-    } as const)
+    })
     .formats({ html: true })
     .paginate();
   if (cursor.current.status === "success") posts.push(...cursor.current.data);

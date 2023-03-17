@@ -26,8 +26,9 @@
 
 Ghost Blog Buster is an interactive CLI allowing you to interact with your Ghost Blog directly via the Ghost Content API. From the cli you will be able to:
 
+- 🌪️ Choose between **Content API** or **Admin API** (for members or blog post content behind subscribption)
 - 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice. 
-- ⚙️ Display or export to JSON your **Tags**, **Tiers** and **Authors**
+- ⚙️ Display or export to JSON your **Tags**, **Tiers**, **Authors**, **Members** (Admin API only)
 - 📶 Connect / Disconnect from the Blog
 
 ## Built With

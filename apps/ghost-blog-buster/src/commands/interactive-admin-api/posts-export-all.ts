@@ -43,7 +43,7 @@ export async function postsExportAll(ghost: TSGhostAdminAPI, siteName: string) {
         input: {
           filter: "html:-null",
           page: currentPage,
-        } as const,
+        },
       })
       .formats({ html: true })
       .fetch();

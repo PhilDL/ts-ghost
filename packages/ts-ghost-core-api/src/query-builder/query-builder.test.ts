@@ -7,12 +7,12 @@ import { z } from "zod";
 
 describe("QueryBuilder", () => {
   const api: ContentAPICredentials = {
-    url: "https://ghost.org" as const,
+    url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
     resource: "posts",
     endpoint: "content",
-  } as const;
+  };
 
   const simplifiedSchema = z.object({
     foo: z.string(),
