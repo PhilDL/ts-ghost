@@ -39,7 +39,7 @@
     "@types/configstore": "^6.0.0",
     "@types/node": "^18.15.3",
     "@types/yargs": "^17.0.22",
-    "eslint-config-vite": "*",
+    "eslint": "^8.36.0",
     "jiti": "^1.18.2",
     "ts-node": "^10.9.1",
     "tsup": "^6.6.3",

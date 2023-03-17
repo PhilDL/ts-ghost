@@ -85,7 +85,7 @@ describe("QueryBuilder", () => {
           input: {
             order: "foo desc",
           },
-        } as const)
+        })
       ).toBeInstanceOf(BrowseFetcher);
     });
 
@@ -94,7 +94,7 @@ describe("QueryBuilder", () => {
         qb.browse({
           input: {
             // @ts-expect-error - invalid field
-            order: "foobarbaz desc" as const,
+            order: "foobarbaz desc",
           },
         })
       ).toThrow();
@@ -140,7 +140,7 @@ describe("QueryBuilder", () => {
           input: {
             filter: "foo:test",
           },
-        } as const)
+        })
       ).toBeInstanceOf(BrowseFetcher);
     });
 
@@ -195,7 +195,7 @@ describe("QueryBuilder", () => {
           input: {
             id: "abc",
           },
-        } as const)
+        })
       ).toBeInstanceOf(ReadFetcher);
 
       expect(
@@ -203,7 +203,7 @@ describe("QueryBuilder", () => {
           input: {
             slug: "foo-bar",
           },
-        } as const)
+        })
       ).toBeInstanceOf(ReadFetcher);
     });
 
@@ -214,7 +214,7 @@ describe("QueryBuilder", () => {
             // @ts-expect-error - invalid field
             foo: "foobarbaz",
           },
-        } as const)
+        })
       ).toThrow();
     });
   });
@@ -228,7 +228,7 @@ describe("QueryBuilder", () => {
               count: true,
             },
           },
-        } as const)
+        })
       ).toBeInstanceOf(BrowseFetcher);
       expect(
         qb.read({
@@ -238,7 +238,7 @@ describe("QueryBuilder", () => {
               count: true,
             },
           },
-        } as const)
+        })
       ).toBeInstanceOf(ReadFetcher);
     });
 
@@ -252,7 +252,7 @@ describe("QueryBuilder", () => {
                 foobarbaz: true,
               },
             },
-          } as const)
+          })
           .getIncludes()
       ).toStrictEqual([]);
       expect(
@@ -267,7 +267,7 @@ describe("QueryBuilder", () => {
                 foobarbaz: true,
               },
             },
-          } as const)
+          })
           .getIncludes()
       ).toStrictEqual([]);
     });
@@ -283,7 +283,7 @@ describe("QueryBuilder", () => {
                 foo: true,
               },
             },
-          } as const)
+          })
           .getOutputFields()
       ).toStrictEqual(["foo"]);
 
@@ -298,7 +298,7 @@ describe("QueryBuilder", () => {
                 foo: true,
               },
             },
-          } as const)
+          })
           .getOutputFields()
       ).toStrictEqual(["foo"]);
     });
@@ -313,7 +313,7 @@ describe("QueryBuilder", () => {
                 foobarbaz: true,
               },
             },
-          } as const)
+          })
           .getOutputFields()
       ).toStrictEqual([]);
 
@@ -327,7 +327,7 @@ describe("QueryBuilder", () => {
                 foobarbaz: true,
               },
             },
-          } as const)
+          })
           .getOutputFields()
       ).toStrictEqual([]);
     });
@@ -342,13 +342,13 @@ describe("QueryBuilder", () => {
             output: {
               fields: outputFields,
             },
-          } as const)
+          })
           .getOutputFields()
       ).toStrictEqual(["foo"]);
     });
 
     test("fields should be parsed even with type-safety overriden with as", () => {
-      const fields = ["slug", "title", "foo"] as const;
+      const fields = ["slug", "title", "foo"];
       const unknownOriginFields = fields.reduce((acc, k) => {
         acc[k as keyof z.infer<typeof simplifiedSchema>] = true;
         return acc;
@@ -359,7 +359,7 @@ describe("QueryBuilder", () => {
             output: {
               fields: unknownOriginFields,
             },
-          } as const)
+          })
           .getOutputFields()
       ).toStrictEqual(["foo"]);
     });

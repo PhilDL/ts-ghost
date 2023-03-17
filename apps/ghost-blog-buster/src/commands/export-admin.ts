@@ -4,6 +4,7 @@ import * as fs from "fs";
 import path from "path";
 import { syncCreateMarkdownFile, convertPostToMarkdown } from "../utils/markdown-converter";
 import { log } from "@clack/prompts";
+import { fetchAllMembers } from "../utils/admin-api";
 
 export const command = "export-admin <resource>";
 
@@ -117,6 +118,20 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
           posts.forEach(async (p) => process.stdout.write(convertPostToMarkdown(p)));
         }
         currentPage += 1;
+      }
+      break;
+    }
+    case "members": {
+      const members = await fetchAllMembers(api);
+      const content = JSON.stringify(members, null, 2);
+      if (output !== null) {
+        fs.writeFile(path.join(output, "members.json"), content, "utf8", (err) => {
+          if (err) {
+            log.error(err.toString());
+          }
+        });
+      } else {
+        process.stdout.write(content);
       }
       break;
     }
