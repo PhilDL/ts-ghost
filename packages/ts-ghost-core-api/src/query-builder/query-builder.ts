@@ -43,20 +43,18 @@ export class QueryBuilder<
    * @returns
    */
   public browse<
-    Fields extends Mask<OutputShape>,
-    Include extends Mask<IncludeShape>,
-    Order extends OrderObjectKeyMask<Shape>,
-    P extends {
-      order?: string;
+    const OrderStr extends string,
+    const FilterStr extends string,
+    const P extends {
+      order?: OrderStr;
       limit?: number | string;
       page?: number | string;
-      filter?: string;
-      _unstable_order?: Order;
-    }
+      filter?: FilterStr;
+    },
+    Fields extends Mask<OutputShape>,
+    Include extends Mask<IncludeShape>,
   >(options?: {
-    input?: BrowseParams<P, Shape> & {
-      _unstable_order?: z.noUnrecognized<Order, Shape>;
-    };
+    input?: BrowseParams<P, Shape>;
     /**
      * @deprecated use .fields(), .include(), and .formats() methods on the fetcher instead to have a better output typing.
      */

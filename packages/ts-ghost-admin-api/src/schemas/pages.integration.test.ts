@@ -265,7 +265,7 @@ describe("pages integration tests browse", () => {
     expect(pageAuthor.roles).toStrictEqual(stubPageAuthors.roles);
 
     // Tiers
-    expect(page.tiers.length).toBeGreaterThan(1);
+    assert(Array.isArray(page.tiers));
     const pageTier = page.tiers[0];
     const stubPageTier = stubPage.tiers[0];
     expect(pageTier.id).toBe(stubPageTier.id);
@@ -317,45 +317,45 @@ describe("pages integration tests browse", () => {
       .fetch();
 
     assert(result.status === "success");
-    const post = result.data;
-    expect(post.id).toBe(stubPage.id);
-    expect(post.uuid).toBe(stubPage.uuid);
-    expect(post.slug).toBe(stubPage.slug);
-    expect(post.title).toBe(stubPage.title);
-    expect(post.html).toBeDefined();
-    expect(post.comment_id).toBe(stubPage.comment_id);
-    expect(post.feature_image).toBe(stubPage.feature_image);
-    expect(post.featured).toBe(stubPage.featured);
-    expect(post.status).toBe(stubPage.status);
-    expect(post.visibility).toBe(stubPage.visibility);
-    expect(post.created_at).toBe(stubPage.created_at);
-    expect(post.updated_at).toBe(stubPage.updated_at);
-    expect(post.published_at).toBe(stubPage.published_at);
-    expect(post.custom_excerpt).toBe(stubPage.custom_excerpt);
-    expect(post.codeinjection_head).toBe(stubPage.codeinjection_head);
-    expect(post.codeinjection_foot).toBe(stubPage.codeinjection_foot);
-    expect(post.custom_template).toBe(stubPage.custom_template);
-    expect(post.canonical_url).toBe(stubPage.canonical_url);
-    expect(post.url).toBe(stubPage.url);
-    expect(post.excerpt).toBe(stubPage.excerpt);
-    expect(post.og_image).toBe(stubPage.og_image);
-    expect(post.og_title).toBe(stubPage.og_title);
-    expect(post.og_description).toBe(stubPage.og_description);
-    expect(post.twitter_image).toBe(stubPage.twitter_image);
-    expect(post.twitter_title).toBe(stubPage.twitter_title);
-    expect(post.twitter_description).toBe(stubPage.twitter_description);
-    expect(post.meta_title).toBe(stubPage.meta_title);
-    expect(post.meta_description).toBe(stubPage.meta_description);
-    expect(post.email_subject).toBeUndefined();
-    expect(post.frontmatter).toBe(stubPage.frontmatter);
-    expect(post.feature_image_alt).toBe(stubPage.feature_image_alt);
-    expect(post.feature_image_caption).toBe(stubPage.feature_image_caption);
+    const page = result.data;
+    expect(page.id).toBe(stubPage.id);
+    expect(page.uuid).toBe(stubPage.uuid);
+    expect(page.slug).toBe(stubPage.slug);
+    expect(page.title).toBe(stubPage.title);
+    expect(page.html).toBeDefined();
+    expect(page.comment_id).toBe(stubPage.comment_id);
+    expect(page.feature_image).toBe(stubPage.feature_image);
+    expect(page.featured).toBe(stubPage.featured);
+    expect(page.status).toBe(stubPage.status);
+    expect(page.visibility).toBe(stubPage.visibility);
+    expect(page.created_at).toBe(stubPage.created_at);
+    expect(page.updated_at).toBe(stubPage.updated_at);
+    expect(page.published_at).toBe(stubPage.published_at);
+    expect(page.custom_excerpt).toBe(stubPage.custom_excerpt);
+    expect(page.codeinjection_head).toBe(stubPage.codeinjection_head);
+    expect(page.codeinjection_foot).toBe(stubPage.codeinjection_foot);
+    expect(page.custom_template).toBe(stubPage.custom_template);
+    expect(page.canonical_url).toBe(stubPage.canonical_url);
+    expect(page.url).toBe(stubPage.url);
+    expect(page.excerpt).toBe(stubPage.excerpt);
+    expect(page.og_image).toBe(stubPage.og_image);
+    expect(page.og_title).toBe(stubPage.og_title);
+    expect(page.og_description).toBe(stubPage.og_description);
+    expect(page.twitter_image).toBe(stubPage.twitter_image);
+    expect(page.twitter_title).toBe(stubPage.twitter_title);
+    expect(page.twitter_description).toBe(stubPage.twitter_description);
+    expect(page.meta_title).toBe(stubPage.meta_title);
+    expect(page.meta_description).toBe(stubPage.meta_description);
+    expect(page.email_subject).toBeUndefined();
+    expect(page.frontmatter).toBe(stubPage.frontmatter);
+    expect(page.feature_image_alt).toBe(stubPage.feature_image_alt);
+    expect(page.feature_image_caption).toBe(stubPage.feature_image_caption);
 
     // relationship fields
-    expect(post.tags).toStrictEqual(stubPage.tags);
+    expect(page.tags).toStrictEqual(stubPage.tags);
 
     // Author
-    const postAuthor = post.authors[0];
+    const postAuthor = page.authors[0];
     const stubPageAuthors = stubPage.authors[0];
     expect(postAuthor.id).toBe(stubPageAuthors.id);
     expect(postAuthor.slug).toBe(stubPageAuthors.slug);
@@ -377,8 +377,8 @@ describe("pages integration tests browse", () => {
     expect(postAuthor.roles).toStrictEqual(stubPageAuthors.roles);
 
     // Tiers
-    expect(post.tiers.length).toBeGreaterThan(1);
-    const postTier = post.tiers[0];
+    assert(Array.isArray(page.tiers));
+    const postTier = page.tiers[0];
     const stubPageTier = stubPage.tiers[0];
     expect(postTier.id).toBe(stubPageTier.id);
     expect(postTier.name).toBe(stubPageTier.name);
@@ -396,27 +396,27 @@ describe("pages integration tests browse", () => {
 
     // Primary author
 
-    expect(post.primary_author.id).toBe(stubPage.primary_author.id);
-    expect(post.primary_author.slug).toBe(stubPage.primary_author.slug);
-    expect(post.primary_author.name).toBe(stubPage.primary_author.name);
-    expect(post.primary_author.profile_image).toBe(stubPage.primary_author.profile_image);
-    expect(post.primary_author.cover_image).toBe(stubPage.primary_author.cover_image);
-    expect(post.primary_author.bio).toBe(stubPage.primary_author.bio);
-    expect(post.primary_author.website).toBe(stubPage.primary_author.website);
-    expect(post.primary_author.location).toBe(stubPage.primary_author.location);
-    expect(post.primary_author.facebook).toBe(stubPage.primary_author.facebook);
-    expect(post.primary_author.twitter).toBe(stubPage.primary_author.twitter);
-    expect(post.primary_author.meta_title).toBe(stubPage.primary_author.meta_title);
-    expect(post.primary_author.meta_description).toBe(stubPage.primary_author.meta_description);
-    expect(post.primary_author.url).toBe(stubPage.primary_author.url);
-    expect(post.primary_author.created_at).toBeDefined();
-    expect(post.primary_author.updated_at).toBeDefined();
-    expect(post.primary_author.email).toBe(stubPage.primary_author.email);
-    expect(post.primary_author.accessibility).toBe(stubPage.primary_author.accessibility);
-    expect(post.primary_author.roles).toStrictEqual(stubPage.primary_author.roles);
+    expect(page.primary_author.id).toBe(stubPage.primary_author.id);
+    expect(page.primary_author.slug).toBe(stubPage.primary_author.slug);
+    expect(page.primary_author.name).toBe(stubPage.primary_author.name);
+    expect(page.primary_author.profile_image).toBe(stubPage.primary_author.profile_image);
+    expect(page.primary_author.cover_image).toBe(stubPage.primary_author.cover_image);
+    expect(page.primary_author.bio).toBe(stubPage.primary_author.bio);
+    expect(page.primary_author.website).toBe(stubPage.primary_author.website);
+    expect(page.primary_author.location).toBe(stubPage.primary_author.location);
+    expect(page.primary_author.facebook).toBe(stubPage.primary_author.facebook);
+    expect(page.primary_author.twitter).toBe(stubPage.primary_author.twitter);
+    expect(page.primary_author.meta_title).toBe(stubPage.primary_author.meta_title);
+    expect(page.primary_author.meta_description).toBe(stubPage.primary_author.meta_description);
+    expect(page.primary_author.url).toBe(stubPage.primary_author.url);
+    expect(page.primary_author.created_at).toBeDefined();
+    expect(page.primary_author.updated_at).toBeDefined();
+    expect(page.primary_author.email).toBe(stubPage.primary_author.email);
+    expect(page.primary_author.accessibility).toBe(stubPage.primary_author.accessibility);
+    expect(page.primary_author.roles).toStrictEqual(stubPage.primary_author.roles);
 
-    expect(post.count).toStrictEqual(stubPage.count);
-    expect(post.primary_tag).toStrictEqual(stubPage.primary_tag);
+    expect(page.count).toStrictEqual(stubPage.count);
+    expect(page.primary_tag).toStrictEqual(stubPage.primary_tag);
   });
 
   test("pages api with bad key", async () => {

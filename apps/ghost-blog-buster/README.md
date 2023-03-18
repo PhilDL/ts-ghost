@@ -26,8 +26,9 @@
 
 Ghost Blog Buster is an interactive CLI allowing you to interact with your Ghost Blog directly via the Ghost Content API. From the cli you will be able to:
 
+- 🌪️ Choose between **Content API** or **Admin API** (for members or blog post content behind subscribption)
 - 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice. 
-- ⚙️ Display or export to JSON your **Tags**, **Tiers** and **Authors**
+- ⚙️ Display or export to JSON your **Tags**, **Tiers**, **Authors**, **Members** (Admin API only)
 - 📶 Connect / Disconnect from the Blog
 
 ## Built With
@@ -58,7 +59,7 @@ ghost-blog-buster
 If you want to bypass the interactive prompts, you can use the CLI with pipeable commands. 
 
 
-### Export content
+### Export content with `export <resource>`
 
 For example if we already configured the URL and the Content API key, we can export all the posts to the `./posts` folder with the following command:
 
@@ -68,8 +69,8 @@ ghost-blog-buster export posts --output ./posts
 
 #### Options available
 
-- `--host` or `-h`: The URL of the blog
-- `--key` or `-k`: The Content API key
+- `--host` or `-h`: The URL of the blog (if not provided, it will check your config file that is filled by the interactive prompt)
+- `--key` or `-k`: The Content API key (if not provided, it will check your config file that is filled by the interactive prompt)
 - `--output` or `-o`: The destination folder. If no output is provided, content will go to stdout.
 
 Full example:
@@ -84,6 +85,33 @@ Available export
 ```sh
 ghost-blog-buster --help
 ```
+
+### Export content from Admin API with `export-admin <resource>`
+
+This export use the Admin API and require you to provide the Admin API key. An Admin API key is different from the Content API key. You can either use a Staff access token, visible at the bottom of a Ghost User profile or you can find it in your Ghost Admin panel, in the Integrations section.
+
+This is useful if your Blog Posts contain a free preview, paid content and you want to export everything.
+
+```sh
+ghost-blog-buster export-admin posts --output ./posts
+```
+
+#### Options available
+
+- `--host` or `-h`: The URL of the blog (if not provided, it will check your config file that is filled by the interactive prompt)
+- `--key` or `-k`: The Content API key (if not provided, it will check your config file that is filled by the interactive prompt)
+- `--output` or `-o`: The destination folder. If no output is provided, content will go to stdout.
+
+Full example:
+
+```sh
+ghost-blog-buster export-admin posts --host https://astro-starter.digitalpress.blog --key 1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8 --output ./posts
+```
+
+Available `export-admin <resource>` resources:
+- `posts`
+- `pages`
+- `members`
 
 ### Example piping commands
 

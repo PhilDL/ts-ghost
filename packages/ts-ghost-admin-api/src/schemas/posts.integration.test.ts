@@ -296,7 +296,7 @@ describe("posts integration tests browse", () => {
     expect(postAuthor.roles).toStrictEqual(stubPostAuthors.roles);
 
     // Tiers
-    expect(post.tiers.length).toBeGreaterThan(1);
+    assert(Array.isArray(post.tiers));
     const postTier = post.tiers[0];
     const stubPostTier = stubPost.tiers[0];
     expect(postTier.id).toBe(stubPostTier.id);
@@ -415,7 +415,7 @@ describe("posts integration tests browse", () => {
     expect(postAuthor.roles).toStrictEqual(stubPostAuthors.roles);
 
     // Tiers
-    expect(post.tiers.length).toBeGreaterThan(1);
+    assert(Array.isArray(post.tiers));
     const postTier = post.tiers[0];
     const stubPostTier = stubPost.tiers[0];
     expect(postTier.id).toBe(stubPostTier.id);

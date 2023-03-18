@@ -25,7 +25,7 @@ Here you will find links to the different packages of the `ts-ghost` suite.
 
 ## [💻 Ghost blog Buster](https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster)
 
-An elegant cli 🤖 to interact with your Ghost Blog directly via the Ghost Content API and export posts in Markdown format. From the cli you will be able to:
+An elegant cli 🤖 to interact with your Ghost Blog directly via the Ghost Content API or Admin API and export posts in Markdown format. From the cli you will be able to:
 
 ```shell
 npx @ts-ghost/ghost-blog-buster
@@ -37,8 +37,10 @@ or
 npm install -g @ts-ghost/ghost-blog-buster
 ```
 
-- 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice.
-- Display our Output in JSON format the **Tags**, **Tiers** and **Authors**.
+- 🌪️ Choose between **Content API** or **Admin API** (for members or blog post content behind subscribption)
+- 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice. 
+- ⚙️ Display or export to JSON your **Tags**, **Tiers**, **Authors**, **Members** (Admin API only)
+- 📶 Connect / Disconnect from the Blog
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster)
 
 

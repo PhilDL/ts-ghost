@@ -18,12 +18,12 @@ describe("BasicFetcher", () => {
   });
   test("instantiation", async () => {
     const api: ContentAPICredentials = {
-      url: "https://ghost.org" as const,
+      url: "https://ghost.org",
       key: "1234",
       version: "v5.0",
       resource: "posts",
       endpoint: "content",
-    } as const;
+    };
     const outputSchema = z.object({
       foo: z.string(),
       bar: z.string(),
@@ -38,12 +38,12 @@ describe("BasicFetcher", () => {
 
   test("fetch", async () => {
     const api: ContentAPICredentials = {
-      url: "https://ghost.org" as const,
+      url: "https://ghost.org",
       key: "1234",
       version: "v5.0",
       resource: "posts",
       endpoint: "content",
-    } as const;
+    };
     const outputSchema = z.object({
       foo: z.string(),
       bar: z.string(),
@@ -69,12 +69,12 @@ describe("BasicFetcher", () => {
 
   test("fetch with errors", async () => {
     const api: ContentAPICredentials = {
-      url: "https://ghost.org" as const,
+      url: "https://ghost.org",
       key: "1234",
       version: "v5.0",
       resource: "posts",
       endpoint: "content",
-    } as const;
+    };
     const outputSchema = z.object({
       foo: z.string(),
       bar: z.string(),
@@ -113,12 +113,12 @@ describe("BasicFetcher", () => {
 
   test("expect BasicFetcher _fetch to throw if _URL is not defined", async () => {
     const api: ContentAPICredentials = {
-      url: "https://ghost.org" as const,
+      url: "https://ghost.org",
       key: "1234",
       version: "v5.0",
       resource: "posts",
       endpoint: "content",
-    } as const;
+    };
     const outputSchema = z.object({
       foo: z.string(),
       bar: z.string(),
@@ -131,12 +131,12 @@ describe("BasicFetcher", () => {
 
   test("fetch failed, errors were caught", async () => {
     const api: ContentAPICredentials = {
-      url: "https://ghost.org" as const,
+      url: "https://ghost.org",
       key: "1234",
       version: "v5.0",
       resource: "posts",
       endpoint: "content",
-    } as const;
+    };
     const outputSchema = z.object({
       foo: z.string(),
       bar: z.string(),

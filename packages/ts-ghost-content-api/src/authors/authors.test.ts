@@ -15,37 +15,35 @@ describe("authors api .browse() Args Type-safety", () => {
 
   test(".browse() 'order' params should ony accept fields values", () => {
     // @ts-expect-error - order should ony contain field
-    expect(() => api.authors.browse({ input: { order: "foo ASC" } } as const)).toThrow();
+    expect(() => api.authors.browse({ input: { order: "foo ASC" } })).toThrow();
     // valid
-    expect(api.authors.browse({ input: { order: "name ASC" } } as const).getParams().browseParams).toStrictEqual({
+    expect(api.authors.browse({ input: { order: "name ASC" } }).getParams().browseParams).toStrictEqual({
       order: "name ASC",
     });
-    expect(
-      api.authors.browse({ input: { order: "name ASC,slug DESC" } } as const).getParams().browseParams
-    ).toStrictEqual({
+    expect(api.authors.browse({ input: { order: "name ASC,slug DESC" } }).getParams().browseParams).toStrictEqual({
       order: "name ASC,slug DESC",
     });
     expect(
-      api.authors.browse({ input: { order: "name ASC,slug DESC,location ASC" } } as const).getParams().browseParams
+      api.authors.browse({ input: { order: "name ASC,slug DESC,location ASC" } }).getParams().browseParams
     ).toStrictEqual({
       order: "name ASC,slug DESC,location ASC",
     });
     // @ts-expect-error - order should ony contain field (There is a typo in location)
-    expect(() => api.authors.browse({ input: { order: "name ASC,slug DESC,locaton ASC" } } as const)).toThrow();
+    expect(() => api.authors.browse({ input: { order: "name ASC,slug DESC,locaton ASC" } })).toThrow();
   });
 
   test(".browse() 'filter' params should ony accept valid field", () => {
     expect(() =>
-      // @ts-expect-error - order should ony contain field
       api.authors.browse({
+        // @ts-expect-error - order should ony contain field
         input: { filter: "foo:bar" },
-      } as const)
+      })
     ).toThrow();
     expect(
       api.authors
         .browse({
           input: { filter: "name:bar" },
-        } as const)
+        })
         .getParams().browseParams
     ).toStrictEqual({
       filter: "name:bar",
@@ -54,7 +52,7 @@ describe("authors api .browse() Args Type-safety", () => {
       api.authors
         .browse({
           input: { filter: "name:bar+slug:-test" },
-        } as const)
+        })
         .getParams().browseParams
     ).toStrictEqual({
       filter: "name:bar+slug:-test",
@@ -69,7 +67,7 @@ describe("authors api .browse() Args Type-safety", () => {
             // @ts-expect-error - order should ony contain field
             fields: { foo: true },
           },
-        } as const)
+        })
         .getOutputFields()
     ).toEqual([]);
 
@@ -79,7 +77,7 @@ describe("authors api .browse() Args Type-safety", () => {
           output: {
             fields: { location: true },
           },
-        } as const)
+        })
         .getOutputFields()
     ).toEqual(["location"]);
     expect(
@@ -88,7 +86,7 @@ describe("authors api .browse() Args Type-safety", () => {
           output: {
             fields: { name: true, website: true },
           },
-        } as const)
+        })
         .getOutputFields()
     ).toEqual(["name", "website"]);
   });
@@ -120,7 +118,7 @@ describe("authors resource mocked", () => {
           id: true,
         },
       },
-    } as const);
+    });
     expect(browseQuery).not.toBeUndefined();
     expect(browseQuery.getParams()?.fields).toStrictEqual({
       name: true,

@@ -9,7 +9,7 @@ export const adminPagesSchema = basePagesSchema.merge(
     mobiledoc: z.string().nullish(),
     status: z.union([z.literal("draft"), z.literal("published"), z.literal("scheduled")]),
     frontmatter: z.string().nullish(),
-    tiers: z.array(adminTiersSchema),
+    tiers: z.array(adminTiersSchema).nullish(),
     count: z
       .object({
         clicks: z.number().nullish(),
@@ -21,7 +21,8 @@ export const adminPagesSchema = basePagesSchema.merge(
       .nullish(),
     authors: z.array(adminAuthorsSchema),
     primary_author: adminAuthorsSchema,
-    html: z.string().optional(),
+    html: z.string().catch("").optional(),
+    plaintext: z.string().catch("").optional(),
   })
 );
 

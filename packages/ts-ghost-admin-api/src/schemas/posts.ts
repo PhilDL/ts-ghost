@@ -11,7 +11,7 @@ export const adminPostsSchema = basePostsSchema.merge(
     status: z.union([z.literal("draft"), z.literal("published"), z.literal("scheduled")]),
     email_segment: z.string().nullish(),
     frontmatter: z.string().nullish(),
-    tiers: z.array(adminTiersSchema),
+    tiers: z.array(adminTiersSchema).nullish(),
     email: baseEmailSchema.nullish(),
     newsletter: baseNewsletterSchema.nullish(),
     count: z
@@ -23,7 +23,8 @@ export const adminPostsSchema = basePostsSchema.merge(
       .nullish(),
     authors: z.array(adminAuthorsSchema),
     primary_author: adminAuthorsSchema,
-    html: z.string().optional(),
+    html: z.string().catch("").optional(),
+    plaintext: z.string().catch("").optional(),
   })
 );
 
