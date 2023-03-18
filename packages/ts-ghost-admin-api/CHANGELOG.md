@@ -1,5 +1,21 @@
 # @ts-ghost/admin-api
 
+## 0.2.0
+
+### Minor Changes
+
+- 5b2326f: Admin API in GBB, upgrade to TypeScript 5.0, remove `as const` requirement
+
+  - eslint conf is now at the root level
+  - you can now use gbb export-admin members resource
+  - upgrade to TS 5.0
+  - Improved typing of query builder so using `as const` is not necessary anymore
+
+### Patch Changes
+
+- Updated dependencies [5b2326f]
+  - @ts-ghost/core-api@0.3.0
+
 ## 0.1.0
 
 ### Minor Changes
