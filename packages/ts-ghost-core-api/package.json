@@ -33,7 +33,7 @@
     "@types/node": "^18.15.3",
     "eslint": "^8.36.0",
     "ts-toolbelt": "^9.6.0",
-    "tsup": "^6.6.3",
+    "tsup": "^6.7.0",
     "typescript": "5.0.2",
     "vite": "^4.2.0",
     "vite-tsconfig-paths": "^4.0.7",
