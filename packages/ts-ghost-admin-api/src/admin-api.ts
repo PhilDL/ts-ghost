@@ -1,6 +1,7 @@
 import { adminPostsSchema } from "./schemas/posts";
 import { adminPagesSchema } from "./schemas/pages";
 import { adminMembersSchema } from "./schemas/members";
+import { adminTiersSchema } from "./schemas";
 import {
   adminAPICredentialsSchema,
   QueryBuilder,
@@ -96,6 +97,35 @@ export class TSGhostAdminAPI {
         schema: adminMembersSchema,
         output: adminMembersSchema,
         include: membersIncludeSchema,
+      },
+      api
+    );
+  }
+
+  get tiers() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "tiers",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "tiers";
+      key: string;
+      version: AdminAPIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    const tiersIncludeSchema = z.object({
+      monthly_price: z.literal(true).optional(),
+      yearly_price: z.literal(true).optional(),
+      benefits: z.literal(true).optional(),
+    });
+    return new QueryBuilder(
+      {
+        schema: adminTiersSchema,
+        output: adminTiersSchema,
+        include: tiersIncludeSchema,
       },
       api
     );

@@ -178,7 +178,15 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
     url: z.string().url(),
     endpoint: z.literal("admin"),
   }),
-
+  z.object({
+    resource: z.literal("tiers"),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
   z.object({
     resource: z.literal("site"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
