@@ -52,7 +52,7 @@ export class QueryBuilder<
       filter?: FilterStr;
     },
     Fields extends Mask<OutputShape>,
-    Include extends Mask<IncludeShape>,
+    Include extends Mask<IncludeShape>
   >(options?: {
     input?: BrowseParams<P, Shape>;
     /**

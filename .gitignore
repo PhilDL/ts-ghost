@@ -35,3 +35,4 @@ coverage
 .env
 .output
 apps/**/public/build
+packages/ts-ghost-admin-api/src/playground.ts

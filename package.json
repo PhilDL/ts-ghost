@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "start": "pnpm --filter=@ts-ghost/ghost-blog-buster start",
+    "playground:admin-api": "pnpm --filter=@ts-ghost/admin-api playground",
     "build": "turbo run build",
     "test": "turbo run test",
     "test:integration": "turbo run test:integration",
@@ -30,16 +31,16 @@
     "validate": "turbo run lint typecheck test"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.26.0",
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.55.0",
+    "@changesets/cli": "^2.26.1",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.7.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-turbo": "^0.0.10",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-config-turbo": "^0.0.9",
-    "typescript": "^5.0.2",
-    "prettier": "^2.8",
-    "turbo": "^1.8.3"
+    "prettier": "^2.8.6",
+    "turbo": "^1.8.5",
+    "typescript": "^5.0.2"
   },
   "engines": {
     "node": ">=16.15.0",

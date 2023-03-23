@@ -41,15 +41,17 @@ export class ReadFetcher<
    * @param formats html, mobiledoc or plaintext
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(formats: Formats) {
+  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
+    formats: z.noUnrecognized<Formats, OutputShape>
+  ) {
     const params = {
       ...this._params,
-      formats: Object.keys(formats),
+      formats: Object.keys(formats).filter((key) => ["html", "mobiledoc", "plaintext"].includes(key)),
     };
     return new ReadFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output.required(formats),
+        output: this.config.output.required(formats as Formats),
         include: this.config.include,
       },
       params,
@@ -66,16 +68,16 @@ export class ReadFetcher<
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
   public include<Includes extends Mask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>>(
-    include: Includes
+    include: z.noUnrecognized<Includes, OutputShape>
   ) {
     const params = {
       ...this._params,
-      include: Object.keys(include),
+      include: Object.keys(this.config.include.parse(include)),
     };
     return new ReadFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output.required(include),
+        output: this.config.output.required(include as Includes),
         include: this.config.include,
       },
       params,
@@ -90,7 +92,7 @@ export class ReadFetcher<
    * @param fields Any keys from the resource Schema
    * @returns A new Fetcher with the fixed output shape having only the selected Fields
    */
-  public fields<Fields extends Mask<OutputShape>>(fields: Fields) {
+  public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
     const newOutput = this.config.output.pick(fields);
     return new ReadFetcher(
       {
@@ -121,6 +123,10 @@ export class ReadFetcher<
 
   public getIncludes() {
     return this._params?.include || [];
+  }
+
+  public getFormats() {
+    return this._params?.formats || [];
   }
 
   private _buildUrlParams() {

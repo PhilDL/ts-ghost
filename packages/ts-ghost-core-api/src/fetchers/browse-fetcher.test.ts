@@ -512,4 +512,28 @@ describe("BrowseFetcher v2", () => {
       "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
     );
   });
+  test("new formats, fields, and include should indicate wrong fields", async () => {
+    const fetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      api
+    );
+    const res = fetcher
+      // @ts-expect-error - foobar is not defined
+      .formats({ html: true, foobar: true })
+      // @ts-expect-error - foo is not in the include schema
+      .include({ count: true, foo: true })
+      // @ts-expect-error - barbaz is not in the output schema schema
+      .fields({ html: true, published: true, count: true, barbaz: true });
+    expect(res.getIncludes()).toStrictEqual(["count"]);
+    expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
+    expect(res.getFormats()).toStrictEqual(["html"]);
+    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/", "")).toBe(
+      "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
+    );
+  });
 });

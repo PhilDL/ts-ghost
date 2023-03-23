@@ -43,15 +43,17 @@ export class BrowseFetcher<
    * @param formats html, mobiledoc or plaintext
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(formats: Formats) {
+  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
+    formats: z.noUnrecognized<Formats, OutputShape>
+  ) {
     const params = {
       ...this._params,
-      formats: Object.keys(formats),
+      formats: Object.keys(formats).filter((key) => ["html", "mobiledoc", "plaintext"].includes(key)),
     };
     return new BrowseFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output.required(formats),
+        output: this.config.output.required(formats as Formats),
         include: this.config.include,
       },
       params,
@@ -68,16 +70,16 @@ export class BrowseFetcher<
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
   public include<Includes extends Mask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>>(
-    include: Includes
+    include: z.noUnrecognized<Includes, OutputShape>
   ) {
     const params = {
       ...this._params,
-      include: Object.keys(include),
+      include: Object.keys(this.config.include.parse(include)),
     };
     return new BrowseFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output.required(include),
+        output: this.config.output.required(include as Includes),
         include: this.config.include,
       },
       params,
@@ -92,7 +94,7 @@ export class BrowseFetcher<
    * @param fields Any keys from the resource Schema
    * @returns A new Fetcher with the fixed output shape having only the selected Fields
    */
-  public fields<Fields extends Mask<OutputShape>>(fields: Fields) {
+  public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
     const newOutput = this.config.output.pick(fields);
     return new BrowseFetcher(
       {
@@ -205,7 +207,16 @@ export class BrowseFetcher<
     } else {
       data = {
         status: "success",
-        meta: result.meta,
+        meta: result.meta || {
+          pagination: {
+            pages: 0,
+            page: 0,
+            limit: 15,
+            total: 0,
+            prev: null,
+            next: null,
+          },
+        },
         data: result[this._resource],
       };
     }
@@ -230,7 +241,16 @@ export class BrowseFetcher<
     } else {
       data = {
         status: "success",
-        meta: result.meta,
+        meta: result.meta || {
+          pagination: {
+            pages: 0,
+            page: 0,
+            limit: 15,
+            total: 0,
+            prev: null,
+            next: null,
+          },
+        },
         data: result[this._resource],
       };
     }

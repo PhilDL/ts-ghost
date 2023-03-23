@@ -6,14 +6,14 @@ export const baseOffersSchema = z.object({
   code: z.string({ description: "Shortcode for the offer, for example: https://yoursite.com/black-friday" }),
   display_title: z.string({ description: "Name displayed in the offer window" }),
   display_description: z.string({ description: "Text displayed in the offer window" }),
-  type: z.union([z.literal("percent"), z.literal("fixed")]),
+  type: z.union([z.literal("percent"), z.literal("fixed"), z.literal("trial")]),
   cadence: z.union([z.literal("month"), z.literal("year")]),
   amount: z.number({
     description: `Offer discount amount, as a percentage or fixed value as set in type. 
       Amount is always denoted by the smallest currency unit 
       (e.g., 100 cents instead of $1.00 in USD)`,
   }),
-  duration: z.union([z.literal("once"), z.literal("forever"), z.literal("repeating")], {
+  duration: z.union([z.literal("once"), z.literal("forever"), z.literal("repeating"), z.literal("trial")], {
     description: "once/forever/repeating. repeating duration is only available when cadence is month",
   }),
   duration_in_months: z
