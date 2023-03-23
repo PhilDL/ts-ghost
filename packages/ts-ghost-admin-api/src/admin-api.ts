@@ -120,7 +120,6 @@ export class TSGhostAdminAPI {
       monthly_price: z.literal(true).optional(),
       yearly_price: z.literal(true).optional(),
       benefits: z.literal(true).optional(),
-      stripe_prices: z.literal(true).optional(),
     });
     return new QueryBuilder(
       {
