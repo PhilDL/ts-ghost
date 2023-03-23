@@ -32,7 +32,6 @@ export class ReadFetcher<
     this._buildUrlParams();
     this._resource = _api.resource;
   }
-
   /**
    * Lets you choose output format for the content of Post and Pages resources
    * The choices are html, mobiledoc or plaintext. It will transform the output of the fetcher to a new shape
@@ -41,7 +40,9 @@ export class ReadFetcher<
    * @param formats html, mobiledoc or plaintext
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(formats: Formats) {
+  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
+    formats: z.noUnrecognized<Formats, OutputShape>
+  ) {
     const params = {
       ...this._params,
       formats: Object.keys(formats),
@@ -49,7 +50,7 @@ export class ReadFetcher<
     return new ReadFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output.required(formats),
+        output: this.config.output.required(formats as Formats),
         include: this.config.include,
       },
       params,
@@ -66,7 +67,7 @@ export class ReadFetcher<
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
   public include<Includes extends Mask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>>(
-    include: Includes
+    include: z.noUnrecognized<Includes, OutputShape>
   ) {
     const params = {
       ...this._params,
@@ -75,7 +76,7 @@ export class ReadFetcher<
     return new ReadFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output.required(include),
+        output: this.config.output.required(include as Includes),
         include: this.config.include,
       },
       params,
@@ -90,7 +91,7 @@ export class ReadFetcher<
    * @param fields Any keys from the resource Schema
    * @returns A new Fetcher with the fixed output shape having only the selected Fields
    */
-  public fields<Fields extends Mask<OutputShape>>(fields: Fields) {
+  public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
     const newOutput = this.config.output.pick(fields);
     return new ReadFetcher(
       {
