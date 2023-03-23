@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 0.2.1
+
+### Patch Changes
+
+- f5a95a2: add admin-tiers API
+- Updated dependencies [f5a95a2]
+  - @ts-ghost/core-api@0.3.1
+
 ## 0.2.0
 
 ### Minor Changes
