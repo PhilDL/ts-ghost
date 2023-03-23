@@ -1,5 +1,29 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.3.1
+
+### Patch Changes
+
+- 079b7e4: ## Improved admin-api
+  Add missing resources:
+
+  - tags
+  - offers
+  - users
+  - newsletters
+
+  ## Improved typing and usage of the new fetchers methods.
+
+  Fetcher methods .fields(), .formats() and .include() got some upgrade to have better type-safety for unknown fields and runtime stripping of unknown keys.
+
+  ## Upgrade dependencies
+
+  Upgrade most of the devDependencies with TypeScript 5.0 compatible versions (lint, prettier, etc)
+
+- Updated dependencies [079b7e4]
+  - @ts-ghost/admin-api@0.2.2
+  - @ts-ghost/content-api@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes
