@@ -2,7 +2,7 @@ import { adminPostsSchema } from "./schemas/posts";
 import { adminPagesSchema } from "./schemas/pages";
 import { adminMembersSchema } from "./schemas/members";
 import { adminTiersSchema } from "./schemas";
-import { baseNewsletterSchema } from "@ts-ghost/core-api";
+import { baseNewsletterSchema, baseOffersSchema, baseTagsSchema } from "@ts-ghost/core-api";
 import {
   adminAPICredentialsSchema,
   QueryBuilder,
@@ -152,6 +152,58 @@ export class TSGhostAdminAPI {
         schema: baseNewsletterSchema,
         output: baseNewsletterSchema,
         include: newslettersIncludeSchema,
+      },
+      api
+    );
+  }
+
+  get offers() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "offers",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "offers";
+      key: string;
+      version: AdminAPIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    const offersIncludeSchema = z.object({});
+    return new QueryBuilder(
+      {
+        schema: baseOffersSchema,
+        output: baseOffersSchema,
+        include: offersIncludeSchema,
+      },
+      api
+    );
+  }
+
+  get tags() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "tags",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "tags";
+      key: string;
+      version: AdminAPIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    const tagsIncludeSchema = z.object({
+      "count.posts": z.literal(true).optional(),
+    });
+    return new QueryBuilder(
+      {
+        schema: baseTagsSchema,
+        output: baseTagsSchema,
+        include: tagsIncludeSchema,
       },
       api
     );

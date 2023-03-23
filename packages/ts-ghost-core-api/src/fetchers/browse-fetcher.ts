@@ -205,9 +205,19 @@ export class BrowseFetcher<
       data.status = "error";
       data.errors = result.errors;
     } else {
+      console.log("result.meta", result.meta);
       data = {
         status: "success",
-        meta: result.meta,
+        meta: result.meta || {
+          pagination: {
+            pages: 0,
+            page: 0,
+            limit: 15,
+            total: 0,
+            prev: null,
+            next: null,
+          },
+        },
         data: result[this._resource],
       };
     }
@@ -232,7 +242,16 @@ export class BrowseFetcher<
     } else {
       data = {
         status: "success",
-        meta: result.meta,
+        meta: result.meta || {
+          pagination: {
+            pages: 0,
+            page: 0,
+            limit: 15,
+            total: 0,
+            prev: null,
+            next: null,
+          },
+        },
         data: result[this._resource],
       };
     }
