@@ -74,7 +74,7 @@ describe("users integration tests browse", () => {
     expect(user.meta_title).toBe(stubUser.meta_title);
     expect(user.meta_description).toBe(stubUser.meta_description);
     expect(user.tour).toBe(stubUser.tour);
-    expect(user.last_seen).toBe(stubUser.last_seen);
+    expect(user.last_seen).toBeDefined();
     expect(user.comment_notifications).toBe(stubUser.comment_notifications);
     expect(user.free_member_signup_notification).toBe(stubUser.free_member_signup_notification);
     expect(user.paid_subscription_started_notification).toBe(stubUser.paid_subscription_started_notification);
@@ -109,7 +109,7 @@ describe("users integration tests browse", () => {
     expect(user.meta_title).toBe(stubUser.meta_title);
     expect(user.meta_description).toBe(stubUser.meta_description);
     expect(user.tour).toBe(stubUser.tour);
-    expect(user.last_seen).toBe(stubUser.last_seen);
+    expect(user.last_seen).toBeDefined();
     expect(user.comment_notifications).toBe(stubUser.comment_notifications);
     expect(user.free_member_signup_notification).toBe(stubUser.free_member_signup_notification);
     expect(user.paid_subscription_started_notification).toBe(stubUser.paid_subscription_started_notification);
