@@ -26,6 +26,8 @@ Available resources:
 - `/posts`
 - `/pages`
 - `/members`
+- `/tiers`
+- `/newsletters`
 
 ## Install
 

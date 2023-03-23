@@ -2,6 +2,7 @@ import { adminPostsSchema } from "./schemas/posts";
 import { adminPagesSchema } from "./schemas/pages";
 import { adminMembersSchema } from "./schemas/members";
 import { adminTiersSchema } from "./schemas";
+import { baseNewsletterSchema } from "@ts-ghost/core-api";
 import {
   adminAPICredentialsSchema,
   QueryBuilder,
@@ -126,6 +127,31 @@ export class TSGhostAdminAPI {
         schema: adminTiersSchema,
         output: adminTiersSchema,
         include: tiersIncludeSchema,
+      },
+      api
+    );
+  }
+
+  get newsletters() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "newsletters",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "newsletters";
+      key: string;
+      version: AdminAPIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    const newslettersIncludeSchema = z.object({});
+    return new QueryBuilder(
+      {
+        schema: baseNewsletterSchema,
+        output: baseNewsletterSchema,
+        include: newslettersIncludeSchema,
       },
       api
     );
