@@ -87,7 +87,7 @@ describe("users integration tests browse", () => {
     expect(api.users).toBeDefined();
     const result = await api.users
       .read({
-        input: { id: "63887bd07f2cf30001fec7a2" },
+        input: { id: "1" },
       })
       .fetch();
     assert(result.status === "success");
