@@ -3,7 +3,6 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["!**/*.test.ts", "!**/*.spec.ts", "!**/*.integration.test.ts", "!.eslintrc.js"],
       "outputs": ["dist/**", ".cache"]
     },
     "start": {
