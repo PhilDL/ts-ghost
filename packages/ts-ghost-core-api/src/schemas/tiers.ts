@@ -24,7 +24,7 @@ export const baseTiersSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => (v ? v : null)),
-  benefits: z.array(z.string()).nullish(),
+  benefits: z.array(z.string()).optional(),
   visibility: ghostVisibilitySchema,
   currency: z.string().nullish(),
   trial_days: z.number().default(0),
