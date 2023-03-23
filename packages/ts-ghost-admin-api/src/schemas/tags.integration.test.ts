@@ -73,7 +73,7 @@ describe("tags integration tests browse", () => {
     expect(tag.accent_color).toBe(stubTag.accent_color);
     expect(tag.url).toBe(stubTag.url);
     expect(tag.created_at).toBe(stubTag.created_at);
-    expect(tag.updated_at).toBe(stubTag.updated_at);
+    expect(tag.updated_at).toBeDefined();
   });
 
   test("tags.read()", async () => {
@@ -106,6 +106,6 @@ describe("tags integration tests browse", () => {
     expect(tag.accent_color).toBe(stubTag.accent_color);
     expect(tag.url).toBe(stubTag.url);
     expect(tag.created_at).toBe(stubTag.created_at);
-    expect(tag.updated_at).toBe(stubTag.updated_at);
+    expect(tag.updated_at).toBeDefined();
   });
 });

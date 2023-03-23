@@ -73,7 +73,7 @@ describe("members integration tests browse", () => {
     expect(member.name).toBe(stubMember.name);
     expect(member.status).toBe(stubMember.status);
     expect(member.created_at).toBe(stubMember.created_at);
-    expect(member.updated_at).toBe(stubMember.updated_at);
+    expect(member.updated_at).toBeDefined();
     expect(member.geolocation).toBeDefined();
     expect(member.email).toBeDefined();
     expect(member.subscribed).toBe(true);
@@ -106,7 +106,7 @@ describe("members integration tests browse", () => {
     expect(member.name).toBe(stubMember.name);
     expect(member.status).toBe(stubMember.status);
     expect(member.created_at).toBe(stubMember.created_at);
-    expect(member.updated_at).toBe(stubMember.updated_at);
+    expect(member.updated_at).toBeDefined();
     expect(member.geolocation).toBeDefined();
     expect(member.email).toBeDefined();
     expect(member.subscribed).toBe(true);

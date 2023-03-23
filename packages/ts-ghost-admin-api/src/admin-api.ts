@@ -2,6 +2,7 @@ import { adminPostsSchema } from "./schemas/posts";
 import { adminPagesSchema } from "./schemas/pages";
 import { adminMembersSchema } from "./schemas/members";
 import { adminTiersSchema } from "./schemas";
+import { adminUsersSchema } from "./schemas/users";
 import { baseNewsletterSchema, baseOffersSchema, baseTagsSchema } from "@ts-ghost/core-api";
 import {
   adminAPICredentialsSchema,
@@ -204,6 +205,31 @@ export class TSGhostAdminAPI {
         schema: baseTagsSchema,
         output: baseTagsSchema,
         include: tagsIncludeSchema,
+      },
+      api
+    );
+  }
+
+  get users() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "users",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "users";
+      key: string;
+      version: AdminAPIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    const usersIncludeSchema = z.object({});
+    return new QueryBuilder(
+      {
+        schema: adminUsersSchema,
+        output: adminUsersSchema,
+        include: usersIncludeSchema,
       },
       api
     );

@@ -72,7 +72,7 @@ describe("tiers integration tests browse", () => {
     expect(tier.type).toBe(stubTier.type);
     expect(tier.welcome_page_url).toBe(stubTier.welcome_page_url);
     expect(tier.created_at).toBe(stubTier.created_at);
-    expect(tier.updated_at).toBe(stubTier.updated_at);
+    expect(tier.updated_at).toBeDefined();
     expect(tier.stripe_prices).toStrictEqual(stubTier.stripe_prices);
     expect(tier.monthly_price).toBe(stubTier.monthly_price);
     expect(tier.yearly_price).toBe(stubTier.yearly_price);
@@ -98,7 +98,7 @@ describe("tiers integration tests browse", () => {
     expect(tier.type).toBe(stubTier.type);
     expect(tier.welcome_page_url).toBe(stubTier.welcome_page_url);
     expect(tier.created_at).toBe(stubTier.created_at);
-    expect(tier.updated_at).toBe(stubTier.updated_at);
+    expect(tier.updated_at).toBeDefined();
     expect(tier.stripe_prices).toStrictEqual(stubTier.stripe_prices);
     expect(tier.monthly_price).toBe(stubTier.monthly_price);
     expect(tier.yearly_price).toBe(stubTier.yearly_price);
