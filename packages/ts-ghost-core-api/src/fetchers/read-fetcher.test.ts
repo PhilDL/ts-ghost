@@ -296,3 +296,83 @@ describe("ReadFetcher", () => {
     expect(fetcher.getIncludes()).toEqual([]);
   });
 });
+describe("ReadFetcherFetcher v2", () => {
+  const api: ContentAPICredentials = {
+    url: "https://ghost.org",
+    key: "1234",
+    version: "v5.0",
+    resource: "posts",
+    endpoint: "content",
+  };
+
+  const simplifiedSchema = z.object({
+    title: z.string(),
+    slug: z.string(),
+    published: z.boolean().optional(),
+    count: z.number().optional(),
+    html: z.string().optional(),
+    plaintext: z.string().optional(),
+    mobiledoc: z.string().optional(),
+  });
+
+  const simplifiedIncludeSchema = z.object({
+    count: z.literal(true).optional(),
+  });
+
+  beforeEach(() => {
+    vi.mock("cross-fetch", async () => {
+      return {
+        default: createFetchMock(vi),
+      };
+    });
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test("new formats, fields, and include", async () => {
+    const fetcher = new ReadFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      { identity: { slug: "this-is-a-slug" } },
+      api
+    );
+    const res = fetcher
+      .formats({ html: true })
+      .include({ count: true })
+      .fields({ html: true, published: true, count: true });
+    expect(res.getIncludes()).toStrictEqual(["count"]);
+    expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
+    expect(res.getFormats()).toStrictEqual(["html"]);
+    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")).toBe(
+      "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
+    );
+  });
+  test("new formats, fields, and include should indicate wrong fields", async () => {
+    const fetcher = new ReadFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      { identity: { slug: "this-is-a-slug" } },
+      api
+    );
+    const res = fetcher
+      // @ts-expect-error - foobar is not defined
+      .formats({ html: true, foobar: true })
+      // @ts-expect-error - foo is not in the include schema
+      .include({ count: true, foo: true })
+      // @ts-expect-error - barbaz is not in the output schema schema
+      .fields({ html: true, published: true, count: true, barbaz: true });
+    expect(res.getIncludes()).toStrictEqual(["count"]);
+    expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
+    expect(res.getFormats()).toStrictEqual(["html"]);
+    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")).toBe(
+      "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
+    );
+  });
+});

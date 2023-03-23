@@ -48,7 +48,7 @@ export class BrowseFetcher<
   ) {
     const params = {
       ...this._params,
-      formats: Object.keys(formats),
+      formats: Object.keys(formats).filter((key) => ["html", "mobiledoc", "plaintext"].includes(key)),
     };
     return new BrowseFetcher(
       {
@@ -74,7 +74,7 @@ export class BrowseFetcher<
   ) {
     const params = {
       ...this._params,
-      include: Object.keys(include),
+      include: Object.keys(this.config.include.parse(include)),
     };
     return new BrowseFetcher(
       {
@@ -205,7 +205,6 @@ export class BrowseFetcher<
       data.status = "error";
       data.errors = result.errors;
     } else {
-      console.log("result.meta", result.meta);
       data = {
         status: "success",
         meta: result.meta || {

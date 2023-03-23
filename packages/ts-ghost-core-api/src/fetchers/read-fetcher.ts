@@ -32,6 +32,7 @@ export class ReadFetcher<
     this._buildUrlParams();
     this._resource = _api.resource;
   }
+
   /**
    * Lets you choose output format for the content of Post and Pages resources
    * The choices are html, mobiledoc or plaintext. It will transform the output of the fetcher to a new shape
@@ -45,7 +46,7 @@ export class ReadFetcher<
   ) {
     const params = {
       ...this._params,
-      formats: Object.keys(formats),
+      formats: Object.keys(formats).filter((key) => ["html", "mobiledoc", "plaintext"].includes(key)),
     };
     return new ReadFetcher(
       {
@@ -71,7 +72,7 @@ export class ReadFetcher<
   ) {
     const params = {
       ...this._params,
-      include: Object.keys(include),
+      include: Object.keys(this.config.include.parse(include)),
     };
     return new ReadFetcher(
       {
@@ -122,6 +123,10 @@ export class ReadFetcher<
 
   public getIncludes() {
     return this._params?.include || [];
+  }
+
+  public getFormats() {
+    return this._params?.formats || [];
   }
 
   private _buildUrlParams() {
