@@ -66,7 +66,8 @@ A strongly 🦾 typed TypeScript library to interact with the Ghost Admin API:
 npm install @ts-ghost/admin-api
 ```
 
-- Browse and Read your blog **Posts**, **Pages**, and **Members** (More coming soon)
+- Browse and Read your blog **Posts**, **Pages**, **Members**, **Tags**, **Tiers**, **Offers**, **Newsletters**, **Users** and **Site**
+- Only `GET` methods are implemented for now.
 - Type-safe Inputs/Outputs.
 - Models schema and run-type safety with [Zod](https://github.com/colinhacks/zod).
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)
