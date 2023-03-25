@@ -149,9 +149,7 @@ describe("authors integration tests read", () => {
   test("should fetch author correctly and accept specific field", async () => {
     const readQuery = api.authors.read({ id: "1" }).fields({ name: true });
     expect(readQuery).not.toBeUndefined();
-    expect(readQuery.getParams()?.fields).toStrictEqual({
-      name: true,
-    });
+    expect(readQuery.getOutputFields()).toStrictEqual(["name"]);
     expect(readQuery.getURL()?.searchParams.toString()).toContain("&fields=name");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
