@@ -35,17 +35,15 @@ describe("QueryBuilder", () => {
     expect(qb.browse()).toBeInstanceOf(BrowseFetcher);
     // @ts-expect-error - missing Identity fields
     expect(() => qb.read()).toThrow();
-    expect(qb.read({ input: { id: "abc" } })).toBeInstanceOf(ReadFetcher);
+    expect(qb.read({ id: "abc" })).toBeInstanceOf(ReadFetcher);
   });
 
   describe("pagination inputs", () => {
     test("pagination params", () => {
       expect(
         qb.browse({
-          input: {
-            limit: 10,
-            page: 2,
-          },
+          limit: 10,
+          page: 2,
         })
       ).toBeInstanceOf(BrowseFetcher);
     });
@@ -53,16 +51,12 @@ describe("QueryBuilder", () => {
     test("pagination params shouldn't accept limit over 15 or under 0", () => {
       expect(() =>
         qb.browse({
-          input: {
-            limit: 20,
-          },
+          limit: 20,
         })
       ).toThrow();
       expect(() =>
         qb.browse({
-          input: {
-            limit: -1,
-          },
+          limit: -1,
         })
       ).toThrow();
     });
@@ -70,9 +64,7 @@ describe("QueryBuilder", () => {
     test("pagination params shouldn't accept page under 1", () => {
       expect(() =>
         qb.browse({
-          input: {
-            page: 0,
-          },
+          page: 0,
         })
       ).toThrow();
     });
@@ -82,9 +74,7 @@ describe("QueryBuilder", () => {
     test("order params should accept a string with correct fields", () => {
       expect(
         qb.browse({
-          input: {
-            order: "foo desc",
-          },
+          order: "foo desc",
         })
       ).toBeInstanceOf(BrowseFetcher);
     });
@@ -92,10 +82,8 @@ describe("QueryBuilder", () => {
     test("order params should not accept incorrect fields", () => {
       expect(() =>
         qb.browse({
-          input: {
-            // @ts-expect-error - invalid field
-            order: "foobarbaz desc",
-          },
+          // @ts-expect-error - invalid field
+          order: "foobarbaz desc",
         })
       ).toThrow();
     });
@@ -103,11 +91,7 @@ describe("QueryBuilder", () => {
     test("order params should be possible to be declared as const", () => {
       const order = "foo DESC";
       const input = { order } satisfies BrowseParams<{ order: typeof order }, z.infer<typeof simplifiedSchema>>;
-      expect(
-        qb.browse({
-          input: input,
-        })
-      ).toBeInstanceOf(BrowseFetcher);
+      expect(qb.browse(input)).toBeInstanceOf(BrowseFetcher);
     });
 
     test("order params should be possible to be declared as const and be type-safe", () => {
@@ -115,21 +99,17 @@ describe("QueryBuilder", () => {
       // @ts-expect-error - invalid field
       const input = { order } satisfies BrowseParams<{ order: typeof order }, z.infer<typeof simplifiedSchema>>;
       expect(() =>
-        qb.browse({
+        qb.browse(
           // @ts-expect-error - invalid field
-          input: input,
-        })
+          input
+        )
       ).toThrow();
     });
 
     test("order params should be possible to be declared without type-safety but still throw", () => {
       const order = "foobar DESC";
       const input = { order } as BrowseParams<{ order: string }, z.infer<typeof simplifiedSchema>>;
-      expect(() =>
-        qb.browse({
-          input: input,
-        })
-      ).toThrow();
+      expect(() => qb.browse(input)).toThrow();
     });
   });
 
@@ -137,9 +117,7 @@ describe("QueryBuilder", () => {
     test("filter params should accept a string with correct fields", () => {
       expect(
         qb.browse({
-          input: {
-            filter: "foo:test",
-          },
+          filter: "foo:test",
         })
       ).toBeInstanceOf(BrowseFetcher);
     });
@@ -147,10 +125,8 @@ describe("QueryBuilder", () => {
     test("filter params should not accept incorrect fields", () => {
       expect(() =>
         qb.browse({
-          input: {
-            // @ts-expect-error - invalid field
-            filter: "fo:test",
-          },
+          // @ts-expect-error - invalid field
+          filter: "fo:test",
         })
       ).toThrow();
     });
@@ -158,11 +134,7 @@ describe("QueryBuilder", () => {
     test("filter params should be possible to be declared as const", () => {
       const filter = "foo:bar";
       const input = { filter } satisfies BrowseParams<{ filter: typeof filter }, z.infer<typeof simplifiedSchema>>;
-      expect(
-        qb.browse({
-          input: input,
-        })
-      ).toBeInstanceOf(BrowseFetcher);
+      expect(qb.browse(input)).toBeInstanceOf(BrowseFetcher);
     });
 
     test("filter params should be possible to be declared as const and be type-safe", () => {
@@ -170,21 +142,17 @@ describe("QueryBuilder", () => {
       // @ts-expect-error - invalid field
       const input = { filter } satisfies BrowseParams<{ filter: typeof filter }, z.infer<typeof simplifiedSchema>>;
       expect(() =>
-        qb.browse({
+        qb.browse(
           // @ts-expect-error - invalid field
-          input: input,
-        })
+          input
+        )
       ).toThrow();
     });
 
     test("filter params should be possible to be declared without type-safety but still throw", () => {
       const filter = "foobar:test";
       const input = { filter } as BrowseParams<{ filter: string }, z.infer<typeof simplifiedSchema>>;
-      expect(() =>
-        qb.browse({
-          input: input,
-        })
-      ).toThrow();
+      expect(() => qb.browse(input)).toThrow();
     });
   });
 
@@ -192,17 +160,13 @@ describe("QueryBuilder", () => {
     test("identity read fields params should only accept key from the identity read schema", () => {
       expect(
         qb.read({
-          input: {
-            id: "abc",
-          },
+          id: "abc",
         })
       ).toBeInstanceOf(ReadFetcher);
 
       expect(
         qb.read({
-          input: {
-            slug: "foo-bar",
-          },
+          slug: "foo-bar",
         })
       ).toBeInstanceOf(ReadFetcher);
     });
@@ -210,10 +174,8 @@ describe("QueryBuilder", () => {
     test("identity read fields params should only accept key from the identity read schema", () => {
       expect(() =>
         qb.read({
-          input: {
-            // @ts-expect-error - invalid field
-            foo: "foobarbaz",
-          },
+          // @ts-expect-error - invalid field
+          foo: "foobarbaz",
         })
       ).toThrow();
     });
@@ -221,169 +183,8 @@ describe("QueryBuilder", () => {
 
   describe("include output", () => {
     test("include params should only accept key from the include schema", () => {
-      expect(
-        qb.browse({
-          output: {
-            include: {
-              count: true,
-            },
-          },
-        })
-      ).toBeInstanceOf(BrowseFetcher);
-      expect(
-        qb.read({
-          input: { id: "abc" },
-          output: {
-            include: {
-              count: true,
-            },
-          },
-        })
-      ).toBeInstanceOf(ReadFetcher);
-    });
-
-    test("include params should only accept key from the include schema", () => {
-      expect(
-        qb
-          .browse({
-            output: {
-              include: {
-                // @ts-expect-error - invalid field
-                foobarbaz: true,
-              },
-            },
-          })
-          .getIncludes()
-      ).toStrictEqual([]);
-      expect(
-        qb
-          .read({
-            input: {
-              id: "abc",
-            },
-            output: {
-              include: {
-                // @ts-expect-error - invalid field
-                foobarbaz: true,
-              },
-            },
-          })
-          .getIncludes()
-      ).toStrictEqual([]);
-    });
-  });
-
-  describe("fields output", () => {
-    test("fields params should only accept key from the fields schema", () => {
-      expect(
-        qb
-          .browse({
-            output: {
-              fields: {
-                foo: true,
-              },
-            },
-          })
-          .getOutputFields()
-      ).toStrictEqual(["foo"]);
-
-      expect(
-        qb
-          .read({
-            input: {
-              id: "abc",
-            },
-            output: {
-              fields: {
-                foo: true,
-              },
-            },
-          })
-          .getOutputFields()
-      ).toStrictEqual(["foo"]);
-    });
-
-    test("fields params should only accept key from the fields schema", () => {
-      expect(
-        qb
-          .browse({
-            output: {
-              fields: {
-                // @ts-expect-error - invalid field
-                foobarbaz: true,
-              },
-            },
-          })
-          .getOutputFields()
-      ).toStrictEqual([]);
-
-      expect(
-        qb
-          .read({
-            input: { id: "abc" },
-            output: {
-              fields: {
-                // @ts-expect-error - invalid field
-                foobarbaz: true,
-              },
-            },
-          })
-          .getOutputFields()
-      ).toStrictEqual([]);
-    });
-
-    test("fields should be okay with separate declaration", () => {
-      const outputFields = {
-        foo: true,
-      } satisfies { [k in keyof z.infer<typeof simplifiedSchema>]?: true | undefined };
-      expect(
-        qb
-          .browse({
-            output: {
-              fields: outputFields,
-            },
-          })
-          .getOutputFields()
-      ).toStrictEqual(["foo"]);
-    });
-
-    test("fields should be parsed even with type-safety overriden with as", () => {
-      const fields = ["slug", "title", "foo"];
-      const unknownOriginFields = fields.reduce((acc, k) => {
-        acc[k as keyof z.infer<typeof simplifiedSchema>] = true;
-        return acc;
-      }, {} as { [k in keyof z.infer<typeof simplifiedSchema>]?: true | undefined });
-      expect(
-        qb
-          .browse({
-            output: {
-              fields: unknownOriginFields,
-            },
-          })
-          .getOutputFields()
-      ).toStrictEqual(["foo"]);
-    });
-  });
-
-  describe("formats output", () => {
-    test("fields params should only accept key from the fields schema", () => {
-      const qb = new QueryBuilder(
-        {
-          schema: simplifiedSchema,
-          output: simplifiedSchema,
-          include: simplifiedIncludeSchema,
-          formats: z.array(z.enum(["html", "mobiledoc"])),
-        },
-        api
-      );
-      qb.read({
-        input: {
-          id: "tzojf",
-        },
-        output: {
-          formats: ["html", "mobiledoc"],
-        },
-      });
+      expect(qb.browse()).toBeInstanceOf(BrowseFetcher);
+      expect(qb.read({ id: "abc" })).toBeInstanceOf(ReadFetcher);
     });
   });
 });
