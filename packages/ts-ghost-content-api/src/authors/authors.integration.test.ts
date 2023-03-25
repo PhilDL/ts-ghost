@@ -56,9 +56,9 @@ describe("authors integration tests browse", () => {
 
   test("authors.browse() with output", async () => {
     const result = await api.authors
-      .browse({
-        output: { fields: { id: true, name: true, slug: true, count: true }, include: { "count.posts": true } },
-      })
+      .browse()
+      .fields({ id: true, name: true, slug: true, count: true })
+      .include({ "count.posts": true })
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
@@ -81,7 +81,7 @@ describe("authors integration tests browse", () => {
     expect(author.count?.posts).toBe(undefined);
   });
   test("authors.browse() with include count.posts", async () => {
-    const result = await api.authors.browse({ output: { include: { "count.posts": true } } }).fetch();
+    const result = await api.authors.browse().include({ "count.posts": true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -105,7 +105,7 @@ describe("authors integration tests read", () => {
   const api = new TSGhostContentAPI(url, key, "v5.0");
 
   test("should fetch one author correctly by id", async () => {
-    const readQuery = api.authors.read({ input: { id: "1" } });
+    const readQuery = api.authors.read({ id: "1" });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams().fields).toBeUndefined();
     expect(readQuery.getURL()?.searchParams.toString()).toBeDefined();
@@ -126,7 +126,7 @@ describe("authors integration tests read", () => {
   });
 
   test("should fetch one author correctly by slug", async () => {
-    const readQuery = api.authors.read({ input: { slug: "phildl" } });
+    const readQuery = api.authors.read({ slug: "phildl" });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams().fields).toBeUndefined();
     expect(readQuery.getURL()?.searchParams.toString()).toBeDefined();
@@ -147,7 +147,7 @@ describe("authors integration tests read", () => {
   });
 
   test("should fetch author correctly and accept specific field", async () => {
-    const readQuery = api.authors.read({ input: { id: "1" }, output: { fields: { name: true } } });
+    const readQuery = api.authors.read({ id: "1" }).fields({ name: true });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams()?.fields).toStrictEqual({
       name: true,
@@ -165,7 +165,7 @@ describe("authors integration tests read", () => {
   });
 
   test("should fetch author correctly and accept include", async () => {
-    const readQuery = api.authors.read({ input: { id: "1" }, output: { include: { "count.posts": true } } });
+    const readQuery = api.authors.read({ id: "1" }).include({ "count.posts": true });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams()?.fields).toBeUndefined();
     expect(readQuery.getParams()?.include).toStrictEqual(["count.posts"]);
@@ -183,7 +183,7 @@ describe("authors integration tests read", () => {
   });
 
   test("should catch the case where author is not found", async () => {
-    const readQuery = api.authors.read({ input: { id: "32" } });
+    const readQuery = api.authors.read({ id: "32" });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams().fields).toBeUndefined();
     expect(readQuery.getURL()?.searchParams.toString()).toBeDefined();

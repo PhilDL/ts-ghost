@@ -349,7 +349,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
     expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")).toBe(
-      "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
+      "?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html"
     );
   });
   test("new formats, fields, and include should indicate wrong fields", async () => {

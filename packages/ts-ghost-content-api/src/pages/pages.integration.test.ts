@@ -108,7 +108,7 @@ describe("pages integration tests browse", () => {
   });
 
   test("pages.browse() include authors and tags", async () => {
-    const result = await api.pages.browse({ output: { include: { authors: true, tags: true } } }).fetch();
+    const result = await api.pages.browse().include({ authors: true, tags: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -132,13 +132,7 @@ describe("pages integration tests browse", () => {
   });
 
   test("pages.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
-    const result = await api.pages
-      .browse({
-        output: {
-          fields: { slug: true, title: true },
-        },
-      })
-      .fetch();
+    const result = await api.pages.browse().fields({ slug: true, title: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -159,12 +153,9 @@ describe("pages integration tests browse", () => {
 
   test("pages.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
     const result = await api.pages
-      .browse({
-        output: {
-          fields: { slug: true, title: true, primary_author: true },
-          include: { authors: true },
-        },
-      })
+      .browse()
+      .fields({ slug: true, title: true, primary_author: true })
+      .include({ authors: true })
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
@@ -194,7 +185,7 @@ describe("pages integration tests read", () => {
   });
 
   test("pages.browse() include authors and tags", async () => {
-    const result = await api.pages.read({ input: { id: "63887bd07f2cf30001fec812" } }).fetch();
+    const result = await api.pages.read({ id: "63887bd07f2cf30001fec812" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
