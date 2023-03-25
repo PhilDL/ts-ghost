@@ -225,11 +225,9 @@ describe("posts integration tests browse", () => {
     expect(api.posts).toBeDefined();
     const result = await api.posts
       .browse({
-        input: { limit: 1 },
-        output: {
-          formats: ["html", "plaintext"],
-        },
+        limit: 1,
       })
+      .formats({ html: true, plaintext: true })
       .fetch();
 
     assert(result.status === "success");
@@ -344,11 +342,9 @@ describe("posts integration tests browse", () => {
     expect(api.posts).toBeDefined();
     const result = await api.posts
       .read({
-        input: { slug: "coming-soon" },
-        output: {
-          formats: ["html", "plaintext"],
-        },
+        slug: "coming-soon",
       })
+      .formats({ html: true, plaintext: true })
       .fetch();
 
     assert(result.status === "success");
@@ -468,21 +464,17 @@ describe("posts integration tests browse", () => {
     expect(api.posts).toBeDefined();
     const result = await api.posts
       .browse({
-        input: { limit: 1 },
-        output: {
-          formats: ["html", "plaintext"],
-        },
+        limit: 1,
       })
+      .formats({ html: true, plaintext: true })
       .fetch();
     assert(result.status === "error");
     expect(result.errors[0].message).toBe("Unknown Admin API Key");
     const resultR = await api.posts
       .read({
-        input: { slug: "coming-soon" },
-        output: {
-          formats: ["html", "plaintext"],
-        },
+        slug: "coming-soon",
       })
+      .formats({ html: true, plaintext: true })
       .fetch();
     assert(resultR.status === "error");
     expect(resultR.errors[0].message).toBe("Unknown Admin API Key");
@@ -497,21 +489,17 @@ describe("posts integration tests browse", () => {
     expect(api.posts).toBeDefined();
     const result = await api.posts
       .browse({
-        input: { limit: 1 },
-        output: {
-          formats: ["html", "plaintext"],
-        },
+        limit: 1,
       })
+      .formats({ html: true, plaintext: true })
       .fetch();
     assert(result.status === "error");
     expect(result.errors[0].message).toContain("FetchError");
     const resultR = await api.posts
       .read({
-        input: { slug: "coming-soon" },
-        output: {
-          formats: ["html", "plaintext"],
-        },
+        slug: "coming-soon",
       })
+      .formats({ html: true, plaintext: true })
       .fetch();
     assert(resultR.status === "error");
     expect(resultR.errors[0].message).toContain("FetchError");

@@ -58,7 +58,7 @@ describe("tiers integration tests browse", () => {
     expect(api.tiers).toBeDefined();
     const result = await api.tiers
       .browse({
-        input: { limit: 1 },
+        limit: 1,
       })
       .fetch();
 
@@ -85,7 +85,7 @@ describe("tiers integration tests browse", () => {
     expect(api.tiers).toBeDefined();
     const result = await api.tiers
       .read({
-        input: { id: "63887bd07f2cf30001fec7a2" },
+        id: "63887bd07f2cf30001fec7a2",
       })
       .fetch();
     assert(result.status === "success");

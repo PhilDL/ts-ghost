@@ -63,7 +63,7 @@ describe("members integration tests browse", () => {
     expect(api.members).toBeDefined();
     const result = await api.members
       .browse({
-        input: { limit: 1 },
+        limit: 1,
       })
       .fetch();
 
@@ -97,7 +97,7 @@ describe("members integration tests browse", () => {
     expect(api.members).toBeDefined();
     const result = await api.members
       .read({
-        input: { id: "64113de3e54f8b0001789b4e" },
+        id: "64113de3e54f8b0001789b4e",
       })
       .fetch();
     assert(result.status === "success");

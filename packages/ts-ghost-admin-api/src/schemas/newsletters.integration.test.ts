@@ -50,7 +50,7 @@ describe("newsletters integration tests browse", () => {
     expect(api.newsletters).toBeDefined();
     const result = await api.newsletters
       .browse({
-        input: { limit: 1 },
+        limit: 1,
       })
       .fetch();
 
@@ -86,7 +86,7 @@ describe("newsletters integration tests browse", () => {
     expect(api.newsletters).toBeDefined();
     const result = await api.newsletters
       .read({
-        input: { id: "63887bd07f2cf30001fec7a4" },
+        id: "63887bd07f2cf30001fec7a4",
       })
       .fetch();
     assert(result.status === "success");
