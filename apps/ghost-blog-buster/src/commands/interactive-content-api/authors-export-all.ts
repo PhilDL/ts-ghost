@@ -47,12 +47,9 @@ export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: strin
 
   s.start(`Fetching Authors...`);
   const authors = await ghost.authors
-    .browse({
-      output: {
-        include: {
-          "count.posts": true,
-        },
-      },
+    .browse()
+    .include({
+      "count.posts": true,
     })
     .fetch();
   if (authors.status === "error") {

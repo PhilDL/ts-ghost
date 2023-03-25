@@ -4,10 +4,8 @@ export const fetchAllBlogPosts = async (ghost: TSGhostAdminAPI) => {
   const posts: (Post & { html: string | null })[] = [];
   let cursor = await ghost.posts
     .browse({
-      input: {
-        filter: "html:-null",
-        order: "published_at DESC,updated_at DESC",
-      },
+      filter: "html:-null",
+      order: "published_at DESC,updated_at DESC",
     })
     .formats({ html: true })
     .paginate();

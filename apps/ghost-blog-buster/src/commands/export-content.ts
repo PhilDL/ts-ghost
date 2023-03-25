@@ -56,15 +56,11 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
       while (currentPage <= pages) {
         const res = await api.posts
           .browse({
-            input: {
-              page: currentPage,
-            },
-            output: {
-              include: {
-                authors: true,
-                tags: true,
-              },
-            },
+            page: currentPage,
+          })
+          .include({
+            authors: true,
+            tags: true,
           })
           .fetch();
         if (res.status === "error") {
@@ -96,15 +92,11 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
       while (currentPage <= pages) {
         const res = await api.pages
           .browse({
-            input: {
-              page: currentPage,
-            },
-            output: {
-              include: {
-                authors: true,
-                tags: true,
-              },
-            },
+            page: currentPage,
+          })
+          .include({
+            authors: true,
+            tags: true,
           })
           .fetch();
         if (res.status === "error") {
@@ -130,12 +122,9 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
     }
     case "authors": {
       const res = await api.authors
-        .browse({
-          output: {
-            include: {
-              "count.posts": true,
-            },
-          },
+        .browse()
+        .include({
+          "count.posts": true,
         })
         .fetch();
       if (res.status === "error") {
@@ -160,12 +149,9 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
     }
     case "tags": {
       const res = await api.tags
-        .browse({
-          output: {
-            include: {
-              "count.posts": true,
-            },
-          },
+        .browse()
+        .include({
+          "count.posts": true,
         })
         .fetch();
       if (res.status === "error") {
@@ -190,14 +176,11 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
     }
     case "tiers": {
       const res = await api.tiers
-        .browse({
-          output: {
-            include: {
-              benefits: true,
-              monthly_price: true,
-              yearly_price: true,
-            },
-          },
+        .browse()
+        .include({
+          benefits: true,
+          monthly_price: true,
+          yearly_price: true,
         })
         .fetch();
       if (res.status === "error") {
