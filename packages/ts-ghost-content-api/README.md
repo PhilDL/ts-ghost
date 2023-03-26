@@ -66,9 +66,7 @@ let key = "22444f78447824223cefc48062"; // Content API KEY
 const api = new TSGhostContentAPI(url, key, "v5.0");
 
 const res = await api.posts.read({
-  input: {
-    slug: "welcome-to-ghost",
-  }
+  slug: "welcome-to-ghost",
 }).fetch();
 if (res.status === "success") {
   const post = res.data;
@@ -86,32 +84,22 @@ new instance of a QueryBuilder containing two methods `read` and `browse`.
 This instance is already built with the associated Schema for that resource so any operation 
 you will do from that point will be typed against the asociated schema.
 
-`browse` and `read` methods accept a config object with 2 properties: `input` and an `output`. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
+`browse` and `read` methods accept an options object. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
 
 ```typescript
 let query = api.posts.browse({
-  input: {
-    limit: 5,
-    order: "title DESC"
-    //      ^? the text here will throw a TypeScript lint error if you use unknown field.
-  },
-  output: {
-    include: {
-      authors: true,
-      tags: true,
-    },
-  },
+  limit: 5,
+  order: "title DESC"
+  //      ^? the text here will throw a TypeScript lint error if you use unknown field.
 });
 ```
 
-- `input` will accept browse parameters like `page`, `limit`, `order`, `filter`. And read parameters are `id` or `slug`.
-- `output` is the same for both methods and let you specify `fields` to output (to not have the full object) and some Schema specific `include`. For example getting the posts including their Authors.
+- `browse` will accept browse parameters like `page`, `limit`, `order`, `filter`. 
+- `read` parameters are `id` or `slug`.
 
-*Ghost Content API doesn't work well when you mix `fields` and `include` output, so in most case you shouldn't*
+## Options 
 
-## `input`
-
-### `.browse` inputs
+### `.browse` options
 
 Input are totally optionals on the `browse` method but they let you filter and order your search.
 
@@ -119,21 +107,15 @@ This is an example containing all the available keys in the `input` object
 
 ```typescript
 let query = api.posts.browse({
-  input: {
-    page: 1,
-    limit: 5,
-    filter: "name:bar+slug:-test",
-    //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
-    order: "title DESC"
-    //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
-  }
+  page: 1,
+  limit: 5,
+  filter: "name:bar+slug:-test",
+  //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
+  order: "title DESC"
+  //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
 });
 ```
 These browse params are then parsed through a `Zod` Schema that will validate all the fields.
-
-#### (Deprecated) Type-hint with `as const`
-~~You should use `as const` for your input if you are playing with `filter` and `order` so TypeScript can analyse the content of the string statically and TypeCheck it.~~
-This is not needed anymore since TypeScript release 5.0 the generics use const inference.
 
 - `page:number` The current page requested
 - `limit:number` Between 0 and 15 (limitation of the Ghost API)
@@ -142,44 +124,35 @@ This is not needed anymore since TypeScript release 5.0 the generics use const i
 
 For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the QueryBuilder will throw an Error with message containing the unknown field.
 
-### `.read` inputs
+### `.read` options
 Read is meant to be used to fetch 1 object only by `id` or `slug`. 
 
 ```typescript
 let query = api.posts.read({
-  input: {
-    id: "edHks74hdKqhs34izzahd45"
-  }
+  id: "edHks74hdKqhs34izzahd45"
 }); 
 
 // or 
 
 let query = api.posts.read({
-  input: {
-    slug: "typescript-is-awesome-in-2025"
-  }
+  slug: "typescript-is-awesome-in-2025"
 }); 
 ```
 You can submit **both** `id` and `slug`, but the fetcher will then chose the `id` in priority if present to make the final URL query to the Ghost API.
 
-## `output`
-Output is the same for both `browse` and `read` methods and gives you 2 keys to play with
+## Modifying the `output` after read or browse.
+Both `browse` and `read` methods give you a Fetcher with methods that alter the output of the results. The output type will be modified to match the fields, inclusion or format you selected. These methods are **chainable**.
 
-### `fields` 
-The `fields` key lets you change the output of the result to have only your selected fields, it works by giving the key and the value `true` to the field you want to keep. Under the hood it will use the `zod.pick` method to pick only the fields you want.
+### `.fields()` 
+The `fields` method lets you change the output of the result to have only your selected fields, it works by giving an object with the field name and the value `true`. Under the hood it will use the `zod.pick` method to pick only the fields you want.
 
 ```typescript
 let result = await api.posts.read({
-  input: {
-    slug: "typescript-is-cool"
-  },
-  output: {
-    fields: {
-      id: true,
-      slug: true,
-      title: true
-    }
-  }
+  slug: "typescript-is-cool"
+}).fields({
+  id: true,
+  slug: true,
+  title: true
 }).fetch();
 
 if (result.status === 'success') {
@@ -189,35 +162,47 @@ if (result.status === 'success') {
 ```
 The **output schema** will be modified to only have the fields you selected and TypeScript will pick up on that to warn you if you access non-existing fields.
 
-### `include`
-The `include` key lets you include some additionnal data that the Ghost API doesn't give you by default. This `include` key is specific to each resource and is defined in the `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
+### `.include()`
+The `include` method lets you include some additionnal data that the Ghost API doesn't give you by default. The `include` params is specific to each resource and is defined in the "include" `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
 
 ```typescript
 let result = await api.authors.read({
-  input: {
-    slug: "phildl"
-  },
-  output: {
-    include: {
-      "count.posts": true,
-    },
-  },
-}).fetch();
+  slug: "phildl"
+}).include({ "count.posts": true }).fetch();
 ```
 
-Available keys by resource:
+Available include keys by resource:
 - Posts & Pages: `authors`, `tags`
 - Authors: `count.posts`
 - Tags: `count.posts`
 - Tiers: `monthly_price`, `yearly_price`, `benefits`
 
+The output type will be modified to make the fields you include **non-optionals**.
+
+### `.formats()`
+The `formats` method lets you add alternative content formats on the output of `Post` or `Page` resource to get the content in `plaintext` or `html`. Available options are `plaintext | html | mobiledoc`.
+
+```typescript
+let result = await api.posts
+  .read({
+    slug: "this-is-a-post-slug"
+  })
+  .formats({ 
+    plaintext: true, 
+    html: true 
+  })
+  .fetch();
+```
+
+The output type will be modified to make the formatted fields you include **non-optionals**.
+
 ## Fetching 
-After building your query you can fetch it with the `fetch` method. This method will return a `Promise` that will resolve to a result object that was parsed by the `Zod` Schema of the resource. 
+After building your query and using output formatting, you can fetch it with the `fetch` method. This method will return a `Promise` that will resolve to a result object that was parsed by the `Zod` Schema of the resource. 
 
 All the results are discriminated unions representing a successful query and an error query. To discriminate the results you can use the `status` key of the result object which is `success` or `error`.
 
 ```typescript
-let result = await api.posts.read({input: {slug: "typescript-is-cool"}}).fetch();
+let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch();
 if (result.status === 'success') {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
@@ -322,14 +307,8 @@ const api = new TSGhostContentAPI(url, key, "v5.0");
 
 const posts: Post[] = [];
 let cursor = await api.posts
-  .browse({
-    output: {
-      include: {
-        authors: true,
-        tags: true,
-      },
-    },
-  })
+  .browse()
+  .include({ authors: true, tags: true })
   .paginate();
 if (cursor.current.status === "success") posts.push(...cursor.current.data);
 while (cursor.next) {
@@ -369,11 +348,8 @@ const outputFields = fieldsKeys.reduce((acc, k) => {
   return acc;
 }, {} as { [k in keyof Post]?: true | undefined });
 const result = await api.posts
-  .browse({
-    output: {
-      fields: outputFields,
-    },
-  })
+  .browse()
+  .fields(outputFields)
   .fetch();
 ```
 
@@ -389,11 +365,7 @@ const outputFields = {
   title: true,
 } satisfies { [k in keyof Post]?: true | undefined };
 
-let test = api.posts.browse({
-  output: {
-    fields: outputFields,
-  },
-});
+let test = api.posts.browse().fields(outputFields);
 ```
 In that case you will **keep type-safety** and the output will be of type `Post` with only the fields you selected.
 

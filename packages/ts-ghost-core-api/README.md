@@ -160,7 +160,7 @@ If the parsing went okay, the `read` and `browse` methods from the `QueryBuilder
 - `ReadFetcher` for the `read` method
 - `BasicFetcher` is a special case when you don't need a QueryBuilder at all and want to fetch directly. 
 
-These Fetchers are instantiated in a similar way as the QueryBuilder with a `config` containing the same schemas. But also a set of params 
+Fetchers are instatiated automatically after using `read` or `browse` but these Fetchers can also be instantiated in isolation, in a similar way as the QueryBuilder with a `config` containing the same schemas. But also a set of params 
 necessary to build the URL to the Ghost API.
 
 ```typescript
@@ -189,7 +189,7 @@ const qb = new QueryBuilder(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   api
 );
-const readFetcher = qb.read({input: {slug: "typescript-is-cool"}});
+const readFetcher = qb.read({ slug: "typescript-is-cool" });
 let result = await readFetcher.fetch();
 if (result.status === 'success') {
   const post = result.data;
@@ -378,8 +378,7 @@ let result = await bf.fields({
 
 ## Roadmap
 
-- Write more docs
-- Better handling of weird Ghost "include" params in API call
+- Handling POST, PUT and DELETE requests.
 
 ## Contributing
 
