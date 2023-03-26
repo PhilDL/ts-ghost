@@ -1,4 +1,4 @@
-import { describe, test, beforeEach, assert } from "vitest";
+import { describe, test, beforeEach, assert, expect } from "vitest";
 import { TSGhostAdminAPI } from "../admin-api";
 
 const stub = {
