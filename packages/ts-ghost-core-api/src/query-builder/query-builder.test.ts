@@ -131,6 +131,14 @@ describe("QueryBuilder", () => {
       ).toBeInstanceOf(BrowseFetcher);
     });
 
+    test("filter params should accept a string with with IncludeSchema fields", () => {
+      expect(
+        qb.browse({
+          filter: "nested.count:test",
+        })
+      ).toBeInstanceOf(BrowseFetcher);
+    });
+
     test("filter params should not accept incorrect fields", () => {
       expect(() =>
         qb.browse({
