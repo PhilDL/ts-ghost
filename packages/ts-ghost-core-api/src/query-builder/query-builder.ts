@@ -1,7 +1,7 @@
 import { parseBrowseParams } from "./browse-params";
 import type { BrowseParams } from "./browse-params";
 import type { APICredentials } from "../schemas";
-import { z, ZodEnum, ZodRawShape } from "zod";
+import { z, ZodRawShape } from "zod";
 import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
 import { queryIdentitySchema } from "../schemas";
