@@ -101,9 +101,9 @@ let query = api.posts.browse({
 
 ### `.browse` options
 
-Input are totally optionals on the `browse` method but they let you filter and order your search.
+Params are totally optionals on the `browse` method but they let you filter and order your search.
 
-This is an example containing all the available keys in the `input` object
+This is an example containing all the available keys in the params object
 
 ```typescript
 let query = api.posts.browse({
@@ -382,17 +382,14 @@ const order = "foobar DESC";
 const input = { order } as BrowseParams<{ order: string }, Post>;
 const result = await api.posts
   .browse({
-    input: {
-      order,
-    },
+    order,
   })
   .fetch();
 ```
 
 ## Roadmap
 
-- [x] Write more docs
-- [ ] Better handling of weird Ghost "include" params in API call
+- [ ] Write more tests
 
 ## Contributing
 

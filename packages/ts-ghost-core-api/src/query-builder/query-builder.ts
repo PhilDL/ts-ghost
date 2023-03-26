@@ -9,36 +9,27 @@ import { queryIdentitySchema } from "../schemas";
 export type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
 
 /**
- * QueryBuilder class
- * @param {ZodRawShape} Shape
- * @param {ZodRawShape} OutputShape
- * @param {ZodRawShape} IncludeShape
- * @param {APICredentials} Api
- *
- * @returns {QueryBuilder} QueryBuilder
- *
+ * QueryBuilder class that accepts a schema and an API credentials object. It will return a class
+ * instance with browse and read functions.
  */
 export class QueryBuilder<
   Shape extends ZodRawShape,
   OutputShape extends ZodRawShape,
   IncludeShape extends ZodRawShape,
-  Api extends APICredentials,
-  Formats extends ZodEnum<[string, ...string[]]>
+  Api extends APICredentials
 > {
   constructor(
     protected config: {
       schema: z.ZodObject<Shape>;
       output: z.ZodObject<OutputShape>;
       include: z.ZodObject<IncludeShape>;
-      formats?: z.ZodArray<Formats, "many">;
     },
     protected _api: Api
   ) {}
 
   /**
-   * Browse function
-   * @param {}
-   * @returns
+   * Browse function that accepts browse params order, filter, page and limit. Will return an instance
+   * of BrowseFetcher class.
    */
   public browse<
     const OrderStr extends string,
@@ -64,9 +55,8 @@ export class QueryBuilder<
   }
 
   /**
-   * Browse function
-   * @param {}
-   * @returns
+   * Read function that accepts Identify fields like id, slug or email. Will return an instance
+   * of ReadFetcher class.
    */
   public read<
     Identity extends
@@ -74,7 +64,8 @@ export class QueryBuilder<
           id: string;
         }
       | { slug: string }
-  >(input: Identity) {
+      | { email: string }
+  >(options: Identity) {
     return new ReadFetcher(
       {
         schema: this.config.schema,
@@ -82,7 +73,7 @@ export class QueryBuilder<
         include: this.config.include,
       },
       {
-        identity: queryIdentitySchema.parse(input),
+        identity: queryIdentitySchema.parse(options),
       },
       this._api
     );
