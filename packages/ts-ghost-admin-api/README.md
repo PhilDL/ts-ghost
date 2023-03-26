@@ -15,12 +15,14 @@
   </p>
 </div>
 
-![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img src="https://img.shields.io/badge/status-beta-orange.svg" alt="Status: Beta" /> <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/PhilDL/ts-ghost?filename=packages%2Fts-ghost-admin-api%2Fpackage.json">
+[![tests](https://github.com/PhilDL/ts-ghost/actions/workflows/deploy.yml/badge.svg)](https://github.com/PhilDL/ts-ghost/actions/workflows/deploy.yml) ![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/PhilDL/ts-ghost?filename=packages%2Fts-ghost-admin-api%2Fpackage.json">
 
 ## About The Project
 
 `@ts-ghost/admin-api` provides a strongly-typed TypeScript client to interract with the Ghost Admin API based on [Zod](https://github.com/colinhacks/zod) schemas passed through a QueryBuilder and then a Fetcher. It is made to interract with the Ghost Admin API with authentication by key. Not all the resources are supported 
 yet.
+
+![admin-api-typesafety](https://user-images.githubusercontent.com/4941205/227786623-facb8e6c-dbe4-45ff-9b6e-721a05cedaba.gif)
 
 Available resources:
 - `/posts`
