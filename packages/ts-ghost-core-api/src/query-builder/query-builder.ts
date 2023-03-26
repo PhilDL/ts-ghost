@@ -40,7 +40,7 @@ export class QueryBuilder<
       page?: number | string;
       filter?: FilterStr;
     }
-  >(options?: BrowseParams<P, Shape>) {
+  >(options?: BrowseParams<P, Shape & IncludeShape>) {
     return new BrowseFetcher(
       {
         schema: this.config.schema,
@@ -48,7 +48,7 @@ export class QueryBuilder<
         include: this.config.include,
       },
       {
-        browseParams: (options && parseBrowseParams(options, this.config.schema)) || undefined,
+        browseParams: (options && parseBrowseParams(options, this.config.schema, this.config.include)) || undefined,
       },
       this._api
     );
