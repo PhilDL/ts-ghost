@@ -5,6 +5,15 @@
   "access": "public",
   "private": false,
   "description": "TypeScript library for the Ghost Admin API with Input and Output type-safety.",
+  "keywords": [
+    "ghost",
+    "blog",
+    "typescript",
+    "client",
+    "api",
+    "admin-api",
+    "zod"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api"
