@@ -5,10 +5,8 @@ const ghost = new TSGhostAdminAPI("https://ghost.org/ghost/api/admin", "1234", "
 
 const posts = await ghost.posts
   .browse({
-    input: {
-      filter: "html:-null",
-      limit: 5,
-    },
+    filter: "html:-null",
+    limit: 5,
   })
   .formats({ html: true })
   .fields({ slug: true, html: true })
