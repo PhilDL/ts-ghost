@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 1.0.1
+
+### Patch Changes
+
+- c6f50c3: update README and metadatas
+- Updated dependencies [c6f50c3]
+  - @ts-ghost/core-api@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
