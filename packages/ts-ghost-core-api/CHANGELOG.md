@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 1.0.1
+
+### Patch Changes
+
+- c6f50c3: update README and metadatas
+
 ## 1.0.0
 
 ### Major Changes
