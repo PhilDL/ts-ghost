@@ -93,29 +93,18 @@ const qb = new QueryBuilder(
   api
 );
 let query = qb.browse({
-  input: {
-    limit: 5,
-    order: "title DESC"
-    //      ^? the text here will throw a TypeScript lint error if you use unknown field.
-    //      In that case `title` is  correctly defined in the `simplifiedSchema
-  },
-  output: {
-    include: {
-      count: true,
-      //  ^? Available inputs here come from the `simplifiedIncludeSchema`
-    },
-  },
+  limit: 5,
+  order: "title DESC"
+  //      ^? the text here will throw a TypeScript lint error if you use unknown field.
+  //      In that case `title` is  correctly defined in the `simplifiedSchema
 });
 ```
 
-- `input` will accept browse parameters like `page`, `limit`, `order`, `filter`. And read parameters are `id` or `slug`.
-- `output` is the same for both methods and let you specify `fields` to output (to not have the full object) and some Schema specific `include`. For example getting the posts including their Authors.
+- browse parameters are `page`, `limit`, `order`, `filter`. And read parameters are `id` or `slug`.
 
-*Ghost Content API doesn't work well when you mix `fields` and `include` output, so in most case you shouldn't*
+## Method options
 
-## `input`
-
-### `.browse` inputs
+### `.browse` options
 
 Input are totally optionals on the `browse` method but they let you filter and order your search.
 
@@ -127,19 +116,13 @@ const qb = new QueryBuilder(
   api
 );
 let query = qb.browse({
-  input: {
-    page: 1,
-    limit: 5,
-    filter: "title:typescript+slug:-test",
-    order: "title DESC"
-  }
+  page: 1,
+  limit: 5,
+  filter: "title:typescript+slug:-test",
+  order: "title DESC"
 });
 ```
 These browse params are then parsed through a `Zod` Schema that will validate all the fields.
-
-#### (Deprecated) Type-hint with `as const`
-~~You should use `as const` for your input if you are playing with `filter` and `order` so TypeScript can analyse the content of the string statically and TypeCheck it.~~
-This is not needed anymore since TypeScript release 5.0 the generics use const inference.
 
 - `page:number` The current page requested
 - `limit:number` Between 0 and 15 (limitation of the Ghost API)
@@ -148,7 +131,7 @@ This is not needed anymore since TypeScript release 5.0 the generics use const i
 
 For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the QueryBuilder will throw an Error with message containing the unknown field.
 
-### `.read` inputs
+### `.read` options
 Read is meant to be used to fetch 1 object only by `id` or `slug`. 
 
 ```typescript
@@ -157,71 +140,17 @@ const qb = new QueryBuilder(
   api
 );
 let query = qb.read({
-  input: {
-    id: "edHks74hdKqhs34izzahd45"
-  }
+  id: "edHks74hdKqhs34izzahd45"
 }); 
 
 // or 
 
 let query = qb.read({
-  input: {
-    slug: "typescript-is-awesome-in-2025"
-  }
+  slug: "typescript-is-awesome-in-2025"
 }); 
 ```
+
 You can submit **both** `id` and `slug`, but the fetcher will then chose the `id` in priority if present to make the final URL query to the Ghost API.
-
-## `output`
-Output is the same for both `browse` and `read` methods and gives you 2 keys to play with
-
-### `fields` 
-The `fields` key lets you change the output of the result to have only your selected fields, it works by giving the key and the value `true` to the field you want to keep. Under the hood it will use the `zod.pick` method to pick only the fields you want.
-
-```typescript
-const qb = new QueryBuilder(
-  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
-  api
-);
-let result = await qb.read({
-  input: {
-    slug: "typescript-is-cool"
-  },
-  output: {
-    fields: {
-      slug: true,
-      title: true
-      // ^? available fields come form the `simplifiedSchema` passed in the constructor
-    }
-  }
-}).fetch();
-
-if (result.status === 'success') {
-  const post = result.data;
-  //     ^? type {"slug":string; "title": string}
-}
-```
-The **output schema** will be modified to only have the fields you selected and TypeScript will pick up on that to warn you if you access non-existing fields.
-
-### `include`
-The `include` key lets you include some additionnal data that the Ghost API doesn't give you by default. This `include` key is specific to each resource and is defined in the `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
-
-```typescript
-const qb = new QueryBuilder(
-  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
-  api
-);
-let result = await qb.read({
-  input: {
-    slug: "phildl"
-  },
-  output: {
-    include: {
-      "count": true,
-    },
-  },
-}).fetch();
-```
 
 ## Fetchers 
 
@@ -350,6 +279,102 @@ const result: {
 
 Here you can use the `next` property to get the next page fetcher if it is defined.
 
+
+## Modifiying Fetchers output by selecting fields, formats, include
+
+Output can be modified on the `BrowseFetcher` and the `ReadFetcher` through available methods:
+- `.fields`
+- `.formats`
+- `.include`
+
+### `.fields()` 
+
+The `fields` methods lets you change the output of the result to have only your selected fields, it works by giving the property key and the value `true` to the field you want to keep. Under the hood it will use the `zod.pick` method to pick only the fields you want.
+
+```typescript
+import { BrowseFetcher } from "@ts-ghost/core-api";
+// Example of instantiating a Fetcher, even though you will probably not do it
+const browseFetcher = new BrowseFetcher(
+  {
+    schema: simplifiedSchema,
+    output: simplifiedSchema,
+    include: simplifiedIncludeSchema,
+  },
+  {
+    browseParams: {
+      limit: 1,
+    },
+  },
+  api
+);
+let result = await browseFetcher.fields({
+  slug: true,
+  title: true
+  // ^? available fields come form the `simplifiedSchema` passed in the constructor
+}).fetch();
+
+if (result.status === 'success') {
+  const post = result.data;
+  //     ^? type {"slug":string; "title": string}
+}
+```
+The **output schema** will be modified to only have the fields you selected and TypeScript will pick up on that to warn you if you access non-existing fields.
+
+### `include`
+The `include` method lets you include some additionnal data that the Ghost API doesn't give you by default. This `include` key is specific to each resource and is defined in the `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
+
+```typescript
+const bf = new BrowseFetcher(
+  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+  {},
+  api
+);
+let result = await bf.include({
+  "count": true,
+}).fetch();
+```
+
+The output type will be modified to make the fields you include **non-optionals**.
+
+### `formats`
+The `formats` method lets you include some additionnal formats that the Ghost API doesn't give you by default. This is used on the `Post` and `Page` resource to retrieve the content in plaintext, html, or mobiledoc format. The available keys are `html | mobiledoc | plaintext` and the value is a boolean to indicate if you want to include it or not.
+
+```typescript
+const bf = new BrowseFetcher(
+  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+  {},
+  api
+);
+let result = await bf.formats({
+  "html": true,
+  "plaintext": true,
+}).fetch();
+```
+The output type will be modified to make the fields `html` and `plaintext` **non-optionals**.
+
+### Chaining methods
+
+You can chain the methods to select the fields, formats, and include you want.
+
+```typescript
+const bf = new BrowseFetcher(
+  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+  {},
+  api
+);
+let result = await bf.fields({
+  slug: true,
+  title: true,
+  html: true,
+  plaintext: true,
+  count: true
+}).formats({
+  "html": true,
+  "plaintext": true,
+}).include({
+  "count": true,
+}).fetch();
+```
 
 ## Roadmap
 
