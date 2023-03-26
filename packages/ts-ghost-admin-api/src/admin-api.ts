@@ -44,7 +44,6 @@ export class TSGhostAdminAPI {
         schema: adminPostsSchema,
         output: adminPostsSchema,
         include: postsIncludeSchema,
-        formats: z.array(z.enum(["html", "mobiledoc", "plaintext"])),
       },
       api
     );
@@ -73,7 +72,6 @@ export class TSGhostAdminAPI {
         schema: adminPagesSchema,
         output: adminPagesSchema,
         include: pagesIncludeSchema,
-        formats: z.array(z.enum(["html", "mobiledoc", "plaintext"])),
       },
       api
     );

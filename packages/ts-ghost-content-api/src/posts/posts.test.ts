@@ -8,7 +8,7 @@ describe("posts api .browse() Args Type-safety", () => {
   const api = new TSGhostContentAPI(url, key, "v5.0");
   test(".browse() params shouldnt accept invalid params", () => {
     // @ts-expect-error - shouldnt accept invalid params
-    const browse = api.posts.browse({ input: { pp: 2 } });
+    const browse = api.posts.browse({ pp: 2 });
     expect(browse.getParams().browseParams).toStrictEqual({});
 
     const outputFields = {
@@ -18,12 +18,10 @@ describe("posts api .browse() Args Type-safety", () => {
       foo: true,
     } satisfies { [k in keyof Post]?: true | undefined };
 
-    let test = api.posts.browse({
-      output: {
-        // @ts-expect-error - shouldnt accept invalid params
-        fields: outputFields,
-      },
-    });
+    let test = api.posts
+      .browse()
+      // @ts-expect-error - shouldnt accept invalid params
+      .fields(outputFields);
     expect(test.getOutputFields()).toEqual(["slug", "title"]);
 
     const fields = ["slug", "title", "foo"] as const;
@@ -31,11 +29,7 @@ describe("posts api .browse() Args Type-safety", () => {
       acc[k as keyof Post] = true;
       return acc;
     }, {} as { [k in keyof Post]?: true | undefined });
-    const result = api.posts.browse({
-      output: {
-        fields: unknownOriginFields,
-      },
-    });
+    const result = api.posts.browse().fields(unknownOriginFields);
     expect(result.getOutputFields()).toEqual(["slug", "title"]);
   });
   test(".browse() params, output fields declare const", () => {
@@ -44,11 +38,7 @@ describe("posts api .browse() Args Type-safety", () => {
       title: true,
     } satisfies { [k in keyof Post]?: true | undefined };
 
-    let test = api.posts.browse({
-      output: {
-        fields: outputFields,
-      },
-    });
+    let test = api.posts.browse().fields(outputFields);
     expect(test.getOutputFields()).toEqual(["slug", "title"]);
   });
 });

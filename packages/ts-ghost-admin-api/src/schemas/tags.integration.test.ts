@@ -1,4 +1,4 @@
-import { describe, test, beforeEach, assert } from "vitest";
+import { describe, test, beforeEach, assert, expect } from "vitest";
 import { TSGhostAdminAPI } from "../admin-api";
 
 const stubResult = {
@@ -46,7 +46,7 @@ describe("tags integration tests browse", () => {
     expect(api.tags).toBeDefined();
     const result = await api.tags
       .browse({
-        input: { limit: 1 },
+        limit: 1,
       })
       .fetch();
 
@@ -80,7 +80,7 @@ describe("tags integration tests browse", () => {
     expect(api.tags).toBeDefined();
     const result = await api.tags
       .read({
-        input: { id: "63887bd07f2cf30001fec7a5" },
+        id: "63887bd07f2cf30001fec7a5",
       })
       .fetch();
     assert(result.status === "success");

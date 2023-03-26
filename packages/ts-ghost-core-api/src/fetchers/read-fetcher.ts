@@ -67,9 +67,7 @@ export class ReadFetcher<
    * @param include Include specific keys from the include shape
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public include<Includes extends Mask<Pick<OutputShape, Extract<keyof IncludeShape, keyof OutputShape>>>>(
-    include: z.noUnrecognized<Includes, OutputShape>
-  ) {
+  public include<Includes extends Mask<IncludeShape>>(include: z.noUnrecognized<Includes, IncludeShape>) {
     const params = {
       ...this._params,
       include: Object.keys(this.config.include.parse(include)),

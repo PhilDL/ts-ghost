@@ -70,7 +70,7 @@ describe("tags integration tests browse", () => {
   });
 
   test("tags.browse() include authors and tags", async () => {
-    const result = await api.tags.browse({ output: { include: { "count.posts": true } } }).fetch();
+    const result = await api.tags.browse().include({ "count.posts": true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -86,13 +86,7 @@ describe("tags integration tests browse", () => {
   });
 
   test("tags.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
-    const result = await api.tags
-      .browse({
-        output: {
-          fields: { slug: true, name: true },
-        },
-      })
-      .fetch();
+    const result = await api.tags.browse().fields({ slug: true, name: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -113,12 +107,9 @@ describe("tags integration tests browse", () => {
 
   test("tags.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
     const result = await api.tags
-      .browse({
-        output: {
-          fields: { slug: true, name: true, count: true },
-          include: { "count.posts": true },
-        },
-      })
+      .browse()
+      .fields({ slug: true, name: true, count: true })
+      .include({ "count.posts": true })
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
@@ -148,7 +139,7 @@ describe("tags integration tests read", () => {
   });
 
   test("tags.read() by id", async () => {
-    const result = await api.tags.read({ input: { id: "63887bd07f2cf30001fec812" } }).fetch();
+    const result = await api.tags.read({ id: "63887bd07f2cf30001fec812" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -183,7 +174,7 @@ describe("tags integration tests read", () => {
   });
 
   test("tags.read() by slug", async () => {
-    const result = await api.tags.read({ input: { slug: "news" } }).fetch();
+    const result = await api.tags.read({ slug: "news" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -218,9 +209,7 @@ describe("tags integration tests read", () => {
   });
 
   test("tags.read() by slug with fields", async () => {
-    const result = await api.tags
-      .read({ input: { slug: "news" }, output: { fields: { name: true, id: true } } })
-      .fetch();
+    const result = await api.tags.read({ slug: "news" }).fields({ name: true, id: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -240,9 +229,7 @@ describe("tags integration tests read", () => {
   });
 
   test("tags.read() with count", async () => {
-    const result = await api.tags
-      .read({ input: { slug: "news" }, output: { include: { "count.posts": true } } })
-      .fetch();
+    const result = await api.tags.read({ slug: "news" }).include({ "count.posts": true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {

@@ -42,7 +42,8 @@
     "vite": "^4.2.1",
     "vite-tsconfig-paths": "^4.0.7",
     "vitest": "^0.29.7",
-    "zod": "^3.20.6"
+    "zod": "^3.20.6",
+    "cross-fetch": "^3.1.5"
   },
   "dependencies": {
     "@ts-ghost/core-api": "^0.3.2",

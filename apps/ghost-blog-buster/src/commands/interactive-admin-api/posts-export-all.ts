@@ -40,10 +40,8 @@ export async function postsExportAll(ghost: TSGhostAdminAPI, siteName: string) {
 
     const res = await ghost.posts
       .browse({
-        input: {
-          filter: "html:-null",
-          page: currentPage,
-        },
+        filter: "html:-null",
+        page: currentPage,
       })
       .formats({ html: true })
       .fetch();

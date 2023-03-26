@@ -1,4 +1,4 @@
-import { describe, test, beforeEach, assert } from "vitest";
+import { describe, test, beforeEach, assert, expect } from "vitest";
 import { TSGhostAdminAPI } from "../admin-api";
 
 const stubPage = {
@@ -199,7 +199,7 @@ describe("pages integration tests browse", () => {
     expect(api.pages).toBeDefined();
     const result = await api.pages
       .browse({
-        input: { limit: 1 },
+        limit: 1,
       })
       .formats({ html: true, plaintext: true })
       .fetch();
@@ -311,7 +311,7 @@ describe("pages integration tests browse", () => {
     expect(api.pages).toBeDefined();
     const result = await api.pages
       .read({
-        input: { slug: "about" },
+        slug: "about",
       })
       .formats({ html: true, plaintext: true })
       .fetch();
@@ -428,7 +428,7 @@ describe("pages integration tests browse", () => {
     expect(api.pages).toBeDefined();
     const result = await api.pages
       .browse({
-        input: { limit: 1 },
+        limit: 1,
       })
       .formats({ html: true, plaintext: true })
       .fetch();
@@ -436,7 +436,7 @@ describe("pages integration tests browse", () => {
     expect(result.errors[0].message).toBe("Unknown Admin API Key");
     const resultR = await api.pages
       .read({
-        input: { slug: "about" },
+        slug: "about",
       })
       .formats({ html: true, plaintext: true })
       .fetch();
@@ -453,7 +453,7 @@ describe("pages integration tests browse", () => {
     expect(api.pages).toBeDefined();
     const result = await api.pages
       .browse({
-        input: { limit: 1 },
+        limit: 1,
       })
       .formats({ html: true, plaintext: true })
       .fetch();
@@ -461,7 +461,7 @@ describe("pages integration tests browse", () => {
     expect(result.errors[0].message).toContain("FetchError");
     const resultR = await api.pages
       .read({
-        input: { slug: "about" },
+        slug: "about",
       })
       .formats({ html: true, plaintext: true })
       .fetch();

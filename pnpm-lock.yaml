@@ -30,8 +30,8 @@ importers:
     specifiers:
       '@clack/core': ^0.3.2
       '@clack/prompts': ^0.6.3
-      '@ts-ghost/admin-api': ^0.2.0
-      '@ts-ghost/content-api': ^0.3.0
+      '@ts-ghost/admin-api': ^0.2.2
+      '@ts-ghost/content-api': ^0.3.1
       '@ts-ghost/tsconfig': '*'
       '@types/configstore': ^6.0.0
       '@types/node': ^18.15.5
@@ -77,10 +77,11 @@ importers:
 
   packages/ts-ghost-admin-api:
     specifiers:
-      '@ts-ghost/core-api': ^0.3.1
+      '@ts-ghost/core-api': ^0.3.2
       '@ts-ghost/tsconfig': '*'
       '@types/node': ^18.15.5
       '@vitest/coverage-c8': ^0.29.7
+      cross-fetch: ^3.1.5
       eslint: ^8.36.0
       jiti: ^1.18.2
       tsup: ^6.7.0
@@ -96,6 +97,7 @@ importers:
       '@ts-ghost/tsconfig': link:../tsconfig
       '@types/node': 18.15.5
       '@vitest/coverage-c8': 0.29.7_vitest@0.29.7
+      cross-fetch: 3.1.5
       eslint: 8.36.0
       jiti: 1.18.2
       tsup: 6.7.0_typescript@5.0.2
@@ -106,10 +108,11 @@ importers:
 
   packages/ts-ghost-content-api:
     specifiers:
-      '@ts-ghost/core-api': ^0.3.0
+      '@ts-ghost/core-api': ^0.3.2
       '@ts-ghost/tsconfig': '*'
       '@types/node': ^18.15.5
       '@vitest/coverage-c8': ^0.29.7
+      cross-fetch: ^3.1.5
       eslint: ^8.36.0
       tsup: ^6.7.0
       typescript: 5.0.2
@@ -125,6 +128,7 @@ importers:
       '@ts-ghost/tsconfig': link:../tsconfig
       '@types/node': 18.15.5
       '@vitest/coverage-c8': 0.29.7_vitest@0.29.7
+      cross-fetch: 3.1.5
       eslint: 8.36.0
       tsup: 6.7.0_typescript@5.0.2
       typescript: 5.0.2

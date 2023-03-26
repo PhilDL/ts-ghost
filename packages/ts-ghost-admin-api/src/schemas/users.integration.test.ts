@@ -1,4 +1,4 @@
-import { describe, test, beforeEach, assert } from "vitest";
+import { describe, test, beforeEach, assert, expect } from "vitest";
 import { TSGhostAdminAPI } from "../admin-api";
 
 const stubResult = {
@@ -51,7 +51,7 @@ describe("users integration tests browse", () => {
     expect(api.users).toBeDefined();
     const result = await api.users
       .browse({
-        input: { limit: 1 },
+        limit: 1,
       })
       .fetch();
 
@@ -87,7 +87,7 @@ describe("users integration tests browse", () => {
     expect(api.users).toBeDefined();
     const result = await api.users
       .read({
-        input: { id: "1" },
+        id: "1",
       })
       .fetch();
     assert(result.status === "success");

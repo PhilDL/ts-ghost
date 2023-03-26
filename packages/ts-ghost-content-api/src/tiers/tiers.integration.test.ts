@@ -72,7 +72,8 @@ describe("tiers integration tests browse", () => {
 
   test("tiers.browse() include authors and tiers", async () => {
     const result = await api.tiers
-      .browse({ output: { include: { benefits: true, monthly_price: true, yearly_price: true } } })
+      .browse()
+      .include({ benefits: true, monthly_price: true, yearly_price: true })
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
@@ -89,13 +90,7 @@ describe("tiers integration tests browse", () => {
   });
 
   test("tiers.browse() with mix of incude and fields... ghost doesn't answer to that query", async () => {
-    const result = await api.tiers
-      .browse({
-        output: {
-          fields: { slug: true, name: true },
-        },
-      })
-      .fetch();
+    const result = await api.tiers.browse().fields({ slug: true, name: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     // Right now this doesn't work in Ghost API
@@ -103,14 +98,7 @@ describe("tiers integration tests browse", () => {
   });
 
   test("tiers.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
-    const result = await api.tiers
-      .browse({
-        output: {
-          fields: { slug: true, name: true },
-          include: { monthly_price: true },
-        },
-      })
-      .fetch();
+    const result = await api.tiers.browse().include({ monthly_price: true }).fields({ slug: true, name: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     expect(result.status).toBe("error");
@@ -124,14 +112,14 @@ describe("tiers integration tests read doesn't work on GHOST API", () => {
   });
 
   test("tiers.read() by id doesn't work on ghost", async () => {
-    const result = await api.tiers.read({ input: { id: "63887bd07f2cf30001fec7a2" } }).fetch();
+    const result = await api.tiers.read({ id: "63887bd07f2cf30001fec7a2" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     expect(result.status).toBe("error");
   });
 
   test("tiers.read() by slug", async () => {
-    const result = await api.tiers.read({ input: { slug: "free" } }).fetch();
+    const result = await api.tiers.read({ slug: "free" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     expect(result.status).toBe("error");

@@ -101,7 +101,7 @@ describe("posts integration tests browse", () => {
   });
 
   test("posts.browse() include authors and tags", async () => {
-    const result = await api.posts.browse({ output: { include: { authors: true, tags: true } } }).fetch();
+    const result = await api.posts.browse().include({ authors: true, tags: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -129,13 +129,7 @@ describe("posts integration tests browse", () => {
       slug: true,
       title: true,
     } satisfies { [k in keyof Post]?: true | undefined };
-    const result = await api.posts
-      .browse({
-        output: {
-          fields: outputFields,
-        },
-      })
-      .fetch();
+    const result = await api.posts.browse().fields(outputFields).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {
@@ -156,12 +150,9 @@ describe("posts integration tests browse", () => {
 
   test("posts.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
     const result = await api.posts
-      .browse({
-        output: {
-          fields: { slug: true, title: true, primary_author: true },
-          include: { authors: true },
-        },
-      })
+      .browse()
+      .fields({ slug: true, title: true, primary_author: true })
+      .include({ authors: true })
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
@@ -191,7 +182,7 @@ describe("posts integration tests read", () => {
   });
 
   test("posts.browse() include authors and tags", async () => {
-    const result = await api.posts.read({ input: { id: "63887bd07f2cf30001fec812" } }).fetch();
+    const result = await api.posts.read({ id: "63887bd07f2cf30001fec812" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     if (result.status === "error") {

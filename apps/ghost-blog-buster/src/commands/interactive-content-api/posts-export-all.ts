@@ -40,15 +40,11 @@ export async function postsExportAll(ghost: TSGhostContentAPI, siteName: string)
 
     const res = await ghost.posts
       .browse({
-        input: {
-          page: currentPage,
-        },
-        output: {
-          include: {
-            authors: true,
-            tags: true,
-          },
-        },
+        page: currentPage,
+      })
+      .include({
+        authors: true,
+        tags: true,
       })
       .fetch();
     if (res.status === "error" || res.data.length === 0) {

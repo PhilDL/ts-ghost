@@ -57,10 +57,8 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
       while (currentPage <= pages) {
         const res = await api.posts
           .browse({
-            input: {
-              page: currentPage,
-              filter: "html:-null",
-            },
+            page: currentPage,
+            filter: "html:-null",
           })
           .formats({ html: true })
           .fetch();
@@ -93,10 +91,8 @@ export const handler = async function (argv: ArgumentsCamelCase<{ host?: string;
       while (currentPage <= pages) {
         const res = await api.pages
           .browse({
-            input: {
-              page: currentPage,
-              filter: "html:-null",
-            },
+            page: currentPage,
+            filter: "html:-null",
           })
           .formats({ html: true })
           .fetch();

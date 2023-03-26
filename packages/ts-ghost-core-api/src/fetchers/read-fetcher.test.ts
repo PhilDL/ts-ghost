@@ -296,7 +296,7 @@ describe("ReadFetcher", () => {
     expect(fetcher.getIncludes()).toEqual([]);
   });
 });
-describe("ReadFetcherFetcher v2", () => {
+describe("ReadFetcherFetcher outputs test suite", () => {
   const api: ContentAPICredentials = {
     url: "https://ghost.org",
     key: "1234",
@@ -317,6 +317,7 @@ describe("ReadFetcherFetcher v2", () => {
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),
+    "nested.key": z.literal(true).optional(),
   });
 
   beforeEach(() => {
@@ -342,13 +343,13 @@ describe("ReadFetcherFetcher v2", () => {
     );
     const res = fetcher
       .formats({ html: true })
-      .include({ count: true })
+      .include({ count: true, "nested.key": true })
       .fields({ html: true, published: true, count: true });
-    expect(res.getIncludes()).toStrictEqual(["count"]);
+    expect(res.getIncludes()).toStrictEqual(["count", "nested.key"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
     expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")).toBe(
-      "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
+      "?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html"
     );
   });
   test("new formats, fields, and include should indicate wrong fields", async () => {
