@@ -1,5 +1,17 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.4.0
+
+### Minor Changes
+
+- 99c9110: Migrate to the newer versions of content and admin API, no user-facing changes.
+
+### Patch Changes
+
+- Updated dependencies [99c9110]
+  - @ts-ghost/content-api@1.0.0
+  - @ts-ghost/admin-api@1.0.0
+
 ## 0.3.1
 
 ### Patch Changes
