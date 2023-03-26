@@ -94,9 +94,12 @@ export type BrowseParamsSchema = z.infer<typeof browseParamsSchema>;
 export const parseBrowseParams = <P, Shape extends z.ZodRawShape, IncludeShape extends z.ZodRawShape>(
   args: P,
   schema: z.ZodObject<Shape>,
-  includeSchema: z.ZodObject<IncludeShape>
+  includeSchema?: z.ZodObject<IncludeShape>
 ) => {
-  const keys = [...(schema.keyof().options as string[]), ...(includeSchema.keyof().options as string[])];
+  const keys = [
+    ...(schema.keyof().options as string[]),
+    ...((includeSchema && (includeSchema.keyof().options as string[])) || []),
+  ];
   const augmentedSchema = browseParamsSchema.merge(
     z.object({
       order: z
