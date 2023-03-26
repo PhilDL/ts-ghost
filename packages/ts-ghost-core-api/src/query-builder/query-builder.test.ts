@@ -23,7 +23,7 @@ describe("QueryBuilder", () => {
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),
-    "nested.count": z.literal(true).optional(),
+    "count.posts": z.literal(true).optional(),
   });
 
   const qb = new QueryBuilder(
@@ -83,7 +83,7 @@ describe("QueryBuilder", () => {
     test("order params should accept a string with IncludeSchema fields", () => {
       expect(
         qb.browse({
-          order: "nested.count desc",
+          order: "count.posts desc",
         })
       ).toBeInstanceOf(BrowseFetcher);
     });
@@ -134,7 +134,7 @@ describe("QueryBuilder", () => {
     test("filter params should accept a string with with IncludeSchema fields", () => {
       expect(
         qb.browse({
-          filter: "nested.count:test",
+          filter: "count.posts:test",
         })
       ).toBeInstanceOf(BrowseFetcher);
     });
