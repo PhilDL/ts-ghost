@@ -1,16 +1,16 @@
 import fetch from "cross-fetch";
-import jwt from "jsonwebtoken";
 import type { APICredentials } from "../schemas/shared";
+import { SignJWT } from "jose";
 
-export function getJWT(key: string) {
-  const [id, secret] = key.split(":");
+export async function getJWT(key: string) {
+  const [id, _secret] = key.split(":");
 
-  return jwt.sign({}, Buffer.from(secret, "hex"), {
-    keyid: id,
-    algorithm: "HS256",
-    expiresIn: "5m",
-    audience: "/admin/",
-  });
+  return new SignJWT({})
+    .setProtectedHeader({ kid: id, alg: "HS256" })
+    .setExpirationTime("5m")
+    .setIssuedAt()
+    .setAudience("/admin/")
+    .sign(Uint8Array.from((_secret.match(/.{1,2}/g) as RegExpMatchArray).map((byte) => parseInt(byte, 16))));
 }
 
 export async function _fetch(URL: URL | undefined, api: APICredentials) {
@@ -21,7 +21,8 @@ export async function _fetch(URL: URL | undefined, api: APICredentials) {
     "Accept-Version": api.version,
   };
   if (api.endpoint === "admin") {
-    headers["Authorization"] = `Ghost ${getJWT(api.key)}`;
+    const jwt = await getJWT(api.key);
+    headers["Authorization"] = `Ghost ${jwt}`;
   }
   try {
     result = await (
