@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 1.1.1
+
+### Patch Changes
+
+- 55acb51: Upgrade dependencies
+
 ## 1.1.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.4.1
+
+### Patch Changes
+
+- 55acb51: Upgrade dependencies
+- Updated dependencies [55acb51]
+  - @ts-ghost/content-api@1.0.2
+  - @ts-ghost/admin-api@1.0.2
+
 ## 0.4.0
 
 ### Minor Changes

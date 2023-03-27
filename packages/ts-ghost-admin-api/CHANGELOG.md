@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 1.0.2
+
+### Patch Changes
+
+- 55acb51: Upgrade dependencies
+- Updated dependencies [55acb51]
+  - @ts-ghost/core-api@1.1.1
+
 ## 1.0.1
 
 ### Patch Changes
