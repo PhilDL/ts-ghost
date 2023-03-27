@@ -23,6 +23,7 @@ describe("QueryBuilder", () => {
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),
+    "count.posts": z.literal(true).optional(),
   });
 
   const qb = new QueryBuilder(
@@ -79,6 +80,14 @@ describe("QueryBuilder", () => {
       ).toBeInstanceOf(BrowseFetcher);
     });
 
+    test("order params should accept a string with IncludeSchema fields", () => {
+      expect(
+        qb.browse({
+          order: "count.posts desc",
+        })
+      ).toBeInstanceOf(BrowseFetcher);
+    });
+
     test("order params should not accept incorrect fields", () => {
       expect(() =>
         qb.browse({
@@ -118,6 +127,14 @@ describe("QueryBuilder", () => {
       expect(
         qb.browse({
           filter: "foo:test",
+        })
+      ).toBeInstanceOf(BrowseFetcher);
+    });
+
+    test("filter params should accept a string with with IncludeSchema fields", () => {
+      expect(
+        qb.browse({
+          filter: "count.posts:test",
         })
       ).toBeInstanceOf(BrowseFetcher);
     });
