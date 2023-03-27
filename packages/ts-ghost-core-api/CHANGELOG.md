@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 1.1.2
+
+### Patch Changes
+
+- 3e0dd53: switch to jose instead of jsonwebtoken
+
 ## 1.1.1
 
 ### Patch Changes
