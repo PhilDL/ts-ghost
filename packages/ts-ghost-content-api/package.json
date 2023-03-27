@@ -41,8 +41,9 @@
   "devDependencies": {
     "@ts-ghost/core-api": "*",
     "@ts-ghost/tsconfig": "*",
-    "@types/node": "^18.15.5",
+    "@types/node": "^18.15.10",
     "@vitest/coverage-c8": "^0.29.7",
+    "cross-fetch": "^3.1.5",
     "eslint": "^8.36.0",
     "tsup": "^6.7.0",
     "typescript": "5.0.2",
@@ -50,11 +51,10 @@
     "vite-tsconfig-paths": "^4.0.7",
     "vitest": "^0.29.7",
     "vitest-fetch-mock": "^0.2.2",
-    "zod": "^3.20.6",
-    "cross-fetch": "^3.1.5"
+    "zod": "^3.20.6"
   },
   "dependencies": {
-    "@ts-ghost/core-api": "^1.0.1",
+    "@ts-ghost/core-api": "^1.1.0",
     "zod": "^3.21.4"
   },
   "publishConfig": {

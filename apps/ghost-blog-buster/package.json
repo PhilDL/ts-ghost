@@ -37,7 +37,7 @@
     "@ts-ghost/content-api": "*",
     "@ts-ghost/tsconfig": "*",
     "@types/configstore": "^6.0.0",
-    "@types/node": "^18.15.5",
+    "@types/node": "^18.15.10",
     "@types/yargs": "^17.0.23",
     "eslint": "^8.36.0",
     "jiti": "^1.18.2",
