@@ -39,7 +39,7 @@ export const basePagesSchema = z.object({
   reading_time: z.number().optional().default(0),
   created_at: z.string(),
   updated_at: z.string().nullish(),
-  published_at: z.string().nullish(),
+  published_at: z.string().nullable(),
   email_subject: z.string().nullish(),
   is_page: z.boolean().default(true),
 });

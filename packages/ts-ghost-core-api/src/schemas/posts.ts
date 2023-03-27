@@ -34,11 +34,11 @@ export const basePostsSchema = z.object({
   primary_author: postsAuthorSchema.nullish(),
   primary_tag: baseTagsSchema.nullish(),
   url: z.string(),
-  excerpt: z.string().nullish(),
+  excerpt: z.string().nullable(),
   reading_time: z.number().optional().default(0),
   created_at: z.string(),
   updated_at: z.string().nullish(),
-  published_at: z.string().nullish(),
+  published_at: z.string().nullable(),
   email_subject: z.string().nullish(),
   is_page: z.boolean().default(false),
 });
