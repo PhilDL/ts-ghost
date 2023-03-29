@@ -3,11 +3,11 @@ import { tagsSchema, tagsIncludeSchema } from "./tags/schemas";
 import { pagesSchema, pagesIncludeSchema } from "./pages/schemas";
 import { postsSchema, postsIncludeSchema } from "./posts/schemas";
 import { tiersSchema, tiersIncludeSchema } from "./tiers/schemas";
-import { contentAPICredentialsSchema, QueryBuilder, ContentAPIVersions } from "@ts-ghost/core-api";
+import { contentAPICredentialsSchema, QueryBuilder, APIVersions, type TAPIVersion } from "@ts-ghost/core-api";
 import { BasicFetcher } from "@ts-ghost/core-api";
 import { settingsSchema } from "./settings/schemas";
 
-export type { ContentAPICredentials, ContentAPIVersions } from "@ts-ghost/core-api";
+export type { ContentAPICredentials, APIVersions } from "@ts-ghost/core-api";
 
 export enum BrowseEndpointType {
   authors = "authors",
@@ -18,12 +18,8 @@ export enum BrowseEndpointType {
   settings = "settings",
 }
 
-export class TSGhostContentAPI {
-  constructor(
-    protected readonly url: string,
-    protected readonly key: string,
-    protected readonly version: ContentAPIVersions
-  ) {}
+export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
+  constructor(protected readonly url: string, protected readonly key: string, protected readonly version: Version) {}
 
   get authors() {
     const api = contentAPICredentialsSchema.parse({
@@ -35,7 +31,7 @@ export class TSGhostContentAPI {
     }) as {
       resource: "authors";
       key: string;
-      version: ContentAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "content";
     };
@@ -58,7 +54,7 @@ export class TSGhostContentAPI {
     }) as {
       resource: "tiers";
       key: string;
-      version: ContentAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "content";
     };
@@ -74,7 +70,7 @@ export class TSGhostContentAPI {
     }) as {
       resource: "posts";
       key: string;
-      version: ContentAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "content";
     };
@@ -97,7 +93,7 @@ export class TSGhostContentAPI {
     }) as {
       resource: "pages";
       key: string;
-      version: ContentAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "content";
     };
@@ -120,7 +116,7 @@ export class TSGhostContentAPI {
     }) as {
       resource: "tags";
       key: string;
-      version: ContentAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "content";
     };
@@ -137,7 +133,7 @@ export class TSGhostContentAPI {
     }) as {
       resource: "settings";
       key: string;
-      version: ContentAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "content";
     };

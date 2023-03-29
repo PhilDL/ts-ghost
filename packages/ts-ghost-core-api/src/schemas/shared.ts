@@ -90,9 +90,12 @@ export const ghostVisibilitySchema = z.union([
   z.literal("paid"),
 ]);
 
-export const apiVersionsSchema = z.enum(["v5.0", "v2", "v3", "v4", "canary"]).default("v5.0");
-export type ContentAPIVersions = z.infer<typeof apiVersionsSchema>;
-export type AdminAPIVersions = z.infer<typeof apiVersionsSchema>;
+export const apiVersionsSchema = z
+  .string()
+  .regex(/^v5\.\d+/)
+  .default("v5.0");
+export type TAPIVersion<V> = V extends "v5.0" | `v5.${infer Minor}` ? `v5.${Minor}` : never;
+export type APIVersions = z.infer<typeof apiVersionsSchema>;
 
 export const contentAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
@@ -155,7 +158,7 @@ export type APICredentials = {
     | "users"
     | "newsletters";
   key: string;
-  version: ContentAPIVersions;
+  version: APIVersions;
   url: string;
   endpoint: "admin" | "content";
 };
