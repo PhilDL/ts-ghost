@@ -150,6 +150,8 @@ export class ReadFetcher<
       url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/${this._params.identity.id}/`;
     } else if (this._params.identity.slug) {
       url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/slug/${this._params.identity.slug}/`;
+    } else if (this._params.identity.email) {
+      url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/email/${this._params.identity.email}/`;
     } else {
       throw new Error("Identity is not defined");
     }
