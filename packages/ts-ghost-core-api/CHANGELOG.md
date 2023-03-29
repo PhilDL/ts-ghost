@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 1.1.3
+
+### Patch Changes
+
+- ec888e3: fix identity field "email"
+
 ## 1.1.2
 
 ### Patch Changes
