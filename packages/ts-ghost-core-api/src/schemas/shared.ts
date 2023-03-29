@@ -8,6 +8,7 @@ export const ghostIdentitySchema = z.object({
 export const ghostIdentityInputSchema = z.object({
   slug: z.string().optional(),
   id: z.string().optional(),
+  email: z.string().email().optional(),
 });
 
 export type GhostIdentityInput = z.infer<typeof ghostIdentityInputSchema>;
