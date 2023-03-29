@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 1.1.4
+
+### Patch Changes
+
+- 31ea021: upgrade dependencies
+
 ## 1.1.3
 
 ### Patch Changes

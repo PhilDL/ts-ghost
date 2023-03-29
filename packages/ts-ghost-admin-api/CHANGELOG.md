@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 1.0.3
+
+### Patch Changes
+
+- 31ea021: upgrade dependencies
+- Updated dependencies [31ea021]
+  - @ts-ghost/core-api@1.1.4
+
 ## 1.0.2
 
 ### Patch Changes
