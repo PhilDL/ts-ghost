@@ -37,6 +37,8 @@ describe("QueryBuilder", () => {
     // @ts-expect-error - missing Identity fields
     expect(() => qb.read()).toThrow();
     expect(qb.read({ id: "abc" })).toBeInstanceOf(ReadFetcher);
+    expect(qb.read({ slug: "this-is-a-slug" })).toBeInstanceOf(ReadFetcher);
+    expect(qb.read({ email: "abc@test.com" })).toBeInstanceOf(ReadFetcher);
   });
 
   describe("pagination inputs", () => {

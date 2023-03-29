@@ -17,19 +17,20 @@ export const queryIdentitySchema = z
   .object({
     slug: z.string().optional(),
     id: z.string().optional(),
+    email: z.string().email().optional(),
   })
   .refine(
     (data) => {
-      if (data.slug === undefined && data.id === undefined) {
+      if (data.slug === undefined && data.id === undefined && data.email === undefined) {
         return {
-          message: "Either slug or id must be provided",
+          message: "Either slug, id or email must be provided",
           path: [],
         };
       }
       return true;
     },
     {
-      message: "Either slug or id must be provided",
+      message: "Either slug, id or email must be provided",
       path: [],
     }
   );
