@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 1.1.5
+
+### Patch Changes
+
+- ad2f099: fix identity field with email on readFetcher
+
 ## 1.1.4
 
 ### Patch Changes
