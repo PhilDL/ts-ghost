@@ -37,16 +37,16 @@
     "@ts-ghost/content-api": "*",
     "@ts-ghost/tsconfig": "*",
     "@types/configstore": "^6.0.0",
-    "@types/node": "^18.15.10",
-    "@types/yargs": "^17.0.23",
-    "eslint": "^8.36.0",
+    "@types/node": "^18.15.11",
+    "@types/yargs": "^17.0.24",
+    "eslint": "^8.37.0",
     "jiti": "^1.18.2",
     "ts-node": "^10.9.1",
     "tsup": "^6.7.0",
     "typescript": "5.0.2",
     "vite": "^4.2.1",
     "vite-tsconfig-paths": "^4.0.7",
-    "vitest": "^0.29.7"
+    "vitest": "^0.29.8"
   },
   "dependencies": {
     "@clack/core": "^0.3.2",
