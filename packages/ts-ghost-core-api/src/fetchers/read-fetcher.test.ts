@@ -352,6 +352,29 @@ describe("ReadFetcherFetcher outputs test suite", () => {
       "?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html"
     );
   });
+
+  test("new formats, fields, and include", async () => {
+    const fetcher = new ReadFetcher(
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      { identity: { email: "abc@foo.com" } },
+      api
+    );
+    const res = fetcher
+      .formats({ html: true })
+      .include({ count: true, "nested.key": true })
+      .fields({ html: true, published: true, count: true });
+    expect(res.getIncludes()).toStrictEqual(["count", "nested.key"]);
+    expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
+    expect(res.getFormats()).toStrictEqual(["html"]);
+    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/email/abc@foo.com/", "")).toBe(
+      "?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html"
+    );
+  });
+
   test("new formats, fields, and include should indicate wrong fields", async () => {
     const fetcher = new ReadFetcher(
       {
