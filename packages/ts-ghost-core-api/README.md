@@ -58,6 +58,12 @@ const simplifiedSchema = z.object({
   count: z.number().optional(),
 });
 
+// the "identity" schema is used to validate the inputs of the `read`method of the QueryBuilder
+const identitySchema = z.union([
+  z.object({ slug: z.string() }), 
+  z.object({ id: z.string() })
+])
+
 // the "include" schema is used to validate the "include" parameters of the API call
 // it is specific to the Ghost API resource from resource to resource.
 // The format is always { 'name_of_the_field': true }
@@ -66,12 +72,12 @@ const simplifiedIncludeSchema = z.object({
 });
 
 const qb = new QueryBuilder(
-  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+  { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
 );
 ```
-
-The output schema is really not necessary, since it will be modified along the way after the params are added to the query. At instantiation it will most likely be the same as the original schema so the API may change and we may remove that key.
+- `identitySchema` can be any `ZodType` and can also be an empty `z.object({})` if you don't need the `read` method.
+- `include` is a `ZodObject` that will validate the `include` parameters of the API call. It is specific to the Ghost API resource from resource to resource. The format is always `{ 'name_of_the_field': true }`
 
 
 ### Building Queries
@@ -89,12 +95,16 @@ const simplifiedSchema = z.object({
   slug: z.string(),
   count: z.number().optional(),
 });
+const identitySchema = z.union([
+  z.object({ slug: z.string() }), 
+  z.object({ id: z.string() })
+])
 const simplifiedIncludeSchema = z.object({
   count: z.literal(true).optional(),
 });
 
 const qb = new QueryBuilder(
-  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+  { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
 );
 let query = qb.browse({
