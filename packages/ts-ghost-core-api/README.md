@@ -41,8 +41,7 @@ A QueryBuilder is a class that helps you build a query based on a a combinations
 ### Instantiation
 
 ```ts
-import type { ContentAPICredentials } from "../schemas";
-import { QueryBuilder } from "./query-builder";
+import { QueryBuilder, type ContentAPICredentials } from "@ts-ghost/core-api";
 import { z } from "zod";
 
 const api: ContentAPICredentials = {
