@@ -4,7 +4,6 @@ import { adminMembersSchema } from "./schemas/members";
 import { adminTiersSchema } from "./schemas";
 import { adminUsersSchema } from "./schemas/users";
 import { baseNewsletterSchema, baseOffersSchema, baseTagsSchema } from "@ts-ghost/core-api";
-import { MemberQueryBuilder } from "./members-api";
 import {
   QueryBuilder,
   BasicFetcher,
@@ -91,7 +90,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       endpoint: "admin";
     };
     const membersIncludeSchema = z.object({});
-    return new MemberQueryBuilder(
+    return new QueryBuilder(
       {
         schema: adminMembersSchema,
         identitySchema: z.object({ id: z.string() }),
