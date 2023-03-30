@@ -30,8 +30,8 @@ importers:
     specifiers:
       '@clack/core': ^0.3.2
       '@clack/prompts': ^0.6.3
-      '@ts-ghost/admin-api': ^1.0.2
-      '@ts-ghost/content-api': ^1.0.2
+      '@ts-ghost/admin-api': ^1.0.4
+      '@ts-ghost/content-api': ^1.0.4
       '@ts-ghost/tsconfig': '*'
       '@types/configstore': ^6.0.0
       '@types/node': ^18.15.11
@@ -77,7 +77,7 @@ importers:
 
   packages/ts-ghost-admin-api:
     specifiers:
-      '@ts-ghost/core-api': ^1.1.1
+      '@ts-ghost/core-api': ^1.1.6
       '@ts-ghost/tsconfig': '*'
       '@types/node': ^18.15.11
       '@vitest/coverage-c8': ^0.29.8
@@ -108,7 +108,7 @@ importers:
 
   packages/ts-ghost-content-api:
     specifiers:
-      '@ts-ghost/core-api': ^1.1.1
+      '@ts-ghost/core-api': ^1.1.6
       '@ts-ghost/tsconfig': '*'
       '@types/node': ^18.15.11
       '@vitest/coverage-c8': ^0.29.8
@@ -140,13 +140,11 @@ importers:
   packages/ts-ghost-core-api:
     specifiers:
       '@ts-ghost/tsconfig': '*'
-      '@types/jsonwebtoken': ^9.0.1
       '@types/node': ^18.15.11
       '@vitest/coverage-c8': ^0.29.8
       cross-fetch: ^3.1.5
       eslint: ^8.37.0
       jose: ^4.13.1
-      ts-toolbelt: ^9.6.0
       tsup: ^6.7.0
       typescript: 5.0.2
       vite: ^4.2.1
@@ -161,10 +159,8 @@ importers:
       zod: 3.21.4
     devDependencies:
       '@ts-ghost/tsconfig': link:../tsconfig
-      '@types/jsonwebtoken': 9.0.1
       '@types/node': 18.15.11
       eslint: 8.37.0
-      ts-toolbelt: 9.6.0
       tsup: 6.7.0_typescript@5.0.2
       typescript: 5.0.2
       vite: 4.2.1_@types+node@18.15.11
@@ -754,12 +750,6 @@ packages:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
     dev: true
 
-  /@types/jsonwebtoken/9.0.1:
-    resolution: {integrity: sha512-c5ltxazpWabia/4UzhIoaDcIza4KViOQhdbjRlfcIGVnsE3c3brkz9Z+F/EeJIECOQP7W7US2hNE930cWWkPiw==}
-    dependencies:
-      '@types/node': 18.15.11
-    dev: true
-
   /@types/minimist/1.2.2:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
@@ -1131,7 +1121,6 @@ packages:
   /c8/7.13.0:
     resolution: {integrity: sha512-/NL4hQTv1gBL6J6ei80zu3IiTrmePDKXKXOTLpHvcIWZTVYQlDhVWjjWvkhICylE8EwwnMVzDZugCvdx0/DIIA==}
     engines: {node: '>=10.12.0'}
-    hasBin: true
     dependencies:
       '@bcoe/v8-coverage': 0.2.3
       '@istanbuljs/schema': 0.1.3
@@ -1624,7 +1613,6 @@ packages:
 
   /eslint-config-prettier/8.8.0_eslint@8.37.0:
     resolution: {integrity: sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==}
-    hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
     dependencies:
@@ -3083,7 +3071,6 @@ packages:
 
   /semver/6.3.0:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
-    hasBin: true
 
   /semver/7.3.8:
     resolution: {integrity: sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==}
@@ -3436,14 +3423,9 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /ts-toolbelt/9.6.0:
-    resolution: {integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==}
-    dev: true
-
   /tsconfck/2.1.0_typescript@5.0.2:
     resolution: {integrity: sha512-lztI9ohwclQHISVWrM/hlcgsRpphsii94DV9AQtAw2XJSVNiv+3ppdEsrL5J+xc5oTeHXe1qDqlOAGw8VSa9+Q==}
     engines: {node: ^14.13.1 || ^16 || >=18}
-    hasBin: true
     peerDependencies:
       typescript: ^4.3.5 || ^5.0.0
     peerDependenciesMeta:
@@ -3495,7 +3477,6 @@ packages:
   /tsup/6.7.0_typescript@5.0.2:
     resolution: {integrity: sha512-L3o8hGkaHnu5TdJns+mCqFsDBo83bJ44rlK7e6VdanIvpea4ArPcU3swWGsLVbXak1PqQx/V+SSmFPujBK+zEQ==}
     engines: {node: '>=14.18'}
-    hasBin: true
     peerDependencies:
       '@swc/core': ^1
       postcss: ^8.4.12
@@ -3754,7 +3735,6 @@ packages:
   /vite/4.2.1_@types+node@18.15.11:
     resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
     engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
     peerDependencies:
       '@types/node': '>= 14'
       less: '*'
@@ -3799,7 +3779,6 @@ packages:
   /vitest/0.29.8:
     resolution: {integrity: sha512-JIAVi2GK5cvA6awGpH0HvH/gEG9PZ0a/WoxdiV3PmqK+3CjQMf8c+J/Vhv4mdZ2nRyXFw66sAg6qz7VNkaHfDQ==}
     engines: {node: '>=v14.16.0'}
-    hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
       '@vitest/browser': '*'
