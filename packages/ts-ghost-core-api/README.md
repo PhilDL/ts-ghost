@@ -65,7 +65,7 @@ const identitySchema = z.union([
 ])
 
 // the "include" schema is used to validate the "include" parameters of the API call
-// it is specific to the Ghost API resource from resource to resource.
+// it is specific to the Ghost API resource targeted.
 // The format is always { 'name_of_the_field': true }
 const simplifiedIncludeSchema = z.object({
   count: z.literal(true).optional(),
@@ -77,7 +77,7 @@ const qb = new QueryBuilder(
 );
 ```
 - `identitySchema` can be any `ZodType` and can also be an empty `z.object({})` if you don't need the `read` method.
-- `include` is a `ZodObject` that will validate the `include` parameters of the API call. It is specific to the Ghost API resource from resource to resource. The format is always `{ 'name_of_the_field': true }`
+- `include` is a `ZodObject` that will validate the `include` parameters of the API call. It is specific to the Ghost API resource targeted. The format is always `{ 'name_of_the_field': true }`
 
 
 ### Building Queries
@@ -127,7 +127,7 @@ This is an example containing all the available keys in the `input` object
 
 ```typescript
 const qb = new QueryBuilder(
-  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+  { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
 );
 let query = qb.browse({
@@ -151,7 +151,7 @@ Read is meant to be used to fetch 1 object only by `id` or `slug`.
 
 ```typescript
 const qb = new QueryBuilder(
-  { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+  { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
 );
 let query = qb.read({
@@ -195,6 +195,7 @@ const browseFetcher = new BrowseFetcher(
   api
 );
 ```
+*The option `output` schema will be modified along the way after the params like `fields`, `formats`, `include` are added to the query. At instantiation it will most likely be the same as the original schema.*
 
 These fetchers have a `fetch` method that will return a discriminated union of 2 types:
 
