@@ -1,5 +1,18 @@
 # @ts-ghost/admin-api
 
+## 1.0.5
+
+### Patch Changes
+
+- 6a55476: ## Upgraded dependencies and add more tests
+
+  - Reflect changes made to `ts-ghost/core-api`
+  - Added more tests
+
+- Updated dependencies [6a55476]
+- Updated dependencies [6a55476]
+  - @ts-ghost/core-api@2.0.0
+
 ## 1.0.4
 
 ### Patch Changes

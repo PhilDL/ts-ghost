@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 1.0.5
+
+### Patch Changes
+
+- Updated dependencies [6a55476]
+- Updated dependencies [6a55476]
+  - @ts-ghost/core-api@2.0.0
+
 ## 1.0.4
 
 ### Patch Changes
