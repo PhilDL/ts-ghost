@@ -250,4 +250,12 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   }),
 ]);
 
+export const slugOrIdSchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
+export const emailOrIdSchema = z.union([z.object({ email: z.string().email() }), z.object({ id: z.string() })]);
+export const identitySchema = z.union([
+  z.object({ email: z.string().email() }),
+  z.object({ id: z.string() }),
+  z.object({ slug: z.string() }),
+]);
+
 export type AdminAPICredentials = z.infer<typeof adminAPICredentialsSchema>;

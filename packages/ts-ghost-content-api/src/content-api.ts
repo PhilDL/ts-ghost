@@ -3,7 +3,7 @@ import { tagsSchema, tagsIncludeSchema } from "./tags/schemas";
 import { pagesSchema, pagesIncludeSchema } from "./pages/schemas";
 import { postsSchema, postsIncludeSchema } from "./posts/schemas";
 import { tiersSchema, tiersIncludeSchema } from "./tiers/schemas";
-import { contentAPICredentialsSchema, QueryBuilder, APIVersions, type TAPIVersion } from "@ts-ghost/core-api";
+import { contentAPICredentialsSchema, QueryBuilder, APIVersions, slugOrIdSchema } from "@ts-ghost/core-api";
 import { BasicFetcher } from "@ts-ghost/core-api";
 import { settingsSchema } from "./settings/schemas";
 
@@ -38,7 +38,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: authorsSchema,
-        output: authorsSchema,
+        identitySchema: slugOrIdSchema,
         include: authorsIncludeSchema,
       },
       api
@@ -58,7 +58,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
       url: string;
       endpoint: "content";
     };
-    return new QueryBuilder({ schema: tiersSchema, output: tiersSchema, include: tiersIncludeSchema }, api);
+    return new QueryBuilder({ schema: tiersSchema, identitySchema: slugOrIdSchema, include: tiersIncludeSchema }, api);
   }
   get posts() {
     const api = contentAPICredentialsSchema.parse({
@@ -77,7 +77,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: postsSchema,
-        output: postsSchema,
+        identitySchema: slugOrIdSchema,
         include: postsIncludeSchema,
       },
       api
@@ -100,7 +100,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: pagesSchema,
-        output: pagesSchema,
+        identitySchema: slugOrIdSchema,
         include: pagesIncludeSchema,
       },
       api
@@ -120,7 +120,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
       url: string;
       endpoint: "content";
     };
-    return new QueryBuilder({ schema: tagsSchema, output: tagsSchema, include: tagsIncludeSchema }, api);
+    return new QueryBuilder({ schema: tagsSchema, identitySchema: slugOrIdSchema, include: tagsIncludeSchema }, api);
   }
 
   get settings() {

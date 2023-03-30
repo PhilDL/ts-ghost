@@ -4,7 +4,6 @@ import type { APICredentials } from "../schemas";
 import { z, ZodRawShape } from "zod";
 import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
-import { queryIdentitySchema } from "../schemas";
 
 export type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
 
@@ -13,15 +12,15 @@ export type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
  * instance with browse and read functions.
  */
 export class QueryBuilder<
-  Shape extends ZodRawShape,
-  OutputShape extends ZodRawShape,
-  IncludeShape extends ZodRawShape,
-  Api extends APICredentials
+  Shape extends ZodRawShape = any,
+  IdentityShape extends z.ZodTypeAny = any,
+  IncludeShape extends ZodRawShape = any,
+  Api extends APICredentials = any
 > {
   constructor(
     protected config: {
       schema: z.ZodObject<Shape>;
-      output: z.ZodObject<OutputShape>;
+      identitySchema: IdentityShape;
       include: z.ZodObject<IncludeShape>;
     },
     protected _api: Api
@@ -44,7 +43,7 @@ export class QueryBuilder<
     return new BrowseFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output,
+        output: this.config.schema,
         include: this.config.include,
       },
       {
@@ -58,22 +57,15 @@ export class QueryBuilder<
    * Read function that accepts Identify fields like id, slug or email. Will return an instance
    * of ReadFetcher class.
    */
-  public read<
-    Identity extends
-      | {
-          id: string;
-        }
-      | { slug: string }
-      | { email: string }
-  >(options: Identity) {
+  public read(options: z.infer<IdentityShape>) {
     return new ReadFetcher(
       {
         schema: this.config.schema,
-        output: this.config.output,
+        output: this.config.schema,
         include: this.config.include,
       },
       {
-        identity: queryIdentitySchema.parse(options),
+        identity: this.config.identitySchema.parse(options),
       },
       this._api
     );
