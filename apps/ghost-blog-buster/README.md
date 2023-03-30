@@ -31,6 +31,10 @@ Ghost Blog Buster is an interactive CLI allowing you to interact with your Ghost
 - ⚙️ Display or export to JSON your **Tags**, **Tiers**, **Authors**, **Members** (Admin API only)
 - 📶 Connect / Disconnect from the Blog
 
+## Compatible Ghost versions.
+This tool was developped and tested mostly for Ghost versions 5.x.
+- Ghost 5^
+
 ## Built With
 
 - [TypeScript](https://github.com/microsoft/TypeScript)

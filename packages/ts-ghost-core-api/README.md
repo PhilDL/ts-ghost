@@ -27,6 +27,11 @@
 pnpm i @ts-ghost/core-api
 ```
 
+### Compatible Ghost versions.
+This client is only compatible with Ghost versions 5.x for now.
+- Ghost 5^
+
+
 ## QueryBuilder
 
 A QueryBuilder is a class that helps you build a query based on a a combinations of ZodSchema. This QueryBuilder exposes 2 methods `read` to fetch a single record and `browse` to fetch multiple records. `read` and `browse` gives you back the appropriate `Fetcher` instance that will handle the actual request to the API with the correct parameters.

@@ -4,23 +4,13 @@ import { adminMembersSchema } from "./schemas/members";
 import { adminTiersSchema } from "./schemas";
 import { adminUsersSchema } from "./schemas/users";
 import { baseNewsletterSchema, baseOffersSchema, baseTagsSchema } from "@ts-ghost/core-api";
-import {
-  adminAPICredentialsSchema,
-  QueryBuilder,
-  AdminAPIVersions,
-  baseSiteSchema,
-  BasicFetcher,
-} from "@ts-ghost/core-api";
+import { adminAPICredentialsSchema, QueryBuilder, APIVersions, baseSiteSchema, BasicFetcher } from "@ts-ghost/core-api";
 import { z } from "zod";
 
-export type { AdminAPICredentials, AdminAPIVersions } from "@ts-ghost/core-api";
+export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
 
-export class TSGhostAdminAPI {
-  constructor(
-    protected readonly url: string,
-    protected readonly key: string,
-    protected readonly version: AdminAPIVersions
-  ) {}
+export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
+  constructor(protected readonly url: string, protected readonly key: string, protected readonly version: Version) {}
   get posts() {
     const api = adminAPICredentialsSchema.parse({
       resource: "posts",
@@ -31,7 +21,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "posts";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
@@ -59,7 +49,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "pages";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
@@ -87,7 +77,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "members";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
@@ -112,7 +102,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "tiers";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
@@ -141,7 +131,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "newsletters";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
@@ -166,7 +156,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "offers";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
@@ -191,7 +181,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "tags";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
@@ -218,7 +208,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "users";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
@@ -243,7 +233,7 @@ export class TSGhostAdminAPI {
     }) as {
       resource: "site";
       key: string;
-      version: AdminAPIVersions;
+      version: APIVersions;
       url: string;
       endpoint: "admin";
     };
