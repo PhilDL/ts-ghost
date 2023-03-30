@@ -26,8 +26,14 @@ describe("QueryBuilder", () => {
     "count.posts": z.literal(true).optional(),
   });
 
+  const identitySchema = z.union([
+    z.object({ id: z.string() }),
+    z.object({ slug: z.string() }),
+    z.object({ email: z.string() }),
+  ]);
+
   const qb = new QueryBuilder(
-    { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+    { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
     api
   );
 
@@ -36,6 +42,8 @@ describe("QueryBuilder", () => {
     expect(qb.browse()).toBeInstanceOf(BrowseFetcher);
     // @ts-expect-error - missing Identity fields
     expect(() => qb.read()).toThrow();
+    // @ts-expect-error - missing Identity fields
+    expect(() => qb.read({})).toThrow();
     expect(qb.read({ id: "abc" })).toBeInstanceOf(ReadFetcher);
     expect(qb.read({ slug: "this-is-a-slug" })).toBeInstanceOf(ReadFetcher);
     expect(qb.read({ email: "abc@test.com" })).toBeInstanceOf(ReadFetcher);

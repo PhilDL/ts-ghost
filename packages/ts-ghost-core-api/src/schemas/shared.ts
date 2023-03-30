@@ -13,28 +13,6 @@ export const ghostIdentityInputSchema = z.object({
 
 export type GhostIdentityInput = z.infer<typeof ghostIdentityInputSchema>;
 
-export const queryIdentitySchema = z
-  .object({
-    slug: z.string().optional(),
-    id: z.string().optional(),
-    email: z.string().email().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.slug === undefined && data.id === undefined && data.email === undefined) {
-        return {
-          message: "Either slug, id or email must be provided",
-          path: [],
-        };
-      }
-      return true;
-    },
-    {
-      message: "Either slug, id or email must be provided",
-      path: [],
-    }
-  );
-
 export type GhostIdentity = z.infer<typeof ghostIdentitySchema>;
 
 export const ghostMetaSchema = z.object({
@@ -248,6 +226,14 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
     url: z.string().url(),
     endpoint: z.literal("admin"),
   }),
+]);
+
+export const slugOrIdSchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
+export const emailOrIdSchema = z.union([z.object({ email: z.string().email() }), z.object({ id: z.string() })]);
+export const identitySchema = z.union([
+  z.object({ email: z.string().email() }),
+  z.object({ id: z.string() }),
+  z.object({ slug: z.string() }),
 ]);
 
 export type AdminAPICredentials = z.infer<typeof adminAPICredentialsSchema>;

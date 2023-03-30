@@ -4,7 +4,15 @@ import { adminMembersSchema } from "./schemas/members";
 import { adminTiersSchema } from "./schemas";
 import { adminUsersSchema } from "./schemas/users";
 import { baseNewsletterSchema, baseOffersSchema, baseTagsSchema } from "@ts-ghost/core-api";
-import { adminAPICredentialsSchema, QueryBuilder, APIVersions, baseSiteSchema, BasicFetcher } from "@ts-ghost/core-api";
+import {
+  QueryBuilder,
+  BasicFetcher,
+  APIVersions,
+  baseSiteSchema,
+  adminAPICredentialsSchema,
+  slugOrIdSchema,
+  emailOrIdSchema,
+} from "@ts-ghost/core-api";
 import { z } from "zod";
 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
@@ -32,7 +40,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: adminPostsSchema,
-        output: adminPostsSchema,
+        identitySchema: slugOrIdSchema,
         include: postsIncludeSchema,
       },
       api
@@ -60,7 +68,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: adminPagesSchema,
-        output: adminPagesSchema,
+        identitySchema: slugOrIdSchema,
         include: pagesIncludeSchema,
       },
       api
@@ -85,7 +93,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: adminMembersSchema,
-        output: adminMembersSchema,
+        identitySchema: z.object({ id: z.string() }),
         include: membersIncludeSchema,
       },
       api
@@ -114,7 +122,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: adminTiersSchema,
-        output: adminTiersSchema,
+        identitySchema: slugOrIdSchema,
         include: tiersIncludeSchema,
       },
       api
@@ -139,7 +147,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: baseNewsletterSchema,
-        output: baseNewsletterSchema,
+        identitySchema: slugOrIdSchema,
         include: newslettersIncludeSchema,
       },
       api
@@ -164,7 +172,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: baseOffersSchema,
-        output: baseOffersSchema,
+        identitySchema: slugOrIdSchema,
         include: offersIncludeSchema,
       },
       api
@@ -191,7 +199,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: baseTagsSchema,
-        output: baseTagsSchema,
+        identitySchema: slugOrIdSchema,
         include: tagsIncludeSchema,
       },
       api
@@ -216,7 +224,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     return new QueryBuilder(
       {
         schema: adminUsersSchema,
-        output: adminUsersSchema,
+        identitySchema: emailOrIdSchema,
         include: usersIncludeSchema,
       },
       api

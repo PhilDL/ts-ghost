@@ -65,6 +65,7 @@ describe("ReadFetcher", () => {
     expect(readFetcher.getURL()?.toString()).toBe(
       "https://ghost.org/ghost/api/content/posts/eh873jdLsnaUDj7149DSASJhdqsdj/?key=1234"
     );
+    expect(readFetcher.getFormats()).toStrictEqual([]);
   });
 
   test("should return a ReadFetcher with admin API instance using id", () => {

@@ -4,11 +4,11 @@ import { _fetch } from "./helpers";
 import type { Mask } from "../utils";
 
 export class ReadFetcher<
-  Fields extends Mask<OutputShape>,
-  BaseShape extends ZodRawShape,
-  OutputShape extends ZodRawShape,
-  IncludeShape extends ZodRawShape,
-  Api extends APICredentials
+  Fields extends Mask<OutputShape> = any,
+  BaseShape extends ZodRawShape = any,
+  OutputShape extends ZodRawShape = any,
+  IncludeShape extends ZodRawShape = any,
+  Api extends APICredentials = any
 > {
   protected _urlParams: Record<string, string> = {};
   protected _URL: URL | undefined = undefined;

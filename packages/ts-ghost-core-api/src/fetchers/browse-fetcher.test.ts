@@ -59,6 +59,7 @@ describe("BrowseFetcher", () => {
     expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
     expect(browseFetcher.getIncludes()).toEqual([]);
     expect(browseFetcher.getParams()).toStrictEqual({});
+    expect(browseFetcher.getFormats()).toStrictEqual([]);
     expect(browseFetcher.getURL()?.toString()).toBe("https://ghost.org/ghost/api/content/posts/?key=1234");
   });
 
@@ -191,8 +192,114 @@ describe("BrowseFetcher", () => {
           prev: null,
         },
       });
+      expect(result.meta.pagination).toStrictEqual({
+        page: 1,
+        limit: 10,
+        pages: 1,
+        total: 1,
+        next: null,
+        prev: null,
+      });
       // @ts-expect-error - published is not in the output schema
       expect(result.data[0].published).toBeUndefined();
+    }
+  });
+
+  test("BrowseFetcher .fetch() that returns empty set should return default meta", async () => {
+    const pick = {
+      title: true,
+      slug: true,
+      count: true,
+    } as const;
+    const output = simplifiedSchema.pick(pick);
+    const browseFetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        browseParams: {
+          order: "title DESC",
+          limit: 10,
+        },
+        include: ["count"],
+        fields: {
+          title: true,
+          slug: true,
+          count: true,
+        },
+      },
+      api
+    );
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
+        posts: [],
+      })
+    );
+    const result = await browseFetcher.fetch();
+    expect(result.status).toBe("success");
+    if (result.status === "success") {
+      expect(result.data).toStrictEqual([]);
+      expect(result.meta).toStrictEqual({
+        pagination: {
+          page: 0,
+          limit: 15,
+          pages: 0,
+          total: 0,
+          next: null,
+          prev: null,
+        },
+      });
+    }
+  });
+
+  test("BrowseFetcher .paginate() that returns empty set should return default meta", async () => {
+    const pick = {
+      title: true,
+      slug: true,
+      count: true,
+    } as const;
+    const output = simplifiedSchema.pick(pick);
+    const browseFetcher = new BrowseFetcher(
+      {
+        schema: simplifiedSchema,
+        output,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        browseParams: {
+          order: "title DESC",
+          limit: 10,
+        },
+        include: ["count"],
+        fields: {
+          title: true,
+          slug: true,
+          count: true,
+        },
+      },
+      api
+    );
+    (fetch as FetchMock).doMockOnce(
+      JSON.stringify({
+        posts: [],
+      })
+    );
+    const result = await browseFetcher.paginate();
+    expect(result.current.status).toBe("success");
+    if (result.current.status === "success") {
+      expect(result.current.data).toStrictEqual([]);
+      expect(result.current.meta).toStrictEqual({
+        pagination: {
+          page: 0,
+          limit: 15,
+          pages: 0,
+          total: 0,
+          next: null,
+          prev: null,
+        },
+      });
     }
   });
 
@@ -261,6 +368,7 @@ describe("BrowseFetcher", () => {
     expect(browseFetcher.getParams()).toStrictEqual({
       formats: ["html", "plaintext"],
     });
+    expect(browseFetcher.getFormats()).toStrictEqual(["html", "plaintext"]);
     expect(browseFetcher.getURL()?.toString()).toBe(
       "https://ghost.org/ghost/api/content/posts/?key=1234&formats=html%2Cplaintext"
     );
@@ -307,6 +415,16 @@ describe("BrowseFetcher", () => {
     const result = await browseFetcher.paginate();
     assert(result.current.status === "success");
     expect(result.current.data[0].slug).toBe("first-page-blog-post");
+    expect(result.current.meta).toStrictEqual({
+      pagination: {
+        page: 1,
+        limit: 1,
+        pages: 2,
+        total: 2,
+        next: null,
+        prev: null,
+      },
+    });
     expect(result.next).toBeInstanceOf(BrowseFetcher);
     assert(result.next);
     expect(result.next.getParams()).toStrictEqual({
