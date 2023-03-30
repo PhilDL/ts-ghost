@@ -1,5 +1,15 @@
 # @ts-ghost/core-api
 
+## 1.1.6
+
+### Patch Changes
+
+- 507b16a: ## Changes
+
+  - Update the TS definition of `APIVersion` to accept only `v5.x` for now.
+  - Updated the corresponding zod schema to have regex validation.
+  - Updated documentation to give info about the supported versions
+
 ## 1.1.5
 
 ### Patch Changes

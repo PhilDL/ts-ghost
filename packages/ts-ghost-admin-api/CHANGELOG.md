@@ -1,5 +1,18 @@
 # @ts-ghost/admin-api
 
+## 1.0.4
+
+### Patch Changes
+
+- 507b16a: ## Changes
+
+  - Update the TS definition of `APIVersion` to accept only `v5.x` for now.
+  - Updated the corresponding zod schema to have regex validation.
+  - Updated documentation to give info about the supported versions
+
+- Updated dependencies [507b16a]
+  - @ts-ghost/core-api@1.1.6
+
 ## 1.0.3
 
 ### Patch Changes
