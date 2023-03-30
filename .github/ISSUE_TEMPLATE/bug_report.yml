@@ -1,0 +1,57 @@
+# This template is a direct copy of the @trpc bug report template
+# See here: https://github.com/trpc/trpc/blob/main/.github/ISSUE_TEMPLATE/1.bug_report.yml
+
+name: 🐞 Bug Report
+description: Create a bug report for the core packages
+title: "bug: "
+labels: ["🐛 bug: unconfirmed"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report! Please fill out this form as completely as possible.
+        Note that the more precise you are, the quicker we will be able to investigate the bug.
+  - type: textarea
+    attributes:
+      label: Provide environment information
+      description: |
+        Run this command in your project root and paste the results:
+
+        ```terminal
+        npx envinfo --system --binaries --browsers --npmPackages "typescript,@ts-ghost/content-api,@ts-ghost/admin-api,@ts-ghost/core-api,@ts-ghost/ghost-blog-buster"
+        ```
+      placeholder: |
+        ``` 
+        <Paste result here> 
+        ```
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: Please describe the bug as clear and concise as possible, as well as the behavior you were expecting whilst encountering the bug.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Target Ghost Blog version
+      description: Please provide the version of the Ghost Blog you are interacting with, knowing that mosts tools here are tested against Ghost v5 minimum.
+      placeholder: "v5.0"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: To reproduce
+      description: Describe how to reproduce your bug. Can be either code or a link to a reproduction repo, Stackblitz etc.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: Add any other information related to the bug here.
+  - type: checkboxes
+    attributes:
+      label: 👨‍👧‍👦 Contributing
+      description: We love contributors in any shape or form. Would you be willing to implement a fix?
+      options:
+        - label: 🙋‍♂️ Yes, I'd be down to file a PR fixing this bug!
