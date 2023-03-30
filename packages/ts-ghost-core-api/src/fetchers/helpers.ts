@@ -13,9 +13,7 @@ export async function getJWT(key: string) {
     .sign(Uint8Array.from((_secret.match(/.{1,2}/g) as RegExpMatchArray).map((byte) => parseInt(byte, 16))));
 }
 
-export async function _fetch(URL: URL | undefined, api: APICredentials) {
-  if (URL === undefined) throw new Error("URL is undefined");
-  let result = undefined;
+export async function _genHeaders(api: APICredentials) {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "Accept-Version": api.version,
@@ -24,6 +22,13 @@ export async function _fetch(URL: URL | undefined, api: APICredentials) {
     const jwt = await getJWT(api.key);
     headers["Authorization"] = `Ghost ${jwt}`;
   }
+  return headers;
+}
+
+export async function _fetch(URL: URL | undefined, api: APICredentials) {
+  if (URL === undefined) throw new Error("URL is undefined");
+  let result = undefined;
+  const headers = await _genHeaders(api);
   try {
     result = await (
       await fetch(URL.toString(), {
