@@ -33,6 +33,11 @@ pnpm i @ts-ghost/content-api
 
 This is a quick example of how to use the library.
 
+### Compatible Ghost versions.
+This client is only compatible with Ghost versions 5.x for now.
+- Ghost 5^
+
+
 ### Browse multiple posts 
 
 ```typescript
