@@ -1,5 +1,11 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.4.4
+
+### Patch Changes
+
+- 47484ce: Fix generated frontmatter was not correct
+
 ## 0.4.3
 
 ### Patch Changes
