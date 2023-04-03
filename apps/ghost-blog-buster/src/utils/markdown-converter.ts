@@ -1,6 +1,7 @@
 import { NodeHtmlMarkdown } from "node-html-markdown";
 import type { Post } from "@ts-ghost/content-api";
 import * as fs from "fs";
+import yaml from "js-yaml";
 
 type MarkdownPost = Pick<
   Post,
@@ -10,13 +11,14 @@ type MarkdownPost = Pick<
 export const frontMatterGenerator = (post: MarkdownPost): string => {
   if (!post) return "";
   const frontMatter = `---
-title: ${post.title}
-date: ${post.published_at}
-tags: ${post.tags?.map((t) => t.name).join(", ")}
-status: ${post.published_at ? "published" : "draft"}
-feature_image: ${post.feature_image}
-canonical_url: ${post.canonical_url || post.url}
----
+${yaml.dump({
+  title: post.title,
+  date: post.published_at,
+  tags: post.tags?.map((t) => t.name),
+  status: post.published_at ? "published" : "draft",
+  feature_image: post.feature_image,
+  canonical_url: post.canonical_url || post.url,
+})}---
 `;
   return frontMatter;
 };
