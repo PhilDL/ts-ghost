@@ -193,13 +193,18 @@ describe("frontMatterGenerator", () => {
     feature_image_caption: null,
   };
   it("should generate front matter", async () => {
-    const frontMatter = await frontMatterGenerator(post);
+    const frontMatter = frontMatterGenerator(post);
     expect(frontMatter).toEqual(`---
-title: Odoo 15 JavaScript Reference: OWL Views, WebClient, Services, and hooks.
-date: 2021-10-18T03:00:00.000+00:00
-tags: Odoo 15, OWL, JavaScript, #syntax-highlight
+title: 'Odoo 15 JavaScript Reference: OWL Views, WebClient, Services, and hooks.'
+date: '2021-10-18T03:00:00.000+00:00'
+tags:
+  - Odoo 15
+  - OWL
+  - JavaScript
+  - '#syntax-highlight'
 status: published
-feature_image: https://codingdodo.com/content/images/2021/10/post-cover-odoo-15-javascript-reference-5.png
+feature_image: >-
+  https://codingdodo.com/content/images/2021/10/post-cover-odoo-15-javascript-reference-5.png
 canonical_url: https://codingdodo.com/odoo-15-javascript-reference
 ---
 `);
