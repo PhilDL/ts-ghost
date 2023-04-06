@@ -391,6 +391,15 @@ let result = await bf.fields({
 }).fetch();
 ```
 
+### `fetch` options
+
+You can pass an optional `options` object to the `fetch` and `paginate` method. The `options` object is the standard `RequestInit` object from the `fetch` API.
+
+```typescript
+let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch({ cache: "no-store" });
+```
+*This may be useful if you use NextJS augmented `fetch`!*
+
 ## Roadmap
 
 - Handling POST, PUT and DELETE requests.
