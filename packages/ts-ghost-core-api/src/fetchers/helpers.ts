@@ -25,13 +25,14 @@ export async function _genHeaders(api: APICredentials) {
   return headers;
 }
 
-export async function _fetch(URL: URL | undefined, api: APICredentials) {
+export async function _fetch(URL: URL | undefined, api: APICredentials, options?: RequestInit) {
   if (URL === undefined) throw new Error("URL is undefined");
   let result = undefined;
   const headers = await _genHeaders(api);
   try {
     result = await (
       await fetch(URL.toString(), {
+        ...options,
         headers,
       })
     ).json();

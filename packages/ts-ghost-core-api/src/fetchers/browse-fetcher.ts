@@ -195,9 +195,9 @@ export class BrowseFetcher<
     ]);
   }
 
-  public async fetch() {
+  public async fetch(options?: RequestInit) {
     const resultSchema = this._getResultSchema();
-    const result = await _fetch(this._URL, this._api);
+    const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.status = "error";
@@ -221,7 +221,7 @@ export class BrowseFetcher<
     return resultSchema.parse(data);
   }
 
-  public async paginate() {
+  public async paginate(options?: RequestInit) {
     if (!this._params.browseParams?.page) {
       this._params.browseParams = {
         ...this._params.browseParams,
@@ -231,7 +231,7 @@ export class BrowseFetcher<
     }
 
     const resultSchema = this._getResultSchema();
-    const result = await _fetch(this._URL, this._api);
+    const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.status = "error";
