@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 1.0.6
+
+### Patch Changes
+
+- d78279e: Allow options to be passed to fetch
+- Updated dependencies [d78279e]
+  - @ts-ghost/core-api@2.0.1
+
 ## 1.0.5
 
 ### Patch Changes
