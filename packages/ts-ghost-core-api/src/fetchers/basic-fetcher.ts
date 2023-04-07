@@ -43,7 +43,7 @@ export class BasicFetcher<OutputShape extends ZodRawShape = any, Api extends API
     this._URL = url;
   }
 
-  public async fetch() {
+  public async fetch(options?: RequestInit) {
     const res = z.discriminatedUnion("status", [
       z.object({
         status: z.literal("success"),
@@ -59,7 +59,7 @@ export class BasicFetcher<OutputShape extends ZodRawShape = any, Api extends API
         ),
       }),
     ]);
-    const result = await _fetch(this._URL, this._api);
+    const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.status = "error";

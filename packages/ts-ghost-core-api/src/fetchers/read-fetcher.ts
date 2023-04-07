@@ -161,7 +161,7 @@ export class ReadFetcher<
     this._URL = url;
   }
 
-  public async fetch() {
+  public async fetch(options?: RequestInit) {
     const res = z.discriminatedUnion("status", [
       z.object({
         status: z.literal("success"),
@@ -177,7 +177,7 @@ export class ReadFetcher<
         ),
       }),
     ]);
-    const result = await _fetch(this._URL, this._api);
+    const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.status = "error";
