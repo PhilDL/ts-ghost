@@ -13,6 +13,7 @@ import {
   slugOrIdSchema,
   emailOrIdSchema,
 } from "@ts-ghost/core-api";
+import { MemberQueryBuilder } from "./member-query-builder";
 import { z } from "zod";
 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
@@ -90,7 +91,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       endpoint: "admin";
     };
     const membersIncludeSchema = z.object({});
-    return new QueryBuilder(
+    return new MemberQueryBuilder(
       {
         schema: adminMembersSchema,
         identitySchema: z.object({ id: z.string() }),
