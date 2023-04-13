@@ -27,7 +27,7 @@ describe("members integration tests browse", () => {
     expect(site.title).toBe(stubSite.title);
     expect(site.description).toBe(stubSite.description);
     expect(site.logo).toBe(stubSite.logo);
-    expect(site.version).toBe(stubSite.version);
+    expect(site.version).toContain("5.");
     expect(site.url).toBe(stubSite.url);
   });
 });
