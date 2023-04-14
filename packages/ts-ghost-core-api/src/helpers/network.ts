@@ -1,6 +1,7 @@
 import fetch from "cross-fetch";
-import type { APICredentials } from "../schemas/shared";
 import { SignJWT } from "jose";
+
+import type { APICredentials } from "../schemas/shared";
 
 export async function getJWT(key: string) {
   const [id, _secret] = key.split(":");

@@ -1,8 +1,8 @@
-import type { TSGhostContentAPI } from "@ts-ghost/content-api";
-import { isCancel } from "@clack/core";
-import { text, cancel, note, spinner, select, log } from "@clack/prompts";
 import * as fs from "fs";
 import path from "path";
+import { isCancel } from "@clack/core";
+import { cancel, log, note, select, spinner, text } from "@clack/prompts";
+import type { TSGhostContentAPI } from "@ts-ghost/content-api";
 
 export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: string) => {
   const s = spinner();
@@ -70,7 +70,10 @@ export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: strin
         log.error(err.toString());
       }
     });
-    note(`${authors.data.length} authors converted to Json file and saved to ${output}/authors.json`, "Success");
+    note(
+      `${authors.data.length} authors converted to Json file and saved to ${output}/authors.json`,
+      "Success"
+    );
   }
   return;
 };

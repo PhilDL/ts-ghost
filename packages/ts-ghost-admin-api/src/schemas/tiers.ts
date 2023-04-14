@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { baseTiersSchema } from "@ts-ghost/core-api";
+import { z } from "zod";
 
 export const adminTiersSchema = baseTiersSchema.merge(
   z.object({

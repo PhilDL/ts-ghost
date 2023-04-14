@@ -1,7 +1,8 @@
-import { BrowseParamsSchema } from "../helpers/browse-params";
 import { z, ZodRawShape } from "zod";
-import { ghostMetaSchema, type APICredentials } from "../schemas/shared";
+
+import { BrowseParamsSchema } from "../helpers/browse-params";
 import { _fetch } from "../helpers/network";
+import { ghostMetaSchema, type APICredentials } from "../schemas/shared";
 import type { Mask } from "../utils";
 
 export class BrowseFetcher<

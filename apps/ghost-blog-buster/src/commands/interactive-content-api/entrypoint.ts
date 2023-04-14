@@ -1,17 +1,17 @@
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
-import { cancel, note, select, confirm, outro } from "@clack/prompts";
+import { cancel, confirm, note, outro, select } from "@clack/prompts";
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
+
+import { getConfig } from "../../config";
 import {
-  postsExportSelection,
-  postsExportAll,
+  authorsExportAll,
   checkCredentials,
+  postsExportAll,
+  postsExportSelection,
   promptCredentialsLoop,
   tagsExportAll,
   tiersExportAll,
-  authorsExportAll,
 } from "./index";
-
-import { getConfig } from "../../config";
 
 export const entrypoint = async function () {
   const config = getConfig();
@@ -36,7 +36,11 @@ export const entrypoint = async function () {
         { value: "export-tags", label: "Tags" },
         { value: "export-tiers", label: "Tiers" },
         { value: "export-authors", label: "Authors" },
-        { value: "disconnect", label: "Disconnect from that blog", hint: "This will close the current session." },
+        {
+          value: "disconnect",
+          label: "Disconnect from that blog",
+          hint: "This will close the current session.",
+        },
         { value: "quit", label: "Quit" },
       ],
     });

@@ -1,9 +1,10 @@
-import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
-import type { ContentAPICredentials, AdminAPICredentials } from "../schemas/shared";
-import { describe, test, expect, assert } from "vitest";
-import { ReadFetcher } from "./read-fetcher";
+import { assert, describe, expect, test } from "vitest";
+import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import { z } from "zod";
+
+import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
+import { ReadFetcher } from "./read-fetcher";
 
 describe("ReadFetcher", () => {
   const api: ContentAPICredentials = {
@@ -349,9 +350,9 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     expect(res.getIncludes()).toStrictEqual(["count", "nested.key"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
-    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")).toBe(
-      "?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html"
-    );
+    expect(
+      res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")
+    ).toBe("?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html");
   });
 
   test("new formats, fields, and include", async () => {
@@ -371,9 +372,9 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     expect(res.getIncludes()).toStrictEqual(["count", "nested.key"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
-    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/email/abc@foo.com/", "")).toBe(
-      "?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html"
-    );
+    expect(
+      res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/email/abc@foo.com/", "")
+    ).toBe("?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html");
   });
 
   test("new formats, fields, and include should indicate wrong fields", async () => {
@@ -396,8 +397,8 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     expect(res.getIncludes()).toStrictEqual(["count"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
-    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")).toBe(
-      "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
-    );
+    expect(
+      res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")
+    ).toBe("?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html");
   });
 });

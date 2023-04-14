@@ -1,9 +1,10 @@
-import type { TSGhostContentAPI } from "@ts-ghost/content-api";
-import { isCancel } from "@clack/core";
-import { text, cancel, note, spinner, log } from "@clack/prompts";
-import { createMarkdownFile } from "../../utils/markdown-converter";
 import * as fs from "fs";
 import path from "path";
+import { isCancel } from "@clack/core";
+import { cancel, log, note, spinner, text } from "@clack/prompts";
+import type { TSGhostContentAPI } from "@ts-ghost/content-api";
+
+import { createMarkdownFile } from "../../utils/markdown-converter";
 
 export async function postsExportAll(ghost: TSGhostContentAPI, siteName: string) {
   const s = spinner();
@@ -36,7 +37,9 @@ export async function postsExportAll(ghost: TSGhostContentAPI, siteName: string)
   let postsCount = 0;
 
   while (currentPage <= pages) {
-    s.start(`Fetching Blog Posts, page ${currentPage} ${postsCount > 0 ? "of pages " + String(pages) : ""}...`);
+    s.start(
+      `Fetching Blog Posts, page ${currentPage} ${postsCount > 0 ? "of pages " + String(pages) : ""}...`
+    );
 
     const res = await ghost.posts
       .browse({
@@ -60,6 +63,9 @@ export async function postsExportAll(ghost: TSGhostContentAPI, siteName: string)
     currentPage += 1;
   }
 
-  note(`${postsCount} posts converted to Markdown and saved to ${outputFolder.toString() || "."}`, "Success");
+  note(
+    `${postsCount} posts converted to Markdown and saved to ${outputFolder.toString() || "."}`,
+    "Success"
+  );
   return;
 }

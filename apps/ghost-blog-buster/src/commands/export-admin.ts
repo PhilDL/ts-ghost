@@ -1,10 +1,11 @@
-import type { ArgumentsCamelCase, CommandBuilder } from "yargs";
-import { requireGhostAdminAPI } from "../utils/require-ghost-api";
 import * as fs from "fs";
 import path from "path";
-import { syncCreateMarkdownFile, convertPostToMarkdown } from "../utils/markdown-converter";
 import { log } from "@clack/prompts";
+import type { ArgumentsCamelCase, CommandBuilder } from "yargs";
+
 import { fetchAllMembers } from "../utils/admin-api";
+import { convertPostToMarkdown, syncCreateMarkdownFile } from "../utils/markdown-converter";
+import { requireGhostAdminAPI } from "../utils/require-ghost-api";
 
 export const command = "export-admin <resource>";
 
@@ -34,7 +35,9 @@ export const builder: CommandBuilder = (yargs) => {
     });
 };
 
-export const handler = async function (argv: ArgumentsCamelCase<{ host?: string; key?: string; output?: string }>) {
+export const handler = async function (
+  argv: ArgumentsCamelCase<{ host?: string; key?: string; output?: string }>
+) {
   let output = argv.output || null;
   if (output) {
     output = path.join(process.cwd(), output.toString());

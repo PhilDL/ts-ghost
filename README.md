@@ -31,18 +31,17 @@ An elegant cli 🤖 to interact with your Ghost Blog directly via the Ghost Cont
 npx @ts-ghost/ghost-blog-buster
 ```
 
-or 
+or
 
 ```shell
 npm install -g @ts-ghost/ghost-blog-buster
 ```
 
 - 🌪️ Choose between **Content API** or **Admin API** (for members or blog post content behind subscribption)
-- 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice. 
+- 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice.
 - ⚙️ Display or export to JSON your **Tags**, **Tiers**, **Authors**, **Members** (Admin API only)
 - 📶 Connect / Disconnect from the Blog
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster)
-
 
 ## [📦 TS Ghost Content API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api)
 
@@ -56,7 +55,6 @@ npm install @ts-ghost/content-api
 - Type-safe Inputs/Outputs.
 - Models schema and run-type safety with [Zod](https://github.com/colinhacks/zod).
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api)
-
 
 ## [📦 TS Ghost Admin API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)
 
@@ -72,7 +70,6 @@ npm install @ts-ghost/admin-api
 - Models schema and run-type safety with [Zod](https://github.com/colinhacks/zod).
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)
 
-
 ## [📦 TS Ghost Core API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api)
 
 The base building block containing QueryBuilders and Fetchers (Browse / Read) accepting Zod Schemas.
@@ -85,7 +82,6 @@ npm install @ts-ghost/core-api
 - Modify Type Output based on Input params
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api)
 
-
 ## Roadmap
 
 - Ghost Admin API integration
@@ -94,11 +90,11 @@ npm install @ts-ghost/core-api
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-* If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PhilDL/ts-ghost/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
-* Please make sure you check your spelling and grammar.
-* Create individual PR for each suggestion.
-* Please also read through the [Code Of Conduct](https://github.com/PhilDL/ts-ghost/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
 
+- If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PhilDL/ts-ghost/issues/new) to discuss it, or directly create a pull request after you edit the _README.md_ file with necessary changes.
+- Please make sure you check your spelling and grammar.
+- Create individual PR for each suggestion.
+- Please also read through the [Code Of Conduct](https://github.com/PhilDL/ts-ghost/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
 
 ## License
 
@@ -106,10 +102,10 @@ Distributed under the MIT License. See [LICENSE](https://github.com/PhilDL/ts-gh
 
 ## Authors
 
-* **[PhilDL](https://github.com/PhilDL)** - *Creator*
+- **[PhilDL](https://github.com/PhilDL)** - _Creator_
 
 ## Acknowledgements
 
-* [Ghost](https://ghost.org/) is the best platform for blogging 💖 and have a good JS Client library that was a real inspiration.
-* [Zod](https://github.com/colinhacks/zod) is a TypeScript-first library for data validation and schema building.
-* [Clack](https://github.com/natemoo-re/clack) to build beautiful prompts.
+- [Ghost](https://ghost.org/) is the best platform for blogging 💖 and have a good JS Client library that was a real inspiration.
+- [Zod](https://github.com/colinhacks/zod) is a TypeScript-first library for data validation and schema building.
+- [Clack](https://github.com/natemoo-re/clack) to build beautiful prompts.

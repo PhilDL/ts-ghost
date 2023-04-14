@@ -1,5 +1,6 @@
-import { z } from "zod";
 import { basePagesSchema } from "@ts-ghost/core-api";
+import { z } from "zod";
+
 import { adminAuthorsSchema } from "./authors";
 import { adminTiersSchema } from "./tiers";
 

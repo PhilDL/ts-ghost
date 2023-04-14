@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { baseMembersSchema } from "@ts-ghost/core-api";
+import { z } from "zod";
 
 export const adminMembersSchema = baseMembersSchema.merge(
   z.object({

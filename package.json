@@ -21,6 +21,7 @@
     "test:integration": "turbo run test:integration",
     "test:integration:watch": "turbo run test:integration:watch",
     "lint": "turbo run lint",
+    "format:write": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test:watch": "turbo run test:watch",
     "test:coverage": "turbo run test:coverage",
     "test-ci": "turbo run test-ci",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
+    "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "^8.37.0",
