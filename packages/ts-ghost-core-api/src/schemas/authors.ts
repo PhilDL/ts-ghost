@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { ghostIdentitySchema, ghostMetadataSchema } from "./shared";
 
 export const baseAuthorsSchema = z.object({

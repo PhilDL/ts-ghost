@@ -52,7 +52,7 @@
   Example:
 
   ```ts
-  import { adminMembersSchema, QueryBuilder } from "@ts-ghost/core-api";
+  import { QueryBuilder, adminMembersSchema } from "@ts-ghost/core-api";
   import { z } from "zod";
 
   const membersIncludeSchema = z.object({});

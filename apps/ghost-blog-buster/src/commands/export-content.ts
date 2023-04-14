@@ -1,10 +1,9 @@
+import type { ArgumentsCamelCase, CommandBuilder } from "yargs";
+import { requireGhostContentAPI } from "../utils/require-ghost-api";
 import * as fs from "fs";
 import path from "path";
+import { syncCreateMarkdownFile, convertPostToMarkdown } from "../utils/markdown-converter";
 import { log } from "@clack/prompts";
-import type { ArgumentsCamelCase, CommandBuilder } from "yargs";
-
-import { convertPostToMarkdown, syncCreateMarkdownFile } from "../utils/markdown-converter";
-import { requireGhostContentAPI } from "../utils/require-ghost-api";
 
 export const command = "export <resource>";
 
@@ -34,9 +33,7 @@ export const builder: CommandBuilder = (yargs) => {
     });
 };
 
-export const handler = async function (
-  argv: ArgumentsCamelCase<{ host?: string; key?: string; output?: string }>
-) {
+export const handler = async function (argv: ArgumentsCamelCase<{ host?: string; key?: string; output?: string }>) {
   const api = await requireGhostContentAPI(argv);
   let output = argv.output || null;
   if (output) {

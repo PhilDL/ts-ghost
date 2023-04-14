@@ -1,6 +1,6 @@
-import { isCancel } from "@clack/core";
-import { cancel, note, spinner, text } from "@clack/prompts";
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
+import { isCancel } from "@clack/core";
+import { spinner, text, cancel, note } from "@clack/prompts";
 import Configstore from "configstore";
 import color from "picocolors";
 

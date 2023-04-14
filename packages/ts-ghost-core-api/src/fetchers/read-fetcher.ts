@@ -1,7 +1,6 @@
 import { z, ZodRawShape } from "zod";
-
-import { _fetch } from "../helpers/network";
 import { type APICredentials, type GhostIdentityInput } from "../schemas/shared";
+import { _fetch } from "../helpers/network";
 import type { Mask } from "../utils";
 
 export class ReadFetcher<

@@ -1,12 +1,11 @@
-import fetch from "cross-fetch";
-import { describe, expect, test } from "vitest";
 import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
-import { z } from "zod";
-
+import fetch from "cross-fetch";
 import { APIComposer } from "./api-composer";
-import { BrowseFetcher, ReadFetcher } from "./fetchers";
-import type { BrowseParams } from "./helpers/browse-params";
 import type { ContentAPICredentials } from "./schemas/shared";
+import type { BrowseParams } from "./helpers/browse-params";
+import { BrowseFetcher, ReadFetcher } from "./fetchers";
+import { test, expect, describe } from "vitest";
+import { z } from "zod";
 
 describe("APIComposer Read / Browse", () => {
   const api: ContentAPICredentials = {

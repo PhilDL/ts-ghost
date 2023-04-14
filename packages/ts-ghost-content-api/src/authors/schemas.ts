@@ -1,5 +1,5 @@
-import { ghostIdentitySchema, ghostMetadataSchema, ghostMetaSchema } from "@ts-ghost/core-api";
 import { z } from "zod";
+import { ghostIdentitySchema, ghostMetaSchema, ghostMetadataSchema } from "@ts-ghost/core-api";
 
 export const authorsSchema = z.object({
   ...ghostIdentitySchema.shape,

@@ -1,10 +1,9 @@
-import fetch from "cross-fetch";
-import { afterEach, describe, expect, test, vi } from "vitest";
 import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
-import { z } from "zod";
-
-import type { ContentAPICredentials } from "../schemas/shared";
+import fetch from "cross-fetch";
+import { test, describe, expect, vi, afterEach } from "vitest";
 import { BasicFetcher } from "./basic-fetcher";
+import type { ContentAPICredentials } from "../schemas/shared";
+import { z } from "zod";
 
 describe("BasicFetcher", () => {
   beforeEach(() => {
@@ -34,9 +33,7 @@ describe("BasicFetcher", () => {
     expect(fetcher.getOutputFields()).toEqual(["foo", "bar"]);
     expect(fetcher.getURL()?.searchParams.toString()).toBe(`key=${api.key}`);
     expect(fetcher.getURL()?.pathname).toBe(`/ghost/api/content/${api.resource}/`);
-    expect(fetcher.getURL()?.toString()).toBe(
-      `${api.url}/ghost/api/content/${api.resource}/?key=${api.key}`
-    );
+    expect(fetcher.getURL()?.toString()).toBe(`${api.url}/ghost/api/content/${api.resource}/?key=${api.key}`);
   });
 
   test("fetch", async () => {

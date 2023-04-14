@@ -24,9 +24,7 @@ export const baseOffersSchema = z.object({
       "Denotes whether the offer `currency` is restricted. If so, changing the currency invalidates the offer",
   }),
   currency: z
-    .string({
-      description: "fixed type offers only - specifies tier's currency as three letter ISO currency code",
-    })
+    .string({ description: "fixed type offers only - specifies tier's currency as three letter ISO currency code" })
     .nullable(),
   status: z.union([z.literal("active"), z.literal("archived")], {
     description: "active or archived - denotes if the offer is active or archived",

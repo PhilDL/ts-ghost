@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, test } from "vitest";
-
+import { describe, test, expect, beforeEach } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
 import type { Post } from "./schemas";
 

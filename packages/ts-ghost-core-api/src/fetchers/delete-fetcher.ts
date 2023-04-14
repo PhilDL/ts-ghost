@@ -1,7 +1,6 @@
 import { z } from "zod";
-
-import { _fetch } from "../helpers/network";
 import type { APICredentials } from "../schemas/shared";
+import { _fetch } from "../helpers/network";
 
 export class DeleteFetcher<Api extends APICredentials = any> {
   protected _urlParams: Record<string, string> = {};

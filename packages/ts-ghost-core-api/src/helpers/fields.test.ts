@@ -1,7 +1,6 @@
-import { describe, expect, test } from "vitest";
-import { z } from "zod";
-
+import { test, describe, expect } from "vitest";
 import { schemaWithPickedFields } from "./fields";
+import { z } from "zod";
 
 describe("schemaWithPickedFields()", () => {
   test("should pick fields", () => {

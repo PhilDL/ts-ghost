@@ -1,5 +1,4 @@
-import { assert, beforeEach, describe, expect, test } from "vitest";
-
+import { describe, test, expect, beforeEach, assert } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
 
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";

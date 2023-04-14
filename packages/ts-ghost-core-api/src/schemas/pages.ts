@@ -1,13 +1,12 @@
 import { z } from "zod";
-
-import { baseAuthorsSchema } from "./authors";
 import {
-  ghostCodeInjectionSchema,
   ghostIdentitySchema,
   ghostMetadataSchema,
+  ghostCodeInjectionSchema,
   ghostSocialMediaSchema,
   ghostVisibilitySchema,
 } from "./shared";
+import { baseAuthorsSchema } from "./authors";
 import { baseTagsSchema } from "./tags";
 
 const postsAuthorSchema = baseAuthorsSchema.extend({

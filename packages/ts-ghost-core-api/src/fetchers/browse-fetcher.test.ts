@@ -1,10 +1,9 @@
-import fetch from "cross-fetch";
-import { assert, describe, expect, test } from "vitest";
 import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
-import { z } from "zod";
-
-import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
+import fetch from "cross-fetch";
+import type { ContentAPICredentials, AdminAPICredentials } from "../schemas/shared";
+import { expect, test, describe, assert } from "vitest";
 import { BrowseFetcher } from "./browse-fetcher";
+import { z } from "zod";
 
 describe("BrowseFetcher", () => {
   const api: ContentAPICredentials = {

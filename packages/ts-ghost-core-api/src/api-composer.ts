@@ -1,11 +1,11 @@
-import { z, ZodRawShape, ZodTypeAny } from "zod";
-
-import { DeleteFetcher } from "./fetchers";
-import { BrowseFetcher } from "./fetchers/browse-fetcher";
-import { MutationFetcher } from "./fetchers/mutation-fetcher";
-import { ReadFetcher } from "./fetchers/read-fetcher";
-import { parseBrowseParams, type BrowseParams } from "./helpers/browse-params";
 import type { APICredentials } from "./schemas";
+import { z, ZodRawShape, ZodTypeAny } from "zod";
+import { MutationFetcher } from "./fetchers/mutation-fetcher";
+import { parseBrowseParams } from "./helpers/browse-params";
+import type { BrowseParams } from "./helpers/browse-params";
+import { BrowseFetcher } from "./fetchers/browse-fetcher";
+import { ReadFetcher } from "./fetchers/read-fetcher";
+import { DeleteFetcher } from "./fetchers";
 
 /**
  * API Composer contains all methods, pick and choose.

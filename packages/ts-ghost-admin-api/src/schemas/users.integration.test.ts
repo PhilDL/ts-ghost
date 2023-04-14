@@ -1,5 +1,4 @@
-import { assert, beforeEach, describe, expect, test } from "vitest";
-
+import { describe, test, beforeEach, assert, expect } from "vitest";
 import { TSGhostAdminAPI } from "../admin-api";
 
 const stubResult = {
@@ -78,12 +77,8 @@ describe("users integration tests browse", () => {
     expect(user.last_seen).toBeDefined();
     expect(user.comment_notifications).toBe(stubUser.comment_notifications);
     expect(user.free_member_signup_notification).toBe(stubUser.free_member_signup_notification);
-    expect(user.paid_subscription_started_notification).toBe(
-      stubUser.paid_subscription_started_notification
-    );
-    expect(user.paid_subscription_canceled_notification).toBe(
-      stubUser.paid_subscription_canceled_notification
-    );
+    expect(user.paid_subscription_started_notification).toBe(stubUser.paid_subscription_started_notification);
+    expect(user.paid_subscription_canceled_notification).toBe(stubUser.paid_subscription_canceled_notification);
     expect(user.created_at).toBe(stubUser.created_at);
     expect(user.updated_at).toBeDefined();
   });
@@ -117,12 +112,8 @@ describe("users integration tests browse", () => {
     expect(user.last_seen).toBeDefined();
     expect(user.comment_notifications).toBe(stubUser.comment_notifications);
     expect(user.free_member_signup_notification).toBe(stubUser.free_member_signup_notification);
-    expect(user.paid_subscription_started_notification).toBe(
-      stubUser.paid_subscription_started_notification
-    );
-    expect(user.paid_subscription_canceled_notification).toBe(
-      stubUser.paid_subscription_canceled_notification
-    );
+    expect(user.paid_subscription_started_notification).toBe(stubUser.paid_subscription_started_notification);
+    expect(user.paid_subscription_canceled_notification).toBe(stubUser.paid_subscription_canceled_notification);
     expect(user.created_at).toBe(stubUser.created_at);
     expect(user.updated_at).toBeDefined();
   });

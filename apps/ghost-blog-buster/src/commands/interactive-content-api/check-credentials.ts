@@ -1,5 +1,6 @@
-import { log, note, spinner } from "@clack/prompts";
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
+import { spinner, note, log } from "@clack/prompts";
+
 import Configstore from "configstore";
 
 export const checkCredentials = async (config: Configstore) => {

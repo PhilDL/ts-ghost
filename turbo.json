@@ -35,9 +35,6 @@
     },
     "typecheck": {
       "outputs": []
-    },
-    "format:write": {
-      "outputs": []
     }
   },
   "globalDependencies": [".env"],

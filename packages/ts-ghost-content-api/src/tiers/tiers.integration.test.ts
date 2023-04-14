@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, test } from "vitest";
-
+import { describe, test, expect, beforeEach } from "vitest";
 import { TSGhostContentAPI } from "../content-api";
 
 const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
@@ -99,11 +98,7 @@ describe("tiers integration tests browse", () => {
   });
 
   test("tiers.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
-    const result = await api.tiers
-      .browse()
-      .include({ monthly_price: true })
-      .fields({ slug: true, name: true })
-      .fetch();
+    const result = await api.tiers.browse().include({ monthly_price: true }).fields({ slug: true, name: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     expect(result.status).toBe("error");

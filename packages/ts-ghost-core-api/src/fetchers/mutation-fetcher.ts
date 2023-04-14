@@ -1,7 +1,6 @@
 import { z, ZodRawShape, ZodTypeAny } from "zod";
-
-import { _fetch } from "../helpers/network";
 import type { APICredentials } from "../schemas/shared";
+import { _fetch } from "../helpers/network";
 
 export class MutationFetcher<
   OutputShape extends ZodRawShape = any,

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
+import type { Arguments } from "yargs";
 import { isCancel } from "@clack/core";
 import { intro, outro, select } from "@clack/prompts";
-import color from "picocolors";
-import type { Arguments } from "yargs";
-
-import { entrypoint as interactiveAdminApiEntrypoint } from "./interactive-admin-api";
 import { entrypoint as interactiveContentApiEntrypoint } from "./interactive-content-api";
+import { entrypoint as interactiveAdminApiEntrypoint } from "./interactive-admin-api";
+
+import color from "picocolors";
 
 export const command = "$0";
 export const desc = "Interactive CLI";
@@ -14,8 +14,7 @@ export const handler = async function (_argv: Arguments) {
   intro(`${color.bgBlack(color.yellow(" 👻 ghost-blog-buster 👻 "))}`);
 
   const endpoint = await select({
-    message:
-      "📦 Please choose the API you want to interact with. Select an option and press Enter (or CTRL-C to quit)",
+    message: "📦 Please choose the API you want to interact with. Select an option and press Enter (or CTRL-C to quit)",
     options: [
       {
         value: "content-api",

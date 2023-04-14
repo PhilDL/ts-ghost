@@ -1,12 +1,11 @@
+import type { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+import { fetchAllBlogPosts } from "./helpers";
+import { isCancel } from "@clack/core";
+import { multiselect, text, cancel, note, spinner } from "@clack/prompts";
+import { createMarkdownFile } from "../../utils/markdown-converter";
 import * as fs from "fs";
 import path from "path";
-import { isCancel } from "@clack/core";
-import { cancel, multiselect, note, spinner, text } from "@clack/prompts";
-import type { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import color from "picocolors";
-
-import { createMarkdownFile } from "../../utils/markdown-converter";
-import { fetchAllBlogPosts } from "./helpers";
 
 export async function postsExportSelection(ghost: TSGhostAdminAPI, siteName: string) {
   const s = spinner();

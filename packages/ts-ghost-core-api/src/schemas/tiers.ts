@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { ghostIdentitySchema, ghostVisibilitySchema } from "./shared";
 
 export const baseTiersSchema = z.object({

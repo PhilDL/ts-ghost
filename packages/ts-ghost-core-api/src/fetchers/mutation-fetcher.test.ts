@@ -1,8 +1,7 @@
-import { describe, expect, test } from "vitest";
-import { z } from "zod";
-
 import type { ContentAPICredentials } from "../schemas/shared";
+import { describe, test, expect } from "vitest";
 import { MutationFetcher } from "./mutation-fetcher";
+import { z } from "zod";
 
 describe("MutationFetcher", () => {
   const api: ContentAPICredentials = {

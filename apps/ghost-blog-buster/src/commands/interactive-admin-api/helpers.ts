@@ -1,4 +1,4 @@
-import type { Member, Post, TSGhostAdminAPI } from "@ts-ghost/admin-api";
+import type { Post, Member, TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 export const fetchAllBlogPosts = async (ghost: TSGhostAdminAPI) => {
   const posts: (Post & { html: string | null })[] = [];

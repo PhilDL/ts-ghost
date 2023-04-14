@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { baseNewsletterSchema } from "./newsletter";
 import { baseSubscriptionsSchema } from "./subscriptions";
 
