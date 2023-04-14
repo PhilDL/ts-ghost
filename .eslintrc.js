@@ -19,5 +19,15 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "types": {
+          // un-ban a type that's banned by default
+          "Function": false
+        },
+        "extendDefaults": true
+      }
+    ]
   },
 };
