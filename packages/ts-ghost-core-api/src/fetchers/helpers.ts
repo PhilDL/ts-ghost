@@ -25,42 +25,17 @@ export async function _genHeaders(api: APICredentials) {
   return headers;
 }
 
-export async function _fetch(
-  URL: URL | undefined,
-  api: APICredentials,
-  method: "POST" | "GET" = "GET",
-  options?: RequestInit,
-  data?: Record<string, any>
-) {
+export async function _fetch(URL: URL | undefined, api: APICredentials, options?: RequestInit) {
   if (URL === undefined) throw new Error("URL is undefined");
   let result = undefined;
   const headers = await _genHeaders(api);
   try {
-    if (method === "POST") {
-      console.log("POST", URL.toString(), {
+    result = await (
+      await fetch(URL.toString(), {
         ...options,
         headers,
-        method,
-        body: JSON.stringify(data),
-      });
-
-      return await (
-        await fetch(URL.toString(), {
-          ...options,
-          headers,
-          method,
-          body: JSON.stringify(data),
-        })
-      ).json();
-    } else {
-      result = await (
-        await fetch(URL.toString(), {
-          ...options,
-          headers,
-          method,
-        })
-      ).json();
-    }
+      })
+    ).json();
   } catch (e) {
     return {
       status: "error",

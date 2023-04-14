@@ -177,7 +177,7 @@ export class ReadFetcher<
         ),
       }),
     ]);
-    const result = await _fetch(this._URL, this._api, "GET", options);
+    const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.status = "error";

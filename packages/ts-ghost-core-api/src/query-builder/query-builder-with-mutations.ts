@@ -1,20 +1,21 @@
 import { parseBrowseParams } from "./browse-params";
 import type { BrowseParams } from "./browse-params";
 import type { APICredentials } from "../schemas";
-import { z, ZodRawShape } from "zod";
+import { z, ZodRawShape, ZodTypeAny } from "zod";
 import { BrowseFetcher } from "../fetchers/browse-fetcher";
 import { ReadFetcher } from "../fetchers/read-fetcher";
-
-export type OrderObjectKeyMask<Obj> = { [k in keyof Obj]?: "ASC" | "DESC" };
+import { PostFetcher } from "../fetchers";
 
 /**
- * QueryBuilder class that accepts a schema and an API credentials object. It will return a class
+ * QueryBuilderWithMutations class that accepts a schema and an API credentials object. It will return a class
  * instance with browse and read functions.
  */
-export class QueryBuilder<
+export class QueryBuilderWithMutation<
   Shape extends ZodRawShape = any,
   IdentityShape extends z.ZodTypeAny = any,
   IncludeShape extends ZodRawShape = any,
+  CreateShape extends ZodTypeAny = any,
+  CreateOptionsShape extends ZodTypeAny = any,
   Api extends APICredentials = any
 > {
   constructor(
@@ -22,6 +23,8 @@ export class QueryBuilder<
       schema: z.ZodObject<Shape>;
       identitySchema: IdentityShape;
       include: z.ZodObject<IncludeShape>;
+      createSchema: CreateShape;
+      createOptionsSchema?: CreateOptionsShape;
     },
     protected _api: Api
   ) {}
@@ -70,5 +73,22 @@ export class QueryBuilder<
       },
       this._api
     );
+  }
+
+  public async create(data: CreateShape["_output"], options?: CreateOptionsShape["_output"]) {
+    const parsedData = this.config.createSchema.parse(data);
+    const parsedOptions =
+      this.config.createOptionsSchema && options
+        ? this.config.createOptionsSchema.parse(options)
+        : undefined;
+    const fetcher = new PostFetcher(
+      {
+        output: this.config.schema,
+        paramsShape: this.config.createOptionsSchema,
+      },
+      parsedOptions,
+      this._api
+    );
+    return fetcher.post(parsedData);
   }
 }

@@ -1,11 +1,11 @@
-import { z, ZodRawShape } from "zod";
+import { z, ZodRawShape, ZodTypeAny } from "zod";
 import { type APICredentials, type GhostIdentityInput } from "../schemas/shared";
 import { _fetch } from "./helpers";
 import type { Mask } from "../utils";
 
 export class PostFetcher<
   OutputShape extends ZodRawShape = any,
-  ParamsShape extends ZodRawShape = any,
+  ParamsShape extends ZodTypeAny = any,
   Api extends APICredentials = any
 > {
   protected _urlParams: Record<string, string> = {};
@@ -15,9 +15,9 @@ export class PostFetcher<
   constructor(
     protected config: {
       output: z.ZodObject<OutputShape>;
-      paramsShape: z.ZodObject<ParamsShape>;
+      paramsShape?: ParamsShape;
     },
-    private _params: ParamsShape["output"],
+    private _params: ParamsShape["_output"],
     protected _api: Api
   ) {
     this._buildUrlParams();
@@ -56,8 +56,8 @@ export class PostFetcher<
     this._URL = url;
   }
 
-  public async post(data: OutputShape["output"]) {
-    const res = z.discriminatedUnion("status", [
+  public async post(body: unknown) {
+    const returnSchema = z.discriminatedUnion("status", [
       z.object({
         status: z.literal("success"),
         data: z.array(this.config.output),
@@ -73,21 +73,28 @@ export class PostFetcher<
         ),
       }),
     ]);
+    // Ghost API is expecting a JSON object with a key that matches the resource name
+    // e.g. { posts: [ { title: "Hello World" } ] }
+    // https://ghost.org/docs/api/v3/content/#create-a-post
+    // body is also an array of objects, so we need to wrap it in another array
+    // but Ghost will throw an error if given more than 1 item in the array.
     const createData = {
-      [this._resource]: data,
+      [this._resource]: [body],
     };
-    const result = await _fetch(this._URL, this._api, "POST", undefined, createData);
-    console.log("result", result);
-    let _data: any = {};
-    if (result.errors) {
-      _data.status = "error";
-      _data.errors = result.errors;
+    const response = await _fetch(this._URL, this._api, {
+      method: "POST",
+      body: JSON.stringify(createData),
+    });
+    let result: any = {};
+    if (response.errors) {
+      result.status = "error";
+      result.errors = response.errors;
     } else {
-      _data = {
+      result = {
         status: "success",
-        data: result[this._resource],
+        data: response[this._resource],
       };
     }
-    return res.parse(_data);
+    return returnSchema.parse(result);
   }
 }

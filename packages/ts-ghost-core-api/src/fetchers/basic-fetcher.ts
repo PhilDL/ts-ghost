@@ -59,7 +59,7 @@ export class BasicFetcher<OutputShape extends ZodRawShape = any, Api extends API
         ),
       }),
     ]);
-    const result = await _fetch(this._URL, this._api, "GET", options);
+    const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.status = "error";

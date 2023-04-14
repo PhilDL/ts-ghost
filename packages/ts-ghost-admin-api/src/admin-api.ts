@@ -3,9 +3,15 @@ import { adminPagesSchema } from "./schemas/pages";
 import { adminMembersSchema } from "./schemas/members";
 import { adminTiersSchema } from "./schemas";
 import { adminUsersSchema } from "./schemas/users";
-import { baseNewsletterSchema, baseOffersSchema, baseTagsSchema } from "@ts-ghost/core-api";
+import {
+  baseNewsletterSchema,
+  baseOffersSchema,
+  baseTagsSchema,
+  membersCreateSchema,
+} from "@ts-ghost/core-api";
 import {
   QueryBuilder,
+  QueryBuilderWithMutation,
   BasicFetcher,
   APIVersions,
   baseSiteSchema,
@@ -13,13 +19,16 @@ import {
   slugOrIdSchema,
   emailOrIdSchema,
 } from "@ts-ghost/core-api";
-import { MemberQueryBuilder } from "./member-query-builder";
 import { z } from "zod";
 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
 
 export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
-  constructor(protected readonly url: string, protected readonly key: string, protected readonly version: Version) {}
+  constructor(
+    protected readonly url: string,
+    protected readonly key: string,
+    protected readonly version: Version
+  ) {}
   get posts() {
     const api = adminAPICredentialsSchema.parse({
       resource: "posts",
@@ -90,12 +99,16 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       url: string;
       endpoint: "admin";
     };
-    const membersIncludeSchema = z.object({});
-    return new MemberQueryBuilder(
+    return new QueryBuilderWithMutation(
       {
         schema: adminMembersSchema,
         identitySchema: z.object({ id: z.string() }),
-        include: membersIncludeSchema,
+        include: z.object({}),
+        createSchema: membersCreateSchema,
+        createOptionsSchema: z.object({
+          send_email: z.boolean().optional(),
+          email_type: z.union([z.literal("signin"), z.literal("subscribe"), z.literal("signup")]).optional(),
+        }),
       },
       api
     );

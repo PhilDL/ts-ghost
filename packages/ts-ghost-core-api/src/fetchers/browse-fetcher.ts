@@ -197,7 +197,7 @@ export class BrowseFetcher<
 
   public async fetch(options?: RequestInit) {
     const resultSchema = this._getResultSchema();
-    const result = await _fetch(this._URL, this._api, "GET", options);
+    const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.status = "error";
@@ -231,7 +231,7 @@ export class BrowseFetcher<
     }
 
     const resultSchema = this._getResultSchema();
-    const result = await _fetch(this._URL, this._api, "GET", options);
+    const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.status = "error";
