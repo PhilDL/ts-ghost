@@ -11,7 +11,7 @@ import {
 } from "@ts-ghost/core-api";
 import {
   QueryBuilder,
-  QueryBuilderWithMutation,
+  QueryWithMutationsBuilder,
   BasicFetcher,
   APIVersions,
   baseSiteSchema,
@@ -99,7 +99,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       url: string;
       endpoint: "admin";
     };
-    return new QueryBuilderWithMutation(
+    return new QueryWithMutationsBuilder(
       {
         schema: adminMembersSchema,
         identitySchema: z.object({ id: z.string() }),
