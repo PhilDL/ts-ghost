@@ -10,14 +10,13 @@ import {
   membersCreateSchema,
 } from "@ts-ghost/core-api";
 import {
-  QueryBuilder,
-  QueryWithMutationsBuilder,
   BasicFetcher,
   APIVersions,
   baseSiteSchema,
   adminAPICredentialsSchema,
   slugOrIdSchema,
   emailOrIdSchema,
+  APIComposer,
 } from "@ts-ghost/core-api";
 import { z } from "zod";
 
@@ -47,14 +46,14 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       authors: z.literal(true).optional(),
       tags: z.literal(true).optional(),
     });
-    return new QueryBuilder(
+    return new APIComposer(
       {
         schema: adminPostsSchema,
         identitySchema: slugOrIdSchema,
         include: postsIncludeSchema,
       },
       api
-    );
+    ).access(["browse", "read"]);
   }
 
   get pages() {
@@ -75,14 +74,14 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       authors: z.literal(true).optional(),
       tags: z.literal(true).optional(),
     });
-    return new QueryBuilder(
+    return new APIComposer(
       {
         schema: adminPagesSchema,
         identitySchema: slugOrIdSchema,
         include: pagesIncludeSchema,
       },
       api
-    );
+    ).access(["browse", "read"]);
   }
 
   get members() {
@@ -99,7 +98,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       url: string;
       endpoint: "admin";
     };
-    return new QueryWithMutationsBuilder(
+    return new APIComposer(
       {
         schema: adminMembersSchema,
         identitySchema: z.object({ id: z.string() }),
@@ -111,7 +110,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         }),
       },
       api
-    );
+    ).access(["browse", "read", "add", "edit"]);
   }
 
   get tiers() {
@@ -133,14 +132,14 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       yearly_price: z.literal(true).optional(),
       benefits: z.literal(true).optional(),
     });
-    return new QueryBuilder(
+    return new APIComposer(
       {
         schema: adminTiersSchema,
         identitySchema: slugOrIdSchema,
         include: tiersIncludeSchema,
       },
       api
-    );
+    ).access(["browse", "read"]);
   }
 
   get newsletters() {
@@ -158,14 +157,14 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       endpoint: "admin";
     };
     const newslettersIncludeSchema = z.object({});
-    return new QueryBuilder(
+    return new APIComposer(
       {
         schema: baseNewsletterSchema,
         identitySchema: slugOrIdSchema,
         include: newslettersIncludeSchema,
       },
       api
-    );
+    ).access(["browse", "read"]);
   }
 
   get offers() {
@@ -183,14 +182,14 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       endpoint: "admin";
     };
     const offersIncludeSchema = z.object({});
-    return new QueryBuilder(
+    return new APIComposer(
       {
         schema: baseOffersSchema,
         identitySchema: slugOrIdSchema,
         include: offersIncludeSchema,
       },
       api
-    );
+    ).access(["browse", "read"]);
   }
 
   get tags() {
@@ -210,14 +209,14 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     const tagsIncludeSchema = z.object({
       "count.posts": z.literal(true).optional(),
     });
-    return new QueryBuilder(
+    return new APIComposer(
       {
         schema: baseTagsSchema,
         identitySchema: slugOrIdSchema,
         include: tagsIncludeSchema,
       },
       api
-    );
+    ).access(["browse", "read"]);
   }
 
   get users() {
@@ -235,14 +234,14 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       endpoint: "admin";
     };
     const usersIncludeSchema = z.object({});
-    return new QueryBuilder(
+    return new APIComposer(
       {
         schema: adminUsersSchema,
         identitySchema: emailOrIdSchema,
         include: usersIncludeSchema,
       },
       api
-    );
+    ).access(["browse", "read"]);
   }
 
   get site() {
