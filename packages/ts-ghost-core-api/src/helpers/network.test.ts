@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { getJWT, _genHeaders } from "./helpers";
+import { getJWT, _genHeaders } from "./network";
 import type { ContentAPICredentials, AdminAPICredentials } from "../schemas/shared";
 
 describe("getJWT", () => {

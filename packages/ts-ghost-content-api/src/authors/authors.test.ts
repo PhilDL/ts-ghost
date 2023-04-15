@@ -23,7 +23,9 @@ describe("authors api .browse() Args Type-safety", () => {
     expect(api.authors.browse({ order: "name ASC,slug DESC" }).getParams().browseParams).toStrictEqual({
       order: "name ASC,slug DESC",
     });
-    expect(api.authors.browse({ order: "name ASC,slug DESC,location ASC" }).getParams().browseParams).toStrictEqual({
+    expect(
+      api.authors.browse({ order: "name ASC,slug DESC,location ASC" }).getParams().browseParams
+    ).toStrictEqual({
       order: "name ASC,slug DESC,location ASC",
     });
     // @ts-expect-error - order should ony contain field (There is a typo in location)
@@ -69,7 +71,10 @@ describe("authors api .browse() Args Type-safety", () => {
     ).toEqual([]);
 
     expect(api.authors.browse().fields({ location: true }).getOutputFields()).toEqual(["location"]);
-    expect(api.authors.browse().fields({ name: true, website: true }).getOutputFields()).toEqual(["name", "website"]);
+    expect(api.authors.browse().fields({ name: true, website: true }).getOutputFields()).toEqual([
+      "name",
+      "website",
+    ]);
   });
 });
 

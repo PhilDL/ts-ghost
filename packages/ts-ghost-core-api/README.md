@@ -32,16 +32,23 @@ This client is only compatible with Ghost versions 5.x for now.
 - Ghost 5^
 
 
-## QueryBuilder
+## APIComposer
 
-A QueryBuilder is a class that helps you build a query based on a a combinations of ZodSchema. This QueryBuilder exposes 2 methods `read` to fetch a single record and `browse` to fetch multiple records. `read` and `browse` gives you back the appropriate `Fetcher` instance that will handle the actual request to the API with the correct parameters.
+The APIComposer is a class that helps you build the target API avec the available methods for a resource based on a combinations of ZodSchema. This APIComposer exposes 5 methods: 
+- `read` to fetch a single record and 
+- `browse` to fetch multiple records.
+- `add` to create a record.
+- `edit` to update a record.
+- `delete` to delete a record.
 
-`QueryBuilder` will handle type-safety of the query parameters and will return the appropriate type based on the `ZodSchema` you pass to it. eg: if you pass the `fields` parameters that "select" fields you want to be present on the response instead of the whole object, then the output schema of the QueryBuilder will change. And then passed to the fetcher to validate data.
+All these methods like `read` and `browse` gives you back the appropriate `Fetcher` instance that will handle the actual request to the API with the correct parameters.
+
+`APIComposer` will handle type-safety of the query parameters and will return the appropriate fetcher and will pass along the correct output type based on the `ZodSchema` you instantiate it with. For the query methods like `browse` and `read`, this output schema will be modified if required when you select specific fields, includes etc.
 
 ### Instantiation
 
 ```ts
-import { QueryBuilder, type ContentAPICredentials } from "@ts-ghost/core-api";
+import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 import { z } from "zod";
 
 const api: ContentAPICredentials = {
@@ -57,7 +64,7 @@ const simplifiedSchema = z.object({
   count: z.number().optional(),
 });
 
-// the "identity" schema is used to validate the inputs of the `read`method of the QueryBuilder
+// the "identity" schema is used to validate the inputs of the `read`method of the APIComposer
 const identitySchema = z.union([
   z.object({ slug: z.string() }), 
   z.object({ id: z.string() })
@@ -70,22 +77,40 @@ const simplifiedIncludeSchema = z.object({
   count: z.literal(true).optional(),
 });
 
-const qb = new QueryBuilder(
-  { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
+const createSchema = z.object({
+  foo: z.string(),
+  bar: z.string().nullish(),
+  baz: z.boolean().nullish(),
+});
+
+const composedAPI = new APIComposer(
+  { 
+    schema: simplifiedSchema, 
+    identitySchema: identitySchema, 
+    include: simplifiedIncludeSchema, 
+    createSchema:createSchema, 
+    createOptionsSchema: z.object({
+      option_1: z.boolean(),
+    })
+  },
   api
 );
 ```
 - `identitySchema` can be any `ZodType` and can also be an empty `z.object({})` if you don't need the `read` method.
 - `include` is a `ZodObject` that will validate the `include` parameters of the API call. It is specific to the Ghost API resource targeted. The format is always `{ 'name_of_the_field': true }`
+- `createSchema` (Optional) is a Zod Schema that will validate the input of the `add` and `edit` methods of the APIComposer.
+  - `add` will take exactly the schema to parse
+  - `edit` will take a `ZodPartial` (all fields are optional) of that schema to parse. Mimicing the Ghost API behavior.
+- `createOptionsSchema` (Optional) is a Zod Schema that will validate options that are going to be passed as query parameters to the `POST` url.
 
 
 ### Building Queries
 
-After instantiation you can use the `QueryBuilder` to build your queries with 2 available methods. 
+After instantiation you can use the `APIComposer` to build your queries with 2 available methods. 
 The `browse` and `read` methods accept a config object with 2 properties: `input` and an `output`. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
 
 ```typescript
-import { QueryBuilder, type ContentAPICredentials } from "@ts-ghost/core-api";
+import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 import { z } from "zod";
 const api: ContentAPICredentials = { url: "https://ghost.org", key: "7d2d15d7338526d43c2fadc47c", version: "v5.0", resource: "posts",};
 
@@ -102,11 +127,11 @@ const simplifiedIncludeSchema = z.object({
   count: z.literal(true).optional(),
 });
 
-const qb = new QueryBuilder(
+const composedAPI = new APIComposer(
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
 );
-let query = qb.browse({
+let query = composedAPI.browse({
   limit: 5,
   order: "title DESC"
   //      ^? the text here will throw a TypeScript lint error if you use unknown field.
@@ -116,20 +141,20 @@ let query = qb.browse({
 
 - browse parameters are `page`, `limit`, `order`, `filter`. And read parameters are `id` or `slug`.
 
-## Method options
+#### Method options
 
-### `.browse` options
+#### `.browse` options
 
 Input are totally optionals on the `browse` method but they let you filter and order your search.
 
 This is an example containing all the available keys in the `input` object
 
 ```typescript
-const qb = new QueryBuilder(
+const composedAPI = new APIComposer(
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
 );
-let query = qb.browse({
+let query = composedAPI.browse({
   page: 1,
   limit: 5,
   filter: "title:typescript+slug:-test",
@@ -143,38 +168,38 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 - `filter:string` Contains the filter with [Ghost API `filter` syntax](https://ghost.org/docs/content-api/#filtering).
 - `order:string` Contains the name of the field and the order `ASC` or `DESC`.
 
-For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the QueryBuilder will throw an Error with message containing the unknown field.
+For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the APIComposer will throw an Error with message containing the unknown field.
 
-### `.read` options
+#### `.read` options
 Read is meant to be used to fetch 1 object only by `id` or `slug`. 
 
 ```typescript
-const qb = new QueryBuilder(
+const composedAPI = new APIComposer(
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
 );
-let query = qb.read({
+let query = composedAPI.read({
   id: "edHks74hdKqhs34izzahd45"
 }); 
 
 // or 
 
-let query = qb.read({
+let query = composedAPI.read({
   slug: "typescript-is-awesome-in-2025"
 }); 
 ```
 
 You can submit **both** `id` and `slug`, but the fetcher will then chose the `id` in priority if present to make the final URL query to the Ghost API.
 
-## Fetchers 
+## Query Fetchers 
 
-If the parsing went okay, the `read` and `browse` methods from the `QueryBuilder` will return the associated `Fetcher`. 
+If the parsing went okay, the `read` and `browse` methods from the `APIComposer` will return the associated `Fetcher`. 
 
 - `BrowseFetcher` for the `browse` method
 - `ReadFetcher` for the `read` method
-- `BasicFetcher` is a special case when you don't need a QueryBuilder at all and want to fetch directly. 
+- `BasicFetcher` is a special case when you don't need a APIComposer at all and want to fetch directly. 
 
-Fetchers are instatiated automatically after using `read` or `browse` but these Fetchers can also be instantiated in isolation, in a similar way as the QueryBuilder with a `config` containing the same schemas. But also a set of params 
+Fetchers are instatiated automatically after using `read` or `browse` but these Fetchers can also be instantiated in isolation, in a similar way as the APIComposer with a `config` containing the same schemas. But also a set of params 
 necessary to build the URL to the Ghost API.
 
 ```typescript
@@ -200,11 +225,11 @@ These fetchers have a `fetch` method that will return a discriminated union of 2
 
 
 ```typescript
-const qb = new QueryBuilder(
+const composedAPI = new APIComposer(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   api
 );
-const readFetcher = qb.read({ slug: "typescript-is-cool" });
+const readFetcher = composedAPI.read({ slug: "typescript-is-cool" });
 let result = await readFetcher.fetch();
 if (result.status === 'success') {
   const post = result.data;
@@ -400,9 +425,113 @@ let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch({ cache:
 ```
 *This may be useful if you use NextJS augmented `fetch`!*
 
+## Mutations
+
+These mutations are async methods, they will return a `Promise` that will resolve to the parsed result.
+
+#### Create record
+
+```typescript
+const composedAPI = new APIComposer(
+  { 
+    schema: simplifiedSchema, 
+    identitySchema: identitySchema, 
+    include: simplifiedIncludeSchema, 
+    createSchema:createSchema, 
+    createOptionsSchema: z.object({
+      option_1: z.boolean(),
+    })
+  },
+  api
+);
+let newPost = await composedAPI.add(
+  {
+    title: "My new post",
+  },
+  {
+    option_1: true,
+  }
+);
+```
+
+- The first argument is the `input` object that will be parsed and typed with the `createSchema` schema.
+- The second argument is the `options` object that will be parsed and typed with the `createOptionsSchema` schema.
+
+The result will be parsed and typed with the `output` schema and represent the newly created record.
+
+```typescript
+// return from the `add` method
+const result: {
+    status: "success";
+    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+} | {
+    status: "error";
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
+#### Edit record
+
+Edit requires the `id` of the record to edit. 
+
+```typescript
+let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
+  title: "My new post",
+});
+```
+The result will be parsed and typed with the `output` schema and represent the updated record.
+
+- The first argument is the `id` of the record to edit.
+- The second argument is the `input` object that will be parsed and typed with the `createSchema` schema wrapped with Partial. So all fields are optional.
+
+```typescript
+// return from the `edit` method
+const result: {
+    status: "success";
+    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+} | {
+    status: "error";
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
+#### Delete record
+
+Delete requires the `id` of the record to delete. 
+
+```typescript
+let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
+  title: "My new post",
+});
+```
+
+- The first argument is the `id` of the record to delete.
+
+The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `status` to know if the deletion was successful or not.
+
+```typescript
+// return from the `delete` method
+const result: {
+    status: "success";
+} | {
+    status: "error";
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
 ## Roadmap
 
-- Handling POST, PUT and DELETE requests.
+- [x] Handling POST, PUT and DELETE requests.
+- [x] Writing examples documentation for mutations.
 
 ## Contributing
 

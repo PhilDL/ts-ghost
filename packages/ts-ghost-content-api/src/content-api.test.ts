@@ -65,6 +65,10 @@ describe("content-api", () => {
     expect(api.authors).toBeDefined();
     expect(api.authors.browse).toBeDefined();
     expect(api.authors.read).toBeDefined();
+    // @ts-expect-error
+    expect(api.authors.add).toBeUndefined();
+    // @ts-expect-error
+    expect(api.authors.edit).toBeUndefined();
     expect(api.authors).toBeDefined();
   });
 
