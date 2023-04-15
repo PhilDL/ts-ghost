@@ -98,7 +98,12 @@ export class APIComposer<
     return fetcher.submit();
   }
 
-  public async edit(id: string, data: Partial<z.output<z.ZodObject<UpdateShape>>>) {
+  public async edit(
+    id: string,
+    data: ThisParameterType<UpdateShape> extends any
+      ? Partial<z.output<z.ZodObject<CreateShape>>>
+      : z.output<z.ZodObject<UpdateShape>>
+  ) {
     let updateSchema: z.ZodObject<any> | undefined = this.config.updateSchema;
     if (!this.config.updateSchema && this.config.createSchema) {
       updateSchema = this.config.createSchema.partial();
