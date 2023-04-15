@@ -12,7 +12,7 @@ import {
   slugOrIdSchema,
 } from "@ts-ghost/core-api";
 
-import { adminTiersSchema } from "./schemas";
+import { adminTiersCreateSchema, adminTiersSchema } from "./schemas";
 import { adminMembersCreateSchema, adminMembersSchema } from "./schemas/members";
 import { adminPagesCreateSchema, adminPagesSchema, adminPagesUpdateSchema } from "./schemas/pages";
 import { adminPostsCreateSchema, adminPostsSchema, adminPostsUpdateSchema } from "./schemas/posts";
@@ -139,6 +139,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: adminTiersSchema,
         identitySchema: slugOrIdSchema,
         include: tiersIncludeSchema,
+        createSchema: adminTiersCreateSchema,
       },
       api
     ).access(["browse", "read"]);
