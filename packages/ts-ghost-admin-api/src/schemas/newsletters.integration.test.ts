@@ -148,7 +148,7 @@ describe("newsletters integration tests browse", () => {
     if (newsletterAdd.status === "success") {
       const nl = newsletterAdd.data;
       expect(nl.id).toBeDefined();
-      expect(nl.name).toBe("My newly created nl");
+      expect(nl.name).toBe("ts-ghost Newsletter API");
       expect(nl.description).toBe("ts-ghost Newsletter API");
       expect(nl.sender_name).toBe("Daily Newsletter");
       expect(nl.sender_email).toBe(null);
@@ -165,7 +165,7 @@ describe("newsletters integration tests browse", () => {
       expect(newsletterAdd.status).toBe("error");
       expect(newsletterAdd.errors).toBeDefined();
       expect(newsletterAdd.errors.length).toBeGreaterThan(0);
-      expect(newsletterAdd.errors[0].context).toBe("'A newsletter with the same name already exists'");
+      expect(newsletterAdd.errors[0].context).toBe("A newsletter with the same name already exists");
     }
   });
 });
