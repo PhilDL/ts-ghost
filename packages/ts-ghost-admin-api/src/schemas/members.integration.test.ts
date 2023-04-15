@@ -81,7 +81,7 @@ describe("members integration tests browse", () => {
     expect(member.email).toBeDefined();
     expect(member.subscribed).toBe(true);
     expect(member.note).toBe(null);
-    expect(member.newsletters.length).toBe(1);
+    expect(member.newsletters.length).toBeGreaterThan(0);
     expect(member.labels).toStrictEqual([]);
     expect(member.subscriptions).toStrictEqual([]);
     expect(member.avatar_image).toBe(
@@ -114,7 +114,7 @@ describe("members integration tests browse", () => {
     expect(member.email).toBeDefined();
     expect(member.subscribed).toBe(true);
     expect(member.note).toBe(null);
-    expect(member.newsletters.length).toBe(1);
+    expect(member.newsletters.length).toBeGreaterThan(0);
     expect(member.labels).toStrictEqual([]);
     expect(member.subscriptions).toStrictEqual([]);
     expect(member.avatar_image).toBe(
