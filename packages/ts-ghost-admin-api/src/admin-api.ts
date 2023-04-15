@@ -1,14 +1,9 @@
 import { adminPostsSchema } from "./schemas/posts";
 import { adminPagesSchema } from "./schemas/pages";
-import { adminMembersSchema } from "./schemas/members";
+import { adminMembersSchema, adminMembersCreateSchema } from "./schemas/members";
 import { adminTiersSchema } from "./schemas";
 import { adminUsersSchema } from "./schemas/users";
-import {
-  baseNewsletterSchema,
-  baseOffersSchema,
-  baseTagsSchema,
-  membersCreateSchema,
-} from "@ts-ghost/core-api";
+import { baseNewsletterSchema, baseOffersSchema, baseTagsSchema } from "@ts-ghost/core-api";
 import {
   BasicFetcher,
   APIVersions,
@@ -103,7 +98,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: adminMembersSchema,
         identitySchema: z.object({ id: z.string() }),
         include: z.object({}),
-        createSchema: membersCreateSchema,
+        createSchema: adminMembersCreateSchema,
         createOptionsSchema: z.object({
           send_email: z.boolean().optional(),
           email_type: z.union([z.literal("signin"), z.literal("subscribe"), z.literal("signup")]).optional(),
