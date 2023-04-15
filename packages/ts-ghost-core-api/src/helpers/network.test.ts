@@ -1,6 +1,7 @@
-import { expect, test, describe } from "vitest";
-import { getJWT, _genHeaders } from "./network";
-import type { ContentAPICredentials, AdminAPICredentials } from "../schemas/shared";
+import { describe, expect, test } from "vitest";
+
+import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
+import { _genHeaders, getJWT } from "./network";
 
 describe("getJWT", () => {
   test("returns a JWT", async () => {

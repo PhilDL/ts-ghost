@@ -1,10 +1,11 @@
 import { z } from "zod";
+
 import {
-  ghostIdentitySchema,
-  ghostVisibilitySchema,
-  ghostMetadataSchema,
   ghostCodeInjectionSchema,
+  ghostIdentitySchema,
+  ghostMetadataSchema,
   ghostSocialMediaSchema,
+  ghostVisibilitySchema,
 } from "./shared";
 
 export const baseTagsSchema = z.object({

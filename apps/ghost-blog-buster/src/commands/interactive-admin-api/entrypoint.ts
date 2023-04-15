@@ -1,10 +1,10 @@
-import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import { isCancel } from "@clack/core";
-import { cancel, note, select, confirm, outro } from "@clack/prompts";
-import { postsExportSelection, postsExportAll, checkCredentials, promptCredentialsLoop } from "./";
-import { membersExportAll } from "./members-export-all";
+import { cancel, confirm, note, outro, select } from "@clack/prompts";
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 import { getConfig } from "../../config";
+import { checkCredentials, postsExportAll, postsExportSelection, promptCredentialsLoop } from "./";
+import { membersExportAll } from "./members-export-all";
 
 export const entrypoint = async function () {
   const config = getConfig();
@@ -27,7 +27,11 @@ export const entrypoint = async function () {
           label: "Posts",
         },
         { value: "export-members", label: "Members" },
-        { value: "disconnect", label: "Disconnect from that blog", hint: "This will close the current session." },
+        {
+          value: "disconnect",
+          label: "Disconnect from that blog",
+          hint: "This will close the current session.",
+        },
         { value: "quit", label: "Quit" },
       ],
     });

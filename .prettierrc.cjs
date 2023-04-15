@@ -1,0 +1,20 @@
+module.exports = {
+  printWidth: 109,
+  tabWidth: 2,
+  importOrder: [
+    "vitest-fetch-mock",
+    "<THIRD_PARTY_MODULES>",
+    "^(@ts-ghost/(.*)$)|^(@ts-ghost$)",
+    "",
+    "^[./]",
+    "^types$",
+  ],
+  importOrderBuiltinModulesToTop: true,
+  importOrderCaseInsensitive: true,
+  importOrderParserPlugins: ["typescript", "decorators-legacy"],
+  importOrderMergeDuplicateImports: true,
+  importOrderCombineTypeAndValueImports: true,
+  importOrderSeparation: false,
+  importOrderSortSpecifiers: true,
+  plugins: [require("@ianvs/prettier-plugin-sort-imports")],
+};

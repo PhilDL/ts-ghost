@@ -1,11 +1,12 @@
 import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
-import { describe, test, expect, vi, afterEach, beforeEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+
 import { TSGhostContentAPI } from "../content-api";
-const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
-const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
 
 describe("authors api .browse() Args Type-safety", () => {
+  const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
+  const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
   const api = new TSGhostContentAPI(url, key, "v5.0");
   test(".browse() params shouldnt accept invalid params", () => {
     // @ts-expect-error - shouldnt accept invalid params

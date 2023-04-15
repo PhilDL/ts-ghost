@@ -1,6 +1,7 @@
 import { z, ZodRawShape } from "zod";
-import type { APICredentials } from "../schemas/shared";
+
 import { _fetch } from "../helpers/network";
+import type { APICredentials } from "../schemas/shared";
 
 export class BasicFetcher<OutputShape extends ZodRawShape = any, Api extends APICredentials = any> {
   protected _urlParams: Record<string, string> = {};

@@ -1,6 +1,7 @@
+import { describe, expect, it } from "vitest";
 import type { Post } from "@ts-ghost/content-api";
+
 import { frontMatterGenerator } from "./markdown-converter";
-import { describe, it, expect } from "vitest";
 
 describe("frontMatterGenerator", () => {
   const post: Post = {
@@ -10,7 +11,8 @@ describe("frontMatterGenerator", () => {
     html: '<p>Odoo 15 is out, and with that comes a big rewrite of the WebClient, a new Odoo JavaScript module ES6-like system, registries, hooks, new Model, and the possibility to write new Views as OWL Component. </p><p>This article will go over some of the biggest additions, give a quick overview or full analysis, and some basic usage examples.</p><h2 id="odoo-module-es6-like-syntax">Odoo module ES6-like syntax</h2><p>Odoo 15 introduced a new way of defining our JavaScript module instead of the usual ',
     comment_id: "6166e323f7a43a65054cd234",
     plaintext: "Odoo 15 is out, and with that comes a big rewrite of the WebClient, a new Odoo\n",
-    feature_image: "https://codingdodo.com/content/images/2021/10/post-cover-odoo-15-javascript-reference-5.png",
+    feature_image:
+      "https://codingdodo.com/content/images/2021/10/post-cover-odoo-15-javascript-reference-5.png",
     featured: true,
     visibility: "public",
     created_at: "2021-10-13T13:46:11.000+00:00",

@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { baseTiersSchema } from "./tiers";
+
 import { baseOffersSchema } from "./offers";
+import { baseTiersSchema } from "./tiers";
 
 export const baseSubscriptionsSchema = z.object({
   id: z.string({ description: "Stripe subscription ID sub_XXXX" }),
@@ -15,7 +16,9 @@ export const baseSubscriptionsSchema = z.object({
   status: z.string({ description: "Subscription status" }),
   start_date: z.string({ description: "Subscription start date" }),
   default_payment_card_last4: z.string({ description: "Last 4 digits of the card" }).nullable(),
-  cancel_at_period_end: z.boolean({ description: "If the subscription should be canceled or renewed at period end" }),
+  cancel_at_period_end: z.boolean({
+    description: "If the subscription should be canceled or renewed at period end",
+  }),
   cancellation_reason: z.string({ description: "Reason for subscription cancellation" }).nullable(),
   current_period_end: z.string({ description: "Subscription end date" }),
   price: z.object({

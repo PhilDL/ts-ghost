@@ -1,4 +1,5 @@
-import { describe, test, expect } from "vitest";
+import { describe, expect, test } from "vitest";
+
 import { TSGhostAdminAPI } from "../admin-api";
 
 describe("posts api .browse() Args Type-safety", () => {

@@ -1,4 +1,5 @@
-import { describe, test, beforeEach, assert, expect } from "vitest";
+import { assert, beforeEach, describe, expect, test } from "vitest";
+
 import { TSGhostAdminAPI } from "./admin-api";
 
 describe("admin-api", () => {

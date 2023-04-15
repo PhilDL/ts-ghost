@@ -1,10 +1,10 @@
 import { z } from "zod";
 import {
-  ghostIdentitySchema,
-  ghostVisibilitySchema,
-  ghostMetadataSchema,
   ghostCodeInjectionSchema,
+  ghostIdentitySchema,
+  ghostMetadataSchema,
   ghostSocialMediaSchema,
+  ghostVisibilitySchema,
 } from "@ts-ghost/core-api";
 
 export const tagsSchema = z.object({

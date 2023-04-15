@@ -1,8 +1,8 @@
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
 import { isCancel } from "@clack/core";
-import { spinner, text, cancel, note } from "@clack/prompts";
+import { cancel, note, spinner, text } from "@clack/prompts";
 import Configstore from "configstore";
 import color from "picocolors";
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
 export const promptCredentialsLoop = async (config: Configstore) => {
   let validSettings = false;
