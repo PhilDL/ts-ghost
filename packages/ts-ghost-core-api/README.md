@@ -141,9 +141,9 @@ let query = composedAPI.browse({
 
 - browse parameters are `page`, `limit`, `order`, `filter`. And read parameters are `id` or `slug`.
 
-## Method options
+#### Method options
 
-### `.browse` options
+#### `.browse` options
 
 Input are totally optionals on the `browse` method but they let you filter and order your search.
 
@@ -170,7 +170,7 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 
 For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the APIComposer will throw an Error with message containing the unknown field.
 
-### `.read` options
+#### `.read` options
 Read is meant to be used to fetch 1 object only by `id` or `slug`. 
 
 ```typescript
@@ -191,7 +191,7 @@ let query = composedAPI.read({
 
 You can submit **both** `id` and `slug`, but the fetcher will then chose the `id` in priority if present to make the final URL query to the Ghost API.
 
-## Fetchers 
+## Query Fetchers 
 
 If the parsing went okay, the `read` and `browse` methods from the `APIComposer` will return the associated `Fetcher`. 
 
@@ -425,10 +425,113 @@ let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch({ cache:
 ```
 *This may be useful if you use NextJS augmented `fetch`!*
 
+## Mutations
+
+These mutations are async methods, they will return a `Promise` that will resolve to the parsed result.
+
+#### Create record
+
+```typescript
+const composedAPI = new APIComposer(
+  { 
+    schema: simplifiedSchema, 
+    identitySchema: identitySchema, 
+    include: simplifiedIncludeSchema, 
+    createSchema:createSchema, 
+    createOptionsSchema: z.object({
+      option_1: z.boolean(),
+    })
+  },
+  api
+);
+let newPost = await composedAPI.add(
+  {
+    title: "My new post",
+  },
+  {
+    option_1: true,
+  }
+);
+```
+
+- The first argument is the `input` object that will be parsed and typed with the `createSchema` schema.
+- The second argument is the `options` object that will be parsed and typed with the `createOptionsSchema` schema.
+
+The result will be parsed and typed with the `output` schema and represent the newly created record.
+
+```typescript
+// return from the `add` method
+const result: {
+    status: "success";
+    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+} | {
+    status: "error";
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
+#### Edit record
+
+Edit requires the `id` of the record to edit. 
+
+```typescript
+let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
+  title: "My new post",
+});
+```
+The result will be parsed and typed with the `output` schema and represent the updated record.
+
+- The first argument is the `id` of the record to edit.
+- The second argument is the `input` object that will be parsed and typed with the `createSchema` schema wrapped with Partial. So all fields are optional.
+
+```typescript
+// return from the `edit` method
+const result: {
+    status: "success";
+    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+} | {
+    status: "error";
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
+#### Delete record
+
+Delete requires the `id` of the record to delete. 
+
+```typescript
+let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
+  title: "My new post",
+});
+```
+
+- The first argument is the `id` of the record to delete.
+
+The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `status` to know if the deletion was successful or not.
+
+```typescript
+// return from the `delete` method
+const result: {
+    status: "success";
+} | {
+    status: "error";
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
 ## Roadmap
 
 - [x] Handling POST, PUT and DELETE requests.
-- [ ] Writing examples documentation for mutations.
+- [x] Writing examples documentation for mutations.
 
 ## Contributing
 
