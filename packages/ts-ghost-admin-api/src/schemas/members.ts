@@ -2,7 +2,7 @@ import { z } from "zod";
 import { baseMembersSchema } from "@ts-ghost/core-api";
 
 export const adminMembersCreateSchema = z.object({
-  email: z.string({ description: "The email address of the member" }),
+  email: z.string({ description: "The email address of the member" }).email(),
   name: z.string({ description: "The name of the member" }).optional(),
   note: z.string({ description: "(nullable) A note about the member" }).optional(),
   geolocation: z.string({ description: "(nullable) The geolocation of the member" }).optional(),

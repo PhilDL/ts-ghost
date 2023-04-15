@@ -11,7 +11,7 @@ export const adminTiersSchema = baseTiersSchema.merge(
 export type Tiers = z.infer<typeof adminTiersSchema>;
 
 export const adminTiersCreateSchema = z.object({
-  name: z.string({ description: "Name of the tier" }),
+  name: z.string({ description: "Name of the tier" }).min(1).max(2000),
   description: z.string({ description: "Description of the tier" }).optional(),
   welcome_page_url: z.string({ description: "Welcome page URL of the tier" }).optional(),
   visibility: z.union([z.literal("public"), z.literal("none")]).optional(),

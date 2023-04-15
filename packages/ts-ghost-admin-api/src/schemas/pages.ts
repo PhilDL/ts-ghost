@@ -30,7 +30,7 @@ export const adminPagesSchema = basePagesSchema.merge(
 export type Page = z.infer<typeof adminPagesSchema>;
 
 export const adminPagesCreateSchema = z.object({
-  title: z.string().max(2000),
+  title: z.string().min(1).max(2000),
   slug: z.string().max(191).optional(),
   mobiledoc: z.string().max(1000000000).optional(),
   lexical: z.string().max(1000000000).optional(),
