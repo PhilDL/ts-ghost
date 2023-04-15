@@ -27,12 +27,14 @@
 Ghost Blog Buster is an interactive CLI allowing you to interact with your Ghost Blog directly via the Ghost Content API. From the cli you will be able to:
 
 - 🌪️ Choose between **Content API** or **Admin API** (for members or blog post content behind subscribption)
-- 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice. 
+- 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice.
 - ⚙️ Display or export to JSON your **Tags**, **Tiers**, **Authors**, **Members** (Admin API only)
 - 📶 Connect / Disconnect from the Blog
 
 ## Compatible Ghost versions.
+
 This tool was developped and tested mostly for Ghost versions 5.x.
+
 - Ghost 5^
 
 ## Built With
@@ -44,24 +46,26 @@ This tool was developped and tested mostly for Ghost versions 5.x.
 ## Basic usage
 
 Use directly with `npx`
+
 ```sh
 npx @ts-ghost/ghost-blog-buster
 ```
 
-Or install globally 
+Or install globally
 
 ```sh
 npm install -g @ts-ghost/ghost-blog-buster
 ```
+
 Then, in a new SHELL session, launch with
+
 ```
 ghost-blog-buster
 ```
 
 ## Advanced usage
 
-If you want to bypass the interactive prompts, you can use the CLI with pipeable commands. 
-
+If you want to bypass the interactive prompts, you can use the CLI with pipeable commands.
 
 ### Export content with `export <resource>`
 
@@ -83,9 +87,10 @@ Full example:
 ghost-blog-buster export posts --host https://astro-starter.digitalpress.blog --key e9b414c5d95a5436a647ff04ab --output ./posts
 ```
 
-Available export 
+Available export
 
 ### Display help
+
 ```sh
 ghost-blog-buster --help
 ```
@@ -113,6 +118,7 @@ ghost-blog-buster export-admin posts --host https://astro-starter.digitalpress.b
 ```
 
 Available `export-admin <resource>` resources:
+
 - `posts`
 - `pages`
 - `members`
@@ -134,10 +140,11 @@ ghost-blog-buster export authors --host https://astro-starter.digitalpress.blog 
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-* If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PhilDL/ts-ghost/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
-* Please make sure you check your spelling and grammar.
-* Create individual PR for each suggestion.
-* Please also read through the [Code Of Conduct](https://github.com/PhilDL/ts-ghost/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
+
+- If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PhilDL/ts-ghost/issues/new) to discuss it, or directly create a pull request after you edit the _README.md_ file with necessary changes.
+- Please make sure you check your spelling and grammar.
+- Create individual PR for each suggestion.
+- Please also read through the [Code Of Conduct](https://github.com/PhilDL/ts-ghost/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
 
 ## License
 
@@ -145,9 +152,9 @@ Distributed under the MIT License. See [LICENSE](https://github.com/PhilDL/ts-gh
 
 ## Authors
 
-* **[PhilDL](https://github.com/PhilDL)** - *Creator*
+- **[PhilDL](https://github.com/PhilDL)** - _Creator_
 
 ## Acknowledgements
 
-* [Ghost](https://ghost.org/) is the best platform for blogging 💖.
-* [Clack](https://github.com/natemoo-re/clack) to build beautiful prompts.
+- [Ghost](https://ghost.org/) is the best platform for blogging 💖.
+- [Clack](https://github.com/natemoo-re/clack) to build beautiful prompts.

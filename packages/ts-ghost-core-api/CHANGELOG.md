@@ -152,8 +152,8 @@
   - `output` option was removed because it is no longer necessary at the QueryBuilder level (kept on Fetchers)
 
   ```ts
-  import { QueryBuilder, type ContentAPICredentials } from "@ts-ghost/core-api";
   import { z } from "zod";
+  import { QueryBuilder, type ContentAPICredentials } from "@ts-ghost/core-api";
 
   const api: ContentAPICredentials = {
     url: "https://ghost.org",
@@ -188,8 +188,8 @@
   Example:
 
   ```ts
-  import { QueryBuilder, adminMembersSchema } from "@ts-ghost/core-api";
   import { z } from "zod";
+  import { adminMembersSchema, QueryBuilder } from "@ts-ghost/core-api";
 
   const membersIncludeSchema = z.object({});
   const queryIdentitySchema = z.object({

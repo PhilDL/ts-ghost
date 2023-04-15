@@ -1,11 +1,12 @@
 import { z } from "zod";
 import {
+  ghostCodeInjectionSchema,
   ghostIdentitySchema,
   ghostMetadataSchema,
-  ghostCodeInjectionSchema,
   ghostSocialMediaSchema,
   ghostVisibilitySchema,
 } from "@ts-ghost/core-api";
+
 import { authorsSchema } from "../authors/schemas";
 import { tagsSchema } from "../tags/schemas";
 

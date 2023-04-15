@@ -1,7 +1,6 @@
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
-import { spinner, note, log } from "@clack/prompts";
-
+import { log, note, spinner } from "@clack/prompts";
 import Configstore from "configstore";
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
 export const checkCredentials = async (config: Configstore) => {
   let validSettings = false;

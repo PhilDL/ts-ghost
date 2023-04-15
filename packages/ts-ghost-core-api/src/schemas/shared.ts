@@ -148,7 +148,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("pages"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -157,7 +158,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("posts"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -166,7 +168,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("members"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -175,7 +178,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("tiers"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -184,7 +188,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("newsletters"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -193,7 +198,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("offers"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -202,7 +208,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("tags"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -211,7 +218,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("users"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -220,7 +228,8 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("site"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message: "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
     }),
     version: apiVersionsSchema,
     url: z.string().url(),
@@ -229,7 +238,10 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
 ]);
 
 export const slugOrIdSchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
-export const emailOrIdSchema = z.union([z.object({ email: z.string().email() }), z.object({ id: z.string() })]);
+export const emailOrIdSchema = z.union([
+  z.object({ email: z.string().email() }),
+  z.object({ id: z.string() }),
+]);
 export const identitySchema = z.union([
   z.object({ email: z.string().email() }),
   z.object({ id: z.string() }),

@@ -1,6 +1,7 @@
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
-import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import { log } from "@clack/prompts";
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
+
 import { getConfig } from "../config";
 
 export async function requireGhostContentAPI(argv: { host?: string; key?: string }) {
@@ -22,7 +23,9 @@ export async function requireGhostContentAPI(argv: { host?: string; key?: string
     const res = await api.settings.fetch();
     if (res.status === "error") {
       log.error(
-        `There was an error trying to connect with these credentials: \n${res.errors.map((m) => m.message).join("\n")}`
+        `There was an error trying to connect with these credentials: \n${res.errors
+          .map((m) => m.message)
+          .join("\n")}`
       );
       process.exit(1);
     }
@@ -51,7 +54,9 @@ export async function requireGhostAdminAPI(argv: { host?: string; key?: string }
     const res = await api.site.fetch();
     if (res.status === "error") {
       log.error(
-        `There was an error trying to connect with these credentials: \n${res.errors.map((m) => m.message).join("\n")}`
+        `There was an error trying to connect with these credentials: \n${res.errors
+          .map((m) => m.message)
+          .join("\n")}`
       );
       process.exit(1);
     }

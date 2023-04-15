@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { ghostIdentitySchema } from "./shared";
 
 export const baseNewsletterSchema = z.object({
@@ -22,7 +23,9 @@ export const baseNewsletterSchema = z.object({
   }),
   sort_order: z.number({ description: "The order in which newsletters are displayed in the Portal" }),
   header_image: z
-    .string({ description: "(nullable) Path to an image to show at the top of emails. Recommended size 1200x600" })
+    .string({
+      description: "(nullable) Path to an image to show at the top of emails. Recommended size 1200x600",
+    })
     .nullish(),
   show_header_icon: z.boolean({ description: "true/false. Show the site icon in emails" }),
   show_header_title: z.boolean({ description: "true/false. Show the site name in emails" }),

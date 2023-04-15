@@ -28,10 +28,13 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "turbo run build && changeset publish",
-    "validate": "turbo run lint typecheck test"
+    "validate": "turbo run lint typecheck test",
+    "format:write": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --check \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
+    "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "^8.37.0",
