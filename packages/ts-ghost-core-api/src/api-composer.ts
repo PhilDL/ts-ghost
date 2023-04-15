@@ -1,4 +1,4 @@
-import { z, ZodRawShape, ZodTypeAny } from "zod";
+import { z, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
 
 import { DeleteFetcher } from "./fetchers";
 import { BrowseFetcher } from "./fetchers/browse-fetcher";
@@ -16,6 +16,7 @@ export class APIComposer<
   IncludeShape extends ZodRawShape = any,
   CreateShape extends ZodRawShape = any,
   CreateOptions extends ZodTypeAny = any,
+  UpdateShape extends ZodRawShape = any,
   Api extends APICredentials = any
 > {
   constructor(
@@ -25,6 +26,7 @@ export class APIComposer<
       include: z.ZodObject<IncludeShape>;
       createSchema?: z.ZodObject<CreateShape>;
       createOptionsSchema?: CreateOptions;
+      updateSchema?: z.ZodObject<UpdateShape>;
     },
     protected _api: Api
   ) {}
@@ -96,13 +98,16 @@ export class APIComposer<
     return fetcher.submit();
   }
 
-  public async edit(id: string, data: Partial<z.output<z.ZodObject<CreateShape>>>) {
-    if (!this.config.createSchema) {
-      throw new Error("No createSchema defined");
+  public async edit(id: string, data: Partial<z.output<z.ZodObject<UpdateShape>>>) {
+    let updateSchema: z.ZodObject<any> | undefined = this.config.updateSchema;
+    if (!this.config.updateSchema && this.config.createSchema) {
+      updateSchema = this.config.createSchema.partial();
     }
-    const editSchema = this.config.createSchema.partial();
+    if (!updateSchema) {
+      throw new Error("No updateSchema defined");
+    }
     const cleanId = z.string().nonempty().parse(id);
-    const parsedData = editSchema.parse(data);
+    const parsedData = updateSchema.parse(data);
 
     if (Object.keys(parsedData).length === 0) {
       throw new Error("No data to edit");

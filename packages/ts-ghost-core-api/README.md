@@ -98,10 +98,11 @@ const composedAPI = new APIComposer(
 
 - `identitySchema` can be any `ZodType` and can also be an empty `z.object({})` if you don't need the `read` method.
 - `include` is a `ZodObject` that will validate the `include` parameters of the API call. It is specific to the Ghost API resource targeted. The format is always `{ 'name_of_the_field': true }`
-- `createSchema` (Optional) is a Zod Schema that will validate the input of the `add` and `edit` methods of the APIComposer.
+- `createSchema` (Optional) is a Zod Schema that will validate the input of the `add` method of the APIComposer.
   - `add` will take exactly the schema to parse
-  - `edit` will take a `ZodPartial` (all fields are optional) of that schema to parse. Mimicing the Ghost API behavior.
 - `createOptionsSchema` (Optional) is a Zod Schema that will validate options that are going to be passed as query parameters to the `POST` url.
+- `updateSchema` (Optional) is a Zod Schema that will validate the input of the `edit` method of the APIComposer.
+  - `edit` will fallback to a `ZodPartial` (all fields are optional) version of the `createSchema` if `updateSchema` is not provided.
 
 ### Building Queries
 
