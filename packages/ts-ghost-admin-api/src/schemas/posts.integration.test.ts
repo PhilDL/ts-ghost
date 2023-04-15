@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { assert, beforeEach, describe, expect, test } from "vitest";
 
 import { TSGhostAdminAPI } from "../admin-api";
@@ -227,6 +228,7 @@ describe("posts integration tests browse", () => {
     const result = await api.posts
       .browse({
         limit: 1,
+        order: "created_at ASC",
       })
       .formats({ html: true, plaintext: true })
       .fetch();
@@ -459,8 +461,10 @@ describe("posts integration tests browse", () => {
   test("posts mutations add, edit, delete", async () => {
     expect(api.posts).toBeDefined();
 
+    const title = faker.hacker.phrase();
+
     const postAdd = await api.posts.add({
-      title: "FooBarBaz",
+      title: title,
       html: "<p>Hello from ts-ghost</p>",
       tags: [{ name: "ts-ghost" }],
       tiers: [{ name: "ts-ghost" }],
@@ -477,7 +481,7 @@ describe("posts integration tests browse", () => {
     });
     assert(postAdd.status === "success");
     const newPost = postAdd.data;
-    expect(newPost.title).toBe("FooBarBaz");
+    expect(newPost.title).toBe(title);
     expect(newPost.slug).toBe("foobarbaz");
     expect(newPost.custom_excerpt).toBe("This is custom excerpt from ts-ghost");
     expect(newPost.meta_title).toBe("Meta Title from ts-ghost");
