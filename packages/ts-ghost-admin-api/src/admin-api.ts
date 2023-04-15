@@ -15,7 +15,7 @@ import {
 import { adminTiersSchema } from "./schemas";
 import { adminMembersCreateSchema, adminMembersSchema } from "./schemas/members";
 import { adminPagesSchema } from "./schemas/pages";
-import { adminPostsSchema } from "./schemas/posts";
+import { adminPostsCreateSchema, adminPostsSchema, adminPostsUpdateSchema } from "./schemas/posts";
 import { adminUsersSchema } from "./schemas/users";
 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
@@ -49,9 +49,11 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: adminPostsSchema,
         identitySchema: slugOrIdSchema,
         include: postsIncludeSchema,
+        createSchema: adminPostsCreateSchema,
+        updateSchema: adminPostsUpdateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "edit", "add", "delete"]);
   }
 
   get pages() {

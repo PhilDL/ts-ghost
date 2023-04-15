@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { _fetch } from "../helpers/network";
+import { _fetchRawResponse } from "../helpers/network";
 import type { APICredentials } from "../schemas/shared";
 
 export class DeleteFetcher<Api extends APICredentials = any> {
@@ -52,16 +52,31 @@ export class DeleteFetcher<Api extends APICredentials = any> {
         ),
       }),
     ]);
-    const response = await _fetch(this._URL, this._api, {
-      method: "DELETE",
-    });
     let result: any = {};
-    if (response.errors) {
-      result.status = "error";
-      result.errors = response.errors;
-    } else {
+    try {
+      const response = await _fetchRawResponse(this._URL, this._api, {
+        method: "DELETE",
+      });
+      if (response.status === 204) {
+        result = {
+          status: "success",
+        };
+      } else {
+        const res = await response.json();
+        if (res.errors) {
+          result.status = "error";
+          result.errors = res.errors;
+        }
+      }
+    } catch (e) {
       result = {
-        status: "success",
+        status: "error",
+        errors: [
+          {
+            type: "FetchError",
+            message: (e as Error).toString(),
+          },
+        ],
       };
     }
     return schema.parse(result);

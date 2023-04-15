@@ -50,3 +50,12 @@ export async function _fetch(URL: URL | undefined, api: APICredentials, options?
   }
   return result;
 }
+
+export async function _fetchRawResponse(URL: URL | undefined, api: APICredentials, options?: RequestInit) {
+  if (URL === undefined) throw new Error("URL is undefined");
+  const headers = await _genHeaders(api);
+  return await fetch(URL.toString(), {
+    ...options,
+    headers,
+  });
+}

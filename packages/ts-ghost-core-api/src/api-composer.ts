@@ -102,8 +102,8 @@ export class APIComposer<
   public async edit(
     id: string,
     data: IsAny<UpdateShape> extends true
-      ? Partial<z.output<z.ZodObject<CreateShape>>>
-      : z.output<z.ZodObject<UpdateShape>>
+      ? Partial<z.input<z.ZodObject<CreateShape>>>
+      : z.input<z.ZodObject<UpdateShape>>
   ) {
     let updateSchema: z.ZodObject<any> | undefined = this.config.updateSchema;
     if (!this.config.updateSchema && this.config.createSchema) {
@@ -118,6 +118,7 @@ export class APIComposer<
     if (Object.keys(parsedData).length === 0) {
       throw new Error("No data to edit");
     }
+    console.log("parsedData", parsedData);
     const fetcher = new MutationFetcher(
       {
         output: this.config.schema,

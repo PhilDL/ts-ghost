@@ -30,3 +30,110 @@ export const adminPostsSchema = basePostsSchema.merge(
 );
 
 export type Post = z.infer<typeof adminPostsSchema>;
+
+export const adminPostsCreateSchema = z.object({
+  title: z.string().max(2000),
+  slug: z.string().max(191).nullish(),
+  mobiledoc: z.string().max(1000000000).nullish(),
+  lexical: z.string().max(1000000000).nullish(),
+  html: z.string().max(1000000000).nullish(),
+  feature_image: z.string().max(2000).url().nullish(),
+  feature_image_alt: z.string().max(65535).nullish(),
+  feature_image_caption: z.string().max(65535).nullish(),
+  featured: z.boolean().nullish(),
+  status: z
+    .union([z.literal("draft"), z.literal("published"), z.literal("scheduled"), z.literal("sent")])
+    .nullish(),
+  locale: z.string().max(6).nullish(),
+  visibility: z
+    .union([z.literal("public"), z.literal("internal"), z.literal("members"), z.literal("paid")])
+    .nullish(),
+  visibility_filter: z.string().nullish(),
+  meta_title: z.string().max(300).nullish(),
+  meta_description: z.string().max(500).nullish(),
+  updated_at: z
+    .date()
+    .transform((val) => val.toISOString())
+    .nullish(),
+  published_at: z
+    .date()
+    .transform((val) => val.toISOString())
+    .nullish(),
+  custom_excerpt: z.string().max(300).nullish(),
+  codeinjection_head: z.string().max(65535).nullish(),
+  codeinjection_foot: z.string().max(65535).nullish(),
+  og_image: z.string().max(2000).url().nullish(),
+  og_title: z.string().max(300).nullish(),
+  og_description: z.string().max(500).nullish(),
+  twitter_image: z.string().max(2000).url().nullish(),
+  twitter_title: z.string().max(300).nullish(),
+  twitter_description: z.string().max(500).nullish(),
+  email_subject: z.string().max(300).nullish(),
+  custom_template: z.string().max(100).nullish(),
+  canonical_url: z.string().max(2000).url().nullish(),
+  email_only: z.boolean().nullish(),
+  tags: z
+    .array(
+      z.union([
+        z.object({
+          id: z.string({ description: "The ID of the tags" }),
+        }),
+        z.object({
+          name: z.string({ description: "The name of the tags" }),
+        }),
+        z.object({
+          slug: z.string({ description: "The slug of the tags" }),
+        }),
+      ]),
+      {
+        description: `The tags associated with the post array of either slug, id or name`,
+      }
+    )
+    .nullish(),
+  tiers: z
+    .array(
+      z.union([
+        z.object({
+          id: z.string({ description: "The ID of the tiers" }),
+        }),
+        z.object({
+          name: z.string({ description: "The name of the tiers" }),
+        }),
+        z.object({
+          slug: z.string({ description: "The slug of the tiers" }),
+        }),
+      ]),
+      {
+        description: `The tiers associated with the post array of either slug, id or name`,
+      }
+    )
+    .nullish(),
+  authors: z
+    .array(
+      z.union([
+        z.object({
+          id: z.string({ description: "The ID of the author" }),
+        }),
+        z.object({
+          name: z.string({ description: "The name of the author" }),
+        }),
+        z.object({
+          email: z.string({ description: "The email of the author" }),
+        }),
+      ]),
+      {
+        description: `Specifing author via id, name or slug.`,
+      }
+    )
+    .nullish(),
+});
+
+export type CreatePost = z.infer<typeof adminPostsCreateSchema>;
+
+export const adminPostsUpdateSchema = adminPostsCreateSchema.partial({ title: true }).merge(
+  z.object({
+    updated_at: z.date().transform((val) => val.toISOString()),
+  })
+);
+
+export type UpdatePost = z.infer<typeof adminPostsUpdateSchema>;
