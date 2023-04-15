@@ -129,7 +129,8 @@ describe("members integration tests browse", () => {
     expect(member.email_suppression).toStrictEqual({ suppressed: false, info: null });
   });
 
-  test("members mutations add, edit, delete", async () => {
+  // this test send emails because new signup
+  test.skip("members mutations add, edit, delete", async () => {
     expect(api.members).toBeDefined();
     const email = faker.internet.email();
     const name = faker.name.fullName();

@@ -14,6 +14,7 @@ import {
 
 import { adminTiersCreateSchema, adminTiersSchema } from "./schemas";
 import { adminMembersCreateSchema, adminMembersSchema } from "./schemas/members";
+import { adminNewsletterCreateSchema } from "./schemas/newsletters";
 import { adminPagesCreateSchema, adminPagesSchema, adminPagesUpdateSchema } from "./schemas/pages";
 import { adminPostsCreateSchema, adminPostsSchema, adminPostsUpdateSchema } from "./schemas/posts";
 import { adminUsersSchema } from "./schemas/users";
@@ -142,7 +143,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminTiersCreateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read"]); // for now tiers mutations don't really work in the admin api
   }
 
   get newsletters() {
@@ -165,9 +166,13 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: baseNewsletterSchema,
         identitySchema: slugOrIdSchema,
         include: newslettersIncludeSchema,
+        createSchema: adminNewsletterCreateSchema,
+        createOptionsSchema: z.object({
+          opt_in_existing: z.boolean(),
+        }),
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "add", "edit"]);
   }
 
   get offers() {
