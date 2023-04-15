@@ -1,4 +1,4 @@
-import { z, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
+import { z, ZodRawShape, ZodTypeAny } from "zod";
 
 import { DeleteFetcher } from "./fetchers";
 import { BrowseFetcher } from "./fetchers/browse-fetcher";
@@ -6,6 +6,7 @@ import { MutationFetcher } from "./fetchers/mutation-fetcher";
 import { ReadFetcher } from "./fetchers/read-fetcher";
 import { parseBrowseParams, type BrowseParams } from "./helpers/browse-params";
 import type { APICredentials } from "./schemas";
+import type { IsAny } from "./utils";
 
 /**
  * API Composer contains all methods, pick and choose.
@@ -100,7 +101,7 @@ export class APIComposer<
 
   public async edit(
     id: string,
-    data: ThisParameterType<UpdateShape> extends any
+    data: IsAny<UpdateShape> extends true
       ? Partial<z.output<z.ZodObject<CreateShape>>>
       : z.output<z.ZodObject<UpdateShape>>
   ) {

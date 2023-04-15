@@ -274,6 +274,9 @@ describe("APIComposer add / edit", () => {
       createOptionsSchema: z.object({
         option_1: z.boolean(),
       }),
+      // updateSchema: z.object({
+      //   foobar: z.string(),
+      // }),
     },
     api
   );
