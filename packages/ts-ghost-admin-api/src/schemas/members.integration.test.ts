@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { assert, beforeEach, describe, expect, test } from "vitest";
 
 import { TSGhostAdminAPI } from "../admin-api";
@@ -126,5 +127,39 @@ describe("members integration tests browse", () => {
     expect(member.status).toBe("free");
     expect(member.last_seen_at).toBeDefined();
     expect(member.email_suppression).toStrictEqual({ suppressed: false, info: null });
+  });
+
+  test("members mutations add, edit, delete", async () => {
+    expect(api.members).toBeDefined();
+    const email = faker.internet.email();
+    const name = faker.name.fullName();
+
+    const addOperation = await api.members.add({ email, name });
+    assert(addOperation.status === "success");
+    const newMember = addOperation.data;
+    expect(newMember.id).toBeDefined();
+    expect(newMember.name).toBe(name);
+    expect(newMember.email).toBe(email);
+    expect(newMember.status).toBe("free");
+    expect(newMember.created_at).toBeDefined();
+    expect(newMember.updated_at).toBeDefined();
+    expect(newMember.comped).toBe(false);
+
+    const editOperation = await api.members.edit(newMember.id, {
+      note: "Hello from ts-ghost",
+      labels: [{ name: "ts-ghost" }],
+      geolocation: "Reunion",
+    });
+    assert(editOperation.status === "success");
+    const editedMember = editOperation.data;
+    expect(editedMember.id).toBe(newMember.id);
+    expect(editedMember.name).toBe(name);
+    expect(editedMember.email).toBe(email);
+    expect(editedMember.status).toBe("free");
+    expect(editedMember.note).toBe("Hello from ts-ghost");
+    expect(editedMember.labels && editedMember.labels[0].name).toBe("ts-ghost");
+
+    const deleteOperation = await api.members.delete(newMember.id);
+    assert(deleteOperation.status === "success");
   });
 });

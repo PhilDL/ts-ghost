@@ -112,7 +112,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         }),
       },
       api
-    ).access(["browse", "read", "add", "edit"]);
+    ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
   get tiers() {
