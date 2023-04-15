@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { assert, beforeEach, describe, expect, test } from "vitest";
 
 import { TSGhostAdminAPI } from "../admin-api";
@@ -418,6 +419,55 @@ describe("pages integration tests browse", () => {
 
     expect(page.count).toStrictEqual(stubPage.count);
     expect(page.primary_tag).toStrictEqual(stubPage.primary_tag);
+  });
+
+  test("posts mutations add, edit, delete", async () => {
+    expect(api.pages).toBeDefined();
+
+    const title = faker.hacker.phrase();
+
+    const postAdd = await api.pages.add({
+      title: title,
+      html: "<p>Hello from ts-ghost</p>",
+      tags: [{ name: "ts-ghost" }],
+      tiers: [{ name: "ts-ghost" }],
+      custom_excerpt: "This is custom excerpt from ts-ghost",
+      meta_title: "Meta Title from ts-ghost",
+      meta_description: "Description from ts-ghost",
+      featured: true,
+      og_title: "OG Title from ts-ghost",
+      og_description: "OG Description from ts-ghost",
+      twitter_title: "Twitter Title from ts-ghost",
+      twitter_description: "Twitter Description from ts-ghost",
+      visibility: "public",
+      slug: "foobarbaz",
+    });
+    assert(postAdd.status === "success");
+    const newPost = postAdd.data;
+    expect(newPost.title).toBe(title);
+    expect(newPost.slug).toBe("foobarbaz");
+    expect(newPost.custom_excerpt).toBe("This is custom excerpt from ts-ghost");
+    expect(newPost.meta_title).toBe("Meta Title from ts-ghost");
+    expect(newPost.meta_description).toBe("Description from ts-ghost");
+    expect(newPost.featured).toBe(true);
+    expect(newPost.og_title).toBe("OG Title from ts-ghost");
+    expect(newPost.og_description).toBe("OG Description from ts-ghost");
+    expect(newPost.twitter_title).toBe("Twitter Title from ts-ghost");
+    expect(newPost.twitter_description).toBe("Twitter Description from ts-ghost");
+    expect(newPost.visibility).toBe("public");
+    expect(newPost.tags && newPost.tags[0].name).toBe("ts-ghost");
+
+    const postEdit = await api.pages.edit(newPost.id, {
+      custom_excerpt: "Modified excerpt from ghost",
+      updated_at: new Date(newPost.updated_at || ""),
+    });
+
+    assert(postEdit.status === "success");
+    const editedPost = postEdit.data;
+    expect(editedPost.custom_excerpt).toBe("Modified excerpt from ghost");
+
+    const postDelete = await api.pages.delete(editedPost.id);
+    assert(postDelete.status === "success");
   });
 
   test("pages api with bad key", async () => {

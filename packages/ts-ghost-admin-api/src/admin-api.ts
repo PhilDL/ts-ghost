@@ -14,7 +14,7 @@ import {
 
 import { adminTiersSchema } from "./schemas";
 import { adminMembersCreateSchema, adminMembersSchema } from "./schemas/members";
-import { adminPagesSchema } from "./schemas/pages";
+import { adminPagesCreateSchema, adminPagesSchema, adminPagesUpdateSchema } from "./schemas/pages";
 import { adminPostsCreateSchema, adminPostsSchema, adminPostsUpdateSchema } from "./schemas/posts";
 import { adminUsersSchema } from "./schemas/users";
 
@@ -53,7 +53,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         updateSchema: adminPostsUpdateSchema,
       },
       api
-    ).access(["browse", "read", "edit", "add", "delete"]);
+    ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
   get pages() {
@@ -79,9 +79,11 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: adminPagesSchema,
         identitySchema: slugOrIdSchema,
         include: pagesIncludeSchema,
+        createSchema: adminPagesCreateSchema,
+        updateSchema: adminPagesUpdateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
   get members() {
