@@ -1,6 +1,6 @@
+import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 
 import { TSGhostContentAPI } from "../content-api";
 

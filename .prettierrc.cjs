@@ -1,7 +1,14 @@
 module.exports = {
   printWidth: 109,
   tabWidth: 2,
-  importOrder: ["<THIRD_PARTY_MODULES>", "^(@ts-ghost/(.*)$)|^(remix$)", "", "^[./]", "^types$"],
+  importOrder: [
+    "vitest-fetch-mock",
+    "<THIRD_PARTY_MODULES>",
+    "^(@ts-ghost/(.*)$)|^(@ts-ghost$)",
+    "",
+    "^[./]",
+    "^types$",
+  ],
   importOrderBuiltinModulesToTop: true,
   importOrderCaseInsensitive: true,
   importOrderParserPlugins: ["typescript", "decorators-legacy"],
