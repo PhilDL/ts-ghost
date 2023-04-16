@@ -20,6 +20,7 @@ import { adminPagesCreateSchema, adminPagesSchema, adminPagesUpdateSchema } from
 import { adminPostsCreateSchema, adminPostsSchema, adminPostsUpdateSchema } from "./schemas/posts";
 import { adminTagsCreateSchema, adminTagsUpdateSchema } from "./schemas/tags";
 import { adminUsersSchema } from "./schemas/users";
+import { adminWebhookCreateSchema, adminWebhookSchema, adminWebhookUpdateSchema } from "./schemas/webhooks";
 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
 
@@ -256,6 +257,32 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       },
       api
     ).access(["browse", "read"]);
+  }
+
+  get webhooks() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "webhooks",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "webhooks";
+      key: string;
+      version: APIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    return new APIComposer(
+      {
+        schema: adminWebhookSchema,
+        identitySchema: z.object({ id: z.string() }),
+        include: z.object({}),
+        createSchema: adminWebhookCreateSchema,
+        updateSchema: adminWebhookUpdateSchema,
+      },
+      api
+    ).access(["add", "edit", "delete"]);
   }
 
   get site() {
