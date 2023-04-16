@@ -53,10 +53,11 @@ describe("users integration tests browse", () => {
     const result = await api.users
       .browse({
         limit: 1,
+        order: "created_at ASC",
       })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const user = result.data[0];
     const stubUser = stubResult.data[0];
     expect(user.id).toBe(stubUser.id);
@@ -95,7 +96,7 @@ describe("users integration tests browse", () => {
         id: "1",
       })
       .fetch();
-    assert(result.status === "success");
+    assert(result.success);
     const user = result.data;
     const stubUser = stubResult.data[0];
     expect(user.id).toBe(stubUser.id);

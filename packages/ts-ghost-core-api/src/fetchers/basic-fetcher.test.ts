@@ -61,8 +61,8 @@ describe("BasicFetcher", () => {
       })
     );
     const result = await fetcher.fetch();
-    expect(result.status).toBe("success");
-    if (result.status === "success") {
+    expect(result.success).toBe(true);
+    if (result.success) {
       expect(result.data).toStrictEqual({
         foo: "foo",
         bar: "eaoizdjoa1321123",
@@ -99,8 +99,8 @@ describe("BasicFetcher", () => {
     );
 
     const result = await fetcher.fetch();
-    expect(result.status).toBe("error");
-    if (result.status === "error") {
+    expect(result.success).toBe(false);
+    if (!result.success) {
       expect(result.errors).toStrictEqual([
         {
           type: "foo error",
@@ -148,8 +148,8 @@ describe("BasicFetcher", () => {
     (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await fetcher.fetch();
-    expect(result.status).toBe("error");
-    if (result.status === "error") {
+    expect(result.success).toBe(false);
+    if (!result.success) {
       expect(result.errors).toStrictEqual([
         {
           type: "FetchError",

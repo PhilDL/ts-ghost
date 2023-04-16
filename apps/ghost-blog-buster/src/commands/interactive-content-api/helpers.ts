@@ -9,10 +9,10 @@ export const fetchAllBlogPosts = async (ghost: TSGhostContentAPI) => {
       tags: true,
     })
     .paginate();
-  if (cursor.current.status === "success") posts.push(...cursor.current.data);
+  if (cursor.current.success) posts.push(...cursor.current.data);
   while (cursor.next) {
     cursor = await cursor.next.paginate();
-    if (cursor.current.status === "success") posts.push(...cursor.current.data);
+    if (cursor.current.success) posts.push(...cursor.current.data);
   }
   return posts;
 };

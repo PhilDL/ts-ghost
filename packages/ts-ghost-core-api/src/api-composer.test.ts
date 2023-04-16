@@ -274,6 +274,9 @@ describe("APIComposer add / edit", () => {
       createOptionsSchema: z.object({
         option_1: z.boolean(),
       }),
+      // updateSchema: z.object({
+      //   foobar: z.string(),
+      // }),
     },
     api
   );
@@ -351,7 +354,7 @@ describe("APIComposer add / edit", () => {
         ],
       }),
     });
-    assert(result.status === "success");
+    assert(result.success);
     const post = result.data;
     expect(post).toStrictEqual({
       id: "abc",
@@ -387,7 +390,7 @@ describe("APIComposer add / edit", () => {
         ],
       }),
     });
-    assert(result.status === "success");
+    assert(result.success);
     expect(result.data).toStrictEqual(mockData);
   });
 
@@ -425,7 +428,7 @@ describe("APIComposer add / edit", () => {
         ],
       }),
     });
-    assert(result.status === "error");
+    assert(!result.success);
     expect(result.errors).toStrictEqual([
       {
         message: "Validation error, cannot save member.",
@@ -462,7 +465,7 @@ describe("APIComposer add / edit", () => {
         ],
       }),
     });
-    assert(result.status === "success");
+    assert(result.success);
     const post = result.data;
     expect(post).toStrictEqual({
       id: "abc",
@@ -506,7 +509,7 @@ describe("APIComposer add / edit", () => {
         ],
       }),
     });
-    assert(result.status === "error");
+    assert(!result.success);
     expect(result.errors).toStrictEqual([
       {
         message: "Resource not found error, cannot edit member.",

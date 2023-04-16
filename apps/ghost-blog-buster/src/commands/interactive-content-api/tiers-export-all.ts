@@ -47,7 +47,7 @@ export const tiersExportAll = async (ghost: TSGhostContentAPI, siteName: string)
 
   s.start(`Fetching Tiers...`);
   const res = await ghost.tiers.browse().fetch();
-  if (res.status === "error" || res.data.length === 0) {
+  if (!res.success || res.data.length === 0) {
     note(`No tiers were found on "${siteName}.".`, "No tiers found");
     return;
   }

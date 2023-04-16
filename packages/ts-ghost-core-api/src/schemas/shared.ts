@@ -134,7 +134,11 @@ export type APICredentials = {
     | "site"
     | "offers"
     | "users"
-    | "newsletters";
+    | "newsletters"
+    | "webhooks"
+    | "themes"
+    | "files"
+    | "images";
   key: string;
   version: APIVersions;
   url: string;
@@ -227,6 +231,56 @@ export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   }),
   z.object({
     resource: z.literal("site"),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
+  z.object({
+    resource: z.literal("webhooks"),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
+  z.object({
+    resource: z.literal("themes"),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
+  z.object({
+    resource: z.literal("files"),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
+  z.object({
+    resource: z.literal("images"),
+    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+      message:
+        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
+    }),
+    version: apiVersionsSchema,
+    url: z.string().url(),
+    endpoint: z.literal("admin"),
+  }),
+  z.object({
+    resource: z.literal("media"),
     key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
       message:
         "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",

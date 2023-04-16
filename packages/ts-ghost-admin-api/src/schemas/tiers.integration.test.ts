@@ -63,7 +63,7 @@ describe("tiers integration tests browse", () => {
       })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const tier = result.data[0];
     const stubTier = stubResult.data[0];
     expect(tier.id).toBe(stubTier.id);
@@ -89,7 +89,7 @@ describe("tiers integration tests browse", () => {
         id: "63887bd07f2cf30001fec7a2",
       })
       .fetch();
-    assert(result.status === "success");
+    assert(result.success);
     const tier = result.data;
     const stubTier = stubResult.data[0];
     expect(tier.id).toBe(stubTier.id);

@@ -19,7 +19,7 @@
 
 ## About The Project
 
-`@ts-ghost/content-api` provides a strongly-typed TypeScript client to interract with the Ghost Content API based on [Zod](https://github.com/colinhacks/zod) schemas passed through a QueryBuilder and then a Fetcher.
+`@ts-ghost/content-api` provides a strongly-typed TypeScript client to interract with the Ghost Content API based on [Zod](https://github.com/colinhacks/zod) schemas passed through the APIComposer that exposes `read` and `browse` methods with safe params and then a Fetcher.
 
 ![content-api-typesafety](https://user-images.githubusercontent.com/4941205/227787797-daf0bc72-1bb7-4ccd-8c98-fe4c03b71dd3.gif)
 
@@ -50,7 +50,7 @@ const api = new TSGhostContentAPI(url, key, "v5.0"); // The instantiation is val
 
 // Browse posts
 const res = await api.posts.browse().fetch();
-if (res.status === "success") {
+if (res.success) {
   const posts = res.data;
   const meta = res.meta;
   //     ^? GhostMeta Type containing pagination info
@@ -77,7 +77,7 @@ const res = await api.posts
     slug: "welcome-to-ghost",
   })
   .fetch();
-if (res.status === "success") {
+if (res.success) {
   const post = res.data;
   //     ^? type Post
 } else {
@@ -88,7 +88,7 @@ if (res.status === "success") {
 ## Building Queries
 
 Calling any resource like `authors`, `posts`, etc (except `settings` resource) will give a
-new instance of a QueryBuilder containing two methods `read` and `browse`.
+new instance of APIComposer containing two exposed methods `read` and `browse` (if you are interested in a version that exposes `add`, `edit` and `delete` you will have to check the [@ts-ghost/admin-api](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)).
 
 This instance is already built with the associated Schema for that resource so any operation
 you will do from that point will be typed against the asociated schema.
@@ -132,7 +132,7 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 - `filter:string` Contains the filter with [Ghost API `filter` syntax](https://ghost.org/docs/content-api/#filtering).
 - `order:string` Contains the name of the field and the order `ASC` or `DESC`.
 
-For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the QueryBuilder will throw an Error with message containing the unknown field.
+For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the methods will throw an Error with message containing the unknown field.
 
 ### `.read` options
 
@@ -172,7 +172,7 @@ let result = await api.posts
   })
   .fetch();
 
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
 }
@@ -228,7 +228,7 @@ All the results are discriminated unions representing a successful query and an 
 
 ```typescript
 let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch();
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
 } else {
@@ -244,10 +244,10 @@ After using `.read` query, you will get a `ReadFetcher` with an `async fetch` me
 ```typescript
 // example for the read query (the data is an object)
 const result: {
-    status: "success";
+    success: true;
     data: Post; // parsed by the Zod Schema and modified by the fields selected
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -269,7 +269,7 @@ That result is a discriminated union of 2 types:
 ```typescript
 // example for the browse query (the data is an array of objects)
 const result: {
-    status: "success";
+    success: true;
     data: Post[];
     meta: {
         pagination: {
@@ -282,7 +282,7 @@ const result: {
         };
     };
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -294,7 +294,7 @@ const result: {
 
 ```typescript
 const result: {
-    status: "success";
+    success: true;
     data: Post[];
     meta: {
         pagination: {
@@ -308,7 +308,7 @@ const result: {
     };
     next: BrowseFetcher | undefined; // the next page fetcher if it is defined
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -337,10 +337,10 @@ let cursor = await api.posts
   .browse()
   .include({ authors: true, tags: true })
   .paginate();
-if (cursor.current.status === "success") posts.push(...cursor.current.data);
+if (cursor.current.success) posts.push(...cursor.current.data);
 while (cursor.next) {
   cursor = await cursor.next.paginate();
-  if (cursor.current.status === "success") posts.push(...cursor.current.data);
+  if (cursor.current.success) posts.push(...cursor.current.data);
 }
 return posts;
 ```
@@ -357,7 +357,7 @@ let key = "22444f78447824223cefc48062"; // Content API KEY
 const api = new TSGhostContentAPI(url, key, "v5.0");
 
 let result = await api.settings.fetch();
-if (result.status === "success") {
+if (result.success) {
   const settings = result.data;
   //     ^? type Settings {title: string; description: string; ...
 }

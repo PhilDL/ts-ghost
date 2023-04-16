@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { assert, beforeEach, describe, expect, test } from "vitest";
 
 import { TSGhostAdminAPI } from "../admin-api";
@@ -227,11 +228,12 @@ describe("posts integration tests browse", () => {
     const result = await api.posts
       .browse({
         limit: 1,
+        order: "created_at ASC",
       })
       .formats({ html: true, plaintext: true })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const post = result.data[0];
     const stubPost = stub.posts[0];
     expect(post.id).toBe(stubPost.id);
@@ -348,7 +350,7 @@ describe("posts integration tests browse", () => {
       .formats({ html: true, plaintext: true })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const post = result.data;
     const stubPost = stub.posts[0];
     expect(post.id).toBe(stubPost.id);
@@ -456,6 +458,55 @@ describe("posts integration tests browse", () => {
     expect(post.newsletter).toStrictEqual(stubPost.newsletter);
   });
 
+  test("posts mutations add, edit, delete", async () => {
+    expect(api.posts).toBeDefined();
+
+    const title = faker.hacker.phrase();
+
+    const postAdd = await api.posts.add({
+      title: title,
+      html: "<p>Hello from ts-ghost</p>",
+      tags: [{ name: "ts-ghost" }],
+      tiers: [{ name: "ts-ghost" }],
+      custom_excerpt: "This is custom excerpt from ts-ghost",
+      meta_title: "Meta Title from ts-ghost",
+      meta_description: "Description from ts-ghost",
+      featured: true,
+      og_title: "OG Title from ts-ghost",
+      og_description: "OG Description from ts-ghost",
+      twitter_title: "Twitter Title from ts-ghost",
+      twitter_description: "Twitter Description from ts-ghost",
+      visibility: "public",
+      slug: "foobarbaz",
+    });
+    assert(postAdd.success);
+    const newPost = postAdd.data;
+    expect(newPost.title).toBe(title);
+    expect(newPost.slug).toBe("foobarbaz");
+    expect(newPost.custom_excerpt).toBe("This is custom excerpt from ts-ghost");
+    expect(newPost.meta_title).toBe("Meta Title from ts-ghost");
+    expect(newPost.meta_description).toBe("Description from ts-ghost");
+    expect(newPost.featured).toBe(true);
+    expect(newPost.og_title).toBe("OG Title from ts-ghost");
+    expect(newPost.og_description).toBe("OG Description from ts-ghost");
+    expect(newPost.twitter_title).toBe("Twitter Title from ts-ghost");
+    expect(newPost.twitter_description).toBe("Twitter Description from ts-ghost");
+    expect(newPost.visibility).toBe("public");
+    expect(newPost.tags && newPost.tags[0].name).toBe("ts-ghost");
+
+    const postEdit = await api.posts.edit(newPost.id, {
+      custom_excerpt: "Modified excerpt from ghost",
+      updated_at: new Date(newPost.updated_at || ""),
+    });
+
+    assert(postEdit.success);
+    const editedPost = postEdit.data;
+    expect(editedPost.custom_excerpt).toBe("Modified excerpt from ghost");
+
+    const postDelete = await api.posts.delete(editedPost.id);
+    assert(postDelete.success);
+  });
+
   test("posts api with bad key", async () => {
     const api = new TSGhostAdminAPI(
       process.env.VITE_GHOST_URL!,
@@ -469,7 +520,7 @@ describe("posts integration tests browse", () => {
       })
       .formats({ html: true, plaintext: true })
       .fetch();
-    assert(result.status === "error");
+    assert(!result.success);
     expect(result.errors[0].message).toBe("Unknown Admin API Key");
     const resultR = await api.posts
       .read({
@@ -477,7 +528,7 @@ describe("posts integration tests browse", () => {
       })
       .formats({ html: true, plaintext: true })
       .fetch();
-    assert(resultR.status === "error");
+    assert(!resultR.success);
     expect(resultR.errors[0].message).toBe("Unknown Admin API Key");
   });
 
@@ -494,7 +545,7 @@ describe("posts integration tests browse", () => {
       })
       .formats({ html: true, plaintext: true })
       .fetch();
-    assert(result.status === "error");
+    assert(!result.success);
     expect(result.errors[0].message).toContain("FetchError");
     const resultR = await api.posts
       .read({
@@ -502,7 +553,7 @@ describe("posts integration tests browse", () => {
       })
       .formats({ html: true, plaintext: true })
       .fetch();
-    assert(resultR.status === "error");
+    assert(!resultR.success);
     expect(resultR.errors[0].message).toContain("FetchError");
   });
 });

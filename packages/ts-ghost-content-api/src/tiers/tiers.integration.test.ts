@@ -47,7 +47,7 @@ describe("tiers integration tests browse", () => {
     const result = await api.tiers.browse().fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -78,7 +78,7 @@ describe("tiers integration tests browse", () => {
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -95,7 +95,7 @@ describe("tiers integration tests browse", () => {
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     // Right now this doesn't work in Ghost API
-    expect(result.status).toBe("error");
+    expect(result.success).toBe(false);
   });
 
   test("tiers.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
@@ -106,7 +106,7 @@ describe("tiers integration tests browse", () => {
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    expect(result.status).toBe("error");
+    expect(result.success).toBe(false);
   });
 });
 
@@ -120,13 +120,13 @@ describe("tiers integration tests read doesn't work on GHOST API", () => {
     const result = await api.tiers.read({ id: "63887bd07f2cf30001fec7a2" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    expect(result.status).toBe("error");
+    expect(result.success).toBe(false);
   });
 
   test("tiers.read() by slug", async () => {
     const result = await api.tiers.read({ slug: "free" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    expect(result.status).toBe("error");
+    expect(result.success).toBe(false);
   });
 });

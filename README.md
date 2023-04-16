@@ -15,7 +15,7 @@
   </p>
 </div>
 
-![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img src="https://img.shields.io/badge/status-beta-orange.svg" alt="Status: Beta" />
+![License](https://img.shields.io/github/license/PhilDL/ts-ghost) ![GitHub top language](https://img.shields.io/github/languages/top/PhilDL/ts-ghost)
 
 ## About The Project
 
@@ -64,15 +64,14 @@ A strongly 🦾 typed TypeScript library to interact with the Ghost Admin API:
 npm install @ts-ghost/admin-api
 ```
 
-- Browse and Read your blog **Posts**, **Pages**, **Members**, **Tags**, **Tiers**, **Offers**, **Newsletters**, **Users** and **Site**
-- Only `GET` methods are implemented for now.
-- Type-safe Inputs/Outputs.
+- Browse/Read/Add/Edit/Delete your blog **Posts**, **Pages**, **Members**, **Tags**, **Tiers**, **Offers**, **Newsletters**, **Users**, **webhooks**, **Site**, ...
+- Type-safe Inputs/Outputs for all CRUD methods.
 - Models schema and run-type safety with [Zod](https://github.com/colinhacks/zod).
 - [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)
 
 ## [📦 TS Ghost Core API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api)
 
-The base building block containing QueryBuilders and Fetchers (Browse / Read) accepting Zod Schemas.
+The base building block containing the APIComposer and Fetchers (Browse / Read / Mutations) accepting Zod Schemas.
 
 ```shell
 npm install @ts-ghost/core-api

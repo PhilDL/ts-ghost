@@ -98,10 +98,11 @@ const composedAPI = new APIComposer(
 
 - `identitySchema` can be any `ZodType` and can also be an empty `z.object({})` if you don't need the `read` method.
 - `include` is a `ZodObject` that will validate the `include` parameters of the API call. It is specific to the Ghost API resource targeted. The format is always `{ 'name_of_the_field': true }`
-- `createSchema` (Optional) is a Zod Schema that will validate the input of the `add` and `edit` methods of the APIComposer.
+- `createSchema` (Optional) is a Zod Schema that will validate the input of the `add` method of the APIComposer.
   - `add` will take exactly the schema to parse
-  - `edit` will take a `ZodPartial` (all fields are optional) of that schema to parse. Mimicing the Ghost API behavior.
 - `createOptionsSchema` (Optional) is a Zod Schema that will validate options that are going to be passed as query parameters to the `POST` url.
+- `updateSchema` (Optional) is a Zod Schema that will validate the input of the `edit` method of the APIComposer.
+  - `edit` will fallback to a `ZodPartial` (all fields are optional) version of the `createSchema` if `updateSchema` is not provided.
 
 ### Building Queries
 
@@ -236,7 +237,7 @@ const composedAPI = new APIComposer(
 );
 const readFetcher = composedAPI.read({ slug: "typescript-is-cool" });
 let result = await readFetcher.fetch();
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"slug":string; "title": string}
 } else {
@@ -252,10 +253,10 @@ After using `.read` query, you will get a `ReadFetcher` with an `async fetch` me
 ```typescript
 // example for the read query (the data is an object)
 const result: {
-    status: "success";
+    status: true;
     data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema and modified by the fields selected
 } | {
-    status: "error";
+    status: false;
     errors: {
         message: string;
         type: string;
@@ -277,7 +278,7 @@ That result is a discriminated union of 2 types:
 ```typescript
 // example for the browse query (the data is an array of objects)
 const result: {
-    status: "success";
+    success: true;
     data: z.infer<typeof simplifiedSchema>[];
     meta: {
         pagination: {
@@ -290,7 +291,7 @@ const result: {
         };
     };
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -302,7 +303,7 @@ const result: {
 
 ```typescript
 const result: {
-    status: "success";
+    success: true;
     data: z.infer<typeof simplifiedSchema>[];
     meta: {
         pagination: {
@@ -316,7 +317,7 @@ const result: {
     };
     next: BrowseFetcher | undefined; // the next page fetcher if it is defined
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -364,7 +365,7 @@ let result = await browseFetcher
   })
   .fetch();
 
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"slug":string; "title": string}
 }
@@ -486,10 +487,10 @@ The result will be parsed and typed with the `output` schema and represent the n
 ```typescript
 // return from the `add` method
 const result: {
-    status: "success";
+    success: true;
     data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -515,10 +516,10 @@ The result will be parsed and typed with the `output` schema and represent the u
 ```typescript
 // return from the `edit` method
 const result: {
-    status: "success";
+    success: true;
     data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -538,14 +539,14 @@ let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
 
 - The first argument is the `id` of the record to delete.
 
-The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `status` to know if the deletion was successful or not.
+The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `success` to know if the deletion was successful or not.
 
 ```typescript
 // return from the `delete` method
 const result: {
-    status: "success";
+    success: true;
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;

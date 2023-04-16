@@ -12,11 +12,15 @@ import {
   slugOrIdSchema,
 } from "@ts-ghost/core-api";
 
-import { adminTiersSchema } from "./schemas";
+import { adminTiersCreateSchema, adminTiersSchema } from "./schemas";
 import { adminMembersCreateSchema, adminMembersSchema } from "./schemas/members";
-import { adminPagesSchema } from "./schemas/pages";
-import { adminPostsSchema } from "./schemas/posts";
+import { adminNewsletterCreateSchema } from "./schemas/newsletters";
+import { adminOffersCreateSchema, adminOffersUpdateSchema } from "./schemas/offers";
+import { adminPagesCreateSchema, adminPagesSchema, adminPagesUpdateSchema } from "./schemas/pages";
+import { adminPostsCreateSchema, adminPostsSchema, adminPostsUpdateSchema } from "./schemas/posts";
+import { adminTagsCreateSchema, adminTagsUpdateSchema } from "./schemas/tags";
 import { adminUsersSchema } from "./schemas/users";
+import { adminWebhookCreateSchema, adminWebhookSchema, adminWebhookUpdateSchema } from "./schemas/webhooks";
 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
 
@@ -49,9 +53,11 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: adminPostsSchema,
         identitySchema: slugOrIdSchema,
         include: postsIncludeSchema,
+        createSchema: adminPostsCreateSchema,
+        updateSchema: adminPostsUpdateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
   get pages() {
@@ -77,9 +83,11 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: adminPagesSchema,
         identitySchema: slugOrIdSchema,
         include: pagesIncludeSchema,
+        createSchema: adminPagesCreateSchema,
+        updateSchema: adminPagesUpdateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
   get members() {
@@ -108,7 +116,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         }),
       },
       api
-    ).access(["browse", "read", "add", "edit"]);
+    ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
   get tiers() {
@@ -135,9 +143,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: adminTiersSchema,
         identitySchema: slugOrIdSchema,
         include: tiersIncludeSchema,
+        createSchema: adminTiersCreateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read"]); // for now tiers mutations don't really work in the admin api
   }
 
   get newsletters() {
@@ -160,9 +169,13 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: baseNewsletterSchema,
         identitySchema: slugOrIdSchema,
         include: newslettersIncludeSchema,
+        createSchema: adminNewsletterCreateSchema,
+        createOptionsSchema: z.object({
+          opt_in_existing: z.boolean(),
+        }),
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "add", "edit"]);
   }
 
   get offers() {
@@ -185,9 +198,11 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: baseOffersSchema,
         identitySchema: slugOrIdSchema,
         include: offersIncludeSchema,
+        createSchema: adminOffersCreateSchema,
+        updateSchema: adminOffersUpdateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "add", "edit"]);
   }
 
   get tags() {
@@ -212,9 +227,11 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: baseTagsSchema,
         identitySchema: slugOrIdSchema,
         include: tagsIncludeSchema,
+        createSchema: adminTagsCreateSchema,
+        updateSchema: adminTagsUpdateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
   get users() {
@@ -240,6 +257,32 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       },
       api
     ).access(["browse", "read"]);
+  }
+
+  get webhooks() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "webhooks",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "webhooks";
+      key: string;
+      version: APIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    return new APIComposer(
+      {
+        schema: adminWebhookSchema,
+        identitySchema: z.object({ id: z.string() }),
+        include: z.object({}),
+        createSchema: adminWebhookCreateSchema,
+        updateSchema: adminWebhookUpdateSchema,
+      },
+      api
+    ).access(["add", "edit", "delete"]);
   }
 
   get site() {

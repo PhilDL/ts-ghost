@@ -9,10 +9,10 @@ export const fetchAllBlogPosts = async (ghost: TSGhostAdminAPI) => {
     })
     .formats({ html: true })
     .paginate();
-  if (cursor.current.status === "success") posts.push(...cursor.current.data);
+  if (cursor.current.success) posts.push(...cursor.current.data);
   while (cursor.next) {
     cursor = await cursor.next.paginate();
-    if (cursor.current.status === "success") posts.push(...cursor.current.data);
+    if (cursor.current.success) posts.push(...cursor.current.data);
   }
   return posts;
 };
@@ -20,12 +20,12 @@ export const fetchAllBlogPosts = async (ghost: TSGhostAdminAPI) => {
 export const fetchAllMembers = async (ghost: TSGhostAdminAPI) => {
   const members: Member[] = [];
   let cursor = await ghost.members.browse().paginate();
-  if (cursor.current.status === "success") {
+  if (cursor.current.success) {
     members.push(...cursor.current.data);
   }
   while (cursor.next) {
     cursor = await cursor.next.paginate();
-    if (cursor.current.status === "success") {
+    if (cursor.current.success) {
       members.push(...cursor.current.data);
     }
   }

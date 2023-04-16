@@ -66,7 +66,7 @@ export const handler = async function (
             tags: true,
           })
           .fetch();
-        if (res.status === "error") {
+        if (!res.success) {
           log.error(
             `There was an error trying to connect to your Ghost Instance: \n${res.errors
               .map((m) => m.message)
@@ -102,7 +102,7 @@ export const handler = async function (
             tags: true,
           })
           .fetch();
-        if (res.status === "error") {
+        if (!res.success) {
           log.error(
             `There was an error trying to connect to your Ghost Instance: \n${res.errors
               .map((m) => m.message)
@@ -130,7 +130,7 @@ export const handler = async function (
           "count.posts": true,
         })
         .fetch();
-      if (res.status === "error") {
+      if (!res.success) {
         log.error(
           `There was an error trying to connect to your Ghost Instance: \n${res.errors
             .map((m) => m.message)
@@ -157,7 +157,7 @@ export const handler = async function (
           "count.posts": true,
         })
         .fetch();
-      if (res.status === "error") {
+      if (!res.success) {
         log.error(
           `There was an error trying to connect to your Ghost Instance: \n${res.errors
             .map((m) => m.message)
@@ -186,7 +186,7 @@ export const handler = async function (
           yearly_price: true,
         })
         .fetch();
-      if (res.status === "error") {
+      if (!res.success) {
         log.error(
           `There was an error trying to connect to your Ghost Instance: \n${res.errors
             .map((m) => m.message)

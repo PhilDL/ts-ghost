@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { _fetch } from "../helpers/network";
+import { _fetchRawResponse } from "../helpers/network";
 import type { APICredentials } from "../schemas/shared";
 
 export class DeleteFetcher<Api extends APICredentials = any> {
@@ -37,12 +37,12 @@ export class DeleteFetcher<Api extends APICredentials = any> {
   }
 
   public async submit() {
-    const schema = z.discriminatedUnion("status", [
+    const schema = z.discriminatedUnion("success", [
       z.object({
-        status: z.literal("success"),
+        success: z.literal(true),
       }),
       z.object({
-        status: z.literal("error"),
+        success: z.literal(false),
         errors: z.array(
           z.object({
             type: z.string(),
@@ -52,16 +52,31 @@ export class DeleteFetcher<Api extends APICredentials = any> {
         ),
       }),
     ]);
-    const response = await _fetch(this._URL, this._api, {
-      method: "DELETE",
-    });
     let result: any = {};
-    if (response.errors) {
-      result.status = "error";
-      result.errors = response.errors;
-    } else {
+    try {
+      const response = await _fetchRawResponse(this._URL, this._api, {
+        method: "DELETE",
+      });
+      if (response.status === 204) {
+        result = {
+          success: true,
+        };
+      } else {
+        const res = await response.json();
+        if (res.errors) {
+          result.success = false;
+          result.errors = res.errors;
+        }
+      }
+    } catch (e) {
       result = {
-        status: "success",
+        success: false,
+        errors: [
+          {
+            type: "FetchError",
+            message: (e as Error).toString(),
+          },
+        ],
       };
     }
     return schema.parse(result);

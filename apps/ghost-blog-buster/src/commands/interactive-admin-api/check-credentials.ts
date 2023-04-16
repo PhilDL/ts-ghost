@@ -12,7 +12,7 @@ export const checkCredentials = async (config: Configstore) => {
       const ghost = new TSGhostAdminAPI(config.get("ghostUrl"), config.get("ghostAdminApiKey"), "v5.0");
       s.start("Connecting to your blog...");
       const res = await ghost.site.fetch();
-      if (res.status === "error") {
+      if (!res.success) {
         s.stop(`❌ Credentials not valid...`);
         log.error(`There was an error trying to connect with these credentials: \n${res.errors.join("\n")}`);
       } else {

@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { assert, beforeEach, describe, expect, test } from "vitest";
 
 import { TSGhostAdminAPI } from "../admin-api";
@@ -52,10 +53,11 @@ describe("newsletters integration tests browse", () => {
     const result = await api.newsletters
       .browse({
         limit: 1,
+        order: "created_at ASC",
       })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const newsletter = result.data[0];
     const stubNewsletter = stubResult.data[0];
     expect(newsletter.id).toBe(stubNewsletter.id);
@@ -90,7 +92,7 @@ describe("newsletters integration tests browse", () => {
         id: "63887bd07f2cf30001fec7a4",
       })
       .fetch();
-    assert(result.status === "success");
+    assert(result.success);
     const newsletter = result.data;
     const stubNewsletter = stubResult.data[0];
     expect(newsletter.id).toBe(stubNewsletter.id);
@@ -116,5 +118,55 @@ describe("newsletters integration tests browse", () => {
     expect(newsletter.show_header_name).toBe(stubNewsletter.show_header_name);
     expect(newsletter.created_at).toBe(stubNewsletter.created_at);
     expect(newsletter.updated_at).toBeDefined();
+  });
+
+  test("newsletters mutations", async () => {
+    const name = "ts-ghost Newsletter API";
+    const fakeDescription = faker.hacker.phrase();
+    const newsletterAdd = await api.newsletters.add(
+      {
+        name: name,
+        description: "ts-ghost Newsletter API",
+        sender_name: "Daily Newsletter",
+        sender_email: null,
+        sender_reply_to: "newsletter",
+        status: "active",
+        subscribe_on_signup: true,
+        sort_order: 1,
+        header_image: null,
+        show_header_icon: true,
+        show_header_title: true,
+        title_font_category: "sans_serif",
+        title_alignment: "center",
+        show_feature_image: true,
+        body_font_category: "sans_serif",
+        footer_content: null,
+        show_badge: true,
+        show_header_name: true,
+      },
+      { opt_in_existing: true }
+    );
+    if (newsletterAdd.success) {
+      const nl = newsletterAdd.data;
+      expect(nl.id).toBeDefined();
+      expect(nl.name).toBe("ts-ghost Newsletter API");
+      expect(nl.description).toBe("ts-ghost Newsletter API");
+      expect(nl.sender_name).toBe("Daily Newsletter");
+      expect(nl.sender_email).toBe(null);
+
+      const newsletterEdit = await api.newsletters.edit(nl.id, {
+        description: fakeDescription,
+        status: "archived",
+      });
+      assert(newsletterEdit.success);
+      const editedNl = newsletterEdit.data;
+      expect(editedNl.id).toBe(nl.id);
+      expect(editedNl.description).toBe(fakeDescription);
+    } else {
+      expect(newsletterAdd.success).toBe(false);
+      expect(newsletterAdd.errors).toBeDefined();
+      expect(newsletterAdd.errors.length).toBeGreaterThan(0);
+      expect(newsletterAdd.errors[0].context).toBe("A newsletter with the same name already exists");
+    }
   });
 });

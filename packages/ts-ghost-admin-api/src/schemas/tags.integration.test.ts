@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { assert, beforeEach, describe, expect, test } from "vitest";
 
 import { TSGhostAdminAPI } from "../admin-api";
@@ -51,7 +52,7 @@ describe("tags integration tests browse", () => {
       })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const tag = result.data[0];
     const stubTag = stubResult.data[0];
     expect(tag.slug).toBe(stubTag.slug);
@@ -84,7 +85,7 @@ describe("tags integration tests browse", () => {
         id: "63887bd07f2cf30001fec7a5",
       })
       .fetch();
-    assert(result.status === "success");
+    assert(result.success);
     const tag = result.data;
     const stubTag = stubResult.data[0];
     expect(tag.slug).toBe(stubTag.slug);
@@ -108,5 +109,56 @@ describe("tags integration tests browse", () => {
     expect(tag.url).toBe(stubTag.url);
     expect(tag.created_at).toBe(stubTag.created_at);
     expect(tag.updated_at).toBeDefined();
+  });
+
+  test("tags mutations: add, edit, delete", async () => {
+    const tagName = faker.hacker.noun();
+    const description = faker.hacker.phrase();
+    const newDescription = faker.hacker.phrase();
+
+    const tagAdd = await api.tags.add({
+      name: tagName,
+      description: description,
+      visibility: "public",
+      meta_title: "Meta title from ts-ghost",
+      meta_description: "Meta description from ts-ghost",
+      og_image: "https://github.com/PhilDL",
+      og_title: "OG Title from ts-ghost",
+      og_description: "OG Description from ts-ghost",
+      twitter_image: "https://github.com/PhilDL",
+      twitter_title: "twitter title from ts-ghost",
+      twitter_description: "twitter description from ts-ghost",
+      codeinjection_head: "",
+      codeinjection_foot: "",
+      accent_color: "#ffffff",
+    });
+    assert(tagAdd.success);
+    const tag = tagAdd.data;
+    expect(tag.name).toBe(tagName);
+    expect(tag.description).toBe(description);
+    expect(tag.visibility).toBe("public");
+    expect(tag.meta_title).toBe("Meta title from ts-ghost");
+    expect(tag.meta_description).toBe("Meta description from ts-ghost");
+    expect(tag.og_image).toBe("https://github.com/PhilDL");
+    expect(tag.og_title).toBe("OG Title from ts-ghost");
+    expect(tag.og_description).toBe("OG Description from ts-ghost");
+    expect(tag.twitter_image).toBe("https://github.com/PhilDL");
+    expect(tag.twitter_title).toBe("twitter title from ts-ghost");
+    expect(tag.twitter_description).toBe("twitter description from ts-ghost");
+    expect(tag.codeinjection_head).toBeNull();
+    expect(tag.codeinjection_foot).toBeNull();
+    expect(tag.accent_color).toBe("#ffffff");
+
+    const tagEdit = await api.tags.edit(tag.id, {
+      description: newDescription,
+      visibility: "internal",
+    });
+    assert(tagEdit.success);
+    const editedTag = tagEdit.data;
+    expect(editedTag.description).toBe(newDescription);
+    expect(editedTag.visibility).toBe("internal");
+
+    const tagDelete = await api.tags.delete(tag.id);
+    assert(tagDelete.success);
   });
 });

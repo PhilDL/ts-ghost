@@ -178,14 +178,14 @@ export class BrowseFetcher<
   }
 
   private _getResultSchema() {
-    return z.discriminatedUnion("status", [
+    return z.discriminatedUnion("success", [
       z.object({
-        status: z.literal("success"),
+        success: z.literal(true),
         meta: ghostMetaSchema,
         data: z.array(this.config.output),
       }),
       z.object({
-        status: z.literal("error"),
+        success: z.literal(false),
         errors: z.array(
           z.object({
             type: z.string(),
@@ -201,11 +201,11 @@ export class BrowseFetcher<
     const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
-      data.status = "error";
+      data.success = false;
       data.errors = result.errors;
     } else {
       data = {
-        status: "success",
+        success: true,
         meta: result.meta || {
           pagination: {
             pages: 0,
@@ -235,11 +235,11 @@ export class BrowseFetcher<
     const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
-      data.status = "error";
+      data.success = false;
       data.errors = result.errors;
     } else {
       data = {
-        status: "success",
+        success: true,
         meta: result.meta || {
           pagination: {
             pages: 0,
@@ -260,7 +260,7 @@ export class BrowseFetcher<
       current: resultSchema.parse(data),
       next: undefined,
     };
-    if (response.current.status === "error") return response;
+    if (response.current.success === false) return response;
     const { meta } = response.current;
     if (meta.pagination.pages <= 1 || meta.pagination.page === meta.pagination.pages) return response;
     const params = {

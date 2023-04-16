@@ -19,27 +19,55 @@
 
 ## About The Project
 
-`@ts-ghost/admin-api` provides a strongly-typed TypeScript client to interract with the Ghost Admin API based on [Zod](https://github.com/colinhacks/zod) schemas passed through a QueryBuilder and then a Fetcher. It is made to interract with the Ghost Admin API with authentication by key. Not all the resources are supported
-yet.
+`@ts-ghost/admin-api` provides a strongly-typed TypeScript client to interract with the Ghost Admin API based on [Zod](https://github.com/colinhacks/zod) schemas passed through all operations on composed API endpoints, `read`, `browse`, `add`, `edit` and `delete.
+
+This client gives you Type-Safety in the **inputs and outputs** of your Ghost API calls, usable in the browser (not recommended since you will probably expose your Admin API Key) or in Node.js.
+
+It is made to interract with the Ghost Admin API with authentication by key. File uploads are not supported yet.
 
 ![admin-api-typesafety](https://user-images.githubusercontent.com/4941205/227786623-facb8e6c-dbe4-45ff-9b6e-721a05cedaba.gif)
 
-Available resources:
+## Available resources:
 
-- `/posts`
-- `/pages`
-- `/members`
-- `/tiers`
-- `/tags`
-- `/newsletters`
-- `/users`
-- `/offers`
+| API               | `.read()` | `.browse()` | `.add()` | `.edit()` | `.delete()` |
+| ----------------- | --------- | ----------- | -------- | --------- | ----------- |
+| `api.posts`       | ✅        | ✅          | ✅       | ✅        | ✅          |
+| `api.pages`       | ✅        | ✅          | ✅       | ✅        | ✅          |
+| `api.members`     | ✅        | ✅          | ✅       | ✅        | ✅          |
+| `api.tiers`       | ✅        | ✅          | -        | -         | -           |
+| `api.newsletters` | ✅        | ✅          | ✅       | ✅        | 🗄️\*        |
+| `api.offers`      | ✅        | ✅          | ✅       | ✅        | 🗄️\*        |
+| `api.tags`        | ✅        | ✅          | ✅       | ✅        | ✅          |
+| `api.users`       | ✅        | ✅          | -        | -         | -           |
+| `api.webhooks`    | -         | -           | ✅       | ✅        | ✅          |
+
+🗄️\* _You have access to a "soft" delete via the `status` field with values `"active" | "archived"`._
 
 ## Install
 
 ```shell
 pnpm i @ts-ghost/admin-api
 ```
+
+### Admin API Key
+
+Admin API keys can be obtained by creating a new Custom Integration under the Integrations screen in Ghost Admin. Keys for individual users can be found on their respective settings page.
+
+My advice would be to connect to your Ghost Admin panel and go to `https://{your-ghost-blog-domain}/ghost/#/settings/integrations` and create a new integration, choose an appropriate Name and Descriptions.
+
+![ts-ghost-api-key](https://user-images.githubusercontent.com/4941205/232329788-28e062b9-ecae-4adb-b340-c00d97aab78f.png)
+
+For all operations You will need:
+
+- the `Admin API Key`
+- and the `API URL` to instantiate the client.
+
+If you plan on creating `webhooks` you will also need to provide the `integration_id`, this is the auto-generated ID of the integration you just created.
+To visualize that id, on your integration page, look at the url:
+
+- `https://{your-ghost-blog-domain}/ghost/#/settings/integrations/63887c187f2cf32001fec9a8`
+
+The last part `63887c187f2cf32001fec9a8` is the `integration_id`.
 
 ## Basic Usage
 
@@ -62,7 +90,8 @@ const api = new TSGhostAdminAPI(url, key, "v5.0"); // The instantiation is valid
 
 // Browse posts
 const res = await api.posts.browse().fetch();
-if (res.status === "success") {
+//    ^? Discriminated Union type { success: true, data: Post[] } | { success: false, errors: Error[] }
+if (res.success) {
   const posts = res.data;
   const meta = res.meta;
   //     ^? GhostMeta Type containing pagination info
@@ -89,7 +118,7 @@ const res = await api.posts
     slug: "welcome-to-ghost",
   })
   .fetch();
-if (res.status === "success") {
+if (res.success) {
   const post = res.data;
   //     ^? type Post
 } else {
@@ -97,11 +126,61 @@ if (res.status === "success") {
 }
 ```
 
+### Creating, editing, deleting a Post
+
+```ts
+import invariant from "tiny-invariant";
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+let url = "https://demo.ghost.io";
+let key = "22444f78447824223cefc48062"; // Admin API KEY
+const api = new TSGhostAdminAPI(url, key, "v5.0");
+
+// Input data are fully typed and then parsed through the appropriate Zod Schema
+const adding = await api.posts.add({
+  title: title,
+  html: "<p>Hello from ts-ghost</p>",
+  tags: [{ name: "ts-ghost" }],
+  tiers: [{ name: "ts-ghost" }],
+  custom_excerpt: "This is custom excerpt from ts-ghost",
+  meta_title: "Meta Title from ts-ghost",
+  meta_description: "Description from ts-ghost",
+  featured: true,
+  og_title: "OG Title from ts-ghost",
+  og_description: "OG Description from ts-ghost",
+  twitter_title: "Twitter Title from ts-ghost",
+  twitter_description: "Twitter Description from ts-ghost",
+  visibility: "public",
+  slug: "foobarbaz",
+});
+invariant(adding.success, "Failed to create post");
+const newPost = adding.data;
+//     ^? type Post
+
+// Update
+const postEdit = await api.posts.edit(newPost.id, {
+  custom_excerpt: "Modified excerpt from ghost",
+  // This is required by Ghost to send the updated_at field with the updated_at
+  // of the post you want to edit.
+  updated_at: new Date(newPost.updated_at || ""),
+});
+
+invariant(postEdit.success, "Failed to edit post");
+const editedPost = postEdit.data;
+//     ^? type Post
+
+// Delete
+const postDelete = await api.posts.delete(editedPost.id);
+if (!postDelete.success) {
+  console.error(postDelete.errors);
+  throw new Error("Failed to delete post");
+}
+```
+
 ## Building Queries
 
 Calling any resource like `pages`, `posts`, will give a
-new instance of a QueryBuilder containing two methods `read` and `browse`.
-
+new instance of a APIComposer containing available methods (read, browse, edit, add, delete). Each ressource has its own specific set of methods exposed to reflect what is available on the Ghost API. _For this part about "queries/fetching" we will focus on the `read`and `browse` methods._
 This instance is already built with the associated Schema for that resource so any operation
 you will do from that point will be typed against the asociated schema.
 
@@ -149,7 +228,7 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 - `filter:string` Contains the filter with [Ghost API `filter` syntax](https://ghost.org/docs/content-api/#filtering).
 - `order:string` Contains the name of the field and the order `ASC` or `DESC`.
 
-For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the QueryBuilder will throw an Error with message containing the unknown field.
+For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the method will throw an Error with message containing the unknown field.
 
 ### `.read` options
 
@@ -189,7 +268,7 @@ let result = await api.posts
   })
   .fetch();
 
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
 }
@@ -246,7 +325,7 @@ All the results are discriminated unions representing a successful query and an 
 
 ```typescript
 let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch();
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
 } else {
@@ -262,10 +341,10 @@ After using `.read` query, you will get a `ReadFetcher` with an `async fetch` me
 ```typescript
 // example for the read query (the data is an object)
 const result: {
-    status: "success";
+    success: true;
     data: Post; // parsed by the Zod Schema and modified by the fields selected
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -287,7 +366,7 @@ That result is a discriminated union of 2 types:
 ```typescript
 // example for the browse query (the data is an array of objects)
 const result: {
-    status: "success";
+    success: true;
     data: Post[];
     meta: {
         pagination: {
@@ -300,7 +379,7 @@ const result: {
         };
     };
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -312,7 +391,7 @@ const result: {
 
 ```typescript
 const result: {
-    status: "success";
+    success: true;
     data: Post[];
     meta: {
         pagination: {
@@ -326,7 +405,7 @@ const result: {
     };
     next: BrowseFetcher | undefined; // the next page fetcher if it is defined
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -347,6 +426,110 @@ let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch({ cache:
 
 _This may be useful if you use NextJS augmented `fetch`!_
 
+## Mutations
+
+These mutations are async methods, they will return a `Promise` that will resolve to the parsed result.
+
+#### Create record
+
+```typescript
+const composedAPI = new APIComposer(
+  {
+    schema: simplifiedSchema,
+    identitySchema: identitySchema,
+    include: simplifiedIncludeSchema,
+    createSchema: createSchema,
+    createOptionsSchema: z.object({
+      option_1: z.boolean(),
+    }),
+  },
+  api
+);
+let newPost = await composedAPI.add(
+  {
+    title: "My new post",
+  },
+  {
+    option_1: true,
+  }
+);
+```
+
+- The first argument is the `input` object that will be parsed and typed with the `createSchema` schema.
+- The second argument is the `options` object that will be parsed and typed with the `createOptionsSchema` schema.
+
+The result will be parsed and typed with the `output` schema and represent the newly created record.
+
+```typescript
+// return from the `add` method
+const result: {
+    success: true;
+    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
+#### Edit record
+
+Edit requires the `id` of the record to edit.
+
+```typescript
+let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
+  title: "My new post",
+});
+```
+
+The result will be parsed and typed with the `output` schema and represent the updated record.
+
+- The first argument is the `id` of the record to edit.
+- The second argument is the `input` object that will be parsed and typed with the `createSchema` schema wrapped with Partial. So all fields are optional.
+
+```typescript
+// return from the `edit` method
+const result: {
+    success: true;
+    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
+#### Delete record
+
+Delete requires the `id` of the record to delete.
+
+```typescript
+let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
+  title: "My new post",
+});
+```
+
+- The first argument is the `id` of the record to delete.
+
+The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `success` to know if the deletion was successful or not.
+
+```typescript
+// return from the `delete` method
+const result: {
+    success: true;
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
 ## Commons recipes
 
 ### Getting all the posts with pagination
@@ -364,10 +547,10 @@ const posts: Post[] = [];
 let cursor = await api.posts
   .browse()
   .paginate();
-if (cursor.current.status === "success") posts.push(...cursor.current.data);
+if (cursor.current.success) posts.push(...cursor.current.data);
 while (cursor.next) {
   cursor = await cursor.next.paginate();
-  if (cursor.current.status === "success") posts.push(...cursor.current.data);
+  if (cursor.current.success) posts.push(...cursor.current.data);
 }
 return posts;
 ```
@@ -424,8 +607,8 @@ const result = await api.posts
 
 ## Roadmap
 
-- [ ] Handle POST, PUT, DELETE requests
-- [ ] Handle Image and Theme uploads
+- [x] Handle POST, PUT, DELETE requests
+- [ ] Handle Image, Media, Files and Theme uploads
 
 ## Contributing
 
