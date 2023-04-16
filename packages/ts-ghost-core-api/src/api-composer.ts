@@ -8,6 +8,10 @@ import { parseBrowseParams, type BrowseParams } from "./helpers/browse-params";
 import type { APICredentials } from "./schemas";
 import type { IsAny } from "./utils";
 
+function isZodObject(schema: z.ZodObject<any> | z.ZodTypeAny): schema is z.ZodObject<any> {
+  return (schema as z.ZodObject<any>).partial !== undefined;
+}
+
 /**
  * API Composer contains all methods, pick and choose.
  */
@@ -15,9 +19,9 @@ export class APIComposer<
   Shape extends ZodRawShape = any,
   IdentityShape extends z.ZodTypeAny = any,
   IncludeShape extends ZodRawShape = any,
-  CreateShape extends ZodRawShape = any,
+  CreateShape extends ZodTypeAny = any,
   CreateOptions extends ZodTypeAny = any,
-  UpdateShape extends ZodRawShape = any,
+  UpdateShape extends ZodTypeAny = any,
   Api extends APICredentials = any
 > {
   constructor(
@@ -25,9 +29,9 @@ export class APIComposer<
       schema: z.ZodObject<Shape>;
       identitySchema: IdentityShape;
       include: z.ZodObject<IncludeShape>;
-      createSchema?: z.ZodObject<CreateShape>;
+      createSchema?: CreateShape;
       createOptionsSchema?: CreateOptions;
-      updateSchema?: z.ZodObject<UpdateShape>;
+      updateSchema?: UpdateShape;
     },
     protected _api: Api
   ) {}
@@ -78,7 +82,7 @@ export class APIComposer<
     );
   }
 
-  public async add(data: z.output<z.ZodObject<CreateShape>>, options?: z.infer<CreateOptions>) {
+  public async add(data: z.input<CreateShape>, options?: z.infer<CreateOptions>) {
     if (!this.config.createSchema) {
       throw new Error("No createSchema defined");
     }
@@ -101,12 +105,10 @@ export class APIComposer<
 
   public async edit(
     id: string,
-    data: IsAny<UpdateShape> extends true
-      ? Partial<z.input<z.ZodObject<CreateShape>>>
-      : z.input<z.ZodObject<UpdateShape>>
+    data: IsAny<UpdateShape> extends true ? Partial<z.input<CreateShape>> : z.input<UpdateShape>
   ) {
-    let updateSchema: z.ZodObject<any> | undefined = this.config.updateSchema;
-    if (!this.config.updateSchema && this.config.createSchema) {
+    let updateSchema: z.ZodTypeAny | z.ZodObject<any> | undefined = this.config.updateSchema;
+    if (!this.config.updateSchema && this.config.createSchema && isZodObject(this.config.createSchema)) {
       updateSchema = this.config.createSchema.partial();
     }
     if (!updateSchema) {

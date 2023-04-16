@@ -119,6 +119,9 @@ importers:
       '@ts-ghost/core-api':
         specifier: ^3.0.0
         version: link:../ts-ghost-core-api
+      validator:
+        specifier: ^13.9.0
+        version: 13.9.0
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -132,6 +135,9 @@ importers:
       '@types/node':
         specifier: ^18.15.11
         version: 18.15.11
+      '@types/validator':
+        specifier: ^13.7.15
+        version: 13.7.15
       '@vitest/coverage-c8':
         specifier: ^0.29.8
         version: 0.29.8(vitest@0.29.8)
@@ -1083,6 +1089,10 @@ packages:
 
   /@types/semver@7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
+    dev: true
+
+  /@types/validator@13.7.15:
+    resolution: {integrity: sha512-yeinDVQunb03AEP8luErFcyf/7Lf7AzKCD0NXfgVoGCCQDNpZET8Jgq74oBgqKld3hafLbfzt/3inUdQvaFeXQ==}
     dev: true
 
   /@types/yargs-parser@21.0.0:
@@ -4023,6 +4033,11 @@ packages:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
     dev: true
+
+  /validator@13.9.0:
+    resolution: {integrity: sha512-B+dGG8U3fdtM0/aNK4/X8CXq/EcxU2WPrPEkJGslb47qyHsxmbggTWK0yEA4qnYVNF+nxNlN88o14hIcPmSIEA==}
+    engines: {node: '>= 0.10'}
+    dev: false
 
   /vite-node@0.29.8(@types/node@18.15.11):
     resolution: {integrity: sha512-b6OtCXfk65L6SElVM20q5G546yu10/kNrhg08afEoWlFRJXFq9/6glsvSVY+aI6YeC1tu2TtAqI2jHEQmOmsFw==}

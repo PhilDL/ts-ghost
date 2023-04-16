@@ -15,6 +15,7 @@ import {
 import { adminTiersCreateSchema, adminTiersSchema } from "./schemas";
 import { adminMembersCreateSchema, adminMembersSchema } from "./schemas/members";
 import { adminNewsletterCreateSchema } from "./schemas/newsletters";
+import { adminOffersCreateSchema, adminOffersUpdateSchema } from "./schemas/offers";
 import { adminPagesCreateSchema, adminPagesSchema, adminPagesUpdateSchema } from "./schemas/pages";
 import { adminPostsCreateSchema, adminPostsSchema, adminPostsUpdateSchema } from "./schemas/posts";
 import { adminTagsCreateSchema, adminTagsUpdateSchema } from "./schemas/tags";
@@ -196,9 +197,11 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         schema: baseOffersSchema,
         identitySchema: slugOrIdSchema,
         include: offersIncludeSchema,
+        createSchema: adminOffersCreateSchema,
+        updateSchema: adminOffersUpdateSchema,
       },
       api
-    ).access(["browse", "read"]);
+    ).access(["browse", "read", "add", "edit"]);
   }
 
   get tags() {
