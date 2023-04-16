@@ -52,7 +52,7 @@ export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: strin
       "count.posts": true,
     })
     .fetch();
-  if (authors.status === "error") {
+  if (!authors.success) {
     log.error(`Error while fetching authors from "${siteName}."`);
     return;
   }

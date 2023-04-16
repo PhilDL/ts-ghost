@@ -50,7 +50,7 @@ const api = new TSGhostContentAPI(url, key, "v5.0"); // The instantiation is val
 
 // Browse posts
 const res = await api.posts.browse().fetch();
-if (res.status === "success") {
+if (res.success) {
   const posts = res.data;
   const meta = res.meta;
   //     ^? GhostMeta Type containing pagination info
@@ -77,7 +77,7 @@ const res = await api.posts
     slug: "welcome-to-ghost",
   })
   .fetch();
-if (res.status === "success") {
+if (res.success) {
   const post = res.data;
   //     ^? type Post
 } else {
@@ -172,7 +172,7 @@ let result = await api.posts
   })
   .fetch();
 
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
 }
@@ -228,7 +228,7 @@ All the results are discriminated unions representing a successful query and an 
 
 ```typescript
 let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch();
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
 } else {
@@ -337,10 +337,10 @@ let cursor = await api.posts
   .browse()
   .include({ authors: true, tags: true })
   .paginate();
-if (cursor.current.status === "success") posts.push(...cursor.current.data);
+if (cursor.current.success) posts.push(...cursor.current.data);
 while (cursor.next) {
   cursor = await cursor.next.paginate();
-  if (cursor.current.status === "success") posts.push(...cursor.current.data);
+  if (cursor.current.success) posts.push(...cursor.current.data);
 }
 return posts;
 ```
@@ -357,7 +357,7 @@ let key = "22444f78447824223cefc48062"; // Content API KEY
 const api = new TSGhostContentAPI(url, key, "v5.0");
 
 let result = await api.settings.fetch();
-if (result.status === "success") {
+if (result.success) {
   const settings = result.data;
   //     ^? type Settings {title: string; description: string; ...
 }

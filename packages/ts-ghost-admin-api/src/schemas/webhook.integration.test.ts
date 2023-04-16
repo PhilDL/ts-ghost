@@ -19,7 +19,7 @@ describe("webhook integration tests", () => {
       target_url: "https://example.com/hook/ts-ghost-integration",
       integration_id,
     });
-    assert(add.status === "success");
+    assert(add.success);
     const webhook = add.data;
     expect(webhook.event).toBe("post.added");
     expect(webhook.target_url).toBe("https://example.com/hook/ts-ghost-integration");
@@ -28,11 +28,11 @@ describe("webhook integration tests", () => {
     const edit = await api.webhooks.edit(webhook.id, {
       name: "Updated webhook name",
     });
-    assert(edit.status === "success");
+    assert(edit.success);
     const updatedWebhook = edit.data;
     expect(updatedWebhook.name).toBe("Updated webhook name");
 
     const del = await api.webhooks.delete(webhook.id);
-    assert(del.status === "success");
+    assert(del.success);
   });
 });

@@ -176,7 +176,7 @@ describe("ReadFetcher", () => {
       })
     );
     const result = await readFetcher.fetch();
-    assert(result.status === "success");
+    assert(result.success);
     expect(result.data).toStrictEqual({
       title: "title",
       slug: "this-is-a-slug-test",
@@ -245,7 +245,7 @@ describe("ReadFetcher", () => {
     );
 
     const result = await readFetcher.fetch();
-    assert(result.status === "error");
+    assert(!result.success);
     expect(result.errors).toStrictEqual([
       { message: "Validation error, cannot read author.", type: "ValidationError" },
     ]);
@@ -267,8 +267,8 @@ describe("ReadFetcher", () => {
     (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await readFetcher.fetch();
-    expect(result.status).toBe("error");
-    if (result.status === "error") {
+    expect(result.success).toBe(false);
+    if (!result.success) {
       expect(result.errors).toStrictEqual([
         {
           type: "FetchError",

@@ -47,7 +47,7 @@ export const tagsExportAll = async (ghost: TSGhostContentAPI, siteName: string) 
 
   s.start(`Fetching Tags...`);
   const res = await ghost.tags.browse().fetch();
-  if (res.status === "error" || res.data.length === 0) {
+  if (!res.success || res.data.length === 0) {
     note(`No tags were found on "${siteName}.".`, "No tags found");
     return;
   }

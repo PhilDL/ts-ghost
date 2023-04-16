@@ -172,8 +172,8 @@ describe("BrowseFetcher", () => {
       })
     );
     const result = await browseFetcher.fetch();
-    expect(result.status).toBe("success");
-    if (result.status === "success") {
+    expect(result.success).toBe(true);
+    if (result.success) {
       expect(result.data).toStrictEqual([
         {
           title: "title",
@@ -239,8 +239,8 @@ describe("BrowseFetcher", () => {
       })
     );
     const result = await browseFetcher.fetch();
-    expect(result.status).toBe("success");
-    if (result.status === "success") {
+    expect(result.success).toBe(true);
+    if (result.success) {
       expect(result.data).toStrictEqual([]);
       expect(result.meta).toStrictEqual({
         pagination: {
@@ -288,8 +288,8 @@ describe("BrowseFetcher", () => {
       })
     );
     const result = await browseFetcher.paginate();
-    expect(result.current.status).toBe("success");
-    if (result.current.status === "success") {
+    expect(result.current.success).toBe(true);
+    if (result.current.success) {
       expect(result.current.data).toStrictEqual([]);
       expect(result.current.meta).toStrictEqual({
         pagination: {
@@ -414,7 +414,7 @@ describe("BrowseFetcher", () => {
       })
     );
     const result = await browseFetcher.paginate();
-    assert(result.current.status === "success");
+    assert(result.current.success);
     expect(result.current.data[0].slug).toBe("first-page-blog-post");
     expect(result.current.meta).toStrictEqual({
       pagination: {
@@ -457,7 +457,7 @@ describe("BrowseFetcher", () => {
       })
     );
     const nextResult = await result.next.paginate();
-    assert(nextResult.current.status === "success");
+    assert(nextResult.current.success);
     expect(nextResult.current.data[0].slug).toBe("second-page-blog-post");
     expect(nextResult.next).toBeUndefined();
   });
@@ -480,8 +480,8 @@ describe("BrowseFetcher", () => {
     (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await browseFetcher.fetch();
-    expect(result.status).toBe("error");
-    if (result.status === "error") {
+    expect(result.success).toBe(false);
+    if (!result.success) {
       expect(result.errors).toStrictEqual([
         {
           type: "FetchError",
@@ -509,8 +509,8 @@ describe("BrowseFetcher", () => {
     (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await browseFetcher.paginate();
-    expect(result.current.status).toBe("error");
-    if (result.current.status === "error") {
+    expect(result.current.success).toBe(false);
+    if (!result.current.success) {
       expect(result.current.errors).toStrictEqual([
         {
           type: "FetchError",
@@ -604,7 +604,7 @@ describe("BrowseFetcher output tests suite", () => {
       })
     );
     const res = await fetcher.formats({ html: true }).fields({ html: true }).fetch();
-    assert(res.status === "success");
+    assert(res.success);
     expect(res.data.length).toBe(1);
     expect(res.data[0].html).toBe("<h1>Hello world</h1>");
     // @ts-expect-error - plaintext is not defined

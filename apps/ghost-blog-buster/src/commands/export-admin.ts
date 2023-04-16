@@ -65,7 +65,7 @@ export const handler = async function (
           })
           .formats({ html: true })
           .fetch();
-        if (res.status === "error") {
+        if (!res.success) {
           log.error(
             `There was an error trying to connect to your Ghost Instance: \n${res.errors
               .map((m) => m.message)
@@ -99,7 +99,7 @@ export const handler = async function (
           })
           .formats({ html: true })
           .fetch();
-        if (res.status === "error") {
+        if (!res.success) {
           log.error(
             `There was an error trying to connect to your Ghost Instance: \n${res.errors
               .map((m) => m.message)

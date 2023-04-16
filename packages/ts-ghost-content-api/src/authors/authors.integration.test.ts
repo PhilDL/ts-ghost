@@ -30,7 +30,7 @@ describe("authors integration tests browse", () => {
     const result = await api.authors.browse().fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -63,7 +63,7 @@ describe("authors integration tests browse", () => {
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       return;
     }
     expect(result.meta.pagination).toBeDefined();
@@ -85,7 +85,7 @@ describe("authors integration tests browse", () => {
     const result = await api.authors.browse().include({ "count.posts": true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       return;
     }
     expect(result.meta.pagination).toBeDefined();
@@ -113,7 +113,7 @@ describe("authors integration tests read", () => {
     expect(readQuery.getURL()?.searchParams.toString()).toContain("key=");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
-    if (result.status === "success") {
+    if (result.success) {
       expect(result.data.id).toBe("1");
       expect(result.data.slug).toBe("phildl");
       expect(result.data.name).toBe("PhilDL");
@@ -134,7 +134,7 @@ describe("authors integration tests read", () => {
     expect(readQuery.getURL()?.searchParams.toString()).toContain("key=");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
-    if (result.status === "success") {
+    if (result.success) {
       expect(result.data.id).toBe("1");
       expect(result.data.slug).toBe("phildl");
       expect(result.data.name).toBe("PhilDL");
@@ -154,7 +154,7 @@ describe("authors integration tests read", () => {
     expect(readQuery.getURL()?.searchParams.toString()).toContain("&fields=name");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
-    if (result.status === "success") {
+    if (result.success) {
       expect(result.data.name).toBe("PhilDL");
       // @ts-expect-error - these fields should not be defined
       expect(result.data.website).toBeUndefined();
@@ -171,7 +171,7 @@ describe("authors integration tests read", () => {
     expect(readQuery.getURL()?.searchParams.toString()).toContain("&include=count.posts");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
-    if (result.status === "success") {
+    if (result.success) {
       expect(result.data.name).toBe("PhilDL");
       expect(result.data.slug).toBe("phildl");
       expect(result.data.website).toBe("https://github.com/PhilDL");
@@ -189,7 +189,7 @@ describe("authors integration tests read", () => {
     expect(readQuery.getURL()?.searchParams.toString()).toContain("key=");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
-    assert(result.status === "error");
+    assert(!result.success);
     expect(result.errors).toBeDefined();
     expect(result.errors).toHaveLength(1);
     expect(result.errors[0].message).toContain("author");

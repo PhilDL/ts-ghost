@@ -62,7 +62,7 @@ const api = new TSGhostAdminAPI(url, key, "v5.0"); // The instantiation is valid
 
 // Browse posts
 const res = await api.posts.browse().fetch();
-if (res.status === "success") {
+if (res.success) {
   const posts = res.data;
   const meta = res.meta;
   //     ^? GhostMeta Type containing pagination info
@@ -89,7 +89,7 @@ const res = await api.posts
     slug: "welcome-to-ghost",
   })
   .fetch();
-if (res.status === "success") {
+if (res.success) {
   const post = res.data;
   //     ^? type Post
 } else {
@@ -189,7 +189,7 @@ let result = await api.posts
   })
   .fetch();
 
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
 }
@@ -246,7 +246,7 @@ All the results are discriminated unions representing a successful query and an 
 
 ```typescript
 let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch();
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"id": string; "slug":string; "title": string}
 } else {
@@ -364,10 +364,10 @@ const posts: Post[] = [];
 let cursor = await api.posts
   .browse()
   .paginate();
-if (cursor.current.status === "success") posts.push(...cursor.current.data);
+if (cursor.current.success) posts.push(...cursor.current.data);
 while (cursor.next) {
   cursor = await cursor.next.paginate();
-  if (cursor.current.status === "success") posts.push(...cursor.current.data);
+  if (cursor.current.success) posts.push(...cursor.current.data);
 }
 return posts;
 ```

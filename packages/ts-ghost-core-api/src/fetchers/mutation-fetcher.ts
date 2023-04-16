@@ -68,13 +68,13 @@ export class MutationFetcher<
   }
 
   public async submit() {
-    const schema = z.discriminatedUnion("status", [
+    const schema = z.discriminatedUnion("success", [
       z.object({
-        status: z.literal("success"),
+        success: z.literal(true),
         data: this.config.output,
       }),
       z.object({
-        status: z.literal("error"),
+        success: z.literal(false),
         errors: z.array(
           z.object({
             type: z.string(),
@@ -98,11 +98,11 @@ export class MutationFetcher<
     });
     let result: any = {};
     if (response.errors) {
-      result.status = "error";
+      result.success = false;
       result.errors = response.errors;
     } else {
       result = {
-        status: "success",
+        success: true,
         data: response[this._resource][0],
       };
     }

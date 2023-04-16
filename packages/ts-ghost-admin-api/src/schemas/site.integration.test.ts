@@ -23,7 +23,7 @@ describe("members integration tests browse", () => {
   test("site .fetch()", async () => {
     expect(api.site).toBeDefined();
     const result = await api.site.fetch();
-    assert(result.status === "success");
+    assert(result.success);
     const site = result.data;
     expect(site.title).toBe(stubSite.title);
     expect(site.description).toBe(stubSite.description);

@@ -15,7 +15,7 @@
 
   ```ts
   const createNewMember = await api.members.add({ email: "abcdefgh@msn.com" }, { send_email: true });
-  assert(createNewMember.status === "success");
+  assert(createNewMember.success);
   const newMember = createNewMember.data;
   // id => 6438cc365a8fdb00013a8783
   const updateMember = await api.members.edit("6438cc365a8fdb00013a8783", {
@@ -25,7 +25,7 @@
     geolocation: "Reunion",
     stripe_customer_id: "aiuhdiuahzdiuhaizudhaiuzdhiuazd",
   });
-  if (updateMember.status === "success") {
+  if (updateMember.success) {
     const member = updateMember.data;
     console.log("labels", member.labels);
   }

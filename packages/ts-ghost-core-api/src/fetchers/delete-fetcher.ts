@@ -37,12 +37,12 @@ export class DeleteFetcher<Api extends APICredentials = any> {
   }
 
   public async submit() {
-    const schema = z.discriminatedUnion("status", [
+    const schema = z.discriminatedUnion("success", [
       z.object({
-        status: z.literal("success"),
+        success: z.literal(true),
       }),
       z.object({
-        status: z.literal("error"),
+        success: z.literal(false),
         errors: z.array(
           z.object({
             type: z.string(),
@@ -59,18 +59,18 @@ export class DeleteFetcher<Api extends APICredentials = any> {
       });
       if (response.status === 204) {
         result = {
-          status: "success",
+          success: true,
         };
       } else {
         const res = await response.json();
         if (res.errors) {
-          result.status = "error";
+          result.success = false;
           result.errors = res.errors;
         }
       }
     } catch (e) {
       result = {
-        status: "error",
+        success: false,
         errors: [
           {
             type: "FetchError",

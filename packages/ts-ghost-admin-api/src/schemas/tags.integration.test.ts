@@ -52,7 +52,7 @@ describe("tags integration tests browse", () => {
       })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const tag = result.data[0];
     const stubTag = stubResult.data[0];
     expect(tag.slug).toBe(stubTag.slug);
@@ -85,7 +85,7 @@ describe("tags integration tests browse", () => {
         id: "63887bd07f2cf30001fec7a5",
       })
       .fetch();
-    assert(result.status === "success");
+    assert(result.success);
     const tag = result.data;
     const stubTag = stubResult.data[0];
     expect(tag.slug).toBe(stubTag.slug);
@@ -132,7 +132,7 @@ describe("tags integration tests browse", () => {
       codeinjection_foot: "",
       accent_color: "#ffffff",
     });
-    assert(tagAdd.status === "success");
+    assert(tagAdd.success);
     const tag = tagAdd.data;
     expect(tag.name).toBe(tagName);
     expect(tag.description).toBe(description);
@@ -153,12 +153,12 @@ describe("tags integration tests browse", () => {
       description: newDescription,
       visibility: "internal",
     });
-    assert(tagEdit.status === "success");
+    assert(tagEdit.success);
     const editedTag = tagEdit.data;
     expect(editedTag.description).toBe(newDescription);
     expect(editedTag.visibility).toBe("internal");
 
     const tagDelete = await api.tags.delete(tag.id);
-    assert(tagDelete.status === "success");
+    assert(tagDelete.success);
   });
 });

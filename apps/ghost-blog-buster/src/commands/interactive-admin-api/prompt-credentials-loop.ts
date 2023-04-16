@@ -49,7 +49,7 @@ export const promptCredentialsLoop = async (config: Configstore) => {
       const ghost = new TSGhostAdminAPI(`${url.protocol}//${url.hostname}`, ghostAdminApiKey, "v5.0");
       s.start("Validating credentials");
       const res = await ghost.site.fetch();
-      if (res.status === "success") {
+      if (res.success) {
         const settings = res.data;
         config.set("ghostUrl", `${url.protocol}//${url.hostname}`);
         config.set("ghostAdminApiKey", ghostAdminApiKey);

@@ -59,7 +59,7 @@ describe("pages integration tests browse", () => {
     const result = await api.pages.browse().fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -112,7 +112,7 @@ describe("pages integration tests browse", () => {
     const result = await api.pages.browse().include({ authors: true, tags: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -136,7 +136,7 @@ describe("pages integration tests browse", () => {
     const result = await api.pages.browse().fields({ slug: true, title: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -160,7 +160,7 @@ describe("pages integration tests browse", () => {
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -189,7 +189,7 @@ describe("pages integration tests read", () => {
     const result = await api.pages.read({ id: "63887bd07f2cf30001fec812" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {

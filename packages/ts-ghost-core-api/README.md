@@ -237,7 +237,7 @@ const composedAPI = new APIComposer(
 );
 const readFetcher = composedAPI.read({ slug: "typescript-is-cool" });
 let result = await readFetcher.fetch();
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"slug":string; "title": string}
 } else {
@@ -365,7 +365,7 @@ let result = await browseFetcher
   })
   .fetch();
 
-if (result.status === "success") {
+if (result.success) {
   const post = result.data;
   //     ^? type {"slug":string; "title": string}
 }

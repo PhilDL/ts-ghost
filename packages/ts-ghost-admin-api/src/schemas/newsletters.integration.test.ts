@@ -57,7 +57,7 @@ describe("newsletters integration tests browse", () => {
       })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const newsletter = result.data[0];
     const stubNewsletter = stubResult.data[0];
     expect(newsletter.id).toBe(stubNewsletter.id);
@@ -92,7 +92,7 @@ describe("newsletters integration tests browse", () => {
         id: "63887bd07f2cf30001fec7a4",
       })
       .fetch();
-    assert(result.status === "success");
+    assert(result.success);
     const newsletter = result.data;
     const stubNewsletter = stubResult.data[0];
     expect(newsletter.id).toBe(stubNewsletter.id);
@@ -146,7 +146,7 @@ describe("newsletters integration tests browse", () => {
       },
       { opt_in_existing: true }
     );
-    if (newsletterAdd.status === "success") {
+    if (newsletterAdd.success) {
       const nl = newsletterAdd.data;
       expect(nl.id).toBeDefined();
       expect(nl.name).toBe("ts-ghost Newsletter API");
@@ -158,12 +158,12 @@ describe("newsletters integration tests browse", () => {
         description: fakeDescription,
         status: "archived",
       });
-      assert(newsletterEdit.status === "success");
+      assert(newsletterEdit.success);
       const editedNl = newsletterEdit.data;
       expect(editedNl.id).toBe(nl.id);
       expect(editedNl.description).toBe(fakeDescription);
     } else {
-      expect(newsletterAdd.status).toBe("error");
+      expect(newsletterAdd.success).toBe(false);
       expect(newsletterAdd.errors).toBeDefined();
       expect(newsletterAdd.errors.length).toBeGreaterThan(0);
       expect(newsletterAdd.errors[0].context).toBe("A newsletter with the same name already exists");

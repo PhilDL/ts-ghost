@@ -35,7 +35,7 @@ describe("tags integration tests browse", () => {
     const result = await api.tags.browse().fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -74,7 +74,7 @@ describe("tags integration tests browse", () => {
     const result = await api.tags.browse().include({ "count.posts": true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -90,7 +90,7 @@ describe("tags integration tests browse", () => {
     const result = await api.tags.browse().fields({ slug: true, name: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -114,7 +114,7 @@ describe("tags integration tests browse", () => {
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -143,7 +143,7 @@ describe("tags integration tests read", () => {
     const result = await api.tags.read({ id: "63887bd07f2cf30001fec812" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -178,7 +178,7 @@ describe("tags integration tests read", () => {
     const result = await api.tags.read({ slug: "news" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -213,7 +213,7 @@ describe("tags integration tests read", () => {
     const result = await api.tags.read({ slug: "news" }).fields({ name: true, id: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {
@@ -233,7 +233,7 @@ describe("tags integration tests read", () => {
     const result = await api.tags.read({ slug: "news" }).include({ "count.posts": true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    if (result.status === "error") {
+    if (!result.success) {
       expect(result.errors).toBeDefined();
       expect(result.errors).toHaveLength(1);
     } else {

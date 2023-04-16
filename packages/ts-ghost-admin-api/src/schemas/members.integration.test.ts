@@ -70,7 +70,7 @@ describe("members integration tests browse", () => {
       })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const member = result.data[0];
     expect(member.id).toBe(stubMember.id);
     expect(member.name).toBe(stubMember.name);
@@ -103,7 +103,7 @@ describe("members integration tests browse", () => {
         id: "64113de3e54f8b0001789b4e",
       })
       .fetch();
-    assert(result.status === "success");
+    assert(result.success);
     const member = result.data;
     expect(member.id).toBe(stubMember.id);
     expect(member.name).toBe(stubMember.name);
@@ -136,7 +136,7 @@ describe("members integration tests browse", () => {
     const name = faker.name.fullName();
 
     const addOperation = await api.members.add({ email, name });
-    assert(addOperation.status === "success");
+    assert(addOperation.success);
     const newMember = addOperation.data;
     expect(newMember.id).toBeDefined();
     expect(newMember.name).toBe(name);
@@ -151,7 +151,7 @@ describe("members integration tests browse", () => {
       labels: [{ name: "ts-ghost" }],
       geolocation: "Reunion",
     });
-    assert(editOperation.status === "success");
+    assert(editOperation.success);
     const editedMember = editOperation.data;
     expect(editedMember.id).toBe(newMember.id);
     expect(editedMember.name).toBe(name);
@@ -161,6 +161,6 @@ describe("members integration tests browse", () => {
     expect(editedMember.labels && editedMember.labels[0].name).toBe("ts-ghost");
 
     const deleteOperation = await api.members.delete(newMember.id);
-    assert(deleteOperation.status === "success");
+    assert(deleteOperation.success);
   });
 });

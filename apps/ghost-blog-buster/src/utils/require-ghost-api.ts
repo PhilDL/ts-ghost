@@ -21,7 +21,7 @@ export async function requireGhostContentAPI(argv: { host?: string; key?: string
   }
   try {
     const res = await api.settings.fetch();
-    if (res.status === "error") {
+    if (!res.success) {
       log.error(
         `There was an error trying to connect with these credentials: \n${res.errors
           .map((m) => m.message)
@@ -52,7 +52,7 @@ export async function requireGhostAdminAPI(argv: { host?: string; key?: string }
   }
   try {
     const res = await api.site.fetch();
-    if (res.status === "error") {
+    if (!res.success) {
       log.error(
         `There was an error trying to connect with these credentials: \n${res.errors
           .map((m) => m.message)

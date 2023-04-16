@@ -50,7 +50,7 @@ export async function postsExportAll(ghost: TSGhostContentAPI, siteName: string)
         tags: true,
       })
       .fetch();
-    if (res.status === "error" || res.data.length === 0) {
+    if (!res.success || res.data.length === 0) {
       log.warn(`No post were found on "${siteName}.".`);
       return;
     }

@@ -134,7 +134,7 @@ describe("authors resource mocked", () => {
     const result = await browseQuery.fetch();
     // expect(spy).toHaveBeenCalledTimes(1);
     expect(result).not.toBeUndefined();
-    if (result.status === "success") {
+    if (result.success) {
       expect(result.data.length).toBe(1);
       expect(result.data[0].name).toBe("foo");
       expect(result.data[0].id).toBe("eaoizdjoa1321123");

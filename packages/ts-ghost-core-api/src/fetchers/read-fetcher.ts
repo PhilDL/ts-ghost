@@ -163,13 +163,13 @@ export class ReadFetcher<
   }
 
   public async fetch(options?: RequestInit) {
-    const res = z.discriminatedUnion("status", [
+    const res = z.discriminatedUnion("success", [
       z.object({
-        status: z.literal("success"),
+        success: z.literal(true),
         data: this.config.output,
       }),
       z.object({
-        status: z.literal("error"),
+        success: z.literal(false),
         errors: z.array(
           z.object({
             type: z.string(),
@@ -181,11 +181,11 @@ export class ReadFetcher<
     const result = await _fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
-      data.status = "error";
+      data.success = false;
       data.errors = result.errors;
     } else {
       data = {
-        status: "success",
+        success: true,
         data: result[this._resource][0],
       };
     }

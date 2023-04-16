@@ -207,7 +207,7 @@ describe("pages integration tests browse", () => {
       .formats({ html: true, plaintext: true })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const page = result.data[0];
     expect(page.id).toBe(stubPage.id);
     expect(page.uuid).toBe(stubPage.uuid);
@@ -319,7 +319,7 @@ describe("pages integration tests browse", () => {
       .formats({ html: true, plaintext: true })
       .fetch();
 
-    assert(result.status === "success");
+    assert(result.success);
     const page = result.data;
     expect(page.id).toBe(stubPage.id);
     expect(page.uuid).toBe(stubPage.uuid);
@@ -422,7 +422,7 @@ describe("pages integration tests browse", () => {
     expect(page.primary_tag).toStrictEqual(stubPage.primary_tag);
   });
 
-  test("posts mutations add, edit, delete", async () => {
+  test("pages mutations add, edit, delete", async () => {
     expect(api.pages).toBeDefined();
 
     const title = faker.hacker.phrase();
@@ -442,7 +442,7 @@ describe("pages integration tests browse", () => {
       twitter_description: "Twitter Description from ts-ghost",
       visibility: "public",
     });
-    assert(postAdd.status === "success");
+    assert(postAdd.success);
     const newPost = postAdd.data;
     expect(newPost.title).toBe(title);
     expect(newPost.slug).toBeDefined();
@@ -462,12 +462,12 @@ describe("pages integration tests browse", () => {
       updated_at: new Date(newPost.updated_at || ""),
     });
 
-    assert(postEdit.status === "success");
+    assert(postEdit.success);
     const editedPost = postEdit.data;
     expect(editedPost.custom_excerpt).toBe("Modified excerpt from ghost");
 
     const postDelete = await api.pages.delete(editedPost.id);
-    assert(postDelete.status === "success");
+    assert(postDelete.success);
   });
 
   test("pages api with bad key", async () => {
@@ -483,7 +483,7 @@ describe("pages integration tests browse", () => {
       })
       .formats({ html: true, plaintext: true })
       .fetch();
-    assert(result.status === "error");
+    assert(!result.success);
     expect(result.errors[0].message).toBe("Unknown Admin API Key");
     const resultR = await api.pages
       .read({
@@ -491,7 +491,7 @@ describe("pages integration tests browse", () => {
       })
       .formats({ html: true, plaintext: true })
       .fetch();
-    assert(resultR.status === "error");
+    assert(!resultR.success);
     expect(resultR.errors[0].message).toBe("Unknown Admin API Key");
   });
 
@@ -508,7 +508,7 @@ describe("pages integration tests browse", () => {
       })
       .formats({ html: true, plaintext: true })
       .fetch();
-    assert(result.status === "error");
+    assert(!result.success);
     expect(result.errors[0].message).toContain("FetchError");
     const resultR = await api.pages
       .read({
@@ -516,7 +516,7 @@ describe("pages integration tests browse", () => {
       })
       .formats({ html: true, plaintext: true })
       .fetch();
-    assert(resultR.status === "error");
+    assert(!resultR.success);
     expect(resultR.errors[0].message).toContain("FetchError");
   });
 });

@@ -120,7 +120,6 @@ export class APIComposer<
     if (Object.keys(parsedData).length === 0) {
       throw new Error("No data to edit");
     }
-    console.log("parsedData", parsedData);
     const fetcher = new MutationFetcher(
       {
         output: this.config.schema,
