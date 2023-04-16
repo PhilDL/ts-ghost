@@ -253,10 +253,10 @@ After using `.read` query, you will get a `ReadFetcher` with an `async fetch` me
 ```typescript
 // example for the read query (the data is an object)
 const result: {
-    status: "success";
+    status: true;
     data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema and modified by the fields selected
 } | {
-    status: "error";
+    status: false;
     errors: {
         message: string;
         type: string;
@@ -278,7 +278,7 @@ That result is a discriminated union of 2 types:
 ```typescript
 // example for the browse query (the data is an array of objects)
 const result: {
-    status: "success";
+    success: true;
     data: z.infer<typeof simplifiedSchema>[];
     meta: {
         pagination: {
@@ -291,7 +291,7 @@ const result: {
         };
     };
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -303,7 +303,7 @@ const result: {
 
 ```typescript
 const result: {
-    status: "success";
+    success: true;
     data: z.infer<typeof simplifiedSchema>[];
     meta: {
         pagination: {
@@ -317,7 +317,7 @@ const result: {
     };
     next: BrowseFetcher | undefined; // the next page fetcher if it is defined
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -487,10 +487,10 @@ The result will be parsed and typed with the `output` schema and represent the n
 ```typescript
 // return from the `add` method
 const result: {
-    status: "success";
+    success: true;
     data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -516,10 +516,10 @@ The result will be parsed and typed with the `output` schema and represent the u
 ```typescript
 // return from the `edit` method
 const result: {
-    status: "success";
+    success: true;
     data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -539,14 +539,14 @@ let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
 
 - The first argument is the `id` of the record to delete.
 
-The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `status` to know if the deletion was successful or not.
+The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `success` to know if the deletion was successful or not.
 
 ```typescript
 // return from the `delete` method
 const result: {
-    status: "success";
+    success: true;
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;

@@ -244,10 +244,10 @@ After using `.read` query, you will get a `ReadFetcher` with an `async fetch` me
 ```typescript
 // example for the read query (the data is an object)
 const result: {
-    status: "success";
+    success: true;
     data: Post; // parsed by the Zod Schema and modified by the fields selected
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -269,7 +269,7 @@ That result is a discriminated union of 2 types:
 ```typescript
 // example for the browse query (the data is an array of objects)
 const result: {
-    status: "success";
+    success: true;
     data: Post[];
     meta: {
         pagination: {
@@ -282,7 +282,7 @@ const result: {
         };
     };
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
@@ -294,7 +294,7 @@ const result: {
 
 ```typescript
 const result: {
-    status: "success";
+    success: true;
     data: Post[];
     meta: {
         pagination: {
@@ -308,7 +308,7 @@ const result: {
     };
     next: BrowseFetcher | undefined; // the next page fetcher if it is defined
 } | {
-    status: "error";
+    success: false;
     errors: {
         message: string;
         type: string;
