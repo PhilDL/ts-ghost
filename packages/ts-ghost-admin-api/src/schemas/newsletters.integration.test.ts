@@ -53,6 +53,7 @@ describe("newsletters integration tests browse", () => {
     const result = await api.newsletters
       .browse({
         limit: 1,
+        order: "created_at ASC",
       })
       .fetch();
 

@@ -53,6 +53,7 @@ describe("users integration tests browse", () => {
     const result = await api.users
       .browse({
         limit: 1,
+        order: "created_at ASC",
       })
       .fetch();
 

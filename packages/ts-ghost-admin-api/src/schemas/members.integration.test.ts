@@ -66,7 +66,7 @@ describe("members integration tests browse", () => {
     const result = await api.members
       .browse({
         limit: 1,
-        order: "created_at ASC",
+        order: "created_at asc",
       })
       .fetch();
 
