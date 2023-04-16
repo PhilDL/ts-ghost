@@ -19,7 +19,7 @@
 
 ## About The Project
 
-`@ts-ghost/content-api` provides a strongly-typed TypeScript client to interract with the Ghost Content API based on [Zod](https://github.com/colinhacks/zod) schemas passed through a QueryBuilder and then a Fetcher.
+`@ts-ghost/content-api` provides a strongly-typed TypeScript client to interract with the Ghost Content API based on [Zod](https://github.com/colinhacks/zod) schemas passed through the APIComposer that exposes `read` and `browse` methods with safe params and then a Fetcher.
 
 ![content-api-typesafety](https://user-images.githubusercontent.com/4941205/227787797-daf0bc72-1bb7-4ccd-8c98-fe4c03b71dd3.gif)
 
@@ -88,7 +88,7 @@ if (res.success) {
 ## Building Queries
 
 Calling any resource like `authors`, `posts`, etc (except `settings` resource) will give a
-new instance of a QueryBuilder containing two methods `read` and `browse`.
+new instance of APIComposer containing two exposed methods `read` and `browse` (if you are interested in a version that exposes `add`, `edit` and `delete` you will have to check the [@ts-ghost/admin-api](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)).
 
 This instance is already built with the associated Schema for that resource so any operation
 you will do from that point will be typed against the asociated schema.
@@ -132,7 +132,7 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 - `filter:string` Contains the filter with [Ghost API `filter` syntax](https://ghost.org/docs/content-api/#filtering).
 - `order:string` Contains the name of the field and the order `ASC` or `DESC`.
 
-For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the QueryBuilder will throw an Error with message containing the unknown field.
+For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the methods will throw an Error with message containing the unknown field.
 
 ### `.read` options
 

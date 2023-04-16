@@ -180,8 +180,7 @@ if (!postDelete.success) {
 ## Building Queries
 
 Calling any resource like `pages`, `posts`, will give a
-new instance of a QueryBuilder containing two methods `read` and `browse`.
-
+new instance of a APIComposer containing available methods (read, browse, edit, add, delete). Each ressource has its own specific set of methods exposed to reflect what is available on the Ghost API. _For this part about "queries/fetching" we will focus on the `read`and `browse` methods._
 This instance is already built with the associated Schema for that resource so any operation
 you will do from that point will be typed against the asociated schema.
 
@@ -229,7 +228,7 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 - `filter:string` Contains the filter with [Ghost API `filter` syntax](https://ghost.org/docs/content-api/#filtering).
 - `order:string` Contains the name of the field and the order `ASC` or `DESC`.
 
-For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the QueryBuilder will throw an Error with message containing the unknown field.
+For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the method will throw an Error with message containing the unknown field.
 
 ### `.read` options
 
