@@ -10,7 +10,7 @@ describe("webhook integration tests", () => {
     const APIKey =
       process.env.VITE_GHOST_ADMIN_API_KEY ||
       "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
-    integration_id = APIKey.split(":")[0] || "";
+    integration_id = process.env.VITE_GHOST_INTEGRATION_ID || "1efedd9db174adee2d23d982";
     api = new TSGhostAdminAPI(url, APIKey, "v5.0");
   });
   test("add, edit, delete", async () => {
