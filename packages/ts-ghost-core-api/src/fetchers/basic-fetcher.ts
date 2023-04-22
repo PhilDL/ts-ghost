@@ -1,16 +1,16 @@
-import { z, ZodRawShape } from "zod";
+import { z, ZodTypeAny } from "zod";
 
 import { _fetch } from "../helpers/network";
 import type { APICredentials } from "../schemas/shared";
 
-export class BasicFetcher<OutputShape extends ZodRawShape = any, Api extends APICredentials = any> {
+export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APICredentials = any> {
   protected _urlParams: Record<string, string> = {};
   protected _URL: URL | undefined = undefined;
   protected readonly _resource: Api["resource"];
 
   constructor(
     protected config: {
-      output: z.ZodObject<OutputShape>;
+      output: OutputShape;
     },
     protected _api: Api
   ) {
@@ -20,10 +20,6 @@ export class BasicFetcher<OutputShape extends ZodRawShape = any, Api extends API
 
   public getResource() {
     return this._resource;
-  }
-
-  public getOutputFields() {
-    return this.config.output.keyof().options as string[];
   }
 
   public getURL() {
