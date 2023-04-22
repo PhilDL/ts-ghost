@@ -1,5 +1,45 @@
 # @ts-ghost/admin-api
 
+## 2.1.0
+
+### Minor Changes
+
+- 889c980: ### Minor changes:
+
+  `admin-api` now expose a `settings` resource that returns the Blog settings array of key, value pairs.
+
+  Example success return
+
+  ```ts
+  {
+    success: true,
+    data: [
+      {
+        key: 'title',
+        value: 'My blog - TypeScript, Python & JavaScript Tutorials'
+      },
+      {
+        key: 'description',
+        value: 'TypeScript Developement Tutorials. Real-world examples and useful code snippets!'
+      },
+      {
+        key: 'logo',
+        value: 'https://myblog.com/content/images/2021/04/myblog.png'
+      },
+      { key: 'cover_image', value: null },
+      // ...
+  }
+  ```
+
+  ### Chores:
+
+  Upgrade internal dependencies
+
+### Patch Changes
+
+- Updated dependencies [889c980]
+  - @ts-ghost/core-api@4.1.0
+
 ## 2.0.0
 
 ### Major Changes
