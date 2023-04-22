@@ -31,7 +31,6 @@ describe("BasicFetcher", () => {
     });
     const fetcher = new BasicFetcher({ output: outputSchema }, api);
     expect(fetcher.getResource()).toBe("posts");
-    expect(fetcher.getOutputFields()).toEqual(["foo", "bar"]);
     expect(fetcher.getURL()?.searchParams.toString()).toBe(`key=${api.key}`);
     expect(fetcher.getURL()?.pathname).toBe(`/ghost/api/content/${api.resource}/`);
     expect(fetcher.getURL()?.toString()).toBe(

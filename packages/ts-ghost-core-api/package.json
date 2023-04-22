@@ -36,19 +36,19 @@
   },
   "devDependencies": {
     "@ts-ghost/tsconfig": "*",
-    "@types/node": "^18.15.11",
-    "eslint": "^8.37.0",
+    "@types/node": "^18.15.13",
+    "eslint": "^8.39.0",
     "tsup": "^6.7.0",
     "typescript": "5.0.4",
-    "vite": "^4.2.1",
+    "vite": "^4.3.1",
     "vite-tsconfig-paths": "^4.0.7",
-    "vitest": "^0.29.8",
+    "vitest": "^0.30.1",
     "vitest-fetch-mock": "^0.2.2"
   },
   "dependencies": {
-    "@vitest/coverage-c8": "^0.29.8",
+    "@vitest/coverage-c8": "^0.30.1",
     "cross-fetch": "^3.1.5",
-    "jose": "^4.13.1",
+    "jose": "^4.14.1",
     "zod": "^3.21.4"
   },
   "publishConfig": {

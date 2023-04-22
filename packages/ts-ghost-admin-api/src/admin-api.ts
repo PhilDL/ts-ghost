@@ -301,4 +301,31 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     };
     return new BasicFetcher({ output: baseSiteSchema }, api);
   }
+
+  get settings() {
+    const api = adminAPICredentialsSchema.parse({
+      resource: "settings",
+      key: this.key,
+      version: this.version,
+      url: this.url,
+      endpoint: "admin",
+    }) as {
+      resource: "settings";
+      key: string;
+      version: APIVersions;
+      url: string;
+      endpoint: "admin";
+    };
+    return new BasicFetcher(
+      {
+        output: z.array(
+          z.object({
+            key: z.string(),
+            value: z.string().nullable().or(z.number().nullable()).or(z.boolean().nullable()),
+          })
+        ),
+      },
+      api
+    );
+  }
 }
