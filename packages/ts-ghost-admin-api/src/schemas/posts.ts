@@ -12,7 +12,7 @@ export const adminPostsSchema = basePostsSchema.merge(
     status: z.union([z.literal("draft"), z.literal("published"), z.literal("scheduled")]),
     email_segment: z.string().nullish(),
     frontmatter: z.string().nullish(),
-    tiers: z.array(adminTiersSchema).nullish(),
+    tiers: z.array(adminTiersSchema).optional(),
     email: baseEmailSchema.nullish(),
     newsletter: baseNewsletterSchema.nullish(),
     count: z
