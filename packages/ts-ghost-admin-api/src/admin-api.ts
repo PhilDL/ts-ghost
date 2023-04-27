@@ -47,6 +47,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     const postsIncludeSchema = z.object({
       authors: z.literal(true).optional(),
       tags: z.literal(true).optional(),
+      tiers: z.literal(true).optional(),
     });
     return new APIComposer(
       {
@@ -77,6 +78,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
     const pagesIncludeSchema = z.object({
       authors: z.literal(true).optional(),
       tags: z.literal(true).optional(),
+      tiers: z.literal(true).optional(),
     });
     return new APIComposer(
       {
