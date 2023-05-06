@@ -1,5 +1,16 @@
 # @ts-ghost/content-api
 
+## 2.2.0
+
+### Minor Changes
+
+- a37a8ec: Possibility to add options to edit method for content and admin API Clients.
+
+### Patch Changes
+
+- Updated dependencies [a37a8ec]
+  - @ts-ghost/core-api@4.2.0
+
 ## 2.1.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.1
+
+### Patch Changes
+
+- a37a8ec: Possibility to add options to edit method for content and admin API Clients.
+- Updated dependencies [a37a8ec]
+  - @ts-ghost/content-api@2.2.0
+  - @ts-ghost/admin-api@2.3.0
+
 ## 0.6.0
 
 ### Minor Changes
