@@ -105,7 +105,8 @@ export class APIComposer<
 
   public async edit(
     id: string,
-    data: IsAny<UpdateShape> extends true ? Partial<z.input<CreateShape>> : z.input<UpdateShape>
+    data: IsAny<UpdateShape> extends true ? Partial<z.input<CreateShape>> : z.input<UpdateShape>,
+    options?: z.infer<CreateOptions>
   ) {
     let updateSchema: z.ZodTypeAny | z.ZodObject<any> | undefined = this.config.updateSchema;
     if (!this.config.updateSchema && this.config.createSchema && isZodObject(this.config.createSchema)) {
@@ -116,6 +117,8 @@ export class APIComposer<
     }
     const cleanId = z.string().nonempty().parse(id);
     const parsedData = updateSchema.parse(data);
+    const parsedOptions =
+      this.config.createOptionsSchema && options ? this.config.createOptionsSchema.parse(options) : {};
 
     if (Object.keys(parsedData).length === 0) {
       throw new Error("No data to edit");
@@ -125,7 +128,7 @@ export class APIComposer<
         output: this.config.schema,
         paramsShape: this.config.createOptionsSchema,
       },
-      { id: cleanId },
+      { id: cleanId, ...parsedOptions },
       { method: "PUT", body: parsedData },
       this._api
     );
