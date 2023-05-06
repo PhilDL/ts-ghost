@@ -6,4 +6,4 @@ export * from "./tags";
 export * from "./tiers";
 export * from "./settings";
 export * from "./helpers";
-export type { InferFetcherDataShape, InferResponseDataShape } from "@ts-ghost/core-api";
+export type { InferFetcherDataShape, InferResponseDataShape, BrowseParams } from "@ts-ghost/core-api";

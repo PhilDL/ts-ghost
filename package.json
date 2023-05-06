@@ -35,13 +35,13 @@
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
     "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0",
-    "eslint": "^8.39.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-turbo": "^1.9.3",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "turbo": "^1.9.3",
     "typescript": "^5.0.2"
   },

@@ -1,6 +1,6 @@
 import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
 import fetch from "cross-fetch";
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, assert, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 
 import type { ContentAPICredentials } from "../schemas/shared";
@@ -51,7 +51,7 @@ describe("BasicFetcher", () => {
       bar: z.string(),
     });
     const fetcher = new BasicFetcher({ output: outputSchema }, api);
-    (fetch as FetchMock).once(
+    (fetch as FetchMock).doMockOnce(
       JSON.stringify({
         posts: {
           foo: "foo",
@@ -60,13 +60,11 @@ describe("BasicFetcher", () => {
       })
     );
     const result = await fetcher.fetch();
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.data).toStrictEqual({
-        foo: "foo",
-        bar: "eaoizdjoa1321123",
-      });
-    }
+    assert(result.success === true);
+    expect(result.data).toStrictEqual({
+      foo: "foo",
+      bar: "eaoizdjoa1321123",
+    });
   });
 
   test("fetch with errors", async () => {
@@ -98,19 +96,17 @@ describe("BasicFetcher", () => {
     );
 
     const result = await fetcher.fetch();
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.errors).toStrictEqual([
-        {
-          type: "foo error",
-          message: "error message",
-        },
-        {
-          type: "bar error",
-          message: "error message",
-        },
-      ]);
-    }
+    assert(result.success === false);
+    expect(result.errors).toStrictEqual([
+      {
+        type: "foo error",
+        message: "error message",
+      },
+      {
+        type: "bar error",
+        message: "error message",
+      },
+    ]);
   });
 
   test("expect BasicFetcher _fetch to throw if _URL is not defined", async () => {
@@ -147,14 +143,13 @@ describe("BasicFetcher", () => {
     (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await fetcher.fetch();
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.errors).toStrictEqual([
-        {
-          type: "FetchError",
-          message: "Fake Fetch Error",
-        },
-      ]);
-    }
+
+    assert(result.success === false);
+    expect(result.errors).toStrictEqual([
+      {
+        type: "FetchError",
+        message: "Fake Fetch Error",
+      },
+    ]);
   });
 });
