@@ -1,5 +1,14 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.2
+
+### Patch Changes
+
+- 0612b6c: Update posts/pages visibility property to accept "tiers" in its union of values.
+- Updated dependencies [0612b6c]
+  - @ts-ghost/content-api@2.2.1
+  - @ts-ghost/admin-api@2.3.1
+
 ## 0.6.1
 
 ### Patch Changes
