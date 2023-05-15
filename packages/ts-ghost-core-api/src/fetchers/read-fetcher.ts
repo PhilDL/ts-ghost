@@ -179,6 +179,7 @@ export class ReadFetcher<
       }),
     ]);
     const result = await _fetch(this._URL, this._api, options);
+    console.log("result", result);
     let data: any = {};
     if (result.errors) {
       data.success = false;

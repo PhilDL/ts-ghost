@@ -40,13 +40,13 @@
     "playground": "jiti ./src/playground.ts"
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.6.0",
+    "@faker-js/faker": "^8.0.0",
     "@ts-ghost/core-api": "*",
     "@ts-ghost/tsconfig": "*",
-    "@types/node": "^20.1.0",
-    "@types/validator": "^13.7.15",
+    "@types/node": "^20.1.4",
+    "@types/validator": "^13.7.17",
     "@vitest/coverage-c8": "^0.31.0",
-    "cross-fetch": "^3.1.5",
+    "cross-fetch": "^3.1.6",
     "eslint": "^8.40.0",
     "jiti": "^1.18.2",
     "tsup": "^6.7.0",
