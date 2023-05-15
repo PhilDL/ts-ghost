@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 2.3.1
+
+### Patch Changes
+
+- 0612b6c: Update posts/pages visibility property to accept "tiers" in its union of values.
+- Updated dependencies [0612b6c]
+  - @ts-ghost/core-api@4.2.1
+
 ## 2.3.0
 
 ### Minor Changes
