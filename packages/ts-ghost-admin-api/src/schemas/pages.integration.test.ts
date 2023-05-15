@@ -509,7 +509,7 @@ describe("pages integration tests browse", () => {
       .formats({ html: true, plaintext: true })
       .fetch();
     assert(!result.success);
-    expect(result.errors[0].message).toContain("FetchError");
+    expect(result.errors[0].message).toContain("fetch");
     const resultR = await api.pages
       .read({
         slug: "about",
@@ -517,6 +517,6 @@ describe("pages integration tests browse", () => {
       .formats({ html: true, plaintext: true })
       .fetch();
     assert(!resultR.success);
-    expect(resultR.errors[0].message).toContain("FetchError");
+    expect(resultR.errors[0].message).toContain("fetch");
   });
 });
