@@ -1,5 +1,4 @@
-import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
-import fetch from "cross-fetch";
+import createFetchMock from "vitest-fetch-mock";
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
 
@@ -7,6 +6,8 @@ import { APIComposer } from "./api-composer";
 import { BrowseFetcher, ReadFetcher } from "./fetchers";
 import type { BrowseParams } from "./helpers/browse-params";
 import type { ContentAPICredentials } from "./schemas/shared";
+
+const fetchMocker = createFetchMock(vi);
 
 describe("APIComposer Read / Browse", () => {
   const api: ContentAPICredentials = {
@@ -282,11 +283,7 @@ describe("APIComposer add / edit", () => {
   );
 
   beforeEach(() => {
-    vi.mock("cross-fetch", async () => {
-      return {
-        default: createFetchMock(vi),
-      };
-    });
+    fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -314,7 +311,7 @@ describe("APIComposer add / edit", () => {
   });
 
   test("post add", async () => {
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
           {
@@ -326,7 +323,7 @@ describe("APIComposer add / edit", () => {
       })
     );
     const result = await composer.add({ foo: "abc@test.com" });
-    expect(fetch).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
+    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
       method: "POST",
       headers: {
         "Accept-Version": "v5.0",
@@ -340,7 +337,7 @@ describe("APIComposer add / edit", () => {
         ],
       }),
     });
-    expect(fetch).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
+    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
       method: "POST",
       headers: {
         "Accept-Version": "v5.0",
@@ -369,14 +366,14 @@ describe("APIComposer add / edit", () => {
       foo: "new foo",
       bar: "foobaz",
     };
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [mockData],
       })
     );
     const result = await composer.add({ foo: "new foo" }, { option_1: true });
 
-    expect(fetch).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234&option_1=true", {
+    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234&option_1=true", {
       method: "POST",
       headers: {
         "Accept-Version": "v5.0",
@@ -395,7 +392,7 @@ describe("APIComposer add / edit", () => {
   });
 
   test("post fail", async () => {
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         errors: [
           {
@@ -414,7 +411,7 @@ describe("APIComposer add / edit", () => {
     );
     const result = await composer.add({ foo: "existing" }, { option_1: true });
 
-    expect(fetch).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234&option_1=true", {
+    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234&option_1=true", {
       method: "POST",
       headers: {
         "Accept-Version": "v5.0",
@@ -439,7 +436,7 @@ describe("APIComposer add / edit", () => {
   });
 
   test("put edit", async () => {
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
           {
@@ -451,7 +448,7 @@ describe("APIComposer add / edit", () => {
       })
     );
     const result = await composer.edit("abc", { foo: "new foo" });
-    expect(fetch).toBeCalledWith("https://ghost.org/ghost/api/content/posts/abc/?key=1234", {
+    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/abc/?key=1234", {
       method: "PUT",
       headers: {
         "Accept-Version": "v5.0",
@@ -475,7 +472,7 @@ describe("APIComposer add / edit", () => {
   });
 
   test("put edit fail", async () => {
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         errors: [
           {
@@ -495,7 +492,7 @@ describe("APIComposer add / edit", () => {
 
     const result = await composer.edit("abc", { foo: "new foo" });
 
-    expect(fetch).toBeCalledWith("https://ghost.org/ghost/api/content/posts/abc/?key=1234", {
+    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/abc/?key=1234", {
       method: "PUT",
       headers: {
         "Accept-Version": "v5.0",

@@ -1,10 +1,11 @@
-import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
-import fetch from "cross-fetch";
+import createFetchMock from "vitest-fetch-mock";
 import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 
 import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
 import { ReadFetcher } from "./read-fetcher";
+
+const fetchMocker = createFetchMock(vi);
 
 describe("ReadFetcher", () => {
   const api: ContentAPICredentials = {
@@ -35,11 +36,7 @@ describe("ReadFetcher", () => {
   });
 
   beforeEach(() => {
-    vi.mock("cross-fetch", async () => {
-      return {
-        default: createFetchMock(vi),
-      };
-    });
+    fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -164,7 +161,7 @@ describe("ReadFetcher", () => {
       "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234&fields=title%2Cslug%2Ccount&include=count"
     );
 
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
           {
@@ -238,7 +235,7 @@ describe("ReadFetcher", () => {
       "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234&fields=title%2Cslug%2Ccount&include=count"
     );
 
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         errors: [{ message: "Validation error, cannot read author.", type: "ValidationError" }],
       })
@@ -264,7 +261,7 @@ describe("ReadFetcher", () => {
       api
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
-    (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
+    fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await readFetcher.fetch();
     expect(result.success).toBe(false);
@@ -323,11 +320,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
   });
 
   beforeEach(() => {
-    vi.mock("cross-fetch", async () => {
-      return {
-        default: createFetchMock(vi),
-      };
-    });
+    fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();

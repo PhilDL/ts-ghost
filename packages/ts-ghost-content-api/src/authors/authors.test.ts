@@ -1,8 +1,9 @@
-import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
-import fetch from "cross-fetch";
+import createFetchMock from "vitest-fetch-mock";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { TSGhostContentAPI } from "../content-api";
+
+const fetchMocker = createFetchMock(vi);
 
 describe("authors api .browse() Args Type-safety", () => {
   const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
@@ -84,11 +85,7 @@ describe("authors resource mocked", () => {
 
   beforeEach(() => {
     api = new TSGhostContentAPI("https://my-ghost-blog.com", "59d4bf56c73c04a18c867dc3ba", "v5.0");
-    vi.mock("cross-fetch", async () => {
-      return {
-        default: createFetchMock(vi),
-      };
-    });
+    fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -111,7 +108,7 @@ describe("authors resource mocked", () => {
       "key=59d4bf56c73c04a18c867dc3ba&page=2&fields=name%2Cid"
     );
 
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         authors: [
           {
