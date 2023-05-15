@@ -66,6 +66,7 @@ export const ghostVisibilitySchema = z.union([
   z.literal("none"),
   z.literal("internal"),
   z.literal("paid"),
+  z.literal("tiers"),
 ]);
 
 export const apiVersionsSchema = z

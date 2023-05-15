@@ -42,7 +42,13 @@ export const adminPagesCreateSchema = z.object({
   status: z.union([z.literal("draft"), z.literal("published"), z.literal("scheduled")]).optional(),
   locale: z.string().max(6).optional(),
   visibility: z
-    .union([z.literal("public"), z.literal("internal"), z.literal("members"), z.literal("paid")])
+    .union([
+      z.literal("public"),
+      z.literal("internal"),
+      z.literal("members"),
+      z.literal("paid"),
+      z.literal("tiers"),
+    ])
     .optional(),
   visibility_filter: z.string().optional(),
   meta_title: z.string().max(300).optional(),
