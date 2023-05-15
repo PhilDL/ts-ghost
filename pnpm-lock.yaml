@@ -47,10 +47,10 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       '@ts-ghost/admin-api':
-        specifier: ^2.1.0
+        specifier: ^2.3.0
         version: link:../../packages/ts-ghost-admin-api
       '@ts-ghost/content-api':
-        specifier: ^2.1.0
+        specifier: ^2.2.0
         version: link:../../packages/ts-ghost-content-api
       configstore:
         specifier: ^6.0.0
@@ -117,7 +117,7 @@ importers:
   packages/ts-ghost-admin-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^4.1.0
+        specifier: ^4.2.0
         version: link:../ts-ghost-core-api
       validator:
         specifier: ^13.9.0
@@ -169,7 +169,7 @@ importers:
   packages/ts-ghost-content-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^4.1.0
+        specifier: ^4.2.0
         version: link:../ts-ghost-core-api
       zod:
         specifier: ^3.21.4
