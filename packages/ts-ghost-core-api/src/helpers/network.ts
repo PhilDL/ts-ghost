@@ -1,4 +1,3 @@
-import fetch from "cross-fetch";
 import { SignJWT } from "jose";
 
 import type { APICredentials } from "../schemas/shared";

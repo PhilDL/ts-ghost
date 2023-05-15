@@ -43,11 +43,11 @@
     "vite": "^4.3.5",
     "vite-tsconfig-paths": "^4.0.7",
     "vitest": "^0.31.0",
-    "vitest-fetch-mock": "^0.2.2"
+    "vitest-fetch-mock": "^0.2.2",
+    "@vitest/coverage-c8": "^0.31.0",
+    "cross-fetch": "^3.1.6"
   },
   "dependencies": {
-    "@vitest/coverage-c8": "^0.31.0",
-    "cross-fetch": "^3.1.6",
     "jose": "^4.14.4",
     "zod": "^3.21.4"
   },
