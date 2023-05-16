@@ -1,5 +1,22 @@
 # @ts-ghost/core-api
 
+## 5.0.0
+
+### Major Changes
+
+- [#69](https://github.com/PhilDL/ts-ghost/pull/69) [`59a8296`](https://github.com/PhilDL/ts-ghost/commit/59a8296a203b5862f757bf5fcdaaae04e21a2fe1) Thanks [@PhilDL](https://github.com/PhilDL)! - # Breaking changes: bring your own fetch
+
+  With the goal of being fully NextJS compatible (and other frameworks that already polyfill fetch and sometimes augment it), we decided to remove the `cross-fetch` dependency from the packages.
+
+  It is now the consummer duty to bring their own implementation of fetch.
+
+  Requirements have been updated:
+
+  - Node.js 16+
+    - We rely on global `fetch` being available, so you can bring your own
+      polyfill and if you run Node 16, you'll need to run with the
+      `--experimental-fetch` flag enabled.
+
 ## 4.2.1
 
 ### Patch Changes
