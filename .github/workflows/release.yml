@@ -11,6 +11,13 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      GHOST_URL: ${{ secrets.VITE_GHOST_URL }}
+      GHOST_CONTENT_API_KEY: ${{ secrets.VITE_GHOST_CONTENT_API_KEY }}
+      GHOST_ADMIN_API_KEY: ${{ secrets.VITE_GHOST_ADMIN_API_KEY }}
+      GHOST_VERSION: ${{ secrets.VITE_GHOST_VERSION }}
     steps:
       - name: ⬇️ Checkout Repo
         uses: actions/checkout@v3

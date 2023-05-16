@@ -27,7 +27,7 @@
     "typecheck": "turbo run typecheck",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo --filter \"./packages/*\" run build && changeset publish",
+    "release": "turbo run --filter \"./packages/*\" build && changeset publish",
     "validate": "turbo run lint typecheck test",
     "format:write": "prettier --write \"**/*.{ts,tsx,md}\"",
     "format": "prettier --check \"**/*.{ts,tsx,md}\""
