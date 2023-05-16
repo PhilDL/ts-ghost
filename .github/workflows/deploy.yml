@@ -94,6 +94,9 @@ jobs:
           node-version: 18
           cache: "pnpm"
 
+      - name: 🏄 Copy example env vars to nextjs app
+        run: cp examples/nextjs/.env.example examples/nextjs/.env
+
       - name: 📥 Download deps
         run: pnpm install --no-frozen-lockfile --ignore-scripts
 
