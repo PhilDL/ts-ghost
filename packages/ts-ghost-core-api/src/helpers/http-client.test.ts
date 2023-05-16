@@ -9,7 +9,7 @@ describe("HTTPClient", () => {
     version: "v5.0",
     endpoint: "content",
   });
-  test("expect instantiation OK", async () => {
+  test("expect instanciation OK", async () => {
     expect(httpClient).toBeDefined();
     expect(httpClient.jwt).toBeUndefined();
   });

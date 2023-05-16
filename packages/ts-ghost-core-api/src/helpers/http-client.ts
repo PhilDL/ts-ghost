@@ -1,8 +1,10 @@
 import { SignJWT } from "jose";
 
+import type { APICredentials } from "../schemas";
+
 export type HTTPClientOptions = {
   key: string;
-  version: string;
+  version: APICredentials["version"];
   endpoint: "content" | "admin";
 };
 

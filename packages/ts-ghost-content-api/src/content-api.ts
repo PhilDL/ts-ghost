@@ -34,7 +34,6 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
     protected readonly version: Version
   ) {
     this.httpClient = new HTTPClient({
-      url,
       key,
       version,
       endpoint: "content",
