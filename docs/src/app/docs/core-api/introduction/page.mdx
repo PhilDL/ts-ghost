@@ -1,0 +1,20 @@
+# Introduction
+
+`@ts-ghost/core-api` contains the core building blocks for the `@ts-ghost/content-api` package. It contains the Type-safe logic of Query Builder and Fetchers. Unless you are building a new package for `@ts-ghost` you should not need to use this package directly.
+
+## Install
+
+```shell
+pnpm i @ts-ghost/core-api
+```
+
+### Requirements
+
+This client is only compatible with Ghost versions 5.x for now.
+
+- Ghost 5^
+
+- Node.js 16+
+  - We rely on global `fetch` being available, so you can bring your own
+    polyfill and if you run Node 16, you'll need to run with the
+    `--experimental-fetch` flag enabled.
