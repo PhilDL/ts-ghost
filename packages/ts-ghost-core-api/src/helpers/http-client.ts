@@ -1,7 +1,6 @@
 import { SignJWT } from "jose";
 
 export type HTTPClientOptions = {
-  url: string;
   key: string;
   version: string;
   endpoint: "content" | "admin";
@@ -12,6 +11,10 @@ export class HTTPClient<Api extends HTTPClientOptions = any> {
   private _jwtExpiresAt: number | undefined;
 
   constructor(protected _apiCredentials: Api) {}
+
+  get jwt() {
+    return this._jwt;
+  }
 
   public async generateJWT(key: string) {
     const [id, _secret] = key.split(":");
@@ -26,16 +29,17 @@ export class HTTPClient<Api extends HTTPClientOptions = any> {
       );
   }
 
-  private async _genHeaders(api: HTTPClientOptions) {
+  public async genHeaders(api: HTTPClientOptions) {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       "Accept-Version": api.version,
     };
     if (api.endpoint === "admin") {
       if (this._jwt === undefined || this._jwtExpiresAt === undefined || this._jwtExpiresAt < Date.now()) {
+        console.log("generating jwt");
         this._jwt = await this.generateJWT(api.key);
       }
-      headers["Authorization"] = `Ghost ${this._jwt}`;
+      headers["Authorization"] = `Ghost ${this.jwt}`;
     }
     return headers;
   }
@@ -43,7 +47,7 @@ export class HTTPClient<Api extends HTTPClientOptions = any> {
   public async fetch(URL: URL | undefined, api: HTTPClientOptions, options?: RequestInit) {
     if (URL === undefined) throw new Error("URL is undefined");
     let result = undefined;
-    const headers = await this._genHeaders(api);
+    const headers = await this.genHeaders(api);
     try {
       result = await (
         await fetch(URL.toString(), {
@@ -67,7 +71,7 @@ export class HTTPClient<Api extends HTTPClientOptions = any> {
 
   public async fetchRawResponse(URL: URL | undefined, api: HTTPClientOptions, options?: RequestInit) {
     if (URL === undefined) throw new Error("URL is undefined");
-    const headers = await this._genHeaders(api);
+    const headers = await this.genHeaders(api);
     return await fetch(URL.toString(), {
       ...options,
       headers,

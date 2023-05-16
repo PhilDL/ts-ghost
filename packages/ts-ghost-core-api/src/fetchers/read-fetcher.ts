@@ -29,7 +29,7 @@ export class ReadFetcher<
       formats?: string[];
     },
     protected _api: Api,
-    protected _httpClient: HTTPClient
+    protected httpClient: HTTPClient
   ) {
     this._buildUrlParams();
     this._resource = _api.resource;
@@ -58,7 +58,7 @@ export class ReadFetcher<
       },
       params,
       this._api,
-      this._httpClient
+      this.httpClient
     );
   }
 
@@ -83,7 +83,7 @@ export class ReadFetcher<
       },
       params,
       this._api,
-      this._httpClient
+      this.httpClient
     );
   }
 
@@ -104,7 +104,7 @@ export class ReadFetcher<
       },
       this._params,
       this._api,
-      this._httpClient
+      this.httpClient
     );
   }
 
@@ -182,7 +182,7 @@ export class ReadFetcher<
         ),
       }),
     ]);
-    const result = await this._httpClient.fetch(this._URL, this._api, options);
+    const result = await this.httpClient.fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.success = false;

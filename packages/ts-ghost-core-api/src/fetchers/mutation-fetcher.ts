@@ -24,7 +24,7 @@ export class MutationFetcher<
       body: Record<string, unknown>;
     },
     protected _api: Api,
-    protected _httpClient: HTTPClient
+    protected httpClient: HTTPClient
   ) {
     this._buildUrlParams();
     this._resource = _api.resource;
@@ -93,7 +93,7 @@ export class MutationFetcher<
     const createData = {
       [this._resource]: [this._options.body],
     };
-    const response = await this._httpClient.fetch(this._URL, this._api, {
+    const response = await this.httpClient.fetch(this._URL, this._api, {
       method: this._options.method,
       body: JSON.stringify(createData),
     });

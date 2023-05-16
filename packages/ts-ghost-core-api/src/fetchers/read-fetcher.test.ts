@@ -27,8 +27,6 @@ describe("ReadFetcher", () => {
     endpoint: "admin",
   };
 
-  const adminHttpClient = new HTTPClient(adminApi);
-
   const simplifiedSchema = z.object({
     title: z.string(),
     slug: z.string(),

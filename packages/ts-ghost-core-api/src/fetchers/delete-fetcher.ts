@@ -8,7 +8,7 @@ export class DeleteFetcher<Api extends APICredentials = any> {
   protected _URL: URL | undefined = undefined;
   protected readonly _resource: Api["resource"];
 
-  constructor(private _params: { id: string }, protected _api: Api, protected _httpClient: HTTPClient) {
+  constructor(private _params: { id: string }, protected _api: Api, protected httpClient: HTTPClient) {
     this._buildUrlParams();
     this._resource = _api.resource;
   }
@@ -54,7 +54,7 @@ export class DeleteFetcher<Api extends APICredentials = any> {
     ]);
     let result: any = {};
     try {
-      const response = await this._httpClient.fetchRawResponse(this._URL, this._api, {
+      const response = await this.httpClient.fetchRawResponse(this._URL, this._api, {
         method: "DELETE",
       });
       if (response.status === 204) {

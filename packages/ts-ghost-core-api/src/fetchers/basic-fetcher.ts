@@ -13,7 +13,7 @@ export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APIC
       output: OutputShape;
     },
     protected _api: Api,
-    protected _httpClient: HTTPClient
+    protected httpClient: HTTPClient
   ) {
     this._buildUrl();
     this._resource = _api.resource;
@@ -57,7 +57,7 @@ export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APIC
         ),
       }),
     ]);
-    const result = await this._httpClient.fetch(this._URL, this._api, options);
+    const result = await this.httpClient.fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.success = false;
