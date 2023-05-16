@@ -45,6 +45,10 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      GHOST_URL: ${{ secrets.VITE_GHOST_URL }}
+      GHOST_CONTENT_API_KEY: ${{ secrets.VITE_GHOST_CONTENT_API_KEY }}
+      GHOST_ADMIN_API_KEY: ${{ secrets.VITE_GHOST_ADMIN_API_KEY }}
+      GHOST_VERSION: ${{ secrets.VITE_GHOST_VERSION }}
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
