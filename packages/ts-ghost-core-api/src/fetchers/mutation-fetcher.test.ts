@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
 
+import { HTTPClient } from "../helpers/http-client";
 import type { ContentAPICredentials } from "../schemas/shared";
 import { MutationFetcher } from "./mutation-fetcher";
 
@@ -12,6 +13,8 @@ describe("MutationFetcher", () => {
     resource: "posts",
     endpoint: "content",
   };
+
+  const httpClient = new HTTPClient(api);
 
   const simplifiedSchema = z.object({
     id: z.string(),
@@ -38,7 +41,8 @@ describe("MutationFetcher", () => {
           foo: "bar",
         },
       },
-      api
+      api,
+      httpClient
     );
     expect(mutation).toBeInstanceOf(MutationFetcher);
     expect(mutation.getResource()).toBe("posts");

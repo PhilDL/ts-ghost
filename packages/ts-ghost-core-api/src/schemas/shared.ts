@@ -146,9 +146,6 @@ export type APICredentials = {
   endpoint: "admin" | "content";
 };
 
-export const adminAPIEndpointsSchema = z.union([z.literal("posts"), z.literal("pages")]);
-export type AdminAPIEndpoints = z.infer<typeof adminAPIEndpointsSchema>;
-
 export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
   z.object({
     resource: z.literal("pages"),

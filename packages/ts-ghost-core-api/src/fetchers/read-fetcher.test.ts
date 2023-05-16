@@ -2,6 +2,7 @@ import createFetchMock from "vitest-fetch-mock";
 import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 
+import { HTTPClient } from "../helpers/http-client";
 import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
 import { ReadFetcher } from "./read-fetcher";
 
@@ -16,6 +17,8 @@ describe("ReadFetcher", () => {
     endpoint: "content",
   };
 
+  const httpClient = new HTTPClient(api);
+
   const adminApi: AdminAPICredentials = {
     url: "https://ghost.org",
     key: "1234:123123",
@@ -23,6 +26,8 @@ describe("ReadFetcher", () => {
     resource: "posts",
     endpoint: "admin",
   };
+
+  const adminHttpClient = new HTTPClient(adminApi);
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -52,7 +57,8 @@ describe("ReadFetcher", () => {
       {
         identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
       },
-      api
+      api,
+      httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -76,7 +82,8 @@ describe("ReadFetcher", () => {
       {
         identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
       },
-      adminApi
+      adminApi,
+      httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -99,7 +106,8 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      api
+      api,
+      httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -127,7 +135,8 @@ describe("ReadFetcher", () => {
               foo: "foobarbaz",
             },
           },
-          api
+          api,
+          httpClient
         )
     ).toThrow();
   });
@@ -147,7 +156,8 @@ describe("ReadFetcher", () => {
         fields: { title: true, slug: true, count: true },
         include: ["count"],
       },
-      api
+      api,
+      httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -192,7 +202,8 @@ describe("ReadFetcher", () => {
         identity: { slug: "this-is-a-slug" },
         formats: ["html", "plaintext"],
       },
-      api
+      api,
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(ReadFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -220,7 +231,8 @@ describe("ReadFetcher", () => {
         fields: { title: true, slug: true, count: true },
         include: ["count"],
       },
-      api
+      api,
+      httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -258,7 +270,8 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      api
+      api,
+      httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
@@ -285,7 +298,8 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      api
+      api,
+      httpClient
     );
     // @ts-expect-error - _URL is private
     fetcher._URL = undefined;
@@ -303,6 +317,8 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     resource: "posts",
     endpoint: "content",
   };
+
+  const httpClient = new HTTPClient(api);
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -334,7 +350,8 @@ describe("ReadFetcherFetcher outputs test suite", () => {
         include: simplifiedIncludeSchema,
       },
       { identity: { slug: "this-is-a-slug" } },
-      api
+      api,
+      httpClient
     );
     const res = fetcher
       .formats({ html: true })
@@ -356,7 +373,8 @@ describe("ReadFetcherFetcher outputs test suite", () => {
         include: simplifiedIncludeSchema,
       },
       { identity: { email: "abc@foo.com" } },
-      api
+      api,
+      httpClient
     );
     const res = fetcher
       .formats({ html: true })
@@ -378,7 +396,8 @@ describe("ReadFetcherFetcher outputs test suite", () => {
         include: simplifiedIncludeSchema,
       },
       { identity: { slug: "this-is-a-slug" } },
-      api
+      api,
+      httpClient
     );
     const res = fetcher
       // @ts-expect-error - foobar is not defined

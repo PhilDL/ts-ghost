@@ -1,6 +1,6 @@
 import { z, ZodTypeAny } from "zod";
 
-import { _fetch } from "../helpers/network";
+import { HTTPClient } from "../helpers/http-client";
 import type { APICredentials } from "../schemas/shared";
 
 export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APICredentials = any> {
@@ -12,7 +12,8 @@ export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APIC
     protected config: {
       output: OutputShape;
     },
-    protected _api: Api
+    protected _api: Api,
+    protected _httpClient: HTTPClient
   ) {
     this._buildUrl();
     this._resource = _api.resource;
@@ -56,7 +57,7 @@ export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APIC
         ),
       }),
     ]);
-    const result = await _fetch(this._URL, this._api, options);
+    const result = await this._httpClient.fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.success = false;

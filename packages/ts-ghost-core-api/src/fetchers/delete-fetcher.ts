@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { _fetchRawResponse } from "../helpers/network";
+import { HTTPClient } from "../helpers";
 import type { APICredentials } from "../schemas/shared";
 
 export class DeleteFetcher<Api extends APICredentials = any> {
@@ -8,7 +8,7 @@ export class DeleteFetcher<Api extends APICredentials = any> {
   protected _URL: URL | undefined = undefined;
   protected readonly _resource: Api["resource"];
 
-  constructor(private _params: { id: string }, protected _api: Api) {
+  constructor(private _params: { id: string }, protected _api: Api, protected _httpClient: HTTPClient) {
     this._buildUrlParams();
     this._resource = _api.resource;
   }
@@ -54,7 +54,7 @@ export class DeleteFetcher<Api extends APICredentials = any> {
     ]);
     let result: any = {};
     try {
-      const response = await _fetchRawResponse(this._URL, this._api, {
+      const response = await this._httpClient.fetchRawResponse(this._URL, this._api, {
         method: "DELETE",
       });
       if (response.status === 204) {

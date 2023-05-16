@@ -1,7 +1,7 @@
 import { z, ZodRawShape } from "zod";
 
+import { HTTPClient } from "../helpers";
 import { BrowseParamsSchema } from "../helpers/browse-params";
-import { _fetch } from "../helpers/network";
 import { ghostMetaSchema, type APICredentials } from "../schemas/shared";
 import type { Mask } from "../utils";
 
@@ -30,7 +30,8 @@ export class BrowseFetcher<
       fields?: Fields;
       formats?: string[];
     } = { browseParams: {} as Params, include: [], fields: {} as z.noUnrecognized<Fields, OutputShape> },
-    protected _api: Api
+    protected _api: Api,
+    protected _httpClient: HTTPClient
   ) {
     this._buildUrlParams();
     this._resource = _api.resource;
@@ -58,7 +59,8 @@ export class BrowseFetcher<
         include: this.config.include,
       },
       params,
-      this._api
+      this._api,
+      this._httpClient
     );
   }
 
@@ -82,7 +84,8 @@ export class BrowseFetcher<
         include: this.config.include,
       },
       params,
-      this._api
+      this._api,
+      this._httpClient
     );
   }
 
@@ -102,7 +105,8 @@ export class BrowseFetcher<
         include: this.config.include,
       },
       this._params,
-      this._api
+      this._api,
+      this._httpClient
     );
   }
 
@@ -198,7 +202,7 @@ export class BrowseFetcher<
 
   public async fetch(options?: RequestInit) {
     const resultSchema = this._getResultSchema();
-    const result = await _fetch(this._URL, this._api, options);
+    const result = await this._httpClient.fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.success = false;
@@ -232,7 +236,7 @@ export class BrowseFetcher<
     }
 
     const resultSchema = this._getResultSchema();
-    const result = await _fetch(this._URL, this._api, options);
+    const result = await this._httpClient.fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.success = false;
@@ -270,7 +274,7 @@ export class BrowseFetcher<
         page: meta.pagination.page + 1,
       },
     };
-    const next = new BrowseFetcher(this.config, params, this._api);
+    const next = new BrowseFetcher(this.config, params, this._api, this._httpClient);
     response.next = next;
     return response;
   }

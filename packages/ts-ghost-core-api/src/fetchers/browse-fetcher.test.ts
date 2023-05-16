@@ -2,6 +2,7 @@ import createFetchMock from "vitest-fetch-mock";
 import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 
+import { HTTPClient } from "../helpers";
 import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
 import { BrowseFetcher } from "./browse-fetcher";
 
@@ -16,6 +17,8 @@ describe("BrowseFetcher", () => {
     endpoint: "content",
   };
 
+  const httpClient = new HTTPClient(api);
+
   const adminApi: AdminAPICredentials = {
     url: "https://ghost.org",
     key: "1234",
@@ -23,6 +26,8 @@ describe("BrowseFetcher", () => {
     resource: "posts",
     endpoint: "admin",
   };
+
+  const adminHttpClient = new HTTPClient(adminApi);
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -50,7 +55,8 @@ describe("BrowseFetcher", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      api,
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -69,7 +75,8 @@ describe("BrowseFetcher", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      adminApi
+      adminApi,
+      adminHttpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -87,7 +94,8 @@ describe("BrowseFetcher", () => {
         include: simplifiedIncludeSchema,
       },
       undefined,
-      api
+      api,
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -126,7 +134,8 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      api
+      api,
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -228,7 +237,8 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      api
+      api,
+      httpClient
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -277,7 +287,8 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      api
+      api,
+      httpClient
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -326,7 +337,8 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      adminApi
+      adminApi,
+      adminHttpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -359,7 +371,8 @@ describe("BrowseFetcher", () => {
       {
         formats: ["html", "plaintext"],
       },
-      api
+      api,
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -384,7 +397,8 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      api
+      api,
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
 
@@ -471,7 +485,8 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      api
+      api,
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
@@ -500,7 +515,8 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      api
+      api,
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
@@ -525,7 +541,8 @@ describe("BrowseFetcher", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      api,
+      httpClient
     );
     // @ts-expect-error - _URL is private
     fetcher._URL = undefined;
@@ -544,6 +561,8 @@ describe("BrowseFetcher output tests suite", () => {
     resource: "posts",
     endpoint: "content",
   };
+
+  const httpClient = new HTTPClient(api);
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -575,7 +594,8 @@ describe("BrowseFetcher output tests suite", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      api,
+      httpClient
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -612,7 +632,8 @@ describe("BrowseFetcher output tests suite", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      api,
+      httpClient
     );
     const res = fetcher
       .formats({ html: true })
@@ -633,7 +654,8 @@ describe("BrowseFetcher output tests suite", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      api,
+      httpClient
     );
     const res = fetcher
       // @ts-expect-error - foobar is not defined

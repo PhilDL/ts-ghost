@@ -1,6 +1,6 @@
 import { z, ZodRawShape, ZodTypeAny } from "zod";
 
-import { _fetch } from "../helpers/network";
+import { HTTPClient } from "../helpers/http-client";
 import type { APICredentials } from "../schemas/shared";
 
 export class MutationFetcher<
@@ -23,7 +23,8 @@ export class MutationFetcher<
       method: HTTPVerb;
       body: Record<string, unknown>;
     },
-    protected _api: Api
+    protected _api: Api,
+    protected _httpClient: HTTPClient
   ) {
     this._buildUrlParams();
     this._resource = _api.resource;
@@ -92,7 +93,7 @@ export class MutationFetcher<
     const createData = {
       [this._resource]: [this._options.body],
     };
-    const response = await _fetch(this._URL, this._api, {
+    const response = await this._httpClient.fetch(this._URL, this._api, {
       method: this._options.method,
       body: JSON.stringify(createData),
     });

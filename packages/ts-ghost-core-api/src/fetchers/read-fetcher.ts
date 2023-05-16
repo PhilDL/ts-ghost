@@ -1,6 +1,6 @@
 import { z, ZodRawShape } from "zod";
 
-import { _fetch } from "../helpers/network";
+import { HTTPClient } from "../helpers/http-client";
 import { type APICredentials, type GhostIdentityInput } from "../schemas/shared";
 import type { Mask } from "../utils";
 
@@ -28,7 +28,8 @@ export class ReadFetcher<
       fields?: Fields;
       formats?: string[];
     },
-    protected _api: Api
+    protected _api: Api,
+    protected _httpClient: HTTPClient
   ) {
     this._buildUrlParams();
     this._resource = _api.resource;
@@ -56,7 +57,8 @@ export class ReadFetcher<
         include: this.config.include,
       },
       params,
-      this._api
+      this._api,
+      this._httpClient
     );
   }
 
@@ -80,7 +82,8 @@ export class ReadFetcher<
         include: this.config.include,
       },
       params,
-      this._api
+      this._api,
+      this._httpClient
     );
   }
 
@@ -100,7 +103,8 @@ export class ReadFetcher<
         include: this.config.include,
       },
       this._params,
-      this._api
+      this._api,
+      this._httpClient
     );
   }
 
@@ -178,7 +182,7 @@ export class ReadFetcher<
         ),
       }),
     ]);
-    const result = await _fetch(this._URL, this._api, options);
+    const result = await this._httpClient.fetch(this._URL, this._api, options);
     let data: any = {};
     if (result.errors) {
       data.success = false;

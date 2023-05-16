@@ -3,6 +3,7 @@ import {
   APIVersions,
   BasicFetcher,
   contentAPICredentialsSchema,
+  HTTPClient,
   slugOrIdSchema,
 } from "@ts-ghost/core-api";
 
@@ -25,11 +26,20 @@ export enum BrowseEndpointType {
 }
 
 export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
+  private httpClient: HTTPClient;
+
   constructor(
     protected readonly url: string,
     protected readonly key: string,
     protected readonly version: Version
-  ) {}
+  ) {
+    this.httpClient = new HTTPClient({
+      url,
+      key,
+      version,
+      endpoint: "content",
+    });
+  }
 
   get authors() {
     const api = contentAPICredentialsSchema.parse({
@@ -51,7 +61,8 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: authorsIncludeSchema,
       },
-      api
+      api,
+      this.httpClient
     ).access(["read", "browse"]);
   }
   get tiers() {
@@ -70,7 +81,8 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
     };
     return new APIComposer(
       { schema: tiersSchema, identitySchema: slugOrIdSchema, include: tiersIncludeSchema },
-      api
+      api,
+      this.httpClient
     ).access(["browse", "read"]);
   }
   get posts() {
@@ -93,7 +105,8 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: postsIncludeSchema,
       },
-      api
+      api,
+      this.httpClient
     ).access(["browse", "read"]);
   }
   get pages() {
@@ -116,7 +129,8 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: pagesIncludeSchema,
       },
-      api
+      api,
+      this.httpClient
     ).access(["browse", "read"]);
   }
   get tags() {
@@ -135,7 +149,8 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
     };
     return new APIComposer(
       { schema: tagsSchema, identitySchema: slugOrIdSchema, include: tagsIncludeSchema },
-      api
+      api,
+      this.httpClient
     ).access(["browse", "read"]);
   }
 
@@ -153,6 +168,6 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
       url: string;
       endpoint: "content";
     };
-    return new BasicFetcher({ output: settingsSchema }, api);
+    return new BasicFetcher({ output: settingsSchema }, api, this.httpClient);
   }
 }

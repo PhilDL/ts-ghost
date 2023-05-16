@@ -5,6 +5,7 @@ import { z } from "zod";
 import { APIComposer } from "./api-composer";
 import { BrowseFetcher, ReadFetcher } from "./fetchers";
 import type { BrowseParams } from "./helpers/browse-params";
+import { HTTPClient } from "./helpers/http-client";
 import type { ContentAPICredentials } from "./schemas/shared";
 
 const fetchMocker = createFetchMock(vi);
@@ -17,6 +18,8 @@ describe("APIComposer Read / Browse", () => {
     resource: "posts",
     endpoint: "content",
   };
+
+  const httpClient = new HTTPClient(api);
 
   const simplifiedSchema = z.object({
     foo: z.string(),
@@ -38,7 +41,8 @@ describe("APIComposer Read / Browse", () => {
 
   const composer = new APIComposer(
     { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-    api
+    api,
+    httpClient
   );
 
   test("instantiation", () => {
@@ -241,6 +245,8 @@ describe("APIComposer add / edit", () => {
     endpoint: "content",
   };
 
+  const httpClient = new HTTPClient(api);
+
   const simplifiedSchema = z.object({
     id: z.string(),
     foo: z.string(),
@@ -279,7 +285,8 @@ describe("APIComposer add / edit", () => {
       //   foobar: z.string(),
       // }),
     },
-    api
+    api,
+    httpClient
   );
 
   beforeEach(() => {

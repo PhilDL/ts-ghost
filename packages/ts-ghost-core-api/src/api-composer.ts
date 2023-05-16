@@ -5,6 +5,7 @@ import { BrowseFetcher } from "./fetchers/browse-fetcher";
 import { MutationFetcher } from "./fetchers/mutation-fetcher";
 import { ReadFetcher } from "./fetchers/read-fetcher";
 import { parseBrowseParams, type BrowseParams } from "./helpers/browse-params";
+import { HTTPClient } from "./helpers/http-client";
 import type { APICredentials } from "./schemas";
 import type { IsAny } from "./utils";
 
@@ -33,7 +34,8 @@ export class APIComposer<
       createOptionsSchema?: CreateOptions;
       updateSchema?: UpdateShape;
     },
-    protected _api: Api
+    protected _apiCredentials: Api,
+    protected _httpClient: HTTPClient
   ) {}
 
   /**
@@ -60,7 +62,8 @@ export class APIComposer<
         browseParams:
           (options && parseBrowseParams(options, this.config.schema, this.config.include)) || undefined,
       },
-      this._api
+      this._apiCredentials,
+      this._httpClient
     );
   }
 
@@ -78,7 +81,8 @@ export class APIComposer<
       {
         identity: this.config.identitySchema.parse(options),
       },
-      this._api
+      this._apiCredentials,
+      this._httpClient
     );
   }
 
@@ -98,7 +102,8 @@ export class APIComposer<
       },
       parsedOptions,
       { method: "POST", body: parsedData },
-      this._api
+      this._apiCredentials,
+      this._httpClient
     );
     return fetcher.submit();
   }
@@ -130,14 +135,15 @@ export class APIComposer<
       },
       { id: cleanId, ...parsedOptions },
       { method: "PUT", body: parsedData },
-      this._api
+      this._apiCredentials,
+      this._httpClient
     );
     return fetcher.submit();
   }
 
   public async delete(id: string) {
     const cleanId = z.string().nonempty().parse(id);
-    const fetcher = new DeleteFetcher({ id: cleanId }, this._api);
+    const fetcher = new DeleteFetcher({ id: cleanId }, this._apiCredentials, this._httpClient);
     return fetcher.submit();
   }
 
