@@ -1,0 +1,49 @@
+# Usage
+
+Here are some examples of how to use the library.
+
+## Browse multiple posts
+
+```typescript
+import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
+
+let url = "https://demo.ghost.io";
+let key = "22444f78447824223cefc48062"; // Content API KEY should be in the right format corresponding to the Ghost Content API (26 Hex chars)
+const api = new TSGhostContentAPI(url, key, "v5.0"); // The instantiation is validated through a zod Schema
+
+// Browse posts
+const res = await api.posts.browse().fetch();
+if (res.success) {
+  const posts = res.data;
+  const meta = res.meta;
+  //     ^? GhostMeta Type containing pagination info
+  for (const post of posts) {
+    //        ^? type Post
+    console.log(post.title);
+  }
+} else {
+  console.error(res.errors);
+}
+```
+
+## Read one Post by slug
+
+```typescript
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
+
+let url = "https://demo.ghost.io";
+let key = "22444f78447824223cefc48062"; // Content API KEY
+const api = new TSGhostContentAPI(url, key, "v5.0");
+
+const res = await api.posts
+  .read({
+    slug: "welcome-to-ghost",
+  })
+  .fetch();
+if (res.success) {
+  const post = res.data;
+  //     ^? type Post
+} else {
+  console.error(res.errors);
+}
+```

@@ -28,6 +28,19 @@ coverage
 *.sln
 *.sw?
 
+# MISC
+.idea
+.cache/
+.next/
+next-env.d.ts
+.nuxt/
+tmp/
+temp/
+.docusaurus
+
+# Remix
+/public/build
+
 # turbo
 .turbo
 .vercel
@@ -36,3 +49,8 @@ coverage
 .output
 apps/**/public/build
 packages/ts-ghost-admin-api/src/playground.ts
+
+# macOS
+._*
+.DS_Store
+Thumbs.db

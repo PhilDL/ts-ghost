@@ -30,7 +30,7 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
 
       - name: 📥 Download deps
@@ -45,6 +45,10 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      GHOST_URL: ${{ secrets.VITE_GHOST_URL }}
+      GHOST_CONTENT_API_KEY: ${{ secrets.VITE_GHOST_CONTENT_API_KEY }}
+      GHOST_ADMIN_API_KEY: ${{ secrets.VITE_GHOST_ADMIN_API_KEY }}
+      GHOST_VERSION: ${{ secrets.VITE_GHOST_VERSION }}
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -59,7 +63,7 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
 
       - name: 📥 Download deps
@@ -91,8 +95,11 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
+
+      - name: 🏄 Copy example env vars to nextjs app
+        run: cp examples/nextjs/.env.example examples/nextjs/.env
 
       - name: 📥 Download deps
         run: pnpm install --no-frozen-lockfile --ignore-scripts
@@ -124,7 +131,7 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
 
       # - name: 🏄 Copy test env vars

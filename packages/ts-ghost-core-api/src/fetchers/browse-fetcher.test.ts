@@ -1,10 +1,11 @@
-import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
-import fetch from "cross-fetch";
+import createFetchMock from "vitest-fetch-mock";
 import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 
 import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
 import { BrowseFetcher } from "./browse-fetcher";
+
+const fetchMocker = createFetchMock(vi);
 
 describe("BrowseFetcher", () => {
   const api: ContentAPICredentials = {
@@ -35,11 +36,7 @@ describe("BrowseFetcher", () => {
   });
 
   beforeEach(() => {
-    vi.mock("cross-fetch", async () => {
-      return {
-        default: createFetchMock(vi),
-      };
-    });
+    fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -150,7 +147,7 @@ describe("BrowseFetcher", () => {
     expect(browseFetcher.getURL()?.toString()).toBe(
       "https://ghost.org/ghost/api/content/posts/?key=1234&order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count"
     );
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
           {
@@ -233,7 +230,7 @@ describe("BrowseFetcher", () => {
       },
       api
     );
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [],
       })
@@ -282,7 +279,7 @@ describe("BrowseFetcher", () => {
       },
       api
     );
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [],
       })
@@ -391,7 +388,7 @@ describe("BrowseFetcher", () => {
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
 
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
           {
@@ -434,7 +431,7 @@ describe("BrowseFetcher", () => {
         page: 2,
       },
     });
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
           {
@@ -477,7 +474,7 @@ describe("BrowseFetcher", () => {
       api
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
-    (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
+    fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await browseFetcher.fetch();
     expect(result.success).toBe(false);
@@ -506,7 +503,7 @@ describe("BrowseFetcher", () => {
       api
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
-    (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
+    fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await browseFetcher.paginate();
     expect(result.current.success).toBe(false);
@@ -564,11 +561,7 @@ describe("BrowseFetcher output tests suite", () => {
   });
 
   beforeEach(() => {
-    vi.mock("cross-fetch", async () => {
-      return {
-        default: createFetchMock(vi),
-      };
-    });
+    fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -584,7 +577,7 @@ describe("BrowseFetcher output tests suite", () => {
       {},
       api
     );
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
           {

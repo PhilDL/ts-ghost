@@ -1,18 +1,15 @@
-import createFetchMock, { type FetchMock } from "vitest-fetch-mock";
-import fetch from "cross-fetch";
+import createFetchMock from "vitest-fetch-mock";
 import { afterEach, assert, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 
 import type { ContentAPICredentials } from "../schemas/shared";
 import { BasicFetcher } from "./basic-fetcher";
 
+const fetchMocker = createFetchMock(vi);
+
 describe("BasicFetcher", () => {
   beforeEach(() => {
-    vi.mock("cross-fetch", async () => {
-      return {
-        default: createFetchMock(vi),
-      };
-    });
+    fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -51,7 +48,7 @@ describe("BasicFetcher", () => {
       bar: z.string(),
     });
     const fetcher = new BasicFetcher({ output: outputSchema }, api);
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         posts: {
           foo: "foo",
@@ -80,7 +77,7 @@ describe("BasicFetcher", () => {
       bar: z.string(),
     });
     const fetcher = new BasicFetcher({ output: outputSchema }, api);
-    (fetch as FetchMock).doMockOnce(
+    fetchMocker.doMockOnce(
       JSON.stringify({
         errors: [
           {
@@ -140,7 +137,7 @@ describe("BasicFetcher", () => {
       bar: z.string(),
     });
     const fetcher = new BasicFetcher({ output: outputSchema }, api);
-    (fetch as FetchMock).mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
+    fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await fetcher.fetch();
 

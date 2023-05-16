@@ -3,14 +3,15 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".cache"]
+      "outputs": ["dist/**", ".cache", ".next/**", "public/build/**", "build/**"]
     },
     "start": {
       "dependsOn": ["^build"],
       "outputs": ["public/build/**"]
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "lint": {
       "outputs": []
@@ -48,6 +49,7 @@
     "NODE_ENV",
     "GHOST_URL",
     "GHOST_CONTENT_API_KEY",
+    "GHOST_ADMIN_API_KEY",
     "GHOST_VERSION",
     "VITE_GHOST_URL",
     "VITE_GHOST_CONTENT_API_KEY",

@@ -33,11 +33,16 @@ pnpm i @ts-ghost/content-api
 
 This is a quick example of how to use the library.
 
-### Compatible Ghost versions.
+### Requirements
 
 This client is only compatible with Ghost versions 5.x for now.
 
 - Ghost 5^
+
+- Node.js 16+
+  - We rely on global `fetch` being available, so you can bring your own
+    polyfill and if you run Node 16, you'll need to run with the
+    `--experimental-fetch` flag enabled.
 
 ### Browse multiple posts
 

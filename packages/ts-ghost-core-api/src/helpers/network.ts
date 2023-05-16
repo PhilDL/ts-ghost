@@ -1,7 +1,12 @@
-import fetch from "cross-fetch";
 import { SignJWT } from "jose";
 
 import type { APICredentials } from "../schemas/shared";
+
+// let ghostJWT: string;
+
+// declare global {
+//   var __ghostJWT: string | undefined;
+// }
 
 export async function getJWT(key: string) {
   const [id, _secret] = key.split(":");
@@ -20,6 +25,9 @@ export async function _genHeaders(api: APICredentials) {
     "Accept-Version": api.version,
   };
   if (api.endpoint === "admin") {
+    // if (!global.__ghostJWT) {
+    //   global.__ghostJWT = await getJWT(api.key);
+    // }
     const jwt = await getJWT(api.key);
     headers["Authorization"] = `Ghost ${jwt}`;
   }
