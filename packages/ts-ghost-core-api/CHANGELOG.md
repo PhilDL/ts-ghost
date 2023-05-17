@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 5.0.1
+
+### Patch Changes
+
+- 6276df3: Inner refactoring due to core-api changes, no user-surfaced changes.
+
 ## 5.0.0
 
 ### Major Changes
