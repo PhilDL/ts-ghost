@@ -15,8 +15,8 @@ describe("HTTPClient Content API", () => {
   test("expect instanciation OK", async () => {
     expect(httpClient).toBeDefined();
     expect(httpClient.jwt).toBeUndefined();
-    expect(httpClient.URL).toBeDefined();
-    expect(httpClient.URL?.toString()).toBe("https://ghost.org/ghost/api/content/");
+    expect(httpClient.baseURL).toBeDefined();
+    expect(httpClient.baseURL?.toString()).toBe("https://ghost.org/ghost/api/content/");
   });
   test("returns correct headers if content api", async () => {
     const headers = await httpClient.genHeaders();
@@ -38,8 +38,8 @@ describe("HTTPClient Admin API", () => {
   test("expect instanciation OK", async () => {
     expect(httpClient).toBeDefined();
     expect(httpClient.jwt).toBeUndefined();
-    expect(httpClient.URL).toBeDefined();
-    expect(httpClient.URL?.toString()).toBe("https://ghost.org/ghost/api/admin/");
+    expect(httpClient.baseURL).toBeDefined();
+    expect(httpClient.baseURL?.toString()).toBe("https://ghost.org/ghost/api/admin/");
   });
   test("returns a JWT", async () => {
     const jwt = await httpClient.generateJWT("a:b");

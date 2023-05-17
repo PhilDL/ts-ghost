@@ -639,7 +639,7 @@ describe("BrowseFetcher", () => {
       httpClient
     );
     // @ts-expect-error - _URL is private
-    fetcher.httpClient._URL = undefined;
+    fetcher.httpClient._baseURL = undefined;
     await expect(fetcher.fetch()).rejects.toThrowError("URL is undefined");
     // @ts-expect-error - _params is private
     fetcher._params = undefined;

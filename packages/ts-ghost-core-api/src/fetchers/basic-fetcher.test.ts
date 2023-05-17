@@ -90,7 +90,7 @@ describe("BasicFetcher", () => {
   test("expect BasicFetcher _fetch to throw if _URL is not defined", async () => {
     const fetcher = new BasicFetcher("posts", { output: outputSchema }, httpClient);
     // @ts-expect-error - _URL is private
-    fetcher.httpClient._URL = undefined;
+    fetcher.httpClient._baseURL = undefined;
     await expect(fetcher.fetch()).rejects.toThrowError("URL is undefined");
   });
 

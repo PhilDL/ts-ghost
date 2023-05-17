@@ -12,15 +12,14 @@ export type HTTPClientOptions = {
 export class HTTPClient<const Options extends HTTPClientOptions = any> {
   private _jwt: string | undefined;
   private _jwtExpiresAt: number | undefined;
-  protected _URL: URL | undefined = undefined;
+  protected _baseURL: URL | undefined = undefined;
 
   constructor(protected config: Options) {
-    this._URL = new URL(config.url);
-    this._URL.pathname = `/ghost/api/${config.endpoint}/`;
+    this._baseURL = new URL(`/ghost/api/${config.endpoint}/`, config.url);
   }
 
-  get URL() {
-    return this._URL;
+  get baseURL() {
+    return this._baseURL;
   }
 
   get jwt() {
@@ -65,24 +64,25 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> {
     options?: RequestInit;
     pathnameIdentity?: string;
   }) {
-    if (this._URL === undefined) throw new Error("URL is undefined");
-    this._URL.pathname += `${resource}/`;
+    if (this._baseURL === undefined) throw new Error("URL is undefined");
+    let path = `${resource}/`;
     if (pathnameIdentity !== undefined) {
-      this._URL.pathname += `${pathnameIdentity}/`;
+      path += `${pathnameIdentity}/`;
     }
+    const url = new URL(path, this._baseURL);
     if (searchParams !== undefined) {
       for (const [key, value] of searchParams.entries()) {
-        this._URL.searchParams.append(key, value);
+        url.searchParams.append(key, value);
       }
     }
     if (this.config.endpoint === "content") {
-      this._URL.searchParams.append("key", this.config.key);
+      url.searchParams.append("key", this.config.key);
     }
     let result = undefined;
     const headers = await this.genHeaders();
     try {
       result = await (
-        await fetch(this._URL.toString(), {
+        await fetch(url.toString(), {
           ...options,
           headers,
         })
@@ -112,21 +112,21 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> {
     options?: RequestInit;
     pathnameIdentity?: string;
   }) {
-    if (this._URL === undefined) throw new Error("URL is undefined");
-    this._URL.pathname += `${resource}/`;
+    if (this._baseURL === undefined) throw new Error("URL is undefined");
+    this._baseURL.pathname += `${resource}/`;
     if (pathnameIdentity !== undefined) {
-      this._URL.pathname += `${pathnameIdentity}/`;
+      this._baseURL.pathname += `${pathnameIdentity}/`;
     }
     if (searchParams !== undefined) {
       for (const [key, value] of searchParams.entries()) {
-        this._URL.searchParams.append(key, value);
+        this._baseURL.searchParams.append(key, value);
       }
     }
     if (this.config.endpoint === "content") {
-      this._URL.searchParams.append("key", this.config.key);
+      this._baseURL.searchParams.append("key", this.config.key);
     }
     const headers = await this.genHeaders();
-    return await fetch(this._URL.toString(), {
+    return await fetch(this._baseURL.toString(), {
       ...options,
       headers,
     });
