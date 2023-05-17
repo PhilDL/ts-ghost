@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 3.0.1
+
+### Patch Changes
+
+- 6276df3: Inner refactoring due to core-api changes, no user-surfaced changes.
+- Updated dependencies [6276df3]
+  - @ts-ghost/core-api@5.0.1
+
 ## 3.0.0
 
 ### Major Changes
