@@ -4,22 +4,51 @@ export const siteConfig = {
     "@ts-ghost is a collection of tools written in TypeScript to interract with a Ghost Blog. Strongly 🦾 typed Content-Api, Cli tools, and more coming!",
   mainNav: [
     {
-      title: "Documentation",
-      href: "/docs/introduction",
+      title: "Content API",
+      href: "/docs/content-api/introduction",
+    },
+    {
+      title: "Admin API",
+      href: "/docs/admin-api/introduction",
+    },
+    {
+      title: "Core API",
+      href: "/docs/core-api/introduction",
+    },
+    {
+      title: "Ghost Blog Buster",
+      href: "/docs/ghost-blog-buster/introduction",
     },
   ],
   sidebarNav: [
     {
-      title: "ts-ghost ecosystem",
+      pathname: "/docs/introduction",
+      title: "Ecosystem",
       items: [
         {
           title: "Introduction",
           href: "/docs/introduction",
           items: [],
         },
+        {
+          title: "@ts-ghost/content-api",
+          href: "/docs/content-api/introduction",
+          items: [],
+        },
+        {
+          title: "@ts-ghost/admin-api",
+          href: "/docs/admin-api/introduction",
+          items: [],
+        },
+        {
+          title: "@ts-ghost/core-api",
+          href: "/docs/core-api/introduction",
+          items: [],
+        },
       ],
     },
     {
+      pathname: "/docs/content-api",
       title: "@ts-ghost/content-api",
       items: [
         {
@@ -35,6 +64,7 @@ export const siteConfig = {
       ],
     },
     {
+      pathname: "/docs/admin-api",
       title: "@ts-ghost/admin-api",
       items: [
         {
@@ -50,6 +80,7 @@ export const siteConfig = {
       ],
     },
     {
+      pathname: "/docs/core-api",
       title: "@ts-ghost/core-api",
       items: [
         {
@@ -65,6 +96,7 @@ export const siteConfig = {
       ],
     },
     {
+      pathname: "/docs/ghost-blog-buster",
       title: "Ghost Blog Buster",
       items: [
         {
@@ -88,3 +120,12 @@ export const siteConfig = {
 };
 
 export type SiteConfig = typeof siteConfig;
+
+export type SidebarNav = {
+  title: string;
+  items: {
+    title: string;
+    href: string;
+    items: never[];
+  }[];
+}[];

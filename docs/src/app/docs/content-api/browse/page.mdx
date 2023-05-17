@@ -1,0 +1,29 @@
+# Browse
+
+- `browse` will accept the same parameters as the Ghost Content API: `page`, `limit`, `order`, `filter`.
+
+## Options
+
+Params are totally optionals on the `browse` method but they let you filter and order your search.
+
+This is an example containing all the available keys in the params object
+
+```typescript
+let query = api.posts.browse({
+  page: 1,
+  limit: 5,
+  filter: "name:bar+slug:-test",
+  //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
+  order: "title DESC",
+  //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
+});
+```
+
+These browse params are then parsed through a `Zod` Schema that will validate all the fields.
+
+- `page:number` The current page requested
+- `limit:number` Between 0 and 15 (limitation of the Ghost API)
+- `filter:string` Contains the filter with [Ghost API `filter` syntax](https://ghost.org/docs/content-api/#filtering).
+- `order:string` Contains the name of the field and the order `ASC` or `DESC`.
+
+For the `order` and `filter` if you use fields that are not present on the schema (for example `name` on a `Post`) then the methods will throw an Error with message containing the unknown field.

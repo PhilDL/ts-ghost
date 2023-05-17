@@ -1,0 +1,65 @@
+# Output modifiers
+
+## Select specific fields with `.fields()`
+
+The `fields` method lets you change the output of the result to have only your selected fields, it works by giving an object with the field name and the value `true`. Under the hood it will use the `zod.pick` method to pick only the fields you want.
+
+```typescript
+let result = await api.posts
+  .read({
+    slug: "typescript-is-cool",
+  })
+  .fields({
+    id: true,
+    slug: true,
+    title: true,
+  })
+  .fetch();
+
+if (result.success) {
+  const post = result.data;
+  //     ^? type {"id": string; "slug":string; "title": string}
+}
+```
+
+The **output schema** will be modified to only have the fields you selected and TypeScript will pick up on that to warn you if you access non-existing fields.
+
+## Include relations with `.include()`
+
+The `include` method lets you include some additionnal data that the Ghost API doesn't give you by default. The `include` params is specific to each resource and is defined in the "include" `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
+
+```typescript
+let result = await api.authors
+  .read({
+    slug: "phildl",
+  })
+  .include({ "count.posts": true })
+  .fetch();
+```
+
+Available include keys by resource:
+
+- Posts & Pages: `authors`, `tags`
+- Authors: `count.posts`
+- Tags: `count.posts`
+- Tiers: `monthly_price`, `yearly_price`, `benefits`
+
+The output type will be modified to make the fields you include **non-optionals**.
+
+## Output page/post content into different `.formats()`
+
+The `formats` method lets you add alternative content formats on the output of `Post` or `Page` resource to get the content in `plaintext` or `html`. Available options are `plaintext | html | mobiledoc`.
+
+```typescript
+let result = await api.posts
+  .read({
+    slug: "this-is-a-post-slug",
+  })
+  .formats({
+    plaintext: true,
+    html: true,
+  })
+  .fetch();
+```
+
+The output type will be modified to make the formatted fields you include **non-optionals**.
