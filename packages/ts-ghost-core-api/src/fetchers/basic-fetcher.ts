@@ -1,44 +1,19 @@
 import { z, ZodTypeAny } from "zod";
 
-import { HTTPClient } from "../helpers/http-client";
-import type { APICredentials } from "../schemas/shared";
+import type { HTTPClient } from "../helpers/http-client";
+import type { APIResource } from "../schemas/shared";
 
-export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APICredentials = any> {
-  protected _urlParams: Record<string, string> = {};
-  protected _URL: URL | undefined = undefined;
-  protected readonly _resource: Api["resource"];
-
+export class BasicFetcher<const Resource extends APIResource = any, OutputShape extends ZodTypeAny = any> {
   constructor(
+    protected resource: Resource,
     protected config: {
       output: OutputShape;
     },
-    protected _api: Api,
     protected httpClient: HTTPClient
-  ) {
-    this._buildUrl();
-    this._resource = _api.resource;
-  }
+  ) {}
 
   public getResource() {
-    return this._resource;
-  }
-
-  public getURL() {
-    return this._URL;
-  }
-
-  private _buildUrl() {
-    if (this._api.endpoint === "content") {
-      this._urlParams = {
-        key: this._api.key,
-      };
-    }
-    const url = new URL(this._api.url);
-    url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/`;
-    for (const [key, value] of Object.entries(this._urlParams)) {
-      url.searchParams.append(key, value);
-    }
-    this._URL = url;
+    return this.resource;
   }
 
   public async fetch(options?: RequestInit) {
@@ -57,7 +32,7 @@ export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APIC
         ),
       }),
     ]);
-    const result = await this.httpClient.fetch(this._URL, this._api, options);
+    const result = await this.httpClient.fetch({ options, resource: this.resource });
     let data: any = {};
     if (result.errors) {
       data.success = false;
@@ -65,7 +40,7 @@ export class BasicFetcher<OutputShape extends ZodTypeAny = any, Api extends APIC
     } else {
       data = {
         success: true,
-        data: result[this._resource],
+        data: result[this.resource],
       };
     }
     return res.parse(data);

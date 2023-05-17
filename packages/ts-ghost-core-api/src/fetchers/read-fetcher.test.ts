@@ -2,30 +2,36 @@ import createFetchMock from "vitest-fetch-mock";
 import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 
-import { HTTPClient } from "../helpers/http-client";
-import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
+import { HTTPClient, HTTPClientOptions } from "../helpers/http-client";
 import { ReadFetcher } from "./read-fetcher";
 
 const fetchMocker = createFetchMock(vi);
 
+const fixture = JSON.stringify({
+  posts: [
+    {
+      title: "title",
+      slug: "this-is-a-slug-test",
+      count: 1,
+    },
+  ],
+});
+
 describe("ReadFetcher", () => {
-  const api: ContentAPICredentials = {
+  const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
-    resource: "posts",
     endpoint: "content",
   };
-
-  const httpClient = new HTTPClient(api);
-
-  const adminApi: AdminAPICredentials = {
+  const adminCredentials: HTTPClientOptions = {
     url: "https://ghost.org",
-    key: "1234:123123",
+    key: "aaiuzhduad:baiuciauhviahuv",
     version: "v5.0",
-    resource: "posts",
     endpoint: "admin",
   };
+  let httpClient: HTTPClient;
+  let adminHttpClient: HTTPClient;
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -39,14 +45,17 @@ describe("ReadFetcher", () => {
   });
 
   beforeEach(() => {
+    httpClient = new HTTPClient(credentials);
+    adminHttpClient = new HTTPClient(adminCredentials);
     fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  test("should return a ReadFetcher instance using id", () => {
+  test("should return a ReadFetcher instance using id", async () => {
     const readFetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -55,7 +64,6 @@ describe("ReadFetcher", () => {
       {
         identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
       },
-      api,
       httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
@@ -64,14 +72,25 @@ describe("ReadFetcher", () => {
     expect(readFetcher.getParams()).toStrictEqual({
       identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
     });
-    expect(readFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/content/posts/eh873jdLsnaUDj7149DSASJhdqsdj/?key=1234"
-    );
     expect(readFetcher.getFormats()).toStrictEqual([]);
+    fetchMocker.doMockOnce(fixture);
+    await readFetcher.fetch();
+
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/eh873jdLsnaUDj7149DSASJhdqsdj/?key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
+    );
   });
 
-  test("should return a ReadFetcher with admin API instance using id", () => {
+  test("should return a ReadFetcher with admin API instance using id", async () => {
     const readFetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -80,8 +99,7 @@ describe("ReadFetcher", () => {
       {
         identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
       },
-      adminApi,
-      httpClient
+      adminHttpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -89,13 +107,25 @@ describe("ReadFetcher", () => {
     expect(readFetcher.getParams()).toStrictEqual({
       identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
     });
-    expect(readFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/admin/posts/eh873jdLsnaUDj7149DSASJhdqsdj/"
+    fetchMocker.doMockOnce(fixture);
+    await readFetcher.fetch();
+
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/admin/posts/eh873jdLsnaUDj7149DSASJhdqsdj/",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+          Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
+        },
+      }
     );
   });
 
-  test("should return a ReadFetcher instance using slug", () => {
+  test("should return a ReadFetcher instance using slug", async () => {
     const readFetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -104,7 +134,6 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      api,
       httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
@@ -113,8 +142,17 @@ describe("ReadFetcher", () => {
     expect(readFetcher.getParams()).toStrictEqual({
       identity: { slug: "this-is-a-slug" },
     });
-    expect(readFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234"
+    fetchMocker.doMockOnce(fixture);
+    await readFetcher.fetch();
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
     );
   });
 
@@ -122,6 +160,7 @@ describe("ReadFetcher", () => {
     expect(
       () =>
         new ReadFetcher(
+          "posts",
           {
             schema: simplifiedSchema,
             output: simplifiedSchema,
@@ -133,7 +172,6 @@ describe("ReadFetcher", () => {
               foo: "foobarbaz",
             },
           },
-          api,
           httpClient
         )
     ).toThrow();
@@ -144,6 +182,7 @@ describe("ReadFetcher", () => {
     const outputSchema = simplifiedSchema.pick(pick);
 
     const readFetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: outputSchema,
@@ -154,7 +193,6 @@ describe("ReadFetcher", () => {
         fields: { title: true, slug: true, count: true },
         include: ["count"],
       },
-      api,
       httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
@@ -165,9 +203,6 @@ describe("ReadFetcher", () => {
       fields: { title: true, slug: true, count: true },
       include: ["count"],
     });
-    expect(readFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234&fields=title%2Cslug%2Ccount&include=count"
-    );
 
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -181,6 +216,15 @@ describe("ReadFetcher", () => {
       })
     );
     const result = await readFetcher.fetch();
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?fields=title%2Cslug%2Ccount&include=count&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
+    );
     assert(result.success);
     expect(result.data).toStrictEqual({
       title: "title",
@@ -190,7 +234,8 @@ describe("ReadFetcher", () => {
   });
 
   test("creating a ReadFetcher with formats", async () => {
-    const browseFetcher = new ReadFetcher(
+    const readFetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -200,17 +245,25 @@ describe("ReadFetcher", () => {
         identity: { slug: "this-is-a-slug" },
         formats: ["html", "plaintext"],
       },
-      api,
       httpClient
     );
-    expect(browseFetcher).toBeInstanceOf(ReadFetcher);
-    expect(browseFetcher.getResource()).toBe("posts");
-    expect(browseFetcher.getParams()).toStrictEqual({
+    expect(readFetcher).toBeInstanceOf(ReadFetcher);
+    expect(readFetcher.getResource()).toBe("posts");
+    expect(readFetcher.getParams()).toStrictEqual({
       identity: { slug: "this-is-a-slug" },
       formats: ["html", "plaintext"],
     });
-    expect(browseFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234&formats=html%2Cplaintext"
+    fetchMocker.doMockOnce(fixture);
+    await readFetcher.fetch();
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?formats=html%2Cplaintext&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
     );
   });
 
@@ -219,6 +272,7 @@ describe("ReadFetcher", () => {
     const outputSchema = simplifiedSchema.pick(pick);
 
     const readFetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: outputSchema,
@@ -229,7 +283,6 @@ describe("ReadFetcher", () => {
         fields: { title: true, slug: true, count: true },
         include: ["count"],
       },
-      api,
       httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
@@ -241,9 +294,6 @@ describe("ReadFetcher", () => {
       fields: { title: true, slug: true, count: true },
       include: ["count"],
     });
-    expect(readFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?key=1234&fields=title%2Cslug%2Ccount&include=count"
-    );
 
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -252,6 +302,15 @@ describe("ReadFetcher", () => {
     );
 
     const result = await readFetcher.fetch();
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?fields=title%2Cslug%2Ccount&include=count&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
+    );
     assert(!result.success);
     expect(result.errors).toStrictEqual([
       { message: "Validation error, cannot read author.", type: "ValidationError" },
@@ -260,6 +319,7 @@ describe("ReadFetcher", () => {
 
   test("_fetch failed, errors were caught in the fetch", async () => {
     const readFetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -268,7 +328,6 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      api,
       httpClient
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
@@ -288,6 +347,7 @@ describe("ReadFetcher", () => {
 
   test("expect ReadFetcher _fetch to throw if _URL is not defined", async () => {
     const fetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -296,27 +356,39 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      api,
       httpClient
     );
     // @ts-expect-error - _URL is private
-    fetcher._URL = undefined;
+    fetcher.httpClient._URL = undefined;
     await expect(fetcher.fetch()).rejects.toThrowError("URL is undefined");
     // @ts-expect-error - _params is private
     fetcher._params = undefined;
     expect(fetcher.getIncludes()).toEqual([]);
   });
 });
+
 describe("ReadFetcherFetcher outputs test suite", () => {
-  const api: ContentAPICredentials = {
+  const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
-    resource: "posts",
     endpoint: "content",
   };
+  let httpClient: HTTPClient;
 
-  const httpClient = new HTTPClient(api);
+  const fixture = JSON.stringify({
+    posts: [
+      {
+        title: "title",
+        slug: "eaoizdjoa1321123",
+        count: 1,
+        published: true,
+        html: "html",
+        plaintext: "plaintext",
+        mobiledoc: "mobiledoc",
+      },
+    ],
+  });
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -334,6 +406,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
   });
 
   beforeEach(() => {
+    httpClient = new HTTPClient(credentials);
     fetchMocker.enableMocks();
   });
   afterEach(() => {
@@ -342,13 +415,13 @@ describe("ReadFetcherFetcher outputs test suite", () => {
 
   test("new formats, fields, and include", async () => {
     const fetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       { identity: { slug: "this-is-a-slug" } },
-      api,
       httpClient
     );
     const res = fetcher
@@ -358,20 +431,30 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     expect(res.getIncludes()).toStrictEqual(["count", "nested.key"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
-    expect(
-      res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")
-    ).toBe("?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html");
+
+    fetchMocker.doMockOnce(fixture);
+    await res.fetch();
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
+    );
   });
 
   test("new formats, fields, and include", async () => {
     const fetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       { identity: { email: "abc@foo.com" } },
-      api,
       httpClient
     );
     const res = fetcher
@@ -381,20 +464,29 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     expect(res.getIncludes()).toStrictEqual(["count", "nested.key"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
-    expect(
-      res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/email/abc@foo.com/", "")
-    ).toBe("?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html");
+    fetchMocker.doMockOnce(fixture);
+    await res.fetch();
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/email/abc@foo.com/?fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
+    );
   });
 
   test("new formats, fields, and include should indicate wrong fields", async () => {
     const fetcher = new ReadFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       { identity: { slug: "this-is-a-slug" } },
-      api,
       httpClient
     );
     const res = fetcher
@@ -407,8 +499,17 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     expect(res.getIncludes()).toStrictEqual(["count"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
-    expect(
-      res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/", "")
-    ).toBe("?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html");
+    fetchMocker.doMockOnce(fixture);
+    await res.fetch();
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?fields=html%2Cpublished%2Ccount&include=count&formats=html&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
+    );
   });
 });

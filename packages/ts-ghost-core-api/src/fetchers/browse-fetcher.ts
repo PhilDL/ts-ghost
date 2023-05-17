@@ -1,24 +1,24 @@
 import { z, ZodRawShape } from "zod";
 
-import { HTTPClient } from "../helpers";
 import { BrowseParamsSchema } from "../helpers/browse-params";
-import { ghostMetaSchema, type APICredentials } from "../schemas/shared";
+import type { HTTPClient } from "../helpers/http-client";
+import { ghostMetaSchema, type APIResource } from "../schemas/shared";
 import type { Mask } from "../utils";
 
 export class BrowseFetcher<
+  const Resource extends APIResource = any,
   Params extends BrowseParamsSchema = any,
   Fields extends Mask<OutputShape> = any,
   BaseShape extends ZodRawShape = any,
   OutputShape extends ZodRawShape = any,
-  IncludeShape extends ZodRawShape = any,
-  Api extends APICredentials = any
+  IncludeShape extends ZodRawShape = any
 > {
   protected _urlParams: Record<string, string> = {};
-  protected _URL: URL | undefined = undefined;
+  protected _urlSearchParams: URLSearchParams | undefined = undefined;
   protected _includeFields: (keyof IncludeShape)[] = [];
-  protected readonly _resource: Api["resource"];
 
   constructor(
+    protected resource: Resource,
     protected config: {
       schema: z.ZodObject<BaseShape>;
       output: z.ZodObject<OutputShape>;
@@ -30,11 +30,9 @@ export class BrowseFetcher<
       fields?: Fields;
       formats?: string[];
     } = { browseParams: {} as Params, include: [], fields: {} as z.noUnrecognized<Fields, OutputShape> },
-    protected _api: Api,
     protected httpClient: HTTPClient
   ) {
     this._buildUrlParams();
-    this._resource = _api.resource;
   }
 
   /**
@@ -53,13 +51,13 @@ export class BrowseFetcher<
       formats: Object.keys(formats).filter((key) => ["html", "mobiledoc", "plaintext"].includes(key)),
     };
     return new BrowseFetcher(
+      this.resource,
       {
         schema: this.config.schema,
         output: this.config.output.required(formats as Formats),
         include: this.config.include,
       },
       params,
-      this._api,
       this.httpClient
     );
   }
@@ -78,13 +76,13 @@ export class BrowseFetcher<
       include: Object.keys(this.config.include.parse(include)),
     };
     return new BrowseFetcher(
+      this.resource,
       {
         schema: this.config.schema,
         output: this.config.output.required(include as Includes),
         include: this.config.include,
       },
       params,
-      this._api,
       this.httpClient
     );
   }
@@ -99,19 +97,19 @@ export class BrowseFetcher<
   public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
     const newOutput = this.config.output.pick(fields);
     return new BrowseFetcher(
+      this.resource,
       {
         schema: this.config.schema,
         output: newOutput,
         include: this.config.include,
       },
       this._params,
-      this._api,
       this.httpClient
     );
   }
 
   public getResource() {
-    return this._resource;
+    return this.resource;
   }
 
   public getParams() {
@@ -122,8 +120,8 @@ export class BrowseFetcher<
     return this.config.output.keyof().options as string[];
   }
 
-  public getURL() {
-    return this._URL;
+  public getURLSearchParams() {
+    return this._urlSearchParams;
   }
 
   public getIncludes() {
@@ -137,16 +135,9 @@ export class BrowseFetcher<
   private _buildUrlParams() {
     const inputKeys = this.config.schema.keyof().options as string[];
     const outputKeys = this.config.output.keyof().options as string[];
-    if (this._api.endpoint === "content") {
-      this._urlParams = {
-        key: this._api.key,
-        ...this._urlBrowseParams(),
-      };
-    } else {
-      this._urlParams = {
-        ...this._urlBrowseParams(),
-      };
-    }
+    this._urlParams = {
+      ...this._urlBrowseParams(),
+    };
 
     if (inputKeys.length !== outputKeys.length && outputKeys.length > 0) {
       this._urlParams.fields = outputKeys.join(",");
@@ -157,12 +148,10 @@ export class BrowseFetcher<
     if (this._params.formats && this._params.formats.length > 0) {
       this._urlParams.formats = this._params.formats.join(",");
     }
-    const url = new URL(this._api.url);
-    url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/`;
+    this._urlSearchParams = new URLSearchParams();
     for (const [key, value] of Object.entries(this._urlParams)) {
-      url.searchParams.append(key, value);
+      this._urlSearchParams.append(key, value);
     }
-    this._URL = url;
   }
 
   private _urlBrowseParams() {
@@ -202,7 +191,11 @@ export class BrowseFetcher<
 
   public async fetch(options?: RequestInit) {
     const resultSchema = this._getResultSchema();
-    const result = await this.httpClient.fetch(this._URL, this._api, options);
+    const result = await this.httpClient.fetch({
+      resource: this.resource,
+      searchParams: this._urlSearchParams,
+      options,
+    });
     let data: any = {};
     if (result.errors) {
       data.success = false;
@@ -220,7 +213,7 @@ export class BrowseFetcher<
             next: null,
           },
         },
-        data: result[this._resource],
+        data: result[this.resource],
       };
     }
     return resultSchema.parse(data);
@@ -236,7 +229,11 @@ export class BrowseFetcher<
     }
 
     const resultSchema = this._getResultSchema();
-    const result = await this.httpClient.fetch(this._URL, this._api, options);
+    const result = await this.httpClient.fetch({
+      resource: this.resource,
+      searchParams: this._urlSearchParams,
+      options,
+    });
     let data: any = {};
     if (result.errors) {
       data.success = false;
@@ -254,12 +251,12 @@ export class BrowseFetcher<
             next: null,
           },
         },
-        data: result[this._resource],
+        data: result[this.resource],
       };
     }
     const response: {
       current: z.infer<typeof resultSchema>;
-      next: BrowseFetcher<Params, Fields, BaseShape, OutputShape, IncludeShape, Api> | undefined;
+      next: BrowseFetcher<Resource, Params, Fields, BaseShape, OutputShape, IncludeShape> | undefined;
     } = {
       current: resultSchema.parse(data),
       next: undefined,
@@ -274,7 +271,7 @@ export class BrowseFetcher<
         page: meta.pagination.page + 1,
       },
     };
-    const next = new BrowseFetcher(this.config, params, this._api, this.httpClient);
+    const next = new BrowseFetcher(this.resource, this.config, params, this.httpClient);
     response.next = next;
     return response;
   }

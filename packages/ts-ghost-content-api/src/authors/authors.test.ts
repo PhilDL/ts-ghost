@@ -104,9 +104,6 @@ describe("authors resource mocked", () => {
       });
     expect(browseQuery).not.toBeUndefined();
     expect(browseQuery.getOutputFields()).toStrictEqual(["name", "id"]);
-    expect(browseQuery.getURL()?.searchParams.toString()).toBe(
-      "key=59d4bf56c73c04a18c867dc3ba&page=2&fields=name%2Cid"
-    );
 
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -129,7 +126,16 @@ describe("authors resource mocked", () => {
       })
     );
     const result = await browseQuery.fetch();
-    // expect(spy).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://my-ghost-blog.com/ghost/api/content/authors/?page=2&fields=name%2Cid&key=59d4bf56c73c04a18c867dc3ba",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
+    );
     expect(result).not.toBeUndefined();
     if (result.success) {
       expect(result.data.length).toBe(1);

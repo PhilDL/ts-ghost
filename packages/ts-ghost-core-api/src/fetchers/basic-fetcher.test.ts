@@ -2,55 +2,35 @@ import createFetchMock from "vitest-fetch-mock";
 import { afterEach, assert, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 
-import { HTTPClient } from "../helpers/http-client";
+import { HTTPClient, HTTPClientOptions } from "../helpers/http-client";
 import type { ContentAPICredentials } from "../schemas/shared";
 import { BasicFetcher } from "./basic-fetcher";
 
 const fetchMocker = createFetchMock(vi);
 
 describe("BasicFetcher", () => {
+  const credentials: HTTPClientOptions = {
+    url: "https://ghost.org",
+    key: "1234",
+    version: "v5.0",
+    endpoint: "content",
+  };
+  let httpClient: HTTPClient;
+  const outputSchema = z.object({
+    foo: z.string(),
+    bar: z.string(),
+  });
+
   beforeEach(() => {
+    httpClient = new HTTPClient(credentials);
     fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
   });
-  test("instantiation", async () => {
-    const api: ContentAPICredentials = {
-      url: "https://ghost.org",
-      key: "1234",
-      version: "v5.0",
-      resource: "posts",
-      endpoint: "content",
-    };
-    const httpClient = new HTTPClient(api);
-    const outputSchema = z.object({
-      foo: z.string(),
-      bar: z.string(),
-    });
-    const fetcher = new BasicFetcher({ output: outputSchema }, api, httpClient);
+  test("instantiation and fetch", async () => {
+    const fetcher = new BasicFetcher("posts", { output: outputSchema }, httpClient);
     expect(fetcher.getResource()).toBe("posts");
-    expect(fetcher.getURL()?.searchParams.toString()).toBe(`key=${api.key}`);
-    expect(fetcher.getURL()?.pathname).toBe(`/ghost/api/content/${api.resource}/`);
-    expect(fetcher.getURL()?.toString()).toBe(
-      `${api.url}/ghost/api/content/${api.resource}/?key=${api.key}`
-    );
-  });
-
-  test("fetch", async () => {
-    const api: ContentAPICredentials = {
-      url: "https://ghost.org",
-      key: "1234",
-      version: "v5.0",
-      resource: "posts",
-      endpoint: "content",
-    };
-    const httpClient = new HTTPClient(api);
-    const outputSchema = z.object({
-      foo: z.string(),
-      bar: z.string(),
-    });
-    const fetcher = new BasicFetcher({ output: outputSchema }, api, httpClient);
     fetchMocker.doMockOnce(
       JSON.stringify({
         posts: {
@@ -60,6 +40,15 @@ describe("BasicFetcher", () => {
       })
     );
     const result = await fetcher.fetch();
+
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Version": "v5.0",
+      },
+    });
+
     assert(result.success === true);
     expect(result.data).toStrictEqual({
       foo: "foo",
@@ -68,19 +57,7 @@ describe("BasicFetcher", () => {
   });
 
   test("fetch with errors", async () => {
-    const api: ContentAPICredentials = {
-      url: "https://ghost.org",
-      key: "1234",
-      version: "v5.0",
-      resource: "posts",
-      endpoint: "content",
-    };
-    const httpClient = new HTTPClient(api);
-    const outputSchema = z.object({
-      foo: z.string(),
-      bar: z.string(),
-    });
-    const fetcher = new BasicFetcher({ output: outputSchema }, api, httpClient);
+    const fetcher = new BasicFetcher("posts", { output: outputSchema }, httpClient);
     fetchMocker.doMockOnce(
       JSON.stringify({
         errors: [
@@ -111,38 +88,14 @@ describe("BasicFetcher", () => {
   });
 
   test("expect BasicFetcher _fetch to throw if _URL is not defined", async () => {
-    const api: ContentAPICredentials = {
-      url: "https://ghost.org",
-      key: "1234",
-      version: "v5.0",
-      resource: "posts",
-      endpoint: "content",
-    };
-    const httpClient = new HTTPClient(api);
-    const outputSchema = z.object({
-      foo: z.string(),
-      bar: z.string(),
-    });
-    const fetcher = new BasicFetcher({ output: outputSchema }, api, httpClient);
+    const fetcher = new BasicFetcher("posts", { output: outputSchema }, httpClient);
     // @ts-expect-error - _URL is private
-    fetcher._URL = undefined;
+    fetcher.httpClient._URL = undefined;
     await expect(fetcher.fetch()).rejects.toThrowError("URL is undefined");
   });
 
   test("fetch failed, errors were caught", async () => {
-    const api: ContentAPICredentials = {
-      url: "https://ghost.org",
-      key: "1234",
-      version: "v5.0",
-      resource: "posts",
-      endpoint: "content",
-    };
-    const httpClient = new HTTPClient(api);
-    const outputSchema = z.object({
-      foo: z.string(),
-      bar: z.string(),
-    });
-    const fetcher = new BasicFetcher({ output: outputSchema }, api, httpClient);
+    const fetcher = new BasicFetcher("posts", { output: outputSchema }, httpClient);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
 
     const result = await fetcher.fetch();

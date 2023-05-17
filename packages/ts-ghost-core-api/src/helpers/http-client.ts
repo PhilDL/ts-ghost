@@ -1,18 +1,27 @@
 import { SignJWT } from "jose";
 
-import type { APICredentials } from "../schemas";
+import type { APICredentials, APIResource, GhostIdentityInput } from "../schemas";
 
 export type HTTPClientOptions = {
   key: string;
   version: APICredentials["version"];
+  url: APICredentials["url"];
   endpoint: "content" | "admin";
 };
 
-export class HTTPClient<Api extends HTTPClientOptions = any> {
+export class HTTPClient<const Options extends HTTPClientOptions = any> {
   private _jwt: string | undefined;
   private _jwtExpiresAt: number | undefined;
+  protected _URL: URL | undefined = undefined;
 
-  constructor(protected _apiCredentials: Api) {}
+  constructor(protected config: Options) {
+    this._URL = new URL(config.url);
+    this._URL.pathname = `/ghost/api/${config.endpoint}/`;
+  }
+
+  get URL() {
+    return this._URL;
+  }
 
   get jwt() {
     return this._jwt;
@@ -31,28 +40,49 @@ export class HTTPClient<Api extends HTTPClientOptions = any> {
       );
   }
 
-  public async genHeaders(api: HTTPClientOptions) {
+  public async genHeaders() {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      "Accept-Version": api.version,
+      "Accept-Version": this.config.version,
     };
-    if (api.endpoint === "admin") {
+    if (this.config.endpoint === "admin") {
       if (this._jwt === undefined || this._jwtExpiresAt === undefined || this._jwtExpiresAt < Date.now()) {
-        console.log("generating jwt");
-        this._jwt = await this.generateJWT(api.key);
+        this._jwt = await this.generateJWT(this.config.key);
       }
       headers["Authorization"] = `Ghost ${this.jwt}`;
     }
     return headers;
   }
 
-  public async fetch(URL: URL | undefined, api: HTTPClientOptions, options?: RequestInit) {
-    if (URL === undefined) throw new Error("URL is undefined");
+  public async fetch({
+    resource,
+    searchParams,
+    options,
+    pathnameIdentity,
+  }: {
+    resource: APIResource;
+    searchParams?: URLSearchParams;
+    options?: RequestInit;
+    pathnameIdentity?: string;
+  }) {
+    if (this._URL === undefined) throw new Error("URL is undefined");
+    this._URL.pathname += `${resource}/`;
+    if (pathnameIdentity !== undefined) {
+      this._URL.pathname += `${pathnameIdentity}/`;
+    }
+    if (searchParams !== undefined) {
+      for (const [key, value] of searchParams.entries()) {
+        this._URL.searchParams.append(key, value);
+      }
+    }
+    if (this.config.endpoint === "content") {
+      this._URL.searchParams.append("key", this.config.key);
+    }
     let result = undefined;
-    const headers = await this.genHeaders(api);
+    const headers = await this.genHeaders();
     try {
       result = await (
-        await fetch(URL.toString(), {
+        await fetch(this._URL.toString(), {
           ...options,
           headers,
         })
@@ -71,10 +101,32 @@ export class HTTPClient<Api extends HTTPClientOptions = any> {
     return result;
   }
 
-  public async fetchRawResponse(URL: URL | undefined, api: HTTPClientOptions, options?: RequestInit) {
-    if (URL === undefined) throw new Error("URL is undefined");
-    const headers = await this.genHeaders(api);
-    return await fetch(URL.toString(), {
+  public async fetchRawResponse({
+    resource,
+    searchParams,
+    options,
+    pathnameIdentity,
+  }: {
+    resource: APIResource;
+    searchParams?: URLSearchParams;
+    options?: RequestInit;
+    pathnameIdentity?: string;
+  }) {
+    if (this._URL === undefined) throw new Error("URL is undefined");
+    this._URL.pathname += `${resource}/`;
+    if (pathnameIdentity !== undefined) {
+      this._URL.pathname += `${pathnameIdentity}/`;
+    }
+    if (searchParams !== undefined) {
+      for (const [key, value] of searchParams.entries()) {
+        this._URL.searchParams.append(key, value);
+      }
+    }
+    if (this.config.endpoint === "content") {
+      this._URL.searchParams.append("key", this.config.key);
+    }
+    const headers = await this.genHeaders();
+    return await fetch(this._URL.toString(), {
       ...options,
       headers,
     });

@@ -1,20 +1,33 @@
+import createFetchMock from "vitest-fetch-mock";
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
 
-import { HTTPClient } from "../helpers/http-client";
-import type { ContentAPICredentials } from "../schemas/shared";
+import { HTTPClient, type HTTPClientOptions } from "../helpers/http-client";
 import { MutationFetcher } from "./mutation-fetcher";
 
+const fetchMocker = createFetchMock(vi);
+
+const fixture = JSON.stringify({
+  posts: [
+    {
+      id: "123123123123123123",
+      foo: "foo",
+      bar: "bar",
+      baz: true,
+      count: 1,
+    },
+  ],
+});
+
 describe("MutationFetcher", () => {
-  const api: ContentAPICredentials = {
+  const adminCredentials: HTTPClientOptions = {
     url: "https://ghost.org",
-    key: "1234",
+    key: "aaiuzhduad:baiuciauhviahuv",
     version: "v5.0",
-    resource: "posts",
-    endpoint: "content",
+    endpoint: "admin",
   };
 
-  const httpClient = new HTTPClient(api);
+  const httpClient = new HTTPClient(adminCredentials);
 
   const simplifiedSchema = z.object({
     id: z.string(),
@@ -24,8 +37,19 @@ describe("MutationFetcher", () => {
     count: z.number().optional(),
   });
 
-  test("should return a MutationFetcher instance", () => {
+  beforeEach(() => {
+    fetchMocker.enableMocks();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test("should return a MutationFetcher instance", async () => {
+    const body = {
+      foo: "bar",
+    };
     const mutation = new MutationFetcher(
+      "posts",
       {
         output: simplifiedSchema,
         paramsShape: z.object({
@@ -37,11 +61,8 @@ describe("MutationFetcher", () => {
       },
       {
         method: "POST",
-        body: {
-          foo: "bar",
-        },
+        body,
       },
-      api,
       httpClient
     );
     expect(mutation).toBeInstanceOf(MutationFetcher);
@@ -49,8 +70,18 @@ describe("MutationFetcher", () => {
     expect(mutation.getParams()).toStrictEqual({
       option_1: true,
     });
-    expect(mutation.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/content/posts/?key=1234&option_1=true"
-    );
+    fetchMocker.doMockOnce(fixture);
+    await mutation.submit();
+
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/admin/posts/?option_1=true", {
+      body: JSON.stringify({ posts: [body] }),
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Version": "v5.0",
+        Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
+      },
+      method: "POST",
+    });
   });
 });

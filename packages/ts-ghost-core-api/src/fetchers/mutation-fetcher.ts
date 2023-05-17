@@ -1,19 +1,20 @@
 import { z, ZodRawShape, ZodTypeAny } from "zod";
 
 import { HTTPClient } from "../helpers/http-client";
-import type { APICredentials } from "../schemas/shared";
+import type { APIResource } from "../schemas/shared";
 
 export class MutationFetcher<
+  const Resource extends APIResource = any,
   OutputShape extends ZodRawShape = any,
   ParamsShape extends ZodTypeAny = any,
-  Api extends APICredentials = any,
   const HTTPVerb extends "POST" | "PUT" = "POST"
 > {
   protected _urlParams: Record<string, string> = {};
-  protected _URL: URL | undefined = undefined;
-  protected readonly _resource: Api["resource"];
+  protected _urlSearchParams: URLSearchParams | undefined = undefined;
+  protected _pathnameIdentity: string | undefined = undefined;
 
   constructor(
+    protected resource: Resource,
     protected config: {
       output: z.ZodObject<OutputShape>;
       paramsShape?: ParamsShape;
@@ -23,31 +24,20 @@ export class MutationFetcher<
       method: HTTPVerb;
       body: Record<string, unknown>;
     },
-    protected _api: Api,
     protected httpClient: HTTPClient
   ) {
     this._buildUrlParams();
-    this._resource = _api.resource;
   }
 
   public getResource() {
-    return this._resource;
+    return this.resource;
   }
 
   public getParams() {
     return this._params;
   }
 
-  public getURL() {
-    return this._URL;
-  }
-
   private _buildUrlParams() {
-    if (this._api.endpoint === "content") {
-      this._urlParams = {
-        key: this._api.key,
-      };
-    }
     if (this._params) {
       for (const [key, value] of Object.entries(this._params)) {
         if (key !== "id") {
@@ -56,16 +46,13 @@ export class MutationFetcher<
       }
     }
 
-    const url = new URL(this._api.url);
+    this._urlSearchParams = new URLSearchParams();
     if (this._params?.id) {
-      url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/${this._params.id}/`;
-    } else {
-      url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/`;
+      this._pathnameIdentity = `${this._params.id}`;
     }
     for (const [key, value] of Object.entries(this._urlParams)) {
-      url.searchParams.append(key, value);
+      this._urlSearchParams.append(key, value);
     }
-    this._URL = url;
   }
 
   public async submit() {
@@ -91,11 +78,16 @@ export class MutationFetcher<
     // body is also an array of objects, so we need to wrap it in another array
     // but Ghost will throw an error if given more than 1 item in the array.
     const createData = {
-      [this._resource]: [this._options.body],
+      [this.resource]: [this._options.body],
     };
-    const response = await this.httpClient.fetch(this._URL, this._api, {
-      method: this._options.method,
-      body: JSON.stringify(createData),
+    const response = await this.httpClient.fetch({
+      resource: this.resource,
+      searchParams: this._urlSearchParams,
+      pathnameIdentity: this._pathnameIdentity,
+      options: {
+        method: this._options.method,
+        body: JSON.stringify(createData),
+      },
     });
     let result: any = {};
     if (response.errors) {
@@ -104,7 +96,7 @@ export class MutationFetcher<
     } else {
       result = {
         success: true,
-        data: response[this._resource][0],
+        data: response[this.resource][0],
       };
     }
     return schema.parse(result);

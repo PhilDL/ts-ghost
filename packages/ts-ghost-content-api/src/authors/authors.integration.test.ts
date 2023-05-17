@@ -109,8 +109,6 @@ describe("authors integration tests read", () => {
     const readQuery = api.authors.read({ id: "1" });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams().fields).toBeUndefined();
-    expect(readQuery.getURL()?.searchParams.toString()).toBeDefined();
-    expect(readQuery.getURL()?.searchParams.toString()).toContain("key=");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     if (result.success) {
@@ -130,8 +128,6 @@ describe("authors integration tests read", () => {
     const readQuery = api.authors.read({ slug: "phildl" });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams().fields).toBeUndefined();
-    expect(readQuery.getURL()?.searchParams.toString()).toBeDefined();
-    expect(readQuery.getURL()?.searchParams.toString()).toContain("key=");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     if (result.success) {
@@ -151,7 +147,6 @@ describe("authors integration tests read", () => {
     const readQuery = api.authors.read({ id: "1" }).fields({ name: true });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getOutputFields()).toStrictEqual(["name"]);
-    expect(readQuery.getURL()?.searchParams.toString()).toContain("&fields=name");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     if (result.success) {
@@ -168,7 +163,6 @@ describe("authors integration tests read", () => {
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams()?.fields).toBeUndefined();
     expect(readQuery.getParams()?.include).toStrictEqual(["count.posts"]);
-    expect(readQuery.getURL()?.searchParams.toString()).toContain("&include=count.posts");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     if (result.success) {
@@ -185,8 +179,6 @@ describe("authors integration tests read", () => {
     const readQuery = api.authors.read({ id: "32" });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams().fields).toBeUndefined();
-    expect(readQuery.getURL()?.searchParams.toString()).toBeDefined();
-    expect(readQuery.getURL()?.searchParams.toString()).toContain("key=");
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     assert(!result.success);
