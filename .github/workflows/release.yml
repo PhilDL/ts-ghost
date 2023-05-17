@@ -38,7 +38,7 @@ jobs:
 
       - name: 🦋 Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v1.4.4
         with:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
           publish: pnpm release
@@ -48,7 +48,7 @@ jobs:
 
       # Changeset has some issues with pnpm so we sync it up manually
       - name: Sync lockfile if necessary
-        if: steps.changeset.outputs.hasChangesets == 'true'
+        if: steps.changesets.outputs.hasChangesets == 'true'
         run: |
           git checkout changeset-release/main
           pnpm install --no-frozen-lockfile
