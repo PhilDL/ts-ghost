@@ -5,7 +5,8 @@ import { BrowseFetcher } from "./fetchers/browse-fetcher";
 import { MutationFetcher } from "./fetchers/mutation-fetcher";
 import { ReadFetcher } from "./fetchers/read-fetcher";
 import { parseBrowseParams, type BrowseParams } from "./helpers/browse-params";
-import type { APICredentials } from "./schemas";
+import type { HTTPClient } from "./helpers/http-client";
+import type { APIResource, GhostRequestConfig } from "./schemas";
 import type { IsAny } from "./utils";
 
 function isZodObject(schema: z.ZodObject<any> | z.ZodTypeAny): schema is z.ZodObject<any> {
@@ -16,15 +17,16 @@ function isZodObject(schema: z.ZodObject<any> | z.ZodTypeAny): schema is z.ZodOb
  * API Composer contains all methods, pick and choose.
  */
 export class APIComposer<
+  const Resource extends APIResource = any,
   Shape extends ZodRawShape = any,
   IdentityShape extends z.ZodTypeAny = any,
   IncludeShape extends ZodRawShape = any,
   CreateShape extends ZodTypeAny = any,
   CreateOptions extends ZodTypeAny = any,
-  UpdateShape extends ZodTypeAny = any,
-  Api extends APICredentials = any
+  UpdateShape extends ZodTypeAny = any
 > {
   constructor(
+    protected resource: Resource,
     protected config: {
       schema: z.ZodObject<Shape>;
       identitySchema: IdentityShape;
@@ -33,7 +35,7 @@ export class APIComposer<
       createOptionsSchema?: CreateOptions;
       updateSchema?: UpdateShape;
     },
-    protected _api: Api
+    protected httpClient: HTTPClient
   ) {}
 
   /**
@@ -51,6 +53,7 @@ export class APIComposer<
     }
   >(options?: BrowseParams<P, Shape & IncludeShape>) {
     return new BrowseFetcher(
+      this.resource,
       {
         schema: this.config.schema,
         output: this.config.schema,
@@ -60,7 +63,7 @@ export class APIComposer<
         browseParams:
           (options && parseBrowseParams(options, this.config.schema, this.config.include)) || undefined,
       },
-      this._api
+      this.httpClient
     );
   }
 
@@ -70,6 +73,7 @@ export class APIComposer<
    */
   public read(options: z.infer<IdentityShape>) {
     return new ReadFetcher(
+      this.resource,
       {
         schema: this.config.schema,
         output: this.config.schema,
@@ -78,7 +82,7 @@ export class APIComposer<
       {
         identity: this.config.identitySchema.parse(options),
       },
-      this._api
+      this.httpClient
     );
   }
 
@@ -92,13 +96,14 @@ export class APIComposer<
         ? this.config.createOptionsSchema.parse(options)
         : undefined;
     const fetcher = new MutationFetcher(
+      this.resource,
       {
         output: this.config.schema,
         paramsShape: this.config.createOptionsSchema,
       },
       parsedOptions,
       { method: "POST", body: parsedData },
-      this._api
+      this.httpClient
     );
     return fetcher.submit();
   }
@@ -124,20 +129,21 @@ export class APIComposer<
       throw new Error("No data to edit");
     }
     const fetcher = new MutationFetcher(
+      this.resource,
       {
         output: this.config.schema,
         paramsShape: this.config.createOptionsSchema,
       },
       { id: cleanId, ...parsedOptions },
       { method: "PUT", body: parsedData },
-      this._api
+      this.httpClient
     );
     return fetcher.submit();
   }
 
   public async delete(id: string) {
     const cleanId = z.string().nonempty().parse(id);
-    const fetcher = new DeleteFetcher({ id: cleanId }, this._api);
+    const fetcher = new DeleteFetcher(this.resource, { id: cleanId }, this.httpClient);
     return fetcher.submit();
   }
 

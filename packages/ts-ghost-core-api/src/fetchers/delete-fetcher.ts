@@ -1,39 +1,32 @@
 import { z } from "zod";
 
-import { _fetchRawResponse } from "../helpers/network";
-import type { APICredentials } from "../schemas/shared";
+import type { HTTPClient } from "../helpers/http-client";
+import type { APIResource } from "../schemas/shared";
 
-export class DeleteFetcher<Api extends APICredentials = any> {
-  protected _urlParams: Record<string, string> = {};
-  protected _URL: URL | undefined = undefined;
-  protected readonly _resource: Api["resource"];
+export class DeleteFetcher<const Resource extends APIResource = any> {
+  protected _pathnameIdentity: string | undefined = undefined;
 
-  constructor(private _params: { id: string }, protected _api: Api) {
-    this._buildUrlParams();
-    this._resource = _api.resource;
+  constructor(
+    protected resource: Resource,
+    private _params: { id: string },
+    protected httpClient: HTTPClient
+  ) {
+    this._buildPathnameIdentity();
   }
 
   public getResource() {
-    return this._resource;
+    return this.resource;
   }
 
   public getParams() {
     return this._params;
   }
 
-  public getURL() {
-    return this._URL;
-  }
-
-  private _buildUrlParams() {
-    if (this._api.endpoint === "content") {
-      this._urlParams = {
-        key: this._api.key,
-      };
+  private _buildPathnameIdentity() {
+    if (!this._params.id) {
+      throw new Error("Missing id in params");
     }
-    const url = new URL(this._api.url);
-    url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/${this._params.id}/`;
-    this._URL = url;
+    this._pathnameIdentity = this._params.id;
   }
 
   public async submit() {
@@ -54,8 +47,12 @@ export class DeleteFetcher<Api extends APICredentials = any> {
     ]);
     let result: any = {};
     try {
-      const response = await _fetchRawResponse(this._URL, this._api, {
-        method: "DELETE",
+      const response = await this.httpClient.fetchRawResponse({
+        resource: this.resource,
+        pathnameIdentity: this._pathnameIdentity,
+        options: {
+          method: "DELETE",
+        },
       });
       if (response.status === 204) {
         result = {

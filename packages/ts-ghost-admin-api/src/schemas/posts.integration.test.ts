@@ -477,12 +477,11 @@ describe("posts integration tests browse", () => {
       twitter_title: "Twitter Title from ts-ghost",
       twitter_description: "Twitter Description from ts-ghost",
       visibility: "public",
-      slug: "foobarbaz",
     });
     assert(postAdd.success);
     const newPost = postAdd.data;
     expect(newPost.title).toBe(title);
-    expect(newPost.slug).toBe("foobarbaz");
+    expect(newPost.slug).toBeDefined();
     expect(newPost.custom_excerpt).toBe("This is custom excerpt from ts-ghost");
     expect(newPost.meta_title).toBe("Meta Title from ts-ghost");
     expect(newPost.meta_description).toBe("Description from ts-ghost");

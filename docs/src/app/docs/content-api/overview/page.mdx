@@ -1,6 +1,27 @@
 # Usage
 
-Here are some examples of how to use the library.
+The `@ts-ghost/content-api` allows you to build type-safe queries to the Ghost Content API endpoints and get back typed responses.
+
+## Building Queries
+
+Calling any resource like `authors`, `posts`, etc (except `settings` resource) will give a
+new instance of APIComposer containing two exposed methods `read` and `browse` (if you are interested in a version that exposes `add`, `edit` and `delete` you will have to check the [@ts-ghost/admin-api](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)).
+
+This instance is already built with the associated Schema for that resource so any operation
+you will do from that point will be typed against the asociated schema.
+
+`browse` and `read` methods accept an options object. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
+
+```typescript
+let query = api.posts.browse({
+  limit: 5,
+  order: "title DESC",
+  //      ^? the text here will throw a TypeScript lint error if you use unknown field.
+});
+```
+
+- `browse` will accept browse parameters like `page`, `limit`, `order`, `filter`.
+- `read` parameters are `id` or `slug`.
 
 ## Browse multiple posts
 

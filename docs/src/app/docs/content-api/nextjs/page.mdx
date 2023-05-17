@@ -1,0 +1,72 @@
+# NextJS
+
+This is an example for NextJS 13 using the `@ts-ghost/content-api` with the app Router where we fetch the list of posts and the site settings to display them on the `/blog` of our site.
+
+<Steps>
+
+### Installation
+
+```bash title="Terminal"
+pnpm add @ts-ghost/content-api
+```
+
+### Create `.env` variable
+
+```bash title=".env"
+GHOST_URL="https://myblog.com"
+GHOST_CONTENT_API_KEY="e9b414c5d95a5436a647ff04ab"
+```
+
+### Create a file in the app folder to instantiate the API
+
+```ts title="app/blog/ghost.ts"
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
+
+export const api = new TSGhostContentAPI(
+  process.env.GHOST_URL || "",
+  process.env.GHOST_CONTENT_API_KEY || "",
+  "v5.0"
+);
+```
+
+### Use the API in the app Router
+
+```tsx title="app/blog/page.tsx"
+import { api } from "./ghost";
+
+async function getBlogPosts() {
+  const response = await api.posts
+    .browse()
+    .fields({title: true, slug:true, id:true})
+    .fetch();
+  if(!response.success) {
+    throw new Error(response.errors.join(", "));
+  }
+  return response.data;
+}
+
+async function getSiteSettings() {
+  const response = await api.settings.fetch();
+  if(!response.success) {
+    throw new Error(response.errors.join(", "));
+  }
+  return response.data;
+}
+
+// async Server Component
+export default async function HomePage() {
+  const [posts, settings] = await Promise.all([
+    getBlogPosts(),
+    getSiteSettings()
+  ])
+  return <div>
+    <h1>This is a list of posts for {settings.title}:</h1>
+    <ul>
+      {(posts).map(post => <li key={post.id}>{post.title} ({post.slug})</li>)}
+    </ul>
+
+  </div>;
+}
+```
+
+</Steps>

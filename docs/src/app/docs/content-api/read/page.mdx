@@ -1,0 +1,19 @@
+# Read
+
+Read is used to fetch 1 resource using an identity field, usually `id`, `slug` or `email`. The Identity field is defined in the `Schema` of the resource. And will be autocompleted at usage.
+
+## Options
+
+```typescript
+let query = api.posts.read({
+  id: "edHks74hdKqhs34izzahd45"
+});
+
+// or
+
+let query = api.posts.read({
+  slug: "typescript-is-awesome-in-2025"
+});
+```
+
+You can submit **both** `id` and `slug`, but the fetcher will then chose the `id` in priority if present to make the final URL query to the Ghost API.

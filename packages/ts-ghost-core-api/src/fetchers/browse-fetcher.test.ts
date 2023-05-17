@@ -2,27 +2,56 @@ import createFetchMock from "vitest-fetch-mock";
 import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 
+import { HTTPClient, type HTTPClientOptions } from "../helpers";
 import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
 import { BrowseFetcher } from "./browse-fetcher";
 
 const fetchMocker = createFetchMock(vi);
 
+const postsStub = JSON.stringify({
+  posts: [
+    {
+      title: "title",
+      slug: "eaoizdjoa1321123",
+      count: 1,
+    },
+  ],
+  meta: {
+    pagination: {
+      page: 1,
+      limit: 10,
+      pages: 1,
+      total: 1,
+      next: null,
+      prev: null,
+    },
+  },
+});
 describe("BrowseFetcher", () => {
-  const api: ContentAPICredentials = {
+  const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
-    resource: "posts",
     endpoint: "content",
   };
-
-  const adminApi: AdminAPICredentials = {
+  const adminCredentials: HTTPClientOptions = {
     url: "https://ghost.org",
-    key: "1234",
+    key: "aaiuzhduad:baiuciauhviahuv",
     version: "v5.0",
-    resource: "posts",
     endpoint: "admin",
   };
+  let httpClient: HTTPClient;
+  let adminHttpClient: HTTPClient;
+
+  // const adminApi: AdminAPICredentials = {
+  //   url: "https://ghost.org",
+  //   key: "1234",
+  //   version: "v5.0",
+  //   resource: "posts",
+  //   endpoint: "admin",
+  // };
+
+  // const adminHttpClient = new HTTPClient(adminApi);
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -36,21 +65,24 @@ describe("BrowseFetcher", () => {
   });
 
   beforeEach(() => {
+    httpClient = new HTTPClient(credentials);
+    adminHttpClient = new HTTPClient(adminCredentials);
     fetchMocker.enableMocks();
   });
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  test("should return a BrowseFetcher instance", () => {
+  test("should return a BrowseFetcher instance", async () => {
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -58,36 +90,75 @@ describe("BrowseFetcher", () => {
     expect(browseFetcher.getIncludes()).toEqual([]);
     expect(browseFetcher.getParams()).toStrictEqual({});
     expect(browseFetcher.getFormats()).toStrictEqual([]);
-    expect(browseFetcher.getURL()?.toString()).toBe("https://ghost.org/ghost/api/content/posts/?key=1234");
+
+    fetchMocker.doMockOnce(postsStub);
+    const result = await browseFetcher.fetch();
+
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Version": "v5.0",
+      },
+    });
+    assert(result.success === true);
+    expect(result.data).toStrictEqual([
+      {
+        title: "title",
+        slug: "eaoizdjoa1321123",
+        count: 1,
+      },
+    ]);
   });
 
-  test("should return a BrowseFetcher instance with Admin API", () => {
+  test("should return a BrowseFetcher instance with Admin API", async () => {
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       {},
-      adminApi
+      adminHttpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
     expect(browseFetcher.getOutputFields()).toEqual(["title", "slug", "published", "count"]);
     expect(browseFetcher.getIncludes()).toEqual([]);
     expect(browseFetcher.getParams()).toStrictEqual({});
-    expect(browseFetcher.getURL()?.toString()).toBe("https://ghost.org/ghost/api/admin/posts/");
+
+    fetchMocker.doMockOnce(postsStub);
+    const result = await browseFetcher.fetch();
+
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/admin/posts/", {
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Version": "v5.0",
+        Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
+      },
+    });
+    assert(result.success === true);
+    expect(result.data).toStrictEqual([
+      {
+        title: "title",
+        slug: "eaoizdjoa1321123",
+        count: 1,
+      },
+    ]);
   });
 
-  test("should return a BrowseFetcher instance with undefined browse params", () => {
+  test("should return a BrowseFetcher instance with undefined browse params", async () => {
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       undefined,
-      api
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -98,7 +169,15 @@ describe("BrowseFetcher", () => {
       fields: {},
       include: [],
     });
-    expect(browseFetcher.getURL()?.toString()).toBe("https://ghost.org/ghost/api/content/posts/?key=1234");
+    fetchMocker.doMockOnce(postsStub);
+    await browseFetcher.fetch();
+    expect(fetchMocker).toHaveBeenCalledTimes(1);
+    expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Version": "v5.0",
+      },
+    });
   });
 
   test("creating a BrowseFetcher with params", async () => {
@@ -109,6 +188,7 @@ describe("BrowseFetcher", () => {
     } as const;
     const output = simplifiedSchema.pick(pick);
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output,
@@ -126,7 +206,7 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      api
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -144,9 +224,6 @@ describe("BrowseFetcher", () => {
       },
       include: ["count"],
     });
-    expect(browseFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/content/posts/?key=1234&order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count"
-    );
     fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
@@ -169,6 +246,15 @@ describe("BrowseFetcher", () => {
       })
     );
     const result = await browseFetcher.fetch();
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/?order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
+    );
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data).toStrictEqual([
@@ -211,6 +297,7 @@ describe("BrowseFetcher", () => {
     } as const;
     const output = simplifiedSchema.pick(pick);
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output,
@@ -228,7 +315,7 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      api
+      httpClient
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -260,6 +347,7 @@ describe("BrowseFetcher", () => {
     } as const;
     const output = simplifiedSchema.pick(pick);
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output,
@@ -277,7 +365,7 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      api
+      httpClient
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -309,6 +397,7 @@ describe("BrowseFetcher", () => {
     } as const;
     const output = simplifiedSchema.pick(pick);
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output,
@@ -326,7 +415,7 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      adminApi
+      adminHttpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -344,13 +433,23 @@ describe("BrowseFetcher", () => {
       },
       include: ["count"],
     });
-    expect(browseFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/admin/posts/?order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count"
+    fetchMocker.doMockOnce(postsStub);
+    await browseFetcher.fetch();
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/admin/posts/?order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+          Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
+        },
+      }
     );
   });
 
   test("creating a BrowseFetcher with formats", async () => {
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -359,7 +458,7 @@ describe("BrowseFetcher", () => {
       {
         formats: ["html", "plaintext"],
       },
-      api
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -367,13 +466,22 @@ describe("BrowseFetcher", () => {
       formats: ["html", "plaintext"],
     });
     expect(browseFetcher.getFormats()).toStrictEqual(["html", "plaintext"]);
-    expect(browseFetcher.getURL()?.toString()).toBe(
-      "https://ghost.org/ghost/api/content/posts/?key=1234&formats=html%2Cplaintext"
+    fetchMocker.doMockOnce(postsStub);
+    await browseFetcher.fetch();
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/?formats=html%2Cplaintext&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
     );
   });
 
   test("creating a BrowseFetcher that paginates", async () => {
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -384,7 +492,7 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      api
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
 
@@ -461,6 +569,7 @@ describe("BrowseFetcher", () => {
 
   test("_fetch failed, errors were caught in the fetch", async () => {
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -471,7 +580,7 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      api
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
@@ -490,6 +599,7 @@ describe("BrowseFetcher", () => {
 
   test("_fetch failed, errors were caught in the paginate", async () => {
     const browseFetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
@@ -500,7 +610,7 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      api
+      httpClient
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
@@ -519,16 +629,17 @@ describe("BrowseFetcher", () => {
 
   test("expect BrowseFetcher _fetch to throw if _URL is not defined", async () => {
     const fetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      httpClient
     );
     // @ts-expect-error - _URL is private
-    fetcher._URL = undefined;
+    fetcher.httpClient._baseURL = undefined;
     await expect(fetcher.fetch()).rejects.toThrowError("URL is undefined");
     // @ts-expect-error - _params is private
     fetcher._params = undefined;
@@ -537,13 +648,13 @@ describe("BrowseFetcher", () => {
 });
 
 describe("BrowseFetcher output tests suite", () => {
-  const api: ContentAPICredentials = {
+  const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
-    resource: "posts",
     endpoint: "content",
   };
+  let httpClient: HTTPClient;
 
   const simplifiedSchema = z.object({
     title: z.string(),
@@ -560,7 +671,32 @@ describe("BrowseFetcher output tests suite", () => {
     "nested.key": z.literal(true).optional(),
   });
 
+  const fixture = JSON.stringify({
+    posts: [
+      {
+        title: "title",
+        slug: "eaoizdjoa1321123",
+        count: 1,
+        published: true,
+        html: "html",
+        plaintext: "plaintext",
+        mobiledoc: "mobiledoc",
+      },
+    ],
+    meta: {
+      pagination: {
+        page: 1,
+        limit: 10,
+        pages: 1,
+        total: 1,
+        next: null,
+        prev: null,
+      },
+    },
+  });
+
   beforeEach(() => {
+    httpClient = new HTTPClient(credentials);
     fetchMocker.enableMocks();
   });
   afterEach(() => {
@@ -569,13 +705,14 @@ describe("BrowseFetcher output tests suite", () => {
 
   test("beta__unstable tests", async () => {
     const fetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      httpClient
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -606,13 +743,14 @@ describe("BrowseFetcher output tests suite", () => {
 
   test("new formats, fields, and include", async () => {
     const fetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      httpClient
     );
     const res = fetcher
       .formats({ html: true })
@@ -621,19 +759,29 @@ describe("BrowseFetcher output tests suite", () => {
     expect(res.getIncludes()).toStrictEqual(["count", "nested.key"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
-    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/", "")).toBe(
-      "?key=1234&fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html"
+
+    fetchMocker.doMockOnce(fixture);
+    await res.fetch();
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/?fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
     );
   });
   test("new formats, fields, and include should indicate wrong fields", async () => {
     const fetcher = new BrowseFetcher(
+      "posts",
       {
         schema: simplifiedSchema,
         output: simplifiedSchema,
         include: simplifiedIncludeSchema,
       },
       {},
-      api
+      httpClient
     );
     const res = fetcher
       // @ts-expect-error - foobar is not defined
@@ -645,8 +793,16 @@ describe("BrowseFetcher output tests suite", () => {
     expect(res.getIncludes()).toStrictEqual(["count"]);
     expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
     expect(res.getFormats()).toStrictEqual(["html"]);
-    expect(res.getURL()?.toString().replace("https://ghost.org/ghost/api/content/posts/", "")).toBe(
-      "?key=1234&fields=html%2Cpublished%2Ccount&include=count&formats=html"
+    fetchMocker.doMockOnce(fixture);
+    await res.fetch();
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/?fields=html%2Cpublished%2Ccount&include=count&formats=html&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v5.0",
+        },
+      }
     );
   });
 });

@@ -1,22 +1,23 @@
 import { z, ZodRawShape } from "zod";
 
-import { _fetch } from "../helpers/network";
-import { type APICredentials, type GhostIdentityInput } from "../schemas/shared";
+import type { HTTPClient } from "../helpers/http-client";
+import { type APIResource, type GhostIdentityInput } from "../schemas/shared";
 import type { Mask } from "../utils";
 
 export class ReadFetcher<
+  const Resource extends APIResource = any,
   Fields extends Mask<OutputShape> = any,
   BaseShape extends ZodRawShape = any,
   OutputShape extends ZodRawShape = any,
-  IncludeShape extends ZodRawShape = any,
-  Api extends APICredentials = any
+  IncludeShape extends ZodRawShape = any
 > {
   protected _urlParams: Record<string, string> = {};
-  protected _URL: URL | undefined = undefined;
+  protected _urlSearchParams: URLSearchParams | undefined = undefined;
+  protected _pathnameIdentity: string | undefined = undefined;
   protected _includeFields: (keyof IncludeShape)[] = [];
-  protected readonly _resource: Api["resource"];
 
   constructor(
+    protected resource: Resource,
     protected config: {
       schema: z.ZodObject<BaseShape>;
       output: z.ZodObject<OutputShape>;
@@ -28,10 +29,9 @@ export class ReadFetcher<
       fields?: Fields;
       formats?: string[];
     },
-    protected _api: Api
+    protected httpClient: HTTPClient
   ) {
     this._buildUrlParams();
-    this._resource = _api.resource;
   }
 
   /**
@@ -50,13 +50,14 @@ export class ReadFetcher<
       formats: Object.keys(formats).filter((key) => ["html", "mobiledoc", "plaintext"].includes(key)),
     };
     return new ReadFetcher(
+      this.resource,
       {
         schema: this.config.schema,
         output: this.config.output.required(formats as Formats),
         include: this.config.include,
       },
       params,
-      this._api
+      this.httpClient
     );
   }
 
@@ -74,13 +75,14 @@ export class ReadFetcher<
       include: Object.keys(this.config.include.parse(include)),
     };
     return new ReadFetcher(
+      this.resource,
       {
         schema: this.config.schema,
         output: this.config.output.required(include as Includes),
         include: this.config.include,
       },
       params,
-      this._api
+      this.httpClient
     );
   }
 
@@ -94,18 +96,19 @@ export class ReadFetcher<
   public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
     const newOutput = this.config.output.pick(fields);
     return new ReadFetcher(
+      this.resource,
       {
         schema: this.config.schema,
         output: newOutput,
         include: this.config.include,
       },
       this._params,
-      this._api
+      this.httpClient
     );
   }
 
   public getResource() {
-    return this._resource;
+    return this.resource;
   }
 
   public getParams() {
@@ -114,10 +117,6 @@ export class ReadFetcher<
 
   public getOutputFields() {
     return this.config.output.keyof().options as string[];
-  }
-
-  public getURL() {
-    return this._URL;
   }
 
   public getIncludes() {
@@ -131,11 +130,6 @@ export class ReadFetcher<
   private _buildUrlParams() {
     const inputKeys = this.config.schema.keyof().options as string[];
     const outputKeys = this.config.output.keyof().options as string[];
-    if (this._api.endpoint === "content") {
-      this._urlParams = {
-        key: this._api.key,
-      };
-    }
 
     if (inputKeys.length !== outputKeys.length && outputKeys.length > 0) {
       this._urlParams.fields = outputKeys.join(",");
@@ -146,20 +140,20 @@ export class ReadFetcher<
     if (this._params.formats && this._params.formats.length > 0) {
       this._urlParams.formats = this._params.formats.join(",");
     }
-    const url = new URL(this._api.url);
+
     if (this._params.identity.id) {
-      url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/${this._params.identity.id}/`;
+      this._pathnameIdentity = `${this._params.identity.id}`;
     } else if (this._params.identity.slug) {
-      url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/slug/${this._params.identity.slug}/`;
+      this._pathnameIdentity = `slug/${this._params.identity.slug}`;
     } else if (this._params.identity.email) {
-      url.pathname = `/ghost/api/${this._api.endpoint}/${this._api.resource}/email/${this._params.identity.email}/`;
+      this._pathnameIdentity = `email/${this._params.identity.email}`;
     } else {
       throw new Error("Identity is not defined");
     }
+    this._urlSearchParams = new URLSearchParams();
     for (const [key, value] of Object.entries(this._urlParams)) {
-      url.searchParams.append(key, value);
+      this._urlSearchParams.append(key, value);
     }
-    this._URL = url;
   }
 
   public async fetch(options?: RequestInit) {
@@ -178,7 +172,12 @@ export class ReadFetcher<
         ),
       }),
     ]);
-    const result = await _fetch(this._URL, this._api, options);
+    const result = await this.httpClient.fetch({
+      resource: this.resource,
+      pathnameIdentity: this._pathnameIdentity,
+      searchParams: this._urlSearchParams,
+      options,
+    });
     let data: any = {};
     if (result.errors) {
       data.success = false;
@@ -186,7 +185,7 @@ export class ReadFetcher<
     } else {
       data = {
         success: true,
-        data: result[this._resource][0],
+        data: result[this.resource][0],
       };
     }
     return res.parse(data);

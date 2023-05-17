@@ -1,13 +1,7 @@
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
-import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+import { ghostAdminAPI, ghostContentAPI } from "./ghost";
 
 async function getBlogPosts() {
-  const api = new TSGhostAdminAPI(
-    process.env.GHOST_URL || "",
-    process.env.GHOST_ADMIN_API_KEY || "",
-    "v5.0"
-  );
-  const response = await api.posts.browse().fields({title: true, slug:true, id:true}).fetch();
+  const response = await ghostAdminAPI.posts.browse().fields({title: true, slug:true, id:true}).fetch();
   if(!response.success) {
     throw new Error(response.errors.join(", "));
   }
@@ -15,12 +9,7 @@ async function getBlogPosts() {
 }
 
 async function getSiteSettings() {
-  const api = new TSGhostContentAPI(
-    process.env.GHOST_URL || "",
-    process.env.GHOST_CONTENT_API_KEY || "",
-    "v5.0"
-  );
-  const response = await api.settings.fetch();
+  const response = await ghostContentAPI.settings.fetch();
   if(!response.success) {
     throw new Error(response.errors.join(", "));
   }

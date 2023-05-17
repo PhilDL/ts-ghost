@@ -5,18 +5,25 @@ import { z } from "zod";
 import { APIComposer } from "./api-composer";
 import { BrowseFetcher, ReadFetcher } from "./fetchers";
 import type { BrowseParams } from "./helpers/browse-params";
-import type { ContentAPICredentials } from "./schemas/shared";
+import { HTTPClient, HTTPClientOptions } from "./helpers/http-client";
 
 const fetchMocker = createFetchMock(vi);
 
 describe("APIComposer Read / Browse", () => {
-  const api: ContentAPICredentials = {
+  const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
-    resource: "posts",
     endpoint: "content",
   };
+  const adminCredentials: HTTPClientOptions = {
+    url: "https://ghost.org",
+    key: "aaiuzhduad:baiuciauhviahuv",
+    version: "v5.0",
+    endpoint: "admin",
+  };
+  let httpClient: HTTPClient;
+  let adminHttpClient: HTTPClient;
 
   const simplifiedSchema = z.object({
     foo: z.string(),
@@ -36,12 +43,21 @@ describe("APIComposer Read / Browse", () => {
     z.object({ email: z.string() }),
   ]);
 
-  const composer = new APIComposer(
-    { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-    api
-  );
+  beforeEach(() => {
+    httpClient = new HTTPClient(credentials);
+    adminHttpClient = new HTTPClient(adminCredentials);
+    fetchMocker.enableMocks();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   test("instantiation", () => {
+    const composer = new APIComposer(
+      "posts",
+      { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
+      httpClient
+    );
     expect(composer).toBeDefined();
     expect(composer.browse()).toBeInstanceOf(BrowseFetcher);
     // @ts-expect-error - missing Identity fields
@@ -54,6 +70,11 @@ describe("APIComposer Read / Browse", () => {
   });
 
   describe("pagination inputs", () => {
+    const composer = new APIComposer(
+      "posts",
+      { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
+      httpClient
+    );
     test("pagination params", () => {
       expect(
         composer.browse({
@@ -86,6 +107,11 @@ describe("APIComposer Read / Browse", () => {
   });
 
   describe("order input", () => {
+    const composer = new APIComposer(
+      "posts",
+      { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
+      httpClient
+    );
     test("order params should accept a string with correct fields", () => {
       expect(
         composer.browse({
@@ -143,6 +169,11 @@ describe("APIComposer Read / Browse", () => {
   });
 
   describe("filter input", () => {
+    const composer = new APIComposer(
+      "posts",
+      { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
+      httpClient
+    );
     test("filter params should accept a string with correct fields", () => {
       expect(
         composer.browse({
@@ -200,6 +231,11 @@ describe("APIComposer Read / Browse", () => {
   });
 
   describe("identity read fields input", () => {
+    const composer = new APIComposer(
+      "posts",
+      { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
+      httpClient
+    );
     test("identity read fields params should only accept key from the identity read schema", () => {
       expect(
         composer.read({
@@ -225,6 +261,11 @@ describe("APIComposer Read / Browse", () => {
   });
 
   describe("include output", () => {
+    const composer = new APIComposer(
+      "posts",
+      { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
+      httpClient
+    );
     test("include params should only accept key from the include schema", () => {
       expect(composer.browse()).toBeInstanceOf(BrowseFetcher);
       expect(composer.read({ id: "abc" })).toBeInstanceOf(ReadFetcher);
@@ -233,13 +274,20 @@ describe("APIComposer Read / Browse", () => {
 });
 
 describe("APIComposer add / edit", () => {
-  const api: ContentAPICredentials = {
+  const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
     version: "v5.0",
-    resource: "posts",
     endpoint: "content",
   };
+  const adminCredentials: HTTPClientOptions = {
+    url: "https://ghost.org",
+    key: "aaiuzhduad:baiuciauhviahuv",
+    version: "v5.0",
+    endpoint: "admin",
+  };
+  let httpClient: HTTPClient;
+  let adminHttpClient: HTTPClient;
 
   const simplifiedSchema = z.object({
     id: z.string(),
@@ -266,23 +314,10 @@ describe("APIComposer add / edit", () => {
     baz: z.boolean().nullish(),
   });
 
-  const composer = new APIComposer(
-    {
-      schema: simplifiedSchema,
-      identitySchema: identitySchema,
-      include: simplifiedIncludeSchema,
-      createSchema,
-      createOptionsSchema: z.object({
-        option_1: z.boolean(),
-      }),
-      // updateSchema: z.object({
-      //   foobar: z.string(),
-      // }),
-    },
-    api
-  );
-
   beforeEach(() => {
+    httpClient = new HTTPClient(credentials);
+    adminHttpClient = new HTTPClient(adminCredentials);
+    fetchMocker.enableMocks();
     fetchMocker.enableMocks();
   });
   afterEach(() => {
@@ -290,6 +325,22 @@ describe("APIComposer add / edit", () => {
   });
 
   test("instantiation", async () => {
+    const composer = new APIComposer(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        identitySchema: identitySchema,
+        include: simplifiedIncludeSchema,
+        createSchema,
+        createOptionsSchema: z.object({
+          option_1: z.boolean(),
+        }),
+        // updateSchema: z.object({
+        //   foobar: z.string(),
+        // }),
+      },
+      httpClient
+    );
     expect(composer).toBeDefined();
     expect(composer.browse()).toBeInstanceOf(BrowseFetcher);
     // @ts-expect-error - missing Identity fields
@@ -311,6 +362,22 @@ describe("APIComposer add / edit", () => {
   });
 
   test("post add", async () => {
+    const composer = new APIComposer(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        identitySchema: identitySchema,
+        include: simplifiedIncludeSchema,
+        createSchema,
+        createOptionsSchema: z.object({
+          option_1: z.boolean(),
+        }),
+        // updateSchema: z.object({
+        //   foobar: z.string(),
+        // }),
+      },
+      httpClient
+    );
     fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
@@ -361,6 +428,22 @@ describe("APIComposer add / edit", () => {
   });
 
   test("post add with options", async () => {
+    const composer = new APIComposer(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        identitySchema: identitySchema,
+        include: simplifiedIncludeSchema,
+        createSchema,
+        createOptionsSchema: z.object({
+          option_1: z.boolean(),
+        }),
+        // updateSchema: z.object({
+        //   foobar: z.string(),
+        // }),
+      },
+      httpClient
+    );
     const mockData = {
       id: "abc",
       foo: "new foo",
@@ -373,7 +456,7 @@ describe("APIComposer add / edit", () => {
     );
     const result = await composer.add({ foo: "new foo" }, { option_1: true });
 
-    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234&option_1=true", {
+    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?option_1=true&key=1234", {
       method: "POST",
       headers: {
         "Accept-Version": "v5.0",
@@ -392,6 +475,22 @@ describe("APIComposer add / edit", () => {
   });
 
   test("post fail", async () => {
+    const composer = new APIComposer(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        identitySchema: identitySchema,
+        include: simplifiedIncludeSchema,
+        createSchema,
+        createOptionsSchema: z.object({
+          option_1: z.boolean(),
+        }),
+        // updateSchema: z.object({
+        //   foobar: z.string(),
+        // }),
+      },
+      httpClient
+    );
     fetchMocker.doMockOnce(
       JSON.stringify({
         errors: [
@@ -411,7 +510,7 @@ describe("APIComposer add / edit", () => {
     );
     const result = await composer.add({ foo: "existing" }, { option_1: true });
 
-    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234&option_1=true", {
+    expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?option_1=true&key=1234", {
       method: "POST",
       headers: {
         "Accept-Version": "v5.0",
@@ -436,6 +535,22 @@ describe("APIComposer add / edit", () => {
   });
 
   test("put edit", async () => {
+    const composer = new APIComposer(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        identitySchema: identitySchema,
+        include: simplifiedIncludeSchema,
+        createSchema,
+        createOptionsSchema: z.object({
+          option_1: z.boolean(),
+        }),
+        // updateSchema: z.object({
+        //   foobar: z.string(),
+        // }),
+      },
+      httpClient
+    );
     fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [
@@ -472,6 +587,22 @@ describe("APIComposer add / edit", () => {
   });
 
   test("put edit fail", async () => {
+    const composer = new APIComposer(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        identitySchema: identitySchema,
+        include: simplifiedIncludeSchema,
+        createSchema,
+        createOptionsSchema: z.object({
+          option_1: z.boolean(),
+        }),
+        // updateSchema: z.object({
+        //   foobar: z.string(),
+        // }),
+      },
+      httpClient
+    );
     fetchMocker.doMockOnce(
       JSON.stringify({
         errors: [

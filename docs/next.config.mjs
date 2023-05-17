@@ -8,9 +8,7 @@ import { getHighlighter } from "shiki";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["ts", "tsx", "mdx"],
-  redirects: () => [
-    { source: "/docs", destination: "/docs/introduction", permanent: true },
-  ],
+  redirects: () => [{ source: "/docs", destination: "/docs/introduction", permanent: true }],
 };
 
 export default withMdx({
@@ -20,7 +18,7 @@ export default withMdx({
         rehypePrettyCode,
         /** @type {import("rehype-pretty-code").Options} */
         ({
-          theme: { dark: "one-dark-pro", light: "github-light" },
+          theme: { dark: "poimandres", light: "min-light" },
           getHighlighter,
           onVisitLine(node) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty

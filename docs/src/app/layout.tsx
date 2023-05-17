@@ -4,10 +4,9 @@ import { Analytics } from "@vercel/analytics/react";
 import { siteConfig } from "~/app/site-config";
 import { cn } from "~/lib/cn";
 import { SiteHeader } from "~/components/site-header";
-import { TailwindIndicator } from "~/components/tailwind-indicator";
 import { ThemeProvider } from "~/components/theme-provider";
 
-import { JetBrains_Mono, Inter } from "next/font/google";
+import { IBM_Plex_Mono, Inter } from "next/font/google";
 import localFont from "next/font/local";
 
 const fontSans = Inter({
@@ -21,8 +20,9 @@ const fontCal = localFont({
   display: "swap",
 });
 
-const fontMono = JetBrains_Mono({
+const fontMono = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: "400",
   variable: "--font-mono",
 });
 

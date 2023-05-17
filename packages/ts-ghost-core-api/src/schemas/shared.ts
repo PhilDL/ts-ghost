@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { HTTPClient } from "../helpers/http-client";
+
 export const ghostIdentitySchema = z.object({
   slug: z.string(),
   id: z.string(),
@@ -76,231 +78,53 @@ export const apiVersionsSchema = z
 export type TAPIVersion<V> = V extends "v5.0" | `v5.${infer Minor}` ? `v5.${Minor}` : never;
 export type APIVersions = z.infer<typeof apiVersionsSchema>;
 
-export const contentAPICredentialsSchema = z.discriminatedUnion("resource", [
-  z.object({
-    resource: z.literal("authors"),
-    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("content"),
-  }),
-  z.object({
-    resource: z.literal("tiers"),
-    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("content"),
-  }),
-  z.object({
-    resource: z.literal("pages"),
-    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("content"),
-  }),
-  z.object({
-    resource: z.literal("posts"),
-    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("content"),
-  }),
-  z.object({
-    resource: z.literal("tags"),
-    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("content"),
-  }),
-  z.object({
-    resource: z.literal("settings"),
-    key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("content"),
-  }),
-]);
+export const contentAPICredentialsSchema = z.object({
+  key: z.string().regex(/[0-9a-f]{26}/, { message: "'key' must have 26 hex characters" }),
+  version: apiVersionsSchema,
+  url: z.string().url(),
+});
 
 export type ContentAPICredentials = z.infer<typeof contentAPICredentialsSchema>;
 
+export type APIResource =
+  | "pages"
+  | "posts"
+  | "settings"
+  | "authors"
+  | "tiers"
+  | "tags"
+  | "members"
+  | "site"
+  | "offers"
+  | "users"
+  | "newsletters"
+  | "webhooks"
+  | "themes"
+  | "files"
+  | "images";
+
+export type APIEndpoint = "admin" | "content";
+
 export type APICredentials = {
-  resource:
-    | "pages"
-    | "posts"
-    | "settings"
-    | "authors"
-    | "tiers"
-    | "tags"
-    | "members"
-    | "site"
-    | "offers"
-    | "users"
-    | "newsletters"
-    | "webhooks"
-    | "themes"
-    | "files"
-    | "images";
   key: string;
   version: APIVersions;
   url: string;
-  endpoint: "admin" | "content";
 };
 
-export const adminAPIEndpointsSchema = z.union([z.literal("posts"), z.literal("pages")]);
-export type AdminAPIEndpoints = z.infer<typeof adminAPIEndpointsSchema>;
+export type GhostRequestConfig = {
+  endpoint: APIEndpoint;
+  resource: APIResource;
+  httpClient: HTTPClient;
+};
 
-export const adminAPICredentialsSchema = z.discriminatedUnion("resource", [
-  z.object({
-    resource: z.literal("pages"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
+export const adminAPICredentialsSchema = z.object({
+  key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
+    message:
+      "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
   }),
-  z.object({
-    resource: z.literal("posts"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("members"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("tiers"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("newsletters"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("offers"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("tags"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("users"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("site"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("webhooks"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("themes"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("files"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("images"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("media"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-  z.object({
-    resource: z.literal("settings"),
-    key: z.string().regex(/[0-9a-f]{24}:[0-9a-f]{64}/, {
-      message:
-        "'key' must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters",
-    }),
-    version: apiVersionsSchema,
-    url: z.string().url(),
-    endpoint: z.literal("admin"),
-  }),
-]);
+  version: apiVersionsSchema,
+  url: z.string().url(),
+});
 
 export const slugOrIdSchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
 export const emailOrIdSchema = z.union([
