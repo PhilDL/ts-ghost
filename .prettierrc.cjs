@@ -11,10 +11,10 @@ module.exports = {
   ],
   importOrderBuiltinModulesToTop: true,
   importOrderCaseInsensitive: true,
-  importOrderParserPlugins: ["typescript", "decorators-legacy"],
+  importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
   importOrderMergeDuplicateImports: true,
   importOrderCombineTypeAndValueImports: true,
   importOrderSeparation: false,
   importOrderSortSpecifiers: true,
-  plugins: [require("@ianvs/prettier-plugin-sort-imports")],
+  plugins: [require("@ianvs/prettier-plugin-sort-imports"), require("prettier-plugin-tailwindcss")],
 };

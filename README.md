@@ -13,6 +13,9 @@
     <br/>
     <br/>
   </p>
+  <p align="center">
+    <a href="https://ts-ghost.dev"> Documentation </a> – <a href="https://twitter.com/_philDL">Twitter</a>
+  </p>
 </div>
 
 ![License](https://img.shields.io/github/license/PhilDL/ts-ghost) ![GitHub top language](https://img.shields.io/github/languages/top/PhilDL/ts-ghost)
@@ -41,7 +44,7 @@ npm install -g @ts-ghost/ghost-blog-buster
 - 📚 Export specific or all blog **Posts** in **Markdown** format to the folder of your choice.
 - ⚙️ Display or export to JSON your **Tags**, **Tiers**, **Authors**, **Members** (Admin API only)
 - 📶 Connect / Disconnect from the Blog
-- [See project](https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster)
+- [Documentation](https://ts-ghost.dev/docs/ghost-blog-buster) — [GitHub](https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster) — [npm](https://www.npmjs.com/package/@ts-ghost/ghost-blog-buster)
 
 ## [📦 TS Ghost Content API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api)
 
@@ -54,7 +57,7 @@ npm install @ts-ghost/content-api
 - Browse and Read your blog **Posts**, **Pages**, **Tags**, **Tiers**, **Authors** and **Settings**
 - Type-safe Inputs/Outputs.
 - Models schema and run-type safety with [Zod](https://github.com/colinhacks/zod).
-- [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api)
+- [Documentation](https://ts-ghost.dev/docs/content-api) — [GitHub](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-content-api) — [npm](https://www.npmjs.com/package/@ts-ghost/content-api)
 
 ## [📦 TS Ghost Admin API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)
 
@@ -67,7 +70,7 @@ npm install @ts-ghost/admin-api
 - Browse/Read/Add/Edit/Delete your blog **Posts**, **Pages**, **Members**, **Tags**, **Tiers**, **Offers**, **Newsletters**, **Users**, **webhooks**, **Site**, ...
 - Type-safe Inputs/Outputs for all CRUD methods.
 - Models schema and run-type safety with [Zod](https://github.com/colinhacks/zod).
-- [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)
+- [Documentation](https://ts-ghost.dev/docs/admin-api) — [GitHub](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api) — [npm](https://www.npmjs.com/package/@ts-ghost/admin-api)
 
 ## [📦 TS Ghost Core API](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api)
 
@@ -79,7 +82,7 @@ npm install @ts-ghost/core-api
 
 - Input type-safety of the Ghost API params
 - Modify Type Output based on Input params
-- [See project](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api)
+- [Documentation](https://ts-ghost.dev/docs/core-api) — [GitHub](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api) — [npm](https://www.npmjs.com/package/@ts-ghost/core-api)
 
 ## Roadmap
 

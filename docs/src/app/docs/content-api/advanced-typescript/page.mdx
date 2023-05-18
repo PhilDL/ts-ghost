@@ -1,0 +1,53 @@
+# TypeScript recipes
+
+Sometimes TypeScript will get in your way, especially with the string-based type-checking on browse parameters. In this section we will show you some tips and tricks to get around those problems, and present you some utilities.
+
+## Unknown inputs and outputs
+
+Let's imagine an example where you don't control what's gonna arrive in the `output.fields` for example.
+You can avoid the type error by casting with `as`.
+
+```ts
+// `fieldsKeys` comes from outside
+const outputFields = fieldsKeys.reduce((acc, k) => {
+  acc[k as keyof Post] = true;
+  return acc;
+}, {} as { [k in keyof Post]?: true | undefined });
+const result = await api.posts.browse().fields(outputFields).fetch();
+```
+
+But you will lose the type-safety of the output, in Type land, `Post` will contains **all** the fields, not only the ones you selected.
+(In user land, the fields you selected are still gonna be parsed and the unknwown fields **are gonna be ignored**)
+
+## Pre-declare the output and keep Type-Safety with `satisfies`
+
+If you would like to pre-declare the output, you can like so:
+
+```ts
+const outputFields = {
+  slug: true,
+  title: true,
+} satisfies { [k in keyof Post]?: true | undefined };
+
+let test = api.posts.browse().fields(outputFields);
+```
+
+In that case you will **keep type-safety** and the output will be of type `Post` with only the fields you selected.
+
+## Unknown order/filter string with `as` to force the type
+
+If you don't build the `order` or `filter` string yourself, for example if that comes from a user input or `FormData`, then you TypeScript will shout at you because the inner-types will be converted to never as the content of the string cannot be templated.
+
+To alleviate that problem you have access to a type helper generics `BrowseParams` that accepts a shape of params and the corresponding resource type. Allowing you to make your query, that will be runtime checked anyway.
+
+```ts
+import type { BrowseParams, Post } from "@ts-ghost/content-api";
+
+const uncontrolledOrderInput = async (formData: FormData) => {
+  const order = formData.get("order");
+  const filter = formData.get("filter");
+  const result = await api.posts
+    .browse({ order, filter } as BrowseParams<{ order: string; filter: string }, Post>)
+    .fetch();
+};
+```

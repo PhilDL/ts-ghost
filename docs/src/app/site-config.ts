@@ -1,23 +1,23 @@
 export const siteConfig = {
   name: "ts-ghost",
   description:
-    "@ts-ghost is a collection of tools written in TypeScript to interract with a Ghost Blog. Strongly 🦾 typed Content-Api, Cli tools, and more coming!",
+    "@ts-ghost is a collection of tools written in TypeScript to interract with a your Ghost Blog! \n End-to-end type-safety 🦾. Build on top of Zod, the Content and Admin API clients are type-safe and validated at runtime. There is also a beautiful CLI to interract with your Ghost Blog and extract data in Markdown or JSON.",
   mainNav: [
     {
       title: "Content API",
-      href: "/docs/content-api/introduction",
+      href: "/docs/content-api",
     },
     {
       title: "Admin API",
-      href: "/docs/admin-api/introduction",
+      href: "/docs/admin-api",
     },
     {
       title: "Core API",
-      href: "/docs/core-api/introduction",
+      href: "/docs/core-api",
     },
     {
       title: "Ghost Blog Buster",
-      href: "/docs/ghost-blog-buster/introduction",
+      href: "/docs/ghost-blog-buster",
     },
   ],
   sidebarNav: [
@@ -32,17 +32,17 @@ export const siteConfig = {
         },
         {
           title: "@ts-ghost/content-api",
-          href: "/docs/content-api/introduction",
+          href: "/docs/content-api",
           items: [],
         },
         {
           title: "@ts-ghost/admin-api",
-          href: "/docs/admin-api/introduction",
+          href: "/docs/admin-api",
           items: [],
         },
         {
           title: "@ts-ghost/core-api",
-          href: "/docs/core-api/introduction",
+          href: "/docs/core-api",
           items: [],
         },
       ],

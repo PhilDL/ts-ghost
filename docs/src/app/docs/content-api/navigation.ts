@@ -4,7 +4,7 @@ export const navigation = [
     items: [
       {
         title: "Introduction",
-        href: "/docs/content-api/introduction",
+        href: "/docs/content-api",
         items: [],
       },
       {
@@ -55,6 +55,11 @@ export const navigation = [
       {
         title: "NextJS",
         href: "/docs/content-api/nextjs",
+        items: [],
+      },
+      {
+        title: "TypeScript recipes",
+        href: "/docs/content-api/advanced-typescript",
         items: [],
       },
     ],

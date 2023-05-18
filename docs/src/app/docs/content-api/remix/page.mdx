@@ -2,6 +2,23 @@
 
 Here is an example using the `@ts-ghost/content-api` in a Remix loader:
 
+<Steps>
+
+### Installation
+
+```bash title="Terminal"
+pnpm add @ts-ghost/content-api
+```
+
+### Create `.env` variable
+
+```bash title=".env"
+GHOST_URL="https://myblog.com"
+GHOST_CONTENT_API_KEY="e9b414c5d95a5436a647ff04ab"
+```
+
+### Use in your route loader
+
 ```tsx title="app/routes/_index.tsx"
 import { json, type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -17,15 +34,12 @@ export async function loader({ request }: LoaderArgs) {
     process.env.GHOST_CONTENT_API_KEY || "",
     "v5.0"
   );
-  const [settings, posts] = await Promise.all([
-    api.settings.fetch(),
-    api.posts.browse().fetch()
-  ]);
+  const [settings, posts] = await Promise.all([api.settings.fetch(), api.posts.browse().fetch()]);
 
-  if(!settings.success) {
+  if (!settings.success) {
     throw new Error(settings.errors.join(", "));
   }
-  if(!posts.success) {
+  if (!posts.success) {
     throw new Error(posts.errors.join(", "));
   }
   return json({ settings: settings.data, posts: posts.data });
@@ -39,18 +53,16 @@ export default function Index() {
       <h1>This is a list of posts for {settings.title}:</h1>
       <ul>
         {posts.map((post) => (
-        <li key={post.slug}>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            {post.title}
-          </a>
-        </li>
+          <li key={post.slug}>
+            <a target="_blank" href="https://remix.run/tutorials/blog" rel="noreferrer">
+              {post.title}
+            </a>
+          </li>
         ))}
       </ul>
     </div>
   );
 }
 ```
+
+</Steps>

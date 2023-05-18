@@ -114,7 +114,7 @@ const composedAPI = new APIComposer(
 After instantiation you can use the `APIComposer` to build your queries with 2 available methods.
 The `browse` and `read` methods accept a config object with 2 properties: `input` and an `output`. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
 
-```typescript
+```ts
 import { z } from "zod";
 import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 
@@ -157,7 +157,7 @@ Input are totally optionals on the `browse` method but they let you filter and o
 
 This is an example containing all the available keys in the `input` object
 
-```typescript
+```ts
 const composedAPI = new APIComposer(
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
@@ -183,7 +183,7 @@ For the `order` and `filter` if you use fields that are not present on the schem
 
 Read is meant to be used to fetch 1 object only by `id` or `slug`.
 
-```typescript
+```ts
 const composedAPI = new APIComposer(
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
   api
@@ -212,7 +212,7 @@ If the parsing went okay, the `read` and `browse` methods from the `APIComposer`
 Fetchers are instatiated automatically after using `read` or `browse` but these Fetchers can also be instantiated in isolation, in a similar way as the APIComposer with a `config` containing the same schemas. But also a set of params
 necessary to build the URL to the Ghost API.
 
-```typescript
+```ts
 import { BrowseFetcher } from "@ts-ghost/core-api";
 
 // Example of instantiating a Fetcher, even though you will probably not do it
@@ -235,7 +235,7 @@ _The option `output` schema will be modified along the way after the params like
 
 These fetchers have a `fetch` method that will return a discriminated union of 2 types:
 
-```typescript
+```ts
 const composedAPI = new APIComposer(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   api
@@ -255,7 +255,7 @@ if (result.success) {
 
 After using `.read` query, you will get a `ReadFetcher` with an `async fetch` method giving you a discriminated union of 2 types:
 
-```typescript
+```ts
 // example for the read query (the data is an object)
 const result: {
     status: true;
@@ -280,7 +280,7 @@ After using `.read` query, you will get a `BrowseFetcher` with 2 methods:
 
 That result is a discriminated union of 2 types:
 
-```typescript
+```ts
 // example for the browse query (the data is an array of objects)
 const result: {
     success: true;
@@ -306,7 +306,7 @@ const result: {
 
 #### Browse `.paginate()`
 
-```typescript
+```ts
 const result: {
     success: true;
     data: z.infer<typeof simplifiedSchema>[];
@@ -345,7 +345,7 @@ Output can be modified on the `BrowseFetcher` and the `ReadFetcher` through avai
 
 The `fields` methods lets you change the output of the result to have only your selected fields, it works by giving the property key and the value `true` to the field you want to keep. Under the hood it will use the `zod.pick` method to pick only the fields you want.
 
-```typescript
+```ts
 import { BrowseFetcher } from "@ts-ghost/core-api";
 
 // Example of instantiating a Fetcher, even though you will probably not do it
@@ -382,7 +382,7 @@ The **output schema** will be modified to only have the fields you selected and 
 
 The `include` method lets you include some additionnal data that the Ghost API doesn't give you by default. This `include` key is specific to each resource and is defined in the `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
 
-```typescript
+```ts
 const bf = new BrowseFetcher(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
@@ -401,7 +401,7 @@ The output type will be modified to make the fields you include **non-optionals*
 
 The `formats` method lets you include some additionnal formats that the Ghost API doesn't give you by default. This is used on the `Post` and `Page` resource to retrieve the content in plaintext, html, or mobiledoc format. The available keys are `html | mobiledoc | plaintext` and the value is a boolean to indicate if you want to include it or not.
 
-```typescript
+```ts
 const bf = new BrowseFetcher(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
@@ -421,7 +421,7 @@ The output type will be modified to make the fields `html` and `plaintext` **non
 
 You can chain the methods to select the fields, formats, and include you want.
 
-```typescript
+```ts
 const bf = new BrowseFetcher(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
@@ -449,7 +449,7 @@ let result = await bf
 
 You can pass an optional `options` object to the `fetch` and `paginate` method. The `options` object is the standard `RequestInit` object from the `fetch` API.
 
-```typescript
+```ts
 let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch({ cache: "no-store" });
 ```
 
@@ -461,7 +461,7 @@ These mutations are async methods, they will return a `Promise` that will resolv
 
 #### Create record
 
-```typescript
+```ts
 const composedAPI = new APIComposer(
   {
     schema: simplifiedSchema,
@@ -489,7 +489,7 @@ let newPost = await composedAPI.add(
 
 The result will be parsed and typed with the `output` schema and represent the newly created record.
 
-```typescript
+```ts
 // return from the `add` method
 const result: {
     success: true;
@@ -507,7 +507,7 @@ const result: {
 
 Edit requires the `id` of the record to edit.
 
-```typescript
+```ts
 let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
   title: "My new post",
 });
@@ -518,7 +518,7 @@ The result will be parsed and typed with the `output` schema and represent the u
 - The first argument is the `id` of the record to edit.
 - The second argument is the `input` object that will be parsed and typed with the `createSchema` schema wrapped with Partial. So all fields are optional.
 
-```typescript
+```ts
 // return from the `edit` method
 const result: {
     success: true;
@@ -536,7 +536,7 @@ const result: {
 
 Delete requires the `id` of the record to delete.
 
-```typescript
+```ts
 let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
   title: "My new post",
 });
@@ -546,7 +546,7 @@ let newPost = await composedAPI.edit("edHks74hdKqhs34izzahd45", {
 
 The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `success` to know if the deletion was successful or not.
 
-```typescript
+```ts
 // return from the `delete` method
 const result: {
     success: true;

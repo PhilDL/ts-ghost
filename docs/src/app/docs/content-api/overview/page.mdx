@@ -1,18 +1,37 @@
-# Usage
+# Overview
 
-The `@ts-ghost/content-api` allows you to build type-safe queries to the Ghost Content API endpoints and get back typed responses.
+Here you will have an overview of the philosophy of the library and a common workflow for your queries.
+
+The `TSGhostContentAPI` object is your entry-point, it will contains all the available endpoints and need to be instantiated with your Ghost Blog API Credentials, the URL, and the Content API Key.
+
+```ts
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
+
+const api = new TSGhostContentAPI("https://demo.ghost.io", "22444f78447824223cefc48062", "v5.0");
+```
+
+From this `api` instance you will be able to call any resource available in the Ghost Content API and have the available methods exposed.
+
+## Available resource
+
+- `api.authors`
+- `api.tiers`
+- `api.posts`
+- `api.pages`
+- `api.tags`
+- `api.settings`
 
 ## Building Queries
 
 Calling any resource like `authors`, `posts`, etc (except `settings` resource) will give a
-new instance of APIComposer containing two exposed methods `read` and `browse` (if you are interested in a version that exposes `add`, `edit` and `delete` you will have to check the [@ts-ghost/admin-api](https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api)).
+new instance of APIComposer containing two exposed methods `read` and `browse` (if you are interested in a version that exposes `add`, `edit` and `delete` you will have to check the [@ts-ghost/admin-api](/docs/admin-api/introduction)).
 
 This instance is already built with the associated Schema for that resource so any operation
-you will do from that point will be typed against the asociated schema.
+you will do from that point will be typed against the asociated schema. Since you are using TypeScript you will get a nice developer experience with autocompletion and squiggly lines if you try to use a field that doesn't exist on the resource.
 
 `browse` and `read` methods accept an options object. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
 
-```typescript
+```ts
 let query = api.posts.browse({
   limit: 5,
   order: "title DESC",
@@ -20,51 +39,69 @@ let query = api.posts.browse({
 });
 ```
 
-- `browse` will accept browse parameters like `page`, `limit`, `order`, `filter`.
-- `read` parameters are `id` or `slug`.
+- `browse` will accept `page`, `limit`, `order`, `filter`. ([More details](/docs/content-api/browse))
+- `read` parameters are `id` or `slug`. ([More details](/docs/content-api/browse))
 
-## Browse multiple posts
+## (Optional) Altering the output
 
-```typescript
-import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
+After calling `read` or `browse` you get a Fetcher instance that you can use to optionnaly alter the output of the result.
 
-let url = "https://demo.ghost.io";
-let key = "22444f78447824223cefc48062"; // Content API KEY should be in the right format corresponding to the Ghost Content API (26 Hex chars)
-const api = new TSGhostContentAPI(url, key, "v5.0"); // The instantiation is validated through a zod Schema
+For example if we want to fetch only the id, slug and title of our blog posts we could do:
 
-// Browse posts
-const res = await api.posts.browse().fetch();
-if (res.success) {
-  const posts = res.data;
-  const meta = res.meta;
-  //     ^? GhostMeta Type containing pagination info
-  for (const post of posts) {
-    //        ^? type Post
-    console.log(post.title);
-  }
-} else {
-  console.error(res.errors);
-}
+```ts
+let query = api.posts
+  .browse({
+    limit: 5,
+    order: "title DESC",
+  })
+  .fields({
+    id: true,
+    slug: true,
+    title: true,
+  });
 ```
 
-## Read one Post by slug
+## Fetching the data
 
-```typescript
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
+After building your query and _optionnaly using output formatting_, you can fetch it with the **async** `fetch` method. This method will return a `Promise` that will resolve to a result object that was parsed by the `Zod` Schema of the resource.
 
-let url = "https://demo.ghost.io";
-let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
-
-const res = await api.posts
-  .read({
-    slug: "welcome-to-ghost",
+```ts
+let query = await api.posts
+  .browse({
+    limit: 5,
+    order: "title DESC",
+  })
+  .fields({
+    id: true,
+    slug: true,
+    title: true,
   })
   .fetch();
-if (res.success) {
-  const post = res.data;
-  //     ^? type Post
-} else {
-  console.error(res.errors);
+
+// or without fields selection
+
+let query2 = await api.posts
+  .browse({
+    limit: 5,
+    order: "title DESC",
+  })
+  .fetch();
+```
+
+Alternatively, coming from a `browse` query you also have access to the `paginate` method, instead of `fetch`. This version will return a cursor and a `next` fetcher to directly have the next query with the same parameters but on page n + 1. See a complete example in the [Common Recipes](/docs/content-api/common-recipes) section.
+
+The result is a **discriminated union** with the Boolean `success` as a discriminator, so a check on `success` will let you know if the query was successful or not. The shape of the "OK" path depends on the query you made and the output modifiers you used.
+
+```ts
+const result: {
+    success: true;
+    data: Post; // Shape depends on resource + browse | read + output modifiers
+    // contains aditionnal metadata for browse queries
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
 }
 ```

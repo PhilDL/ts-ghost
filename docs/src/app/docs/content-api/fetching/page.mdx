@@ -1,98 +1,39 @@
 # Fetching
 
-After building your query and using output formatting, you can fetch it with the `fetch` method. This method will return a `Promise` that will resolve to a result object that was parsed by the `Zod` Schema of the resource.
+Fetching happens at the end of your chaining of methods, the moment you call the async `fetch` method (or the async `paginate`).
 
-All the results are discriminated unions representing a successful query and an error query. To discriminate the results you can use the `status` key of the result object which is `success` or `error`.
+Technically these are the only asynchronous methods and the only moment where the library will make a request to the Ghost API through the platform `fetch` function (in Node or in the browser).
 
-```typescript
-let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch();
-if (result.success) {
-  const post = result.data;
-  //     ^? type {"id": string; "slug":string; "title": string}
-} else {
-  // errors array of objects
-  console.log(result.errors.map((e) => e.message).join("\n"));
-}
+## Reminder requirements
+
+This library expect the global `fetch` function to be available. If you are using Node 16, you will need to run with the `--experimental-fetch` flag enabled.
+
+## fetch options
+
+Since we are using the standard `fetch` you have can pass options of type [`RequestInit`](https://developer.mozilla.org/en-US/docs/Web/API/fetch) notably to play with the `cache` behavior.
+
+For example:
+
+```ts
+let query = await api.posts
+  .browse({
+    limit: 5,
+    order: "title DESC",
+  })
+  .fetch({
+    cache: "no-cache",
+  });
 ```
 
-## Read Fetcher
+### With NextJS
 
-After using `.read` query, you will get a `ReadFetcher` with an `async fetch` method giving you a discriminated union of 2 types:
+In a NextJS 13+ project, `fetch` is augmented and you can fully take advantage of that and you have access to the `next` option.
 
-```typescript
-// example for the read query (the data is an object)
-const result: {
-    success: true;
-    data: Post; // parsed by the Zod Schema and modified by the fields selected
-} | {
-    success: false;
-    errors: {
-        message: string;
-        type: string;
-    }[];
-}
+```ts
+let query = await api.posts
+  .browse({
+    limit: 5,
+    order: "title DESC",
+  })
+  .fetch({ next: { revalidate: 10 } }); // NextJS revalidate this data every 10 seconds at most
 ```
-
-## Browse Fetcher
-
-After using `.read` query, you will get a `BrowseFetcher` with 2 methods:
-
-- `async fetch`
-- `async paginate`
-
-### Browse `.fetch()`
-
-That result is a discriminated union of 2 types:
-
-```typescript
-// example for the browse query (the data is an array of objects)
-const result: {
-    success: true;
-    data: Post[];
-    meta: {
-        pagination: {
-            pages: number;
-            limit: number;
-            page: number;
-            total: number;
-            prev: number | null;
-            next: number | null;
-        };
-    };
-} | {
-    success: false;
-    errors: {
-        message: string;
-        type: string;
-    }[];
-}
-```
-
-### Browse `.paginate()`
-
-```typescript
-const result: {
-    success: true;
-    data: Post[];
-    meta: {
-        pagination: {
-            pages: number;
-            limit: number;
-            page: number;
-            total: number;
-            prev: number | null;
-            next: number | null;
-        };
-    };
-    next: BrowseFetcher | undefined; // the next page fetcher if it is defined
-} | {
-    success: false;
-    errors: {
-        message: string;
-        type: string;
-    }[];
-    next: undefined; // the next page fetcher is undefined here
-}
-```
-
-Here you can use the `next` property to get the next page fetcher if it is defined.
