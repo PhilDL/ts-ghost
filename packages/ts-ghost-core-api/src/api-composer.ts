@@ -6,7 +6,7 @@ import { MutationFetcher } from "./fetchers/mutation-fetcher";
 import { ReadFetcher } from "./fetchers/read-fetcher";
 import { parseBrowseParams, type BrowseParams } from "./helpers/browse-params";
 import type { HTTPClient } from "./helpers/http-client";
-import type { APIResource, GhostRequestConfig } from "./schemas";
+import type { APIResource } from "./schemas";
 import type { IsAny } from "./utils";
 
 function isZodObject(schema: z.ZodObject<any> | z.ZodTypeAny): schema is z.ZodObject<any> {

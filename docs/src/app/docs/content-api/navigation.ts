@@ -57,6 +57,11 @@ export const navigation = [
         href: "/docs/content-api/nextjs",
         items: [],
       },
+      {
+        title: "TypeScript recipes",
+        href: "/docs/content-api/advanced-typescript",
+        items: [],
+      },
     ],
   },
 ];

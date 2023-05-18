@@ -1,16 +1,12 @@
 # Introduction
 
-`@ts-ghost/content-api` provides a strongly-typed TypeScript client to interract with the Ghost Content API based on [Zod](https://github.com/colinhacks/zod) schemas passed through the APIComposer that exposes `read` and `browse` methods with safe params and then a Fetcher.
+`@ts-ghost/content-api` provides a strongly-typed TypeScript client to interract with the **Ghost Content API** based on [Zod](https://github.com/colinhacks/zod) schemas passed through an APIComposer that exposes different resources and their `read` or `browse` methods (dependening on the resource) with params and output type-safety.
+
+All the available options from the Ghost Content API are available here, filtering, ordering, pagination, selecting fields, modifiying output, etc...
 
 ![content-api-typesafety](https://user-images.githubusercontent.com/4941205/227787797-daf0bc72-1bb7-4ccd-8c98-fe4c03b71dd3.gif)
 
-## Install
-
-```shell
-pnpm i @ts-ghost/content-api
-```
-
-### Requirements
+## Requirements
 
 This client is only compatible with Ghost versions 5.x for now.
 
@@ -20,3 +16,60 @@ This client is only compatible with Ghost versions 5.x for now.
   - We rely on global `fetch` being available, so you can bring your own
     polyfill and if you run Node 16, you'll need to run with the
     `--experimental-fetch` flag enabled.
+- TypeScript 5+, the lib make usage of const in generics and other TS5+ features.
+
+## Quickstart
+
+These are the basic steps to follow to interact with the Ghost Content API in your TypeScript project.
+
+<Steps>
+
+### Installation
+
+```bash title="Terminal"
+pnpm add @ts-ghost/content-api
+```
+
+### (Optional) Create `.env` variable
+
+```bash title=".env"
+GHOST_URL="https://myblog.com"
+GHOST_CONTENT_API_KEY="e9b414c5d95a5436a647ff04ab"
+```
+
+### Use in your TypeScript file
+
+```ts title="ghost-queries.ts"
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
+
+const api = new TSGhostContentAPI(
+  process.env.GHOST_URL || "",
+  process.env.GHOST_CONTENT_API_KEY || "",
+  "v5.0"
+);
+
+export async function getBlogPosts() {
+  const response = await api.posts
+    .browse({
+      limit: 10,
+    })
+    .fields({
+      title: true,
+      slug: true,
+      id: true,
+    })
+    .fetch();
+  if (!response.success) {
+    throw new Error(response.errors.join(", "));
+  }
+  // Response data is typed correctly with only the requested fields
+  // {
+  //   title: string;
+  //   slug: string;
+  //   id: string;
+  // }[]
+  return response.data;
+}
+```
+
+</Steps>

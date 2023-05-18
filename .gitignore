@@ -39,7 +39,8 @@ temp/
 .docusaurus
 
 # Remix
-/public/build
+examples/remix/public/build
+examples/remix/build
 
 # turbo
 .turbo

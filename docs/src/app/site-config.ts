@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "ts-ghost",
   description:
-    "@ts-ghost is a collection of tools written in TypeScript to interract with a Ghost Blog. Strongly 🦾 typed Content-Api, Cli tools, and more coming!",
+    "@ts-ghost is a collection of tools written in TypeScript to interract with a your Ghost Blog! \n End-to-end type-safety 🦾. Build on top of Zod, the Content and Admin API clients are type-safe and validated at runtime. There is also a beautiful CLI to interract with your Ghost Blog and extract data in Markdown or JSON.",
   mainNav: [
     {
       title: "Content API",
