@@ -46,7 +46,7 @@ This client is only compatible with Ghost versions 5.x for now.
 
 ### Browse multiple posts
 
-```typescript
+```ts
 import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
@@ -70,7 +70,7 @@ if (res.success) {
 
 ### Read one Post by slug
 
-```typescript
+```ts
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
@@ -100,7 +100,7 @@ you will do from that point will be typed against the asociated schema.
 
 `browse` and `read` methods accept an options object. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
 
-```typescript
+```ts
 let query = api.posts.browse({
   limit: 5,
   order: "title DESC",
@@ -119,7 +119,7 @@ Params are totally optionals on the `browse` method but they let you filter and 
 
 This is an example containing all the available keys in the params object
 
-```typescript
+```ts
 let query = api.posts.browse({
   page: 1,
   limit: 5,
@@ -143,7 +143,7 @@ For the `order` and `filter` if you use fields that are not present on the schem
 
 Read is meant to be used to fetch 1 object only by `id` or `slug`.
 
-```typescript
+```ts
 let query = api.posts.read({
   id: "edHks74hdKqhs34izzahd45"
 });
@@ -165,7 +165,7 @@ Both `browse` and `read` methods give you a Fetcher with methods that alter the 
 
 The `fields` method lets you change the output of the result to have only your selected fields, it works by giving an object with the field name and the value `true`. Under the hood it will use the `zod.pick` method to pick only the fields you want.
 
-```typescript
+```ts
 let result = await api.posts
   .read({
     slug: "typescript-is-cool",
@@ -189,7 +189,7 @@ The **output schema** will be modified to only have the fields you selected and 
 
 The `include` method lets you include some additionnal data that the Ghost API doesn't give you by default. The `include` params is specific to each resource and is defined in the "include" `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
 
-```typescript
+```ts
 let result = await api.authors
   .read({
     slug: "phildl",
@@ -211,7 +211,7 @@ The output type will be modified to make the fields you include **non-optionals*
 
 The `formats` method lets you add alternative content formats on the output of `Post` or `Page` resource to get the content in `plaintext` or `html`. Available options are `plaintext | html | mobiledoc`.
 
-```typescript
+```ts
 let result = await api.posts
   .read({
     slug: "this-is-a-post-slug",
@@ -231,7 +231,7 @@ After building your query and using output formatting, you can fetch it with the
 
 All the results are discriminated unions representing a successful query and an error query. To discriminate the results you can use the `status` key of the result object which is `success` or `error`.
 
-```typescript
+```ts
 let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch();
 if (result.success) {
   const post = result.data;
@@ -246,7 +246,7 @@ if (result.success) {
 
 After using `.read` query, you will get a `ReadFetcher` with an `async fetch` method giving you a discriminated union of 2 types:
 
-```typescript
+```ts
 // example for the read query (the data is an object)
 const result: {
     success: true;
@@ -271,7 +271,7 @@ After using `.read` query, you will get a `BrowseFetcher` with 2 methods:
 
 That result is a discriminated union of 2 types:
 
-```typescript
+```ts
 // example for the browse query (the data is an array of objects)
 const result: {
     success: true;
@@ -297,7 +297,7 @@ const result: {
 
 #### Browse `.paginate()`
 
-```typescript
+```ts
 const result: {
     success: true;
     data: Post[];
@@ -330,7 +330,7 @@ Here you can use the `next` property to get the next page fetcher if it is defin
 
 Here we will use the `paginate` function of the fetcher to get the next page fetcher directly if it is defined.
 
-```typescript
+```ts
 import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
@@ -354,7 +354,7 @@ return posts;
 
 Settings is a specific resource, you cannot build query against it like the other resources. You can only fetch the settings, so calling `api.settings` will directly give you a fetcher.
 
-```typescript
+```ts
 import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
@@ -373,7 +373,7 @@ if (result.success) {
 Let's imagine an example where you don't control what's gonna arrive in the `output.fields` for example.
 You can avoid the type error by casting with `as`.
 
-```typescript
+```ts
 // `fieldsKeys` comes from outside
 const outputFields = fieldsKeys.reduce((acc, k) => {
   acc[k as keyof Post] = true;
@@ -389,7 +389,7 @@ But you will lose the type-safety of the output, in Type land, `Post` will conta
 
 If you would like to pre-declare the output, you can like so:
 
-```typescript
+```ts
 const outputFields = {
   slug: true,
   title: true,
@@ -405,7 +405,7 @@ In that case you will **keep type-safety** and the output will be of type `Post`
 If you don't control the content of the `order` field in the `input`.
 You can force typeSafety with `as`.
 
-```typescript
+```ts
 import type { Post } from "@ts-ghost/content-api";
 import type { BrowseParams } from "@ts-ghost/core-api";
 
@@ -422,7 +422,7 @@ const result = await api.posts
 
 You can pass an optional `options` object to the `fetch` and `paginate` method. The `options` object is the standard `RequestInit` object from the `fetch` API.
 
-```typescript
+```ts
 let result = await api.posts.read({ slug: "typescript-is-cool" }).fetch({ cache: "no-store" });
 ```
 

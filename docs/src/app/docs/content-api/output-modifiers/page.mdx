@@ -16,7 +16,7 @@ let result = await api.posts.browse({limit: 2}).fields({ title: true }).fetch();
 
 The `fields` method lets you change the output of the result to have only your selected fields, it works by giving an object with the field name and the value `true`. Under the hood it will use the `zod.pick` method to pick only the fields you want.
 
-```typescript
+```ts
 let result = await api.posts
   .read({
     slug: "typescript-is-cool",
@@ -40,7 +40,7 @@ The **output schema** will be modified to only have the fields you selected and 
 
 The `include` method lets you include some additionnal data that the Ghost API doesn't give you by default. The `include` params is specific to each resource and is defined in the "include" `Schema` of the resource. You will have to let TypeScript guide you to know what you can include.
 
-```typescript
+```ts
 let result = await api.authors
   .read({
     slug: "phildl",
@@ -62,7 +62,7 @@ The output type will be modified to make the fields you include **non-optionals*
 
 The `formats` method lets you add alternative content formats on the output of `Post` or `Page` resource to get the content in `plaintext` or `html`. Available options are `plaintext | html | mobiledoc`.
 
-```typescript
+```ts
 let result = await api.posts
   .read({
     slug: "this-is-a-post-slug",

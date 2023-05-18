@@ -81,7 +81,7 @@
 
   ### Before:
 
-  ```typescript
+  ```ts
   // example for the browse query (the data is an array of objects)
   const result: {
       status: "success";
@@ -107,7 +107,7 @@
 
   ### After
 
-  ```typescript
+  ```ts
   // example for the browse query (the data is an array of objects)
   const result: {
       success: true;
@@ -133,7 +133,7 @@
 
   It is now easier to check if the result is a success or an error:
 
-  ```typescript
+  ```ts
   if (result.success) {
     // do something with result.data
   } else {
