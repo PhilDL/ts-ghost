@@ -4,7 +4,7 @@ export const navigation = [
     items: [
       {
         title: "Introduction",
-        href: "/docs/content-api/introduction",
+        href: "/docs/content-api",
         items: [],
       },
       {

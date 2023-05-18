@@ -1,17 +1,17 @@
 export const navigation = [
   {
-    title: "@ts-ghost/admin-api",
+    title: "GBB",
     items: [
       {
         title: "Introduction",
-        href: "/docs/admin-api/introduction",
+        href: "/docs/ghost-blog-buster",
         items: [],
       },
-      {
-        title: "Usage",
-        href: "/docs/admin-api/usage",
-        items: [],
-      },
+      // {
+      //   title: "Usage",
+      //   href: "/docs/ghost-blog-buster/usage",
+      //   items: [],
+      // },
     ],
   },
 ];

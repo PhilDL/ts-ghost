@@ -31,7 +31,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     blockquote: (props) => <blockquote className="mt-4 border-l-4 pl-4" {...props} />,
     code: (props) => (
       <code
-        className="bg-muted text-muted-foreground text-md relative rounded px-[0.3rem] py-[0.2rem] font-mono font-semibold"
+        className="bg-muted text-muted-foreground relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold"
         {...props}
       />
     ),
