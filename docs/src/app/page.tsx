@@ -37,28 +37,28 @@ export default function IndexPage() {
         </p>
         <div className="grid grid-cols-2 gap-4">
           <PackageCard
-            href="/docs/content-api/introduction"
+            href="/docs/content-api"
             Icon={Book}
             title="@ts-ghost/content-api"
             description="A TypeScript Content API Client for Ghost with end-to-end TypeSafety, using fetch compatible with NextJS and Remix."
             animationDelay="0.20s"
           />
           <PackageCard
-            href="/docs/admin-api/introduction"
+            href="/docs/admin-api"
             Icon={BookLock}
             title="@ts-ghost/admin-api"
             description="A TypeScript Admin API Client for Ghost with end-to-end TypeSafety for GET PUT and POST, using fetch compatible with NextJS and Remix."
             animationDelay="0.30s"
           />
           <PackageCard
-            href="/docs/ghost-blog-buster/introduction"
+            href="/docs/ghost-blog-buster"
             Icon={ChevronRightSquare}
             title="@ts-ghost/ghost-blog-buster"
             description="A beautiful interractive CLI to connect to your Ghost Blog and export Posts to markdown, Members to JSON, etc..."
             animationDelay="0.40s"
           />
           <PackageCard
-            href="/docs/core-api/introduction"
+            href="/docs/core-api"
             Icon={Boxes}
             title="@ts-ghost/core-api"
             description="The base building blocks for the Content and Admin API. Used internally."
