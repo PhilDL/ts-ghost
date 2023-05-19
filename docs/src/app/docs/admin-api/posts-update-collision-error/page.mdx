@@ -1,0 +1,31 @@
+# How to avoid post / page "UPDATE_COLLISION" Error
+
+When updating `posts` or `page` with the Admin API, Ghost expects you to send the `updated_at` field with the **current updated_at value** of that Post or Page.
+
+<Callout type="warning">
+  This is only the case for Post and Page, and is a limitation from the Ghost API unfortunately.
+</Callout>
+
+If you don't send this field, you will get an `UPDATE_COLLISION` error. Here is an example workflow where we fetch the Post first and then update it:
+
+```ts title
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+
+const result = await api.posts
+  .read({
+    slug: "coming-soon",
+  })
+  .fetch();
+
+if (!result.success) {
+  throw new Error(result.errors.join(", "));
+}
+const post = result.data;
+
+const postEditResult = await api.posts.edit(post.id, {
+  custom_excerpt: "Modified excerpt from ghost",
+  updated_at: new Date(post.updated_at || ""),
+});
+```
