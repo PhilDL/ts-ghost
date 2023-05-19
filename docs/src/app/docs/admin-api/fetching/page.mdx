@@ -1,0 +1,39 @@
+# Fetching
+
+Fetching happens at the end of your chaining of methods, the moment you call the async `fetch` method (or the async `paginate`).
+
+Technically these are the only asynchronous methods and the only moment where the library will make a request to the Ghost API through the platform `fetch` function (in Node or in the browser).
+
+## Reminder requirements
+
+This library expect the global `fetch` function to be available. If you are using Node 16, you will need to run with the `--experimental-fetch` flag enabled.
+
+## fetch options
+
+Since we are using the standard `fetch` you have can pass options of type [`RequestInit`](https://developer.mozilla.org/en-US/docs/Web/API/fetch) notably to play with the `cache` behavior.
+
+For example:
+
+```ts
+let query = await api.posts
+  .browse({
+    limit: 5,
+    order: "title DESC",
+  })
+  .fetch({
+    cache: "no-cache",
+  });
+```
+
+### With NextJS
+
+In a NextJS 13+ project, `fetch` is augmented and you can fully take advantage of that and you have access to the `next` option.
+
+```ts
+let query = await api.posts
+  .browse({
+    limit: 5,
+    order: "title DESC",
+  })
+  .fetch({ next: { revalidate: 10 } }); // NextJS revalidate this data every 10 seconds at most
+```

@@ -1,0 +1,50 @@
+# Commons recipes
+
+Here is a growing collections of things you can achieve with the `@ts-ghost/admin-api`.
+
+## Getting all the posts (including Authors) with pagination
+
+Here we will use the `paginate` function of the fetcher to get the next page fetcher directly if it is defined.
+
+```ts title
+import { TSGhostAdminAPI, type Post } from "@ts-ghost/admin-api";
+
+let url = "https://demo.ghost.io";
+let key = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8"; // Admin API KEY
+const api = new TSGhostAdminAPI(url, key, "v5.0");
+
+const posts: Post[] = [];
+let cursor = await api.posts
+  .browse()
+  .include({ authors: true, tags: true })
+  .paginate();
+if (cursor.current.success) posts.push(...cursor.current.data);
+while (cursor.next) {
+  cursor = await cursor.next.paginate();
+  if (cursor.current.success) posts.push(...cursor.current.data);
+}
+return posts;
+```
+
+## Fetching the Settings of your Ghost instance
+
+Settings is a specific resource, you cannot build query against it like the other resources. You can only fetch the settings, so calling `api.settings` will directly give you a fetcher. It will return an array of Key/Value. The keys are the settings names and the values are the settings values.
+
+<Callout type="info">
+  This `settings` resource is different from the [@ts-ghost/content-api](/docs/content-api/common-recipes)
+  `settings` resource. The Admin API `settings` gives more info but just in key/value form.
+</Callout>
+
+```ts
+import { TSGhostAdminAPI, type Post } from "@ts-ghost/admin-api";
+
+let url = "https://demo.ghost.io";
+let key = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8"; // Admin API KEY
+const api = new TSGhostAdminAPI(url, key, "v5.0");
+
+let result = await api.settings.fetch();
+if (result.success) {
+  const settings = result.data;
+  //     ^? type Settings {title: string; description: string; ...
+}
+```

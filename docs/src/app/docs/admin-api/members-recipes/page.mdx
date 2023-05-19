@@ -1,0 +1,70 @@
+# Members & Subscriptions recipes
+
+The advantage of using the admin API is that you can create, edit and delete members. This is not possible with the content API.
+
+## Handling new members and add their stripe susbscription
+
+Using the admin API you can create a new member with minimal information name and email
+
+```ts title
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+
+const membersAdd = await api.members.add(
+  { name: "Philippe", email: "philippe@ts-ghost.com" },
+  { send_email: false }
+);
+```
+
+Then later update that member to add a stripe customer id
+
+```ts
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+
+const membersEdit = await api.members.edit(
+  "edHks74hdKqhs34izzahd45",
+  { stripe_customer_id: "cus_123456789" },
+  { send_email: false }
+);
+```
+
+## Get all Paid tiers that are active
+
+You can get all the Tiers you created from your Ghost Blog and filter them by active and paid tiers.
+
+```ts title
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+const tiers = await api.tiers
+  .browse({
+    filter: "active:true+type:paid",
+  })
+  .include({ benefits: true, monthly_price: true, yearly_price: true })
+  .fetch();
+
+if (!tiers.success) {
+  throw new Error(tiers.errors.join(", "));
+}
+console.log(tiers);
+```
+
+## Get Members active subscriptions
+
+This is a quick example to get the subscriptions of a member and filter them by active status.
+
+```ts title
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+export const getMemberActiveSubscriptions = async (memberId: string) => {
+  const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+  const subscriptions = await api.members.read({ id: memberId }).fields({ subscriptions: true }).fetch();
+  if (!subscriptions.success) {
+    throw new Error(subscriptions.errors.join(", "));
+  }
+  return subscriptions.data.subscriptions.filter((sub) => sub.status === "active");
+};
+```

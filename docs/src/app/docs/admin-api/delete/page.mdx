@@ -1,0 +1,38 @@
+# Delete
+
+Delete is an async function that requires the `id` of the record to delete. _Some resources don't support deletion, but instead give you accessed to a soft delete through the `status` field in the `edit` method._
+
+The only argument is the `id` of the record to delete, in this example we delete a member.
+
+```ts
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(
+  "https://demo.ghost.io",
+  "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
+  "v5.0"
+);
+const result = await api.members.delete("edHks74hdKqhs34izzahd45");
+
+if (!result.success) {
+  console.error(result.errors);
+  throw new Error("Failed to delete Member");
+}
+```
+
+## Result
+
+The response will not contain any data since Ghost API just return a 204 empty response. You will have to check the discriminator `success` to know if the deletion was successful or not.
+
+```ts
+// return from the `delete` method
+const result: {
+    success: true;
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```

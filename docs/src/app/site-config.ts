@@ -1,5 +1,3 @@
-import { Book, BookLock, Boxes, ChevronRightSquare, type LucideIcon } from "lucide-react";
-
 export type NavItem = {
   title: string;
   href: string;
@@ -55,6 +53,10 @@ export const siteConfig: SiteConfig = {
             {
               title: "Introduction",
               href: "/docs/content-api",
+            },
+            {
+              title: "Quickstart",
+              href: "/docs/content-api/quickstart",
             },
             {
               title: "Overview",
@@ -122,11 +124,77 @@ export const siteConfig: SiteConfig = {
               title: "Introduction",
               href: "/docs/admin-api",
             },
-            // {
-            //   title: "Usage",
-            //   href: "/docs/admin-api/usage",
-
-            // },
+            {
+              title: "Quickstart",
+              href: "/docs/admin-api/quickstart",
+            },
+            {
+              title: "Overview",
+              href: "/docs/admin-api/overview",
+            },
+          ],
+        },
+        {
+          title: "Query methods",
+          items: [
+            {
+              title: "Browse",
+              href: "/docs/admin-api/browse",
+            },
+            {
+              title: "Read",
+              href: "/docs/admin-api/read",
+            },
+            {
+              title: "Output modifiers",
+              href: "/docs/admin-api/output-modifiers",
+            },
+            {
+              title: "Fetching",
+              href: "/docs/admin-api/fetching",
+            },
+          ],
+        },
+        {
+          title: "Mutation methods",
+          items: [
+            {
+              title: "Add",
+              href: "/docs/admin-api/add",
+            },
+            {
+              title: "Edit",
+              href: "/docs/admin-api/edit",
+            },
+            {
+              title: "Delete",
+              href: "/docs/admin-api/delete",
+            },
+          ],
+        },
+        {
+          title: "How-to",
+          items: [
+            {
+              title: "Members & Subscriptions",
+              href: "/docs/admin-api/members-recipes",
+            },
+            {
+              title: "Common recipes",
+              href: "/docs/admin-api/common-recipes",
+            },
+            {
+              title: "Remix",
+              href: "/docs/admin-api/remix",
+            },
+            {
+              title: "NextJS",
+              href: "/docs/admin-api/nextjs",
+            },
+            {
+              title: "TypeScript recipes",
+              href: "/docs/admin-api/advanced-typescript",
+            },
           ],
         },
       ],

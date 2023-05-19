@@ -1,0 +1,45 @@
+# Edit
+
+Edit lets you edit an existing record of a given resource by inputing the resource `id` and the new data. The `edit` method is available on the resources that support it. (For example on the `users` resource don't have access to any mutation methods).
+
+The `edit` method is asynchronous and accept the `id`, the data object and an optional `option` object. The shapes given to the data and the option are fully typed so you will benefit from auto-completion and missing required fields. The `option` is also typesafe and will be available on some resources (most resource don't have options).
+
+You will benefit also from **run-time validation**, the data you input will be parsed before being send through the network.
+
+## Example editing members
+
+Here we want to edit a Member to attach a `stripe_customer_id` to it and we will give the option to not send an email to the member because we want to handle that ourself.
+
+```ts
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(
+  "https://demo.ghost.io",
+  "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
+  "v5.0"
+);
+
+const membersEdit = await api.members.edit(
+  "edHks74hdKqhs34izzahd45",
+  { stripe_customer_id: "cus_123456789" },
+  { send_email: false }
+);
+```
+
+## Result
+
+The result will be parsed and typed with the `output` schema and represent the newly created record.
+
+```ts
+// return from the `edit` method
+const result: {
+    success: true;
+    data: Member;
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```

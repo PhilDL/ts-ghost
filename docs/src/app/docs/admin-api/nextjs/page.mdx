@@ -1,0 +1,71 @@
+# NextJS
+
+This is an example for NextJS 13 using the `@ts-ghost/admin-api` with the app Router where we fetch the list of posts and the site settings to display them on the `/blog` of our site.
+
+<Steps>
+
+### Installation
+
+```bash title="Terminal"
+pnpm add @ts-ghost/admin-api
+```
+
+### Create `.env` variable
+
+```bash title=".env"
+GHOST_URL="https://myblog.com"
+GHOST_ADMIN_API_KEY="1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8"
+```
+
+### Create a file in the app folder to instantiate the API
+
+```ts title="app/blog/ghost.ts"
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+export const api = new TSGhostAdminAPI(
+  process.env.GHOST_URL || "",
+  process.env.GHOST_ADMIN_API_KEY || "",
+  "v5.0"
+);
+```
+
+### Use the API in the app Router
+
+```tsx title="app/blog/page.tsx"
+import { api } from "./ghost";
+
+async function getBlogPosts() {
+  const response = await api.posts.browse().fields({ title: true, slug: true, id: true }).fetch();
+  if (!response.success) {
+    throw new Error(response.errors.join(", "));
+  }
+  return response.data;
+}
+
+async function getSiteSettings() {
+  const response = await api.site.fetch();
+  if (!response.success) {
+    throw new Error(response.errors.join(", "));
+  }
+  return response.data;
+}
+
+// async Server Component
+export default async function HomePage() {
+  const [posts, site] = await Promise.all([getBlogPosts(), getSiteSettings()]);
+  return (
+    <div>
+      <h1>This is a list of posts for {site.title}:</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            {post.title} ({post.slug})
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+</Steps>

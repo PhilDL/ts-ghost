@@ -1,20 +1,20 @@
 # Remix example
 
-Here is an example using the `@ts-ghost/content-api` in a Remix loader:
+Here is an example using the `@ts-ghost/admin-api` in a Remix loader:
 
 <Steps>
 
 ### Installation
 
 ```bash title="Terminal"
-pnpm add @ts-ghost/content-api
+pnpm add @ts-ghost/admin-api
 ```
 
 ### Create `.env` variable
 
 ```bash title=".env"
 GHOST_URL="https://myblog.com"
-GHOST_CONTENT_API_KEY="e9b414c5d95a5436a647ff04ab"
+GHOST_ADMIN_API_KEY="1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8"
 ```
 
 ### Use in your route loader
@@ -22,35 +22,35 @@ GHOST_CONTENT_API_KEY="e9b414c5d95a5436a647ff04ab"
 ```tsx title="app/routes/_index.tsx"
 import { json, type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { TSGhostContentAPI } from "@ts-ghost/content-api";
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: "New Remix App" }];
 };
 
 export async function loader({ request }: LoaderArgs) {
-  const api = new TSGhostContentAPI(
+  const api = new TSGhostAdminAPI(
     process.env.GHOST_URL || "",
-    process.env.GHOST_CONTENT_API_KEY || "",
+    process.env.GHOST_ADMIN_API_KEY || "",
     "v5.0"
   );
-  const [settings, posts] = await Promise.all([api.settings.fetch(), api.posts.browse().fetch()]);
+  const [site, posts] = await Promise.all([api.site.fetch(), api.posts.browse().fetch()]);
 
-  if (!settings.success) {
-    throw new Error(settings.errors.join(", "));
+  if (!site.success) {
+    throw new Error(site.errors.join(", "));
   }
   if (!posts.success) {
     throw new Error(posts.errors.join(", "));
   }
-  return json({ settings: settings.data, posts: posts.data });
+  return json({ site: site.data, posts: posts.data });
 }
 
 export default function Index() {
-  const { settings, posts } = useLoaderData<typeof loader>();
+  const { site, posts } = useLoaderData<typeof loader>();
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>This is a list of posts for {settings.title}:</h1>
+      <h1>This is a list of posts for {site.title}:</h1>
       <ul>
         {posts.map((post) => (
           <li key={post.slug}>
