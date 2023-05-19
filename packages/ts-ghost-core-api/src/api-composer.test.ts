@@ -16,14 +16,7 @@ describe("APIComposer Read / Browse", () => {
     version: "v5.0",
     endpoint: "content",
   };
-  const adminCredentials: HTTPClientOptions = {
-    url: "https://ghost.org",
-    key: "aaiuzhduad:baiuciauhviahuv",
-    version: "v5.0",
-    endpoint: "admin",
-  };
   let httpClient: HTTPClient;
-  let adminHttpClient: HTTPClient;
 
   const simplifiedSchema = z.object({
     foo: z.string(),
@@ -45,7 +38,6 @@ describe("APIComposer Read / Browse", () => {
 
   beforeEach(() => {
     httpClient = new HTTPClient(credentials);
-    adminHttpClient = new HTTPClient(adminCredentials);
     fetchMocker.enableMocks();
   });
   afterEach(() => {
@@ -280,14 +272,7 @@ describe("APIComposer add / edit", () => {
     version: "v5.0",
     endpoint: "content",
   };
-  const adminCredentials: HTTPClientOptions = {
-    url: "https://ghost.org",
-    key: "aaiuzhduad:baiuciauhviahuv",
-    version: "v5.0",
-    endpoint: "admin",
-  };
   let httpClient: HTTPClient;
-  let adminHttpClient: HTTPClient;
 
   const simplifiedSchema = z.object({
     id: z.string(),
@@ -316,7 +301,6 @@ describe("APIComposer add / edit", () => {
 
   beforeEach(() => {
     httpClient = new HTTPClient(credentials);
-    adminHttpClient = new HTTPClient(adminCredentials);
     fetchMocker.enableMocks();
     fetchMocker.enableMocks();
   });

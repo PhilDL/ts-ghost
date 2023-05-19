@@ -1,6 +1,6 @@
 import { SignJWT } from "jose";
 
-import type { APICredentials, APIResource, GhostIdentityInput } from "../schemas";
+import type { APICredentials, APIResource } from "../schemas";
 
 export type HTTPClientOptions = {
   key: string;

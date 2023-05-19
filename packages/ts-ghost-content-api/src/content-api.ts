@@ -1,6 +1,5 @@
 import {
   APIComposer,
-  APIVersions,
   BasicFetcher,
   contentAPICredentialsSchema,
   HTTPClient,

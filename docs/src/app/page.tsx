@@ -9,6 +9,12 @@ import { buttonVariants } from "~/components/ui/button";
 
 import heroLogo from "./hero-logo.png";
 
+const IconMap = {
+  "@ts-ghost/content-api": Book,
+  "@ts-ghost/admin-api": BookLock,
+  "@ts-ghost/ghost-blog-buster": ChevronRightSquare,
+  "@ts-ghost/core-api": Boxes,
+};
 export default function IndexPage() {
   return (
     <section className="container flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-6 overflow-hidden pb-8 pt-6 md:py-10">
@@ -36,34 +42,15 @@ export default function IndexPage() {
           </Balancer>
         </p>
         <div className="grid grid-cols-2 gap-4">
-          <PackageCard
-            href="/docs/content-api"
-            Icon={Book}
-            title="@ts-ghost/content-api"
-            description="A TypeScript Content API Client for Ghost with end-to-end TypeSafety, using fetch compatible with NextJS and Remix."
-            animationDelay="0.20s"
-          />
-          <PackageCard
-            href="/docs/admin-api"
-            Icon={BookLock}
-            title="@ts-ghost/admin-api"
-            description="A TypeScript Admin API Client for Ghost with end-to-end TypeSafety for GET PUT and POST, using fetch compatible with NextJS and Remix."
-            animationDelay="0.30s"
-          />
-          <PackageCard
-            href="/docs/ghost-blog-buster"
-            Icon={ChevronRightSquare}
-            title="@ts-ghost/ghost-blog-buster"
-            description="A beautiful interractive CLI to connect to your Ghost Blog and export Posts to markdown, Members to JSON, etc..."
-            animationDelay="0.40s"
-          />
-          <PackageCard
-            href="/docs/core-api"
-            Icon={Boxes}
-            title="@ts-ghost/core-api"
-            description="The base building blocks for the Content and Admin API. Used internally."
-            animationDelay="0.50s"
-          />
+          {siteConfig.docs.map((packageDoc, index) => (
+            <PackageCard
+              href={packageDoc.path}
+              Icon={IconMap[packageDoc.package]}
+              title={packageDoc.package}
+              description={packageDoc.description}
+              animationDelay={`0.${(index + 1) * 15 + 30}s`}
+            />
+          ))}
         </div>
         <div
           className="animate-fade-up flex justify-center gap-4 opacity-0"

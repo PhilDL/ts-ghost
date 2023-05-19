@@ -1,13 +1,12 @@
 import "~/styles/globals.css";
-import { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
-import { siteConfig } from "~/app/site-config";
-import { cn } from "~/lib/cn";
-import { SiteHeader } from "~/components/site-header";
-import { ThemeProvider } from "~/components/theme-provider";
-
+import { Metadata } from "next";
 import { IBM_Plex_Mono, Inter } from "next/font/google";
 import localFont from "next/font/local";
+import { siteConfig } from "~/app/site-config";
+import { SiteHeader } from "~/components/site-header";
+import { ThemeProvider } from "~/components/theme-provider";
+import { cn } from "~/lib/cn";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -42,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [{ url: "https://acme-corp-lib.vercel.app/opengraph-image.png" }],
+    images: [{ url: "https://ts-ghost.dev/opengraph-image.png" }],
     creator: "@PhilDL",
   },
 };
