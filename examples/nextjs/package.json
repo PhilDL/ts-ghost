@@ -9,15 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/node": "^20.1.4",
-    "@types/react": "18.0.38",
-    "@types/react-dom": "18.0.11",
+    "@ts-ghost/admin-api": "*",
+    "@ts-ghost/content-api": "*",
+    "@types/node": "^20.2.1",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
     "eslint": "^8.39.0",
     "next": "^13.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.0.4",
-    "@ts-ghost/admin-api": "*",
-    "@ts-ghost/content-api": "*"
+    "typescript": "^5.0.4"
   }
 }

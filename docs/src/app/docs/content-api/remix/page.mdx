@@ -21,7 +21,7 @@ GHOST_CONTENT_API_KEY="e9b414c5d95a5436a647ff04ab"
 
 ```tsx title="app/routes/_index.tsx"
 import { json, type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
 export const meta: V2_MetaFunction = () => {
@@ -54,9 +54,7 @@ export default function Index() {
       <ul>
         {posts.map((post) => (
           <li key={post.slug}>
-            <a target="_blank" href="https://remix.run/tutorials/blog" rel="noreferrer">
-              {post.title}
-            </a>
+            <Link to={`/${post.slug}`}>{post.title}</Link>
           </li>
         ))}
       </ul>

@@ -1,0 +1,69 @@
+# Quickstart
+
+These are the basic steps to follow to interact with the Ghost Content API in your TypeScript project.
+
+<Steps>
+
+### Get your Ghost API Key and Ghost version number
+
+Connect to your ghost blog and create a new Integration to get your Content API Key.
+
+![Create an Integration to get your Content API Key](https://github.com/PhilDL/ts-ghost/assets/4941205/0a35955e-1d42-40b3-a966-2cfc0345fa38)
+
+_You will need the URL of your Ghost Blog and the Content API Key_
+
+To know which Ghost Version you are using go in the Settings and click on top right button "About Ghost":
+
+![Ghost Version](https://github.com/PhilDL/ts-ghost/assets/4941205/c46034a5-844e-4d8c-b525-a47e26d941c6)
+
+Here the version is **"v5.47.0"**
+
+### Installation
+
+```bash title="Terminal"
+pnpm add @ts-ghost/content-api
+```
+
+### (Optional) Create `.env` variable
+
+```bash title=".env"
+GHOST_URL="https://myblog.com"
+GHOST_CONTENT_API_KEY="e9b414c5d95a5436a647ff04ab"
+```
+
+### Use in your TypeScript file
+
+```ts title="ghost-queries.ts"
+import { TSGhostContentAPI } from "@ts-ghost/content-api";
+
+const api = new TSGhostContentAPI(
+  process.env.GHOST_URL || "",
+  process.env.GHOST_CONTENT_API_KEY || "",
+  "v5.47.0"
+);
+
+export async function getBlogPosts() {
+  const response = await api.posts
+    .browse({
+      limit: 10,
+    })
+    .fields({
+      title: true,
+      slug: true,
+      id: true,
+    })
+    .fetch();
+  if (!response.success) {
+    throw new Error(response.errors.join(", "));
+  }
+  // Response data is typed correctly with only the requested fields
+  // {
+  //   title: string;
+  //   slug: string;
+  //   id: string;
+  // }[]
+  return response.data;
+}
+```
+
+</Steps>

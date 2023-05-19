@@ -3,6 +3,7 @@
 
 import withMdx from "@next/mdx";
 import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 import { getHighlighter } from "shiki";
 
 /** @type {import('next').NextConfig} */
@@ -37,5 +38,6 @@ export default withMdx({
         }),
       ],
     ],
+    remarkPlugins: [remarkGfm],
   },
 })(nextConfig);

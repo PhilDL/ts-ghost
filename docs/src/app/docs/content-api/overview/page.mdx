@@ -14,12 +14,16 @@ From this `api` instance you will be able to call any resource available in the 
 
 ## Available resource
 
-- `api.authors`
-- `api.tiers`
-- `api.posts`
-- `api.pages`
-- `api.tags`
-- `api.settings`
+| Resource       | `.read()` | `.browse()` |
+| -------------- | --------- | ----------- |
+| `api.posts`    | ✅        | ✅          |
+| `api.pages`    | ✅        | ✅          |
+| `api.authors`  | ✅        | ✅          |
+| `api.tiers`    | ✅        | ✅          |
+| `api.tags`     | ✅        | ✅          |
+| `api.settings` | \*        | \*          |
+
+- settings resource only has a `fetch` function exposed, no query builder.
 
 ## Building Queries
 

@@ -9,25 +9,25 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@remix-run/css-bundle": "^1.16.0",
-    "@remix-run/node": "^1.16.0",
-    "@remix-run/react": "^1.16.0",
-    "@remix-run/serve": "^1.16.0",
-    "isbot": "^3.6.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@remix-run/css-bundle": "^1.16.1",
+    "@remix-run/node": "^1.16.1",
+    "@remix-run/react": "^1.16.1",
+    "@remix-run/serve": "^1.16.1",
     "@ts-ghost/admin-api": "*",
-    "@ts-ghost/content-api": "*"
+    "@ts-ghost/content-api": "*",
+    "isbot": "^3.6.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.16.0",
-    "@remix-run/eslint-config": "^1.16.0",
-    "@types/react": "^18.0.35",
-    "@types/react-dom": "^18.0.11",
-    "eslint": "^8.38.0",
-    "typescript": "^5.0.4",
+    "@remix-run/dev": "^1.16.1",
+    "@remix-run/eslint-config": "^1.16.1",
     "@types/cookie": "^0.5.1",
-    "@types/node": "^20.1.4"
+    "@types/node": "^20.2.1",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "eslint": "^8.38.0",
+    "typescript": "^5.0.4"
   },
   "engines": {
     "node": ">=14"

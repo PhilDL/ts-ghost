@@ -36,15 +36,15 @@
   },
   "devDependencies": {
     "@ts-ghost/tsconfig": "*",
-    "@types/node": "^20.1.4",
+    "@types/node": "^20.2.1",
+    "@vitest/coverage-c8": "^0.31.1",
     "eslint": "^8.40.0",
     "tsup": "^6.7.0",
     "typescript": "5.0.4",
-    "vite": "^4.3.5",
+    "vite": "^4.3.8",
     "vite-tsconfig-paths": "^4.0.7",
-    "vitest": "^0.31.0",
-    "vitest-fetch-mock": "^0.2.2",
-    "@vitest/coverage-c8": "^0.31.0"
+    "vitest": "^0.31.1",
+    "vitest-fetch-mock": "^0.2.2"
   },
   "dependencies": {
     "jose": "^4.14.4",

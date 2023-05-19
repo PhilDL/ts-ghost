@@ -3,7 +3,6 @@ import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 
 import { HTTPClient, type HTTPClientOptions } from "../helpers";
-import type { AdminAPICredentials, ContentAPICredentials } from "../schemas/shared";
 import { BrowseFetcher } from "./browse-fetcher";
 
 const fetchMocker = createFetchMock(vi);

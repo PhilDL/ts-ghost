@@ -1,0 +1,188 @@
+# Overview
+
+Here you will have an overview of the philosophy of the library and a common workflow for your queries.
+
+The `TSGhostAdminAPI` object is your entry-point, it will contains all the available endpoints and need to be instantiated with your Ghost Blog API Credentials, the URL, and the Admin API Key.
+
+```ts
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(
+  "https://demo.ghost.io",
+  "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
+  "v5.0"
+);
+```
+
+From this `api` instance you will be able to call any resource available in the Ghost Admin API and have the available methods exposed.
+
+## Available resource
+
+| Resource            | `.read()` | `.browse()` | `.add()` | `.edit()` | `.delete()` |
+| ------------------- | --------- | ----------- | -------- | --------- | ----------- |
+| `api.posts`         | ✅        | ✅          | ✅       | ✅        | ✅          |
+| `api.pages`         | ✅        | ✅          | ✅       | ✅        | ✅          |
+| `api.members`       | ✅        | ✅          | ✅       | ✅        | ✅          |
+| `api.tiers`         | ✅        | ✅          | -        | -         | -           |
+| `api.newsletters`   | ✅        | ✅          | ✅       | ✅        | 🗄️\*        |
+| `api.offers`        | ✅        | ✅          | ✅       | ✅        | 🗄️\*        |
+| `api.tags`          | ✅        | ✅          | ✅       | ✅        | ✅          |
+| `api.users`         | ✅        | ✅          | -        | -         | -           |
+| `api.webhooks`      | -         | -           | ✅       | ✅        | ✅          |
+| `api.site` \*\*     | -         | -           | -        | -         | -           |
+| `api.settings` \*\* | -         | -           | -        | -         | -           |
+
+- 🗄️\* _You have access to a "soft" delete via the `status` field with values `"active" | "archived"`._
+- \*\* `site` and `settings` resources only have a `fetch` function exposed, no query builder.
+
+Calling any resource like `members` or `posts` will give your a new instance of APIComposer containing a mix of exposed methods between `read`, `browse` for data fetching and `add`, `edit` and `delete` for mutation.
+
+In this Admin API the schemas returned are different from the [@ts-ghost/content-api](/docs/content-api) and have usually more data. For example the `Post` resource can give you access to the paid `tiers` required to have access to the content.
+
+## Building Queries (Read / Browse)
+
+The resource instance is already built with the associated Schema for that resource so any operation
+you will do from that point will be typed against the asociated schema. Since you are using TypeScript you will get a nice developer experience with autocompletion and squiggly lines if you try to use a field that doesn't exist on the resource.
+
+`browse` and `read` methods accept an options object. These params mimic the way Ghost API Admin is built but with the power of Zod and TypeScript they are type-safe here.
+
+```ts
+let query = api.members.browse({
+  limit: 5,
+  order: "name ASC",
+  //      ^? the text here will throw a TypeScript lint error if you use unknown field.
+});
+```
+
+- `browse` will accept `page`, `limit`, `order`, `filter`. ([More details](/docs/admin-api/browse))
+- `read` parameters are `id` or `slug`. ([More details](/docs/admin-api/browse))
+
+## (Optional) Altering the output
+
+After calling `read` or `browse` you get a Fetcher instance that you can use to optionnaly alter the output of the result.
+
+For example if we want to fetch only the id, name and email of your members we could do:
+
+```ts
+let query = api.members
+  .browse({
+    limit: 5,
+    order: "email ASC",
+  })
+  .fields({
+    id: true,
+    email: true,
+    name: true,
+  });
+```
+
+## Fetching the data
+
+After building your query and _optionnaly using output formatting_, you can fetch it with the **async** `fetch` method. This method will return a `Promise` that will resolve to a result object that was parsed by the `Zod` Schema of the resource.
+
+```ts
+let query = await api.members
+  .browse({
+    limit: 5,
+    order: "email ASC",
+  })
+  .fields({
+    id: true,
+    email: true,
+    name: true,
+  })
+  .fetch();
+
+// or without fields selection
+
+let query2 = await api.members
+  .browse({
+    limit: 5,
+    order: "email ASC",
+  })
+  .fetch();
+```
+
+Alternatively, coming from a `browse` query you also have access to the `paginate` method, instead of `fetch`. This version will return a cursor and a `next` fetcher to directly have the next query with the same parameters but on page n + 1. See a complete example in the [Common Recipes](/docs/admin-api/common-recipes) section.
+
+The result is a **discriminated union** with the Boolean `success` as a discriminator, so a check on `success` will let you know if the query was successful or not. The shape of the "OK" path depends on the query you made and the output modifiers you used.
+
+```ts
+const result: {
+    success: true;
+    data: Member; // Shape depends on resource + browse | read + output modifiers
+    // contains aditionnal metadata for browse queries
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
+## Mutations (Add / Edit / Delete)
+
+The `add`, `edit` and `delete` methods are available on the resources that support it. (For example on `user` you don't have access to any mutation methods).
+You will get auto-completion from each resource if the different methods are available or not.
+
+**These methods are all asynchronous** (no need to call a fetch method to execute them) and will return a result object with the same shape as query methods (except for delete).
+
+Examples:
+
+```ts
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+let url = "https://demo.ghost.io";
+let key = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
+const api = new TSGhostAdminAPI(url, key, "v5.0");
+
+// Input data are fully typed and then parsed through the appropriate Zod Schema
+const adding = await api.posts.add({
+  title: title,
+  html: "<p>Hello from ts-ghost</p>",
+  tags: [{ name: "ts-ghost" }],
+  tiers: [{ name: "ts-ghost" }],
+  custom_excerpt: "This is custom excerpt from ts-ghost",
+  meta_title: "Meta Title from ts-ghost",
+  meta_description: "Description from ts-ghost",
+  featured: true,
+  og_title: "OG Title from ts-ghost",
+  og_description: "OG Description from ts-ghost",
+  twitter_title: "Twitter Title from ts-ghost",
+  twitter_description: "Twitter Description from ts-ghost",
+  visibility: "public",
+  slug: "foobarbaz",
+});
+
+if (!adding.success) {
+  console.error(adding.errors);
+  throw new Error("Failed to create post");
+}
+
+const newPost = adding.data;
+//     ^? type Post
+
+// Update
+const postEdit = await api.posts.edit(newPost.id, {
+  custom_excerpt: "Modified excerpt from ghost",
+  // This is required by Ghost to send the updated_at field with the updated_at
+  // of the post you want to edit.
+  updated_at: new Date(newPost.updated_at || ""),
+});
+
+if (!postEdit.success) {
+  console.error(postEdit.errors);
+  throw new Error("Failed to edit post");
+}
+
+const editedPost = postEdit.data;
+//     ^? type Post
+
+// Delete
+const postDelete = await api.posts.delete(editedPost.id);
+if (!postDelete.success) {
+  console.error(postDelete.errors);
+  throw new Error("Failed to delete post");
+}
+```

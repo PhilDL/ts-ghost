@@ -1,0 +1,170 @@
+# Browse
+
+The `browse` method is used to get a list of items from a Ghost Admin API resource, it is the equivalent of the `GET /members` endpoint. You have access to different options to paginate, limit, filter and order your results.
+
+## Options
+
+These options are totally _optionals_ on the `browse` method but they let you filter and order your search.
+
+This is an example containing all the available keys in the params object
+
+```ts
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(
+  "https://demo.ghost.io",
+  "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
+  "v5.0"
+);
+
+let query = api.posts.browse({
+  page: 1,
+  limit: 5,
+  filter: "name:bar+slug:-test",
+  //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
+  order: "title DESC",
+  //      ^? the text here will throw a TypeScript lint error if you use unknown fields.
+});
+```
+
+These browse params are then parsed through a `Zod` Schema that will validate all the fields.
+
+### page `number`
+
+Lets you query a specific page of results. The default value is `1` and pagination starts at `1`.
+
+### limit `number`
+
+Lets you limit the number of results per page. The default value is `15` and the maximum value is `15` (limitation of the Ghost API).
+
+### filter `string`
+
+Lets you filter the results with the [Ghost API `filter` syntax](https://ghost.org/docs/admin-api/#filtering). But with the power of TypeScript, you will get **lint errors if you use unknown fields**.
+
+For example if you use `filter: "name:bar+slug:-test"`, `name` IS NOT a field of the `Post` resource, you will get a lint error.
+
+Example, getting all featured posts except one with specific slug:
+
+```ts
+const slugToExclude = "test";
+
+let query = await api.posts
+  .browse({
+    filter: `featured:true+slug:-${slugToExclude}`,
+  })
+  .fetch();
+```
+
+Note that you also have access to
+
+### order `string`
+
+Lets you order the results by fields. Similar to the `filter` option, you will get **TypeScript lint errors if you use unknown fields**. The syntax is `field direction` where `direction` is `ASC` or `DESC`.
+
+```ts
+let query = await api.posts
+  .browse({
+    order: "title DESC",
+  })
+  .fetch();
+```
+
+Note that you can also use nested properties, for example if you want to fetch the first 3 `Tags` with the most posts:
+
+```ts
+api.tags
+.browse({
+  order: "count.posts DESC",
+  filter: "visibility:public",
+  limit: 3,
+})
+.include({ "count.posts": true })
+.fetch(),
+```
+
+## Output modifiers
+
+After calling `browse` you get a Fetcher instance that you can use to optionnaly alter the output of the result with methods like `include`, `fields` and `formats`. You can also use the `fetch` method to get the result.
+
+There is a section [dedicated to output modifiers here](/docs/admin-api/output-modifiers).
+
+## Fetching the data
+
+After using browse query, you will get a `BrowseFetcher` with 2 methods:
+
+- `async fetch`
+- `async paginate`
+
+That result is a discriminated union with the Boolean `success` as a discriminator, so a check on `success` will let you know if the query was successful or not. Generally your workflow will look like that:
+
+```ts
+let result = await api.posts.browse().fetch();
+if (result.success) {
+  const posts = result.data;
+  //     ^? type Post[]
+} else {
+  // errors array of objects
+  console.log(result.errors.map((e) => e.message).join("\n"));
+}
+```
+
+### Result type of `.fetch()`
+
+The `data` property of the result will be an array of objects of the resource you queried. This output schema will be modified according to the output modifiers you used.
+
+**Basic example for Posts** (without output modifiers you get the full Post object):
+
+```ts
+// example for the browse query (the data is an array of objects)
+const result: {
+    success: true;
+    data: Post[];
+    meta: {
+        pagination: {
+            pages: number;
+            limit: number;
+            page: number;
+            total: number;
+            prev: number | null;
+            next: number | null;
+        };
+    };
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```
+
+### Result type of `.paginate()`
+
+Paginate is a method that will return a cursor and a `next` fetcher to directly have the next query with the same parameters but on page n + 1. See a complete example in the [Common Recipes](/docs/admin-api/common-recipes) section.
+
+```ts
+const result: {
+    success: true;
+    data: Post[];
+    meta: {
+        pagination: {
+            pages: number;
+            limit: number;
+            page: number;
+            total: number;
+            prev: number | null;
+            next: number | null;
+        };
+    };
+    next: BrowseFetcher | undefined; // the next page fetcher if it is defined
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+    next: undefined; // the next page fetcher is undefined here
+}
+```
+
+Here you can use the `next` property to get the next page fetcher if it is defined.

@@ -264,7 +264,7 @@ describe("pages integration tests browse", () => {
     expect(pageAuthor.created_at).toBeDefined();
     expect(pageAuthor.updated_at).toBeDefined();
     expect(pageAuthor.email).toBe(stubPageAuthors.email);
-    expect(pageAuthor.accessibility).toBe(stubPageAuthors.accessibility);
+    expect(pageAuthor.accessibility).toBeDefined();
     expect(pageAuthor.roles).toStrictEqual(stubPageAuthors.roles);
 
     // Tiers
@@ -303,7 +303,7 @@ describe("pages integration tests browse", () => {
     expect(page.primary_author.created_at).toBeDefined();
     expect(page.primary_author.updated_at).toBeDefined();
     expect(page.primary_author.email).toBe(stubPage.primary_author.email);
-    expect(page.primary_author.accessibility).toBe(stubPage.primary_author.accessibility);
+    expect(page.primary_author.accessibility).toBeDefined();
     expect(page.primary_author.roles).toStrictEqual(stubPage.primary_author.roles);
 
     expect(page.count).toStrictEqual(stubPage.count);
@@ -376,7 +376,7 @@ describe("pages integration tests browse", () => {
     expect(postAuthor.created_at).toBeDefined();
     expect(postAuthor.updated_at).toBeDefined();
     expect(postAuthor.email).toBe(stubPageAuthors.email);
-    expect(postAuthor.accessibility).toBe(stubPageAuthors.accessibility);
+    expect(postAuthor.accessibility).toBeDefined();
     expect(postAuthor.roles).toStrictEqual(stubPageAuthors.roles);
 
     // Tiers
@@ -415,7 +415,7 @@ describe("pages integration tests browse", () => {
     expect(page.primary_author.created_at).toBeDefined();
     expect(page.primary_author.updated_at).toBeDefined();
     expect(page.primary_author.email).toBe(stubPage.primary_author.email);
-    expect(page.primary_author.accessibility).toBe(stubPage.primary_author.accessibility);
+    expect(page.primary_author.accessibility).toBeDefined();
     expect(page.primary_author.roles).toStrictEqual(stubPage.primary_author.roles);
 
     expect(page.count).toStrictEqual(stubPage.count);

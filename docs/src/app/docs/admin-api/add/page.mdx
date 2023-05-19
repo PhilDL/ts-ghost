@@ -1,0 +1,62 @@
+# Add
+
+Add lets you create a new record of a given resource. The `add` method is available on the resources that support it. (For example on the `users` resource don't have access to any mutation methods).
+
+The `add` method is asynchronous and accept a data object and an optional `option` object. The shapes given to the data and the option are fully typed so you will benefit from auto-completion and missing required fields. The `option` is also typesafe and will be available on some resources (most resource don't have options).
+
+You will benefit also from **run-time validation**, the data you input will be parsed before being send through the network.
+
+## Simple example without options
+
+Here we create a Post with the minimum required fields: `title`:
+
+```ts
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(
+  "https://demo.ghost.io",
+  "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
+  "v5.0"
+);
+
+const postAdd = await api.posts.add({
+  title: title,
+});
+```
+
+## Create a member (with options)
+
+The `members` resource accept an option to send an email or not to the member:
+
+```ts
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+const api = new TSGhostAdminAPI(
+  "https://demo.ghost.io",
+  "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
+  "v5.0"
+);
+
+const memberAdd = await api.members.add(
+  { name: "Philippe", email: "philippe@ts-ghost.com" },
+  { send_email: false }
+);
+```
+
+## Result
+
+The result will be parsed and typed with the `output` schema and represent the newly created record.
+
+```ts
+// return from the `add` method
+const result: {
+    success: true;
+    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+} | {
+    success: false;
+    errors: {
+        message: string;
+        type: string;
+    }[];
+}
+```

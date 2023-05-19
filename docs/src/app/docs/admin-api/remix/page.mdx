@@ -1,0 +1,66 @@
+# Remix example
+
+Here is an example using the `@ts-ghost/admin-api` in a Remix loader:
+
+<Steps>
+
+### Installation
+
+```bash title="Terminal"
+pnpm add @ts-ghost/admin-api
+```
+
+### Create `.env` variable
+
+```bash title=".env"
+GHOST_URL="https://myblog.com"
+GHOST_ADMIN_API_KEY="1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8"
+```
+
+### Use in your route loader
+
+```tsx title="app/routes/_index.tsx"
+import { json, type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
+import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
+
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "New Remix App" }];
+};
+
+export async function loader({ request }: LoaderArgs) {
+  const api = new TSGhostAdminAPI(
+    process.env.GHOST_URL || "",
+    process.env.GHOST_ADMIN_API_KEY || "",
+    "v5.0"
+  );
+  const [site, posts] = await Promise.all([api.site.fetch(), api.posts.browse().fetch()]);
+
+  if (!site.success) {
+    throw new Error(site.errors.join(", "));
+  }
+  if (!posts.success) {
+    throw new Error(posts.errors.join(", "));
+  }
+  return json({ site: site.data, posts: posts.data });
+}
+
+export default function Index() {
+  const { site, posts } = useLoaderData<typeof loader>();
+
+  return (
+    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
+      <h1>This is a list of posts for {site.title}:</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.slug}>
+            <Link to={`/${post.slug}`}>{post.title}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+</Steps>

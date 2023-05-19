@@ -3,7 +3,6 @@ import { afterEach, assert, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 
 import { HTTPClient, HTTPClientOptions } from "../helpers/http-client";
-import type { ContentAPICredentials } from "../schemas/shared";
 import { BasicFetcher } from "./basic-fetcher";
 
 const fetchMocker = createFetchMock(vi);

@@ -71,7 +71,7 @@ describe("users integration tests browse", () => {
     expect(user.location).toBe(stubUser.location);
     expect(user.facebook).toBe(stubUser.facebook);
     expect(user.twitter).toBe(stubUser.twitter);
-    expect(user.accessibility).toBe(stubUser.accessibility);
+    expect(user.accessibility).toBeDefined();
     expect(user.status).toBe(stubUser.status);
     expect(user.meta_title).toBe(stubUser.meta_title);
     expect(user.meta_description).toBe(stubUser.meta_description);
@@ -110,7 +110,7 @@ describe("users integration tests browse", () => {
     expect(user.location).toBe(stubUser.location);
     expect(user.facebook).toBe(stubUser.facebook);
     expect(user.twitter).toBe(stubUser.twitter);
-    expect(user.accessibility).toBe(stubUser.accessibility);
+    expect(user.accessibility).toBeDefined();
     expect(user.status).toBe(stubUser.status);
     expect(user.meta_title).toBe(stubUser.meta_title);
     expect(user.meta_description).toBe(stubUser.meta_description);

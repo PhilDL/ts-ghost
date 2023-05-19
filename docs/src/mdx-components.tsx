@@ -29,6 +29,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     },
     ul: (props) => <ul className="mt-4 list-disc space-y-2 pl-8" {...props} />,
     blockquote: (props) => <blockquote className="mt-4 border-l-4 pl-4" {...props} />,
+    table: (props) => <table className="border-muted w-full table-auto rounded-md border" {...props} />,
+    thead: (props) => <thead className="bg-muted" {...props} />,
+    tbody: (props) => <tbody className="divide-muted divide-y" {...props} />,
+    tr: (props) => <tr className="divide-x" {...props} />,
+    td: (props) => <td className="p-2" {...props} />,
     code: (props) => (
       <code
         className="bg-muted text-muted-foreground relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold"
