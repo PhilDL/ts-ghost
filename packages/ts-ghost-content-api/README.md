@@ -13,6 +13,9 @@
     <br/>
     <br/>
   </p>
+  <p align="center">
+    <a href="https://ts-ghost.dev/docs/content-api"> Documentation </a> – <a href="https://twitter.com/_philDL">Twitter</a>
+  </p>
 </div>
 
 [![tests](https://github.com/PhilDL/ts-ghost/actions/workflows/deploy.yml/badge.svg)](https://github.com/PhilDL/ts-ghost/actions/workflows/deploy.yml) ![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/PhilDL/ts-ghost?filename=packages%2Fts-ghost-content-api%2Fpackage.json">
@@ -29,19 +32,32 @@ All the available options from the Ghost Content API are available here, filteri
 
 This client is only compatible with Ghost versions 5.x for now.
 
-- Ghost 5^
+- Ghost 5.^ (Any Ghost version after 5.0)
 
 - Node.js 16+
   - We rely on global `fetch` being available, so you can bring your own
     polyfill and if you run Node 16, you'll need to run with the
     `--experimental-fetch` flag enabled.
 - TypeScript 5+, the lib make usage of const in generics and other TS5+ features.
-
-## Quickstart
+# Quickstart
 
 These are the basic steps to follow to interact with the Ghost Content API in your TypeScript project.
 
 
+
+### Get your Ghost API Key and Ghost version number
+
+Connect to your ghost blog and create a new Integration to get your Content API Key.
+
+![Create an Integration to get your Content API Key](https://github.com/PhilDL/ts-ghost/assets/4941205/0a35955e-1d42-40b3-a966-2cfc0345fa38)
+
+_You will need the URL of your Ghost Blog and the Content API Key_
+
+To know which Ghost Version you are using go in the Settings and click on top right button "About Ghost":
+
+![Ghost Version](https://github.com/PhilDL/ts-ghost/assets/4941205/c46034a5-844e-4d8c-b525-a47e26d941c6)
+
+Here the version is **"v5.47.0"**
 
 ### Installation
 
@@ -64,7 +80,7 @@ import { TSGhostContentAPI } from "@ts-ghost/content-api";
 const api = new TSGhostContentAPI(
   process.env.GHOST_URL || "",
   process.env.GHOST_CONTENT_API_KEY || "",
-  "v5.0"
+  "v5.47.0"
 );
 
 export async function getBlogPosts() {
@@ -108,12 +124,16 @@ From this `api` instance you will be able to call any resource available in the 
 
 ## Available resource
 
-- `api.authors`
-- `api.tiers`
-- `api.posts`
-- `api.pages`
-- `api.tags`
-- `api.settings`
+| Resource       | `.read()` | `.browse()` |
+| -------------- | --------- | ----------- |
+| `api.posts`    | ✅        | ✅          |
+| `api.pages`    | ✅        | ✅          |
+| `api.authors`  | ✅        | ✅          |
+| `api.tiers`    | ✅        | ✅          |
+| `api.tags`     | ✅        | ✅          |
+| `api.settings` | \*        | \*          |
+
+- settings resource only has a `fetch` function exposed, no query builder.
 
 ## Building Queries
 
@@ -617,7 +637,7 @@ GHOST_CONTENT_API_KEY="e9b414c5d95a5436a647ff04ab"
 
 ```tsx title="app/routes/_index.tsx"
 import { json, type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
 export const meta: V2_MetaFunction = () => {
@@ -650,9 +670,7 @@ export default function Index() {
       <ul>
         {posts.map((post) => (
           <li key={post.slug}>
-            <a target="_blank" href="https://remix.run/tutorials/blog" rel="noreferrer">
-              {post.title}
-            </a>
+            <Link to={`/${post.slug}`}>{post.title}</Link>
           </li>
         ))}
       </ul>

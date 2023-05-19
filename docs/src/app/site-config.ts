@@ -180,7 +180,7 @@ export const siteConfig: SiteConfig = {
               href: "/docs/admin-api/members-recipes",
             },
             {
-              title: "Posts UPDATE_COLLISION error",
+              title: "UPDATE_COLLISION error",
               href: "/docs/admin-api/posts-update-collision-error",
             },
             {
