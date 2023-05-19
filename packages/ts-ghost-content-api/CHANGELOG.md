@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 4.0.1
+
+### Patch Changes
+
+- 21520e8: Update documentation
+- Updated dependencies [21520e8]
+  - @ts-ghost/core-api@5.0.2
+
 ## 4.0.0
 
 ### Major Changes

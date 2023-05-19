@@ -18,7 +18,7 @@
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-admin-api"
   },
-  "version": "3.0.1",
+  "version": "3.0.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -56,7 +56,7 @@
     "zod": "^3.20.6"
   },
   "dependencies": {
-    "@ts-ghost/core-api": "^5.0.1",
+    "@ts-ghost/core-api": "^5.0.2",
     "validator": "^13.9.0",
     "zod": "^3.21.4"
   },

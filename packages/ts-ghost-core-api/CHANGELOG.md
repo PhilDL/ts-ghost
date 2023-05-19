@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 5.0.2
+
+### Patch Changes
+
+- 21520e8: Update documentation
+
 ## 5.0.1
 
 ### Patch Changes

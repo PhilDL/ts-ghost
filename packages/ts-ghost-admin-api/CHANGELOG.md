@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 3.0.2
+
+### Patch Changes
+
+- 21520e8: Update documentation
+- Updated dependencies [21520e8]
+  - @ts-ghost/core-api@5.0.2
+
 ## 3.0.1
 
 ### Patch Changes
