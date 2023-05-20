@@ -1,5 +1,11 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.8
+
+### Patch Changes
+
+- f753800: fix monorepo release bug
+
 ## 0.6.7
 
 ### Patch Changes
