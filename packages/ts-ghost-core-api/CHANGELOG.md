@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 5.0.3
+
+### Patch Changes
+
+- a8c0222: Dev dependencies
+
 ## 5.0.2
 
 ### Patch Changes
