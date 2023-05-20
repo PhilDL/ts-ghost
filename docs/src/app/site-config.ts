@@ -219,6 +219,14 @@ export const siteConfig: SiteConfig = {
               title: "Introduction",
               href: "/docs/ghost-blog-buster",
             },
+            {
+              title: "Installation",
+              href: "/docs/ghost-blog-buster/installation",
+            },
+            {
+              title: "Usage",
+              href: "/docs/ghost-blog-buster/usage",
+            },
           ],
         },
       ],

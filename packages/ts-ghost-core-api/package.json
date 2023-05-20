@@ -38,7 +38,7 @@
     "@ts-ghost/tsconfig": "*",
     "@types/node": "^20.2.1",
     "@vitest/coverage-c8": "^0.31.1",
-    "eslint": "^8.40.0",
+    "eslint": "^8.41.0",
     "tsup": "^6.7.0",
     "typescript": "5.0.4",
     "vite": "^4.3.8",
