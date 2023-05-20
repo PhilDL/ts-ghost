@@ -1,8 +1,7 @@
 import "~/styles/globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
-import { IBM_Plex_Mono, Inter } from "next/font/google";
-import localFont from "next/font/local";
+import { IBM_Plex_Mono, Inter, Jost } from "next/font/google";
 import { siteConfig } from "~/app/site-config";
 import { SiteHeader } from "~/components/site-header";
 import { ThemeProvider } from "~/components/theme-provider";
@@ -13,10 +12,9 @@ const fontSans = Inter({
   variable: "--font-sans",
 });
 
-const fontCal = localFont({
-  src: "../styles/calsans.ttf",
+const fontCal = Jost({
+  subsets: ["latin"],
   variable: "--font-cal",
-  display: "swap",
 });
 
 const fontMono = IBM_Plex_Mono({
