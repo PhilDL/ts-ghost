@@ -10,8 +10,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 packages/**/dist
-node_modules
-dist
+node_modules/   
+dist/
 dist-ssr
 *.local
 coverage

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import "cross-fetch/polyfill";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 

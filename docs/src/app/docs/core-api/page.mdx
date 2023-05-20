@@ -1,6 +1,11 @@
 # Introduction
 
-<Callout type="warning">Documentation is there but the layout is still under construction 🏗️</Callout>
+<Callout type="warning">
+This is an **internal package**, containing the bulding blocks of the Content and Admin packages. Unless you want to build your own implementation you probably don't need this package.
+
+_Documentation here may be outdated, this package being internal, it is changing a lot through versions to versions... still under construction 🏗️_
+
+</Callout>
 
 `@ts-ghost/core-api` contains the core building blocks for the `@ts-ghost/content-api` package. It contains the Type-safe logic of Query Builder and Fetchers. Unless you are building a new package for `@ts-ghost` you should not need to use this package directly.
 
@@ -23,7 +28,7 @@ This client is only compatible with Ghost versions 5.x for now.
 
 ## APIComposer
 
-The APIComposer is a class that helps you build the target API avec the available methods for a resource based on a combinations of ZodSchema. This APIComposer exposes 5 methods:
+The APIComposer is a class that helps you build the target API with the available methods for a resource based on a combinations of ZodSchema. This APIComposer exposes 5 methods:
 
 - `read` to fetch a single record and
 - `browse` to fetch multiple records.
@@ -33,20 +38,22 @@ The APIComposer is a class that helps you build the target API avec the availabl
 
 All these methods like `read` and `browse` gives you back the appropriate `Fetcher` instance that will handle the actual request to the API with the correct parameters.
 
-`APIComposer` will handle type-safety of the query parameters and will return the appropriate fetcher and will pass along the correct output type based on the `ZodSchema` you instantiate it with. For the query methods like `browse` and `read`, this output schema will be modified if required when you select specific fields, includes etc.
+`APIComposer` will handle type-safety of the query parameters, will return the appropriate fetcher and will pass along the correct output type based on the `ZodSchema` you instantiate it with. For the query methods like `browse` and `read`, this output schema will be modified if required when you select specific fields, includes etc.
 
 ### Instantiation
 
 ```ts
 import { z } from "zod";
-import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
+import { APIComposer, HTTPClient, type HTTPClientOptions } from "@ts-ghost/core-api";
 
-const api: ContentAPICredentials = {
+const credentials: HTTPClientOptions = {
   url: "https://ghost.org",
   key: "7d2d15d7338526d43c2fadc47c",
   version: "v5.0",
-  resource: "posts",
+  endpoint: "content",
 };
+
+const httpClient = new HTTPClient(credentials);
 
 const simplifiedSchema = z.object({
   title: z.string(),
@@ -71,6 +78,7 @@ const createSchema = z.object({
 });
 
 const composedAPI = new APIComposer(
+  "posts",
   {
     schema: simplifiedSchema,
     identitySchema: identitySchema,
@@ -80,17 +88,20 @@ const composedAPI = new APIComposer(
       option_1: z.boolean(),
     }),
   },
-  api
+  HTTPClient
 );
 ```
 
-- `identitySchema` can be any `ZodType` and can also be an empty `z.object({})` if you don't need the `read` method.
-- `include` is a `ZodObject` that will validate the `include` parameters of the API call. It is specific to the Ghost API resource targeted. The format is always `{ 'name_of_the_field': true }`
-- `createSchema` (Optional) is a Zod Schema that will validate the input of the `add` method of the APIComposer.
-  - `add` will take exactly the schema to parse
-- `createOptionsSchema` (Optional) is a Zod Schema that will validate options that are going to be passed as query parameters to the `POST` url.
-- `updateSchema` (Optional) is a Zod Schema that will validate the input of the `edit` method of the APIComposer.
-  - `edit` will fallback to a `ZodPartial` (all fields are optional) version of the `createSchema` if `updateSchema` is not provided.
+- first argument is the name of the resource you want to target.
+- second argument is an object containing the different schemas to validate the inputs and outputs of the APIComposer:
+  - `identitySchema` can be any `ZodType` and can also be an empty `z.object({})` if you don't need the `read` method.
+  - `include` is a `ZodObject` that will validate the `include` parameters of the API call. It is specific to the Ghost API resource targeted. The format is always `{ 'name_of_the_field': true }`
+  - `createSchema` (Optional) is a Zod Schema that will validate the input of the `add` method of the APIComposer.
+    - `add` will take exactly the schema to parse
+  - `createOptionsSchema` (Optional) is a Zod Schema that will validate options that are going to be passed as query parameters to the `POST` url.
+  - `updateSchema` (Optional) is a Zod Schema that will validate the input of the `edit` method of the APIComposer.
+    - `edit` will fallback to a `ZodPartial` (all fields are optional) version of the `createSchema` if `updateSchema` is not provided.
+- last argument is the `HTTPClient` instance that will be used to do the actual `fetch` and handle the JWT if using the admin endpoint.
 
 ### Building Queries
 
@@ -99,14 +110,16 @@ The `browse` and `read` methods accept a config object with 2 properties: `input
 
 ```ts
 import { z } from "zod";
-import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
+import { APIComposer, HTTPClient, type HTTPClientOptions } from "@ts-ghost/core-api";
 
-const api: ContentAPICredentials = {
+const credentials: HTTPClientOptions = {
   url: "https://ghost.org",
   key: "7d2d15d7338526d43c2fadc47c",
   version: "v5.0",
-  resource: "posts",
+  endpoint: "content",
 };
+
+const httpClient = new HTTPClient(credentials);
 
 const simplifiedSchema = z.object({
   title: z.string(),
@@ -119,8 +132,9 @@ const simplifiedIncludeSchema = z.object({
 });
 
 const composedAPI = new APIComposer(
+  "posts",
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-  api
+  httpClient
 );
 let query = composedAPI.browse({
   limit: 5,
@@ -142,8 +156,9 @@ This is an example containing all the available keys in the `input` object
 
 ```ts
 const composedAPI = new APIComposer(
+  "posts",
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-  api
+  httpClient
 );
 let query = composedAPI.browse({
   page: 1,
@@ -168,8 +183,9 @@ Read is meant to be used to fetch 1 object only by `id` or `slug`.
 
 ```ts
 const composedAPI = new APIComposer(
+  "posts",
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-  api
+  httpClient
 );
 let query = composedAPI.read({
   id: "edHks74hdKqhs34izzahd45"
@@ -196,10 +212,18 @@ Fetchers are instatiated automatically after using `read` or `browse` but these 
 necessary to build the URL to the Ghost API.
 
 ```ts
-import { BrowseFetcher } from "@ts-ghost/core-api";
+import { BrowseFetcher, HTTPClient } from "@ts-ghost/core-api";
+
+const httpClient = new HTTPClient({
+  url: "https://ghost.org",
+  key: "7d2d15d7338526d43c2fadc47c",
+  version: "v5.0",
+  endpoint: "content",
+});
 
 // Example of instantiating a Fetcher, even though you will probably not do it
 const browseFetcher = new BrowseFetcher(
+  "posts",
   {
     schema: simplifiedSchema,
     output: simplifiedSchema,
@@ -210,7 +234,7 @@ const browseFetcher = new BrowseFetcher(
       limit: 1,
     },
   },
-  api
+  httpClient
 );
 ```
 
@@ -220,8 +244,9 @@ These fetchers have a `fetch` method that will return a discriminated union of 2
 
 ```ts
 const composedAPI = new APIComposer(
+  "posts",
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
-  api
+  httpClient
 );
 const readFetcher = composedAPI.read({ slug: "typescript-is-cool" });
 let result = await readFetcher.fetch();
@@ -329,10 +354,17 @@ Output can be modified on the `BrowseFetcher` and the `ReadFetcher` through avai
 The `fields` methods lets you change the output of the result to have only your selected fields, it works by giving the property key and the value `true` to the field you want to keep. Under the hood it will use the `zod.pick` method to pick only the fields you want.
 
 ```ts
-import { BrowseFetcher } from "@ts-ghost/core-api";
+import { BrowseFetcher, HTTPClient } from "@ts-ghost/core-api";
 
+const httpClient = new HTTPClient({
+  url: "https://ghost.org",
+  key: "7d2d15d7338526d43c2fadc47c",
+  version: "v5.0",
+  endpoint: "content",
+});
 // Example of instantiating a Fetcher, even though you will probably not do it
 const browseFetcher = new BrowseFetcher(
+  "members",
   {
     schema: simplifiedSchema,
     output: simplifiedSchema,
@@ -343,7 +375,7 @@ const browseFetcher = new BrowseFetcher(
       limit: 1,
     },
   },
-  api
+  httpClient
 );
 let result = await browseFetcher
   .fields({
@@ -367,9 +399,10 @@ The `include` method lets you include some additionnal data that the Ghost API d
 
 ```ts
 const bf = new BrowseFetcher(
+  "posts",
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
-  api
+  httpClient
 );
 let result = await bf
   .include({
@@ -386,9 +419,10 @@ The `formats` method lets you include some additionnal formats that the Ghost AP
 
 ```ts
 const bf = new BrowseFetcher(
+  "posts",
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
-  api
+  httpClient
 );
 let result = await bf
   .formats({
@@ -406,9 +440,10 @@ You can chain the methods to select the fields, formats, and include you want.
 
 ```ts
 const bf = new BrowseFetcher(
+  "posts",
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
-  api
+  httpClient
 );
 let result = await bf
   .fields({
@@ -446,6 +481,7 @@ These mutations are async methods, they will return a `Promise` that will resolv
 
 ```ts
 const composedAPI = new APIComposer(
+  "posts",
   {
     schema: simplifiedSchema,
     identitySchema: identitySchema,
@@ -455,7 +491,7 @@ const composedAPI = new APIComposer(
       option_1: z.boolean(),
     }),
   },
-  api
+  httpClient
 );
 let newPost = await composedAPI.add(
   {

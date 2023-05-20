@@ -51,7 +51,7 @@ The result will be parsed and typed with the `output` schema and represent the n
 // return from the `add` method
 const result: {
     success: true;
-    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+    data: Member; // parsed by the Zod Schema given in the config
 } | {
     success: false;
     errors: {

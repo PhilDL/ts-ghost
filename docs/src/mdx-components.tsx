@@ -8,12 +8,12 @@ import { Codeblock } from "~/components/mdx/code-block";
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     // Allows customizing built-in components, e.g. to add styling.
-    h1: (props) => <h1 className="font-cal mt-10 scroll-m-20 text-4xl" {...props} />,
+    h1: (props) => <h1 className="font-cal mt-10 scroll-m-20 text-4xl font-bold" {...props} />,
     h2: (props) => (
-      <h2 className="font-cal mt-10 scroll-m-20 border-b pb-2 text-3xl first:mt-0" {...props} />
+      <h2 className="font-cal mt-10 scroll-m-20 border-b pb-2 text-3xl font-bold first:mt-0" {...props} />
     ),
-    h3: (props) => <h3 className="font-cal mt-8 scroll-m-20 text-2xl" {...props} />,
-    h4: (props) => <h4 className="font-cal -mb-4 mt-6 scroll-m-20 text-2xl" {...props} />,
+    h3: (props) => <h3 className="font-cal mt-8 scroll-m-20 text-2xl font-bold" {...props} />,
+    h4: (props) => <h4 className="font-cal -mb-4 mt-6 scroll-m-20 text-2xl font-bold" {...props} />,
     p: (props) => <p className="leading-7 [&:not(:first-child)]:mt-6" {...props} />,
     a: ({ children, href }) => {
       const isExternal = href?.startsWith("http");
