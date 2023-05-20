@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 3.0.3
+
+### Patch Changes
+
+- a8c0222: Dev dependencies
+- Updated dependencies [a8c0222]
+  - @ts-ghost/core-api@5.0.3
+
 ## 3.0.2
 
 ### Patch Changes

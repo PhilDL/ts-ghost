@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 4.0.2
+
+### Patch Changes
+
+- a8c0222: Dev dependencies
+- Updated dependencies [a8c0222]
+  - @ts-ghost/core-api@5.0.3
+
 ## 4.0.1
 
 ### Patch Changes
