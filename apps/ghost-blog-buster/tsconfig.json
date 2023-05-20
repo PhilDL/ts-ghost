@@ -16,5 +16,5 @@
       "@ts-ghost/core-api": ["../../packages/ts-ghost-core-api/src/index"],
     },
   },
-  "exclude": ["dist", "node_modules"],
+  "exclude": ["node_modules"],
 }
