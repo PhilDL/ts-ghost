@@ -17,7 +17,7 @@ export type PackageDocumentationConfig = {
   title: string;
   path: string;
   description: string;
-  disabled: false;
+  disabled: boolean;
   navigation: NavSection[];
 };
 
@@ -234,13 +234,13 @@ export const siteConfig: SiteConfig = {
     {
       package: "@ts-ghost/core-api",
       fsPath: "packages/ts-ghost-core-api",
-      title: "Core API",
+      title: "Core",
       path: "/docs/core-api",
       description: "The base building blocks for the Content and Admin API. Used internally.",
       disabled: false,
       navigation: [
         {
-          title: "Core API",
+          title: "Core",
           items: [
             {
               title: "Introduction",

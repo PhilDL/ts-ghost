@@ -9,7 +9,36 @@ export type HTTPClientOptions = {
   endpoint: "content" | "admin";
 };
 
-export class HTTPClient<const Options extends HTTPClientOptions = any> {
+export interface IHTTPClient {
+  get baseURL(): URL | undefined;
+  get jwt(): string | undefined;
+  generateJWT(key: string): Promise<string>;
+  genHeaders(): Promise<Record<string, string>>;
+  fetch({
+    resource,
+    searchParams,
+    options,
+    pathnameIdentity,
+  }: {
+    resource: APIResource;
+    searchParams?: URLSearchParams;
+    options?: RequestInit;
+    pathnameIdentity?: string;
+  }): Promise<any>;
+  fetchRawResponse({
+    resource,
+    searchParams,
+    options,
+    pathnameIdentity,
+  }: {
+    resource: APIResource;
+    searchParams?: URLSearchParams;
+    options?: RequestInit;
+    pathnameIdentity?: string;
+  }): Promise<Response>;
+}
+
+export class HTTPClient<const Options extends HTTPClientOptions = any> implements IHTTPClient {
   private _jwt: string | undefined;
   private _jwtExpiresAt: number | undefined;
   protected _baseURL: URL | undefined = undefined;
