@@ -1,5 +1,11 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.7
+
+### Patch Changes
+
+- 21fb4e8: fix install
+
 ## 0.6.6
 
 ### Patch Changes
