@@ -16,6 +16,10 @@
     .
     <a href="https://github.com/PhilDL/ts-ghost/issues">Request Feature</a>
   </p>
+
+  <p align="center">
+    <a href="https://ts-ghost.dev/docs/ghost-blog-buster"> Documentation </a> – <a href="https://twitter.com/_philDL">Twitter</a>
+  </p>
 </div>
 
 ![License](https://img.shields.io/github/license/PhilDL/ts-ghost) <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/PhilDL/ts-ghost?filename=apps%2Fghost-blog-buster%2Fpackage.json">
