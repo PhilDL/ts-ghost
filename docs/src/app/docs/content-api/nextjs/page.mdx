@@ -35,11 +35,8 @@ export const api = new TSGhostContentAPI(
 import { api } from "./ghost";
 
 async function getBlogPosts() {
-  const response = await api.posts
-    .browse()
-    .fields({title: true, slug:true, id:true})
-    .fetch();
-  if(!response.success) {
+  const response = await api.posts.browse().fields({ title: true, slug: true, id: true }).fetch();
+  if (!response.success) {
     throw new Error(response.errors.join(", "));
   }
   return response.data;
@@ -47,7 +44,7 @@ async function getBlogPosts() {
 
 async function getSiteSettings() {
   const response = await api.settings.fetch();
-  if(!response.success) {
+  if (!response.success) {
     throw new Error(response.errors.join(", "));
   }
   return response.data;
@@ -55,18 +52,25 @@ async function getSiteSettings() {
 
 // async Server Component
 export default async function HomePage() {
-  const [posts, settings] = await Promise.all([
-    getBlogPosts(),
-    getSiteSettings()
-  ])
-  return <div>
-    <h1>This is a list of posts for {settings.title}:</h1>
-    <ul>
-      {(posts).map(post => <li key={post.id}>{post.title} ({post.slug})</li>)}
-    </ul>
-
-  </div>;
+  const [posts, settings] = await Promise.all([getBlogPosts(), getSiteSettings()]);
+  return (
+    <div>
+      <h1>This is a list of posts for {settings.title}:</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            {post.title} ({post.slug})
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 ```
 
 </Steps>
+
+<ContentNavigation
+  previous={{ title: "Remix", href: "/docs/content-api/remix" }}
+  next={{ title: "TypeScript Recipes", href: "/docs/content-api/advanced-typescript" }}
+/>

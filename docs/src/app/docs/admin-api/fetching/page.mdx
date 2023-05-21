@@ -37,3 +37,8 @@ let query = await api.posts
   })
   .fetch({ next: { revalidate: 10 } }); // NextJS revalidate this data every 10 seconds at most
 ```
+
+<ContentNavigation
+  previous={{ title: "Output Modfiers", href: "/docs/admin-api/output-modifiers" }}
+  next={{ title: "Add", href: "/docs/admin-api/add" }}
+/>

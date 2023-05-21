@@ -3,6 +3,7 @@ import Link from "next/link";
 import * as React from "react";
 import { Callout } from "~/components/mdx/callout";
 import { Codeblock } from "~/components/mdx/code-block";
+import { ContentNavigation } from "~/components/mdx/content-navigation";
 
 // This file is required to use MDX in `app` directory.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -46,6 +47,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Add custom components.
     Callout,
+    ContentNavigation,
     Steps: ({ ...props }) => (
       <div className="[&>h3]:step mb-12 ml-4 border-l pl-6 [counter-reset:step]" {...props} />
     ),
