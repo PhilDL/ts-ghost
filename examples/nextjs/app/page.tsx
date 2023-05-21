@@ -1,7 +1,12 @@
+import Link from "next/link";
+
 import { ghostAdminAPI, ghostContentAPI } from "./ghost";
 
 async function getBlogPosts() {
-  const response = await ghostAdminAPI.posts.browse().fields({ title: true, slug: true, id: true }).fetch();
+  const response = await ghostAdminAPI.posts
+    .browse()
+    .fields({ title: true, slug: true, id: true, status: true })
+    .fetch();
   if (!response.success) {
     throw new Error(response.errors.join(", "));
   }
@@ -24,7 +29,9 @@ export default async function HomePage() {
       <ul>
         {posts.map((post) => (
           <li key={post.id}>
-            {post.title} ({post.slug})
+            <Link key={post.id} href={post.slug}>
+              {post.status === "draft" ? "📜" : "🚀"} {post.title}
+            </Link>
           </li>
         ))}
       </ul>
