@@ -54,7 +54,7 @@ export const MobileDropdown = ({ items }: { items: PackageDocumentationConfig[] 
           </div>
         </div>
         {currentPackage && (
-          <ScrollArea className="h-[85%] w-full pb-8">
+          <ScrollArea className="h-[75%] w-full pb-8">
             {currentPackage.navigation.map((section, index) => (
               <div key={index} className="flex flex-col space-y-3 pt-6">
                 <h4 className="font-bold">{section.title}</h4>
