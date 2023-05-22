@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 3.0.5
+
+### Patch Changes
+
+- 18a9866: fix minor problem with filter in browse Typings
+- Updated dependencies [18a9866]
+  - @ts-ghost/core-api@5.0.5
+
 ## 3.0.4
 
 ### Patch Changes
