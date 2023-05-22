@@ -34,18 +34,23 @@ export type FieldOrSubField<S> = S extends `${infer Field}.${string}` ? Field : 
 export type BrowseFilter<S, Shape> = S extends string
   ? S extends `${infer Field}:${infer Rest}`
     ? FieldOrSubField<Field> extends keyof Shape
-      ? Rest extends `${infer Operator extends FilterQuerySetOperators}[${infer Values}]`
-        ? `${Field}:${Operator}[${Values}]`
+      ? Rest extends `${FilterQuerySetOperators}[${infer Values}]`
+        ? `${Field}:${FilterQuerySetOperators}[${Values}]`
         : Rest extends `[${infer Values}]`
         ? `${Field}:[${Values}]`
-        : Rest extends `${infer Operator extends FilterQuerySetOperators}[${infer Values}]${infer Separator extends FilterQuerySeparator}${infer NextQuery}`
-        ? `${Field}:${Operator}[${Values}]${Separator}${BrowseFilter<NextQuery, Shape>}`
-        : Rest extends `[${infer Values}]${infer Separator extends FilterQuerySeparator}${infer NextQuery}`
-        ? `${Field}:[${Values}]${Separator}${BrowseFilter<NextQuery, Shape>}`
-        : Rest extends `${infer Value}${infer Separator extends FilterQuerySeparator}${infer NextQuery}`
-        ? `${Field}:${Value}${Separator}${BrowseFilter<NextQuery, Shape>}`
+        : Rest extends `${FilterQuerySetOperators}[${infer Values}]${FilterQuerySeparator}${infer NextQuery}`
+        ? `${Field}:${FilterQuerySetOperators}[${Values}]${FilterQuerySeparator}${BrowseFilter<
+            NextQuery,
+            Shape
+          >}`
+        : Rest extends `[${infer Values}]${FilterQuerySeparator}${infer NextQuery}`
+        ? `${Field}:[${Values}]${FilterQuerySeparator}${BrowseFilter<NextQuery, Shape>}`
+        : Rest extends `${infer Value}${FilterQuerySeparator}${infer NextQuery}`
+        ? `${Field}:${Value}${FilterQuerySeparator}${BrowseFilter<NextQuery, Shape>}`
         : Rest extends `${infer Value}`
-        ? `${Field}:${Value}`
+        ? Value extends string
+          ? `${Field}:${Value}`
+          : never
         : never
       : never
     : never
