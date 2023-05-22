@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 5.0.5
+
+### Patch Changes
+
+- 18a9866: fix minor problem with filter in browse Typings
+
 ## 5.0.4
 
 ### Patch Changes
