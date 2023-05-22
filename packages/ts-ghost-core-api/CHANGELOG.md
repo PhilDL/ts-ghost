@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 5.0.6
+
+### Patch Changes
+
+- de9d78a: fix filter typings and add tests
+
 ## 5.0.5
 
 ### Patch Changes
