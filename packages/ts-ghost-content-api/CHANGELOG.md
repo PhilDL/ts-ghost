@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 4.0.5
+
+### Patch Changes
+
+- de9d78a: fix filter typings and add tests
+- Updated dependencies [de9d78a]
+  - @ts-ghost/core-api@5.0.6
+
 ## 4.0.4
 
 ### Patch Changes
