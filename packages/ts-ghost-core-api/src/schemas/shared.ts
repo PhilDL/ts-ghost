@@ -21,7 +21,7 @@ export const ghostMetaSchema = z.object({
   pagination: z.object({
     pages: z.number(),
     page: z.number(),
-    limit: z.number(),
+    limit: z.union([z.number(), z.literal("all")]),
     total: z.number(),
     prev: z.number().nullable(),
     next: z.number().nullable(),
