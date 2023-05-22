@@ -42,5 +42,14 @@ describe("posts api .browse() Args Type-safety", () => {
 
     let test = api.posts.browse().fields(outputFields);
     expect(test.getOutputFields()).toEqual(["slug", "title"]);
+
+    // @ts-expect-error - shouldnt accept invalid params
+    expect(() => api.posts.browse({ filter: "slugg:test" })).toThrow();
+    // @ts-expect-error - shouldnt accept invalid params
+    expect(() => api.posts.browse({ filter: "slug:test,foo:-[bar,baz]" })).toThrow();
+    expect(api.posts.browse({ filter: "slug:test,tags:-[bar,baz]" })).toBeDefined();
+    expect(api.posts.browse({ filter: "slug:test,tags:[bar,baz]" })).toBeDefined();
+    // @ts-expect-error - shouldnt accept invalid params
+    expect(() => api.posts.browse({ filter: "slug:test,food:-[bar,baz]" })).toThrow();
   });
 });
