@@ -48,8 +48,10 @@ export type BrowseFilter<S, Shape> = S extends string
         : Rest extends `${infer Value}${FilterQuerySeparator}${infer NextQuery}`
         ? `${Field}:${Value}${FilterQuerySeparator}${BrowseFilter<NextQuery, Shape>}`
         : Rest extends `${infer Value}`
-        ? `${Field}:${Value}`
-        : string
+        ? Value extends string
+          ? `${Field}:${Value}`
+          : never
+        : never
       : never
     : never
   : never;
