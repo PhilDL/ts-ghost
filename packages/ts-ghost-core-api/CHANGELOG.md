@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 5.0.4
+
+### Patch Changes
+
+- 79b4bf7: Add possibility to browse with limit "all"
+
 ## 5.0.3
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 4.0.3
+
+### Patch Changes
+
+- 79b4bf7: Add possibility to browse with limit "all"
+- Updated dependencies [79b4bf7]
+  - @ts-ghost/core-api@5.0.4
+
 ## 4.0.2
 
 ### Patch Changes
