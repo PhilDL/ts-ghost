@@ -51,7 +51,7 @@ export type BrowseFilter<S, Shape> = S extends string
         ? Value extends string
           ? `${Field}:${Value}`
           : never
-        : never
+        : S
       : never
     : never
   : never;
@@ -123,7 +123,7 @@ export const parseBrowseParams = <P, Shape extends z.ZodRawShape, IncludeShape e
       filter: z
         .string()
         .superRefine((val, ctx) => {
-          const filterPredicates = val.split(/[+(,]+/);
+          const filterPredicates = val.replace(/ *\[[^)]*\] */g, "").split(/[+(,]+/);
           for (const filterPredicate of filterPredicates) {
             const field = filterPredicate.split(":")[0].split(".")[0];
             if (!keys.includes(field)) {

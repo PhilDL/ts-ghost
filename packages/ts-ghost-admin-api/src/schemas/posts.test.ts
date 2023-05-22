@@ -11,5 +11,13 @@ describe("posts api .browse() Args Type-safety", () => {
   test(".browse() params shouldnt accept invalid params", () => {
     expect(api.posts).toBeDefined();
     expect(1).toEqual(1);
+    // @ts-expect-error - shouldnt accept invalid params
+    expect(() => api.posts.browse({ filter: "slugg:test" })).toThrow();
+    // @ts-expect-error - shouldnt accept invalid params
+    expect(() => api.posts.browse({ filter: "slug:test,foo:-[bar,baz]" })).toThrow();
+    expect(api.posts.browse({ filter: "slug:test,tags:-[bar,baz]" })).toBeDefined();
+    expect(api.posts.browse({ filter: "slug:test,tags:[bar,baz]" })).toBeDefined();
+    // @ts-expect-error - shouldnt accept invalid params
+    expect(() => api.posts.browse({ filter: "slug:test,food:-[bar,baz]" })).toThrow();
   });
 });
