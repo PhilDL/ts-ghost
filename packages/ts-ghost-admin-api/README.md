@@ -41,6 +41,8 @@ This client is only compatible with Ghost versions 5.x for now.
     polyfill and if you run Node 16, you'll need to run with the
     `--experimental-fetch` flag enabled.
 - TypeScript 5+, the lib make usage of const in generics and other TS5+ features.
+
+<ContentNavigation next={{ title: "Quickstart", href: "/docs/admin-api/quickstart" }} />
 # Quickstart
 
 These are the basic steps to follow to interact with the Ghost Content API in your TypeScript project.
@@ -130,6 +132,11 @@ export async function getBlogPosts() {
 ```
 
 
+
+<ContentNavigation
+  previous={{ title: "Introduction", href: "/docs/admin-api" }}
+  next={{ title: "Overview", href: "/docs/admin-api/overview" }}
+/>
 # Overview
 
 Here you will have an overview of the philosophy of the library and a common workflow for your queries.
@@ -318,6 +325,11 @@ if (!postDelete.success) {
   throw new Error("Failed to delete post");
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "Quickstart", href: "/docs/admin-api/quickstart" }}
+  next={{ title: "Browse", href: "/docs/admin-api/browse" }}
+/>
 # Browse
 
 The `browse` method is used to get a list of items from a Ghost Admin API resource, it is the equivalent of the `GET /members` endpoint. You have access to different options to paginate, limit, filter and order your results.
@@ -353,9 +365,10 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 
 Lets you query a specific page of results. The default value is `1` and pagination starts at `1`.
 
-### limit `number`
+### limit `number` | `"all"`
 
 Lets you limit the number of results per page. The default value is `15` and the maximum value is `15` (limitation of the Ghost API).
+You can also pass the literal string `"all"` to get all the results.
 
 ### filter `string`
 
@@ -469,7 +482,7 @@ const result: {
     meta: {
         pagination: {
             pages: number;
-            limit: number;
+            limit: number | "all";
             page: number;
             total: number;
             prev: number | null;
@@ -488,6 +501,11 @@ const result: {
 ```
 
 Here you can use the `next` property to get the next page fetcher if it is defined.
+
+<ContentNavigation
+  previous={{ title: "Overview", href: "/docs/admin-api/overview" }}
+  next={{ title: "Read", href: "/docs/admin-api/read" }}
+/>
 # Read
 
 The `read` method is used to one item from a Ghost Admin API resource, it is the equivalent of the `GET /posts/slug/this-is-a-slug` endpoint. You have to give it an identity field to fetch the resource.
@@ -574,6 +592,11 @@ const result: {
     }[];
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "Browse", href: "/docs/admin-api/browse" }}
+  next={{ title: "Output Modfiers", href: "/docs/admin-api/output-modifiers" }}
+/>
 # Output modifiers
 
 Output modifiers are available for the `read` and `browse` methods. They let you change the output of the result to have only your selected fields, include some additionnal data that the Ghost API doesn't give you by default or get the content in different formats.
@@ -727,6 +750,11 @@ let query = await api.posts
   })
   .fetch({ next: { revalidate: 10 } }); // NextJS revalidate this data every 10 seconds at most
 ```
+
+<ContentNavigation
+  previous={{ title: "Output Modfiers", href: "/docs/admin-api/output-modifiers" }}
+  next={{ title: "Add", href: "/docs/admin-api/add" }}
+/>
 # Add
 
 Add lets you create a new record of a given resource. The `add` method is available on the resources that support it. (For example on the `users` resource don't have access to any mutation methods).
@@ -780,7 +808,7 @@ The result will be parsed and typed with the `output` schema and represent the n
 // return from the `add` method
 const result: {
     success: true;
-    data: z.infer<typeof simplifiedSchema>; // parsed by the Zod Schema given in the config
+    data: Member; // parsed by the Zod Schema given in the config
 } | {
     success: false;
     errors: {
@@ -789,6 +817,11 @@ const result: {
     }[];
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "Fetching", href: "/docs/admin-api/fetching" }}
+  next={{ title: "Edit", href: "/docs/admin-api/edit" }}
+/>
 # Edit
 
 Edit lets you edit an existing record of a given resource by inputing the resource `id` and the new data. The `edit` method is available on the resources that support it. (For example on the `users` resource don't have access to any mutation methods).
@@ -834,6 +867,11 @@ const result: {
     }[];
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "Add", href: "/docs/admin-api/add" }}
+  next={{ title: "Delete", href: "/docs/admin-api/delete" }}
+/>
 # Delete
 
 Delete is an async function that requires the `id` of the record to delete. _Some resources don't support deletion, but instead give you accessed to a soft delete through the `status` field in the `edit` method._
@@ -872,6 +910,11 @@ const result: {
     }[];
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "Add", href: "/docs/admin-api/add" }}
+  next={{ title: "Members & Subscriptions", href: "/docs/admin-api/members-recipes" }}
+/>
 # Members & Subscriptions recipes
 
 The advantage of using the admin API is that you can create, edit and delete members. This is not possible with the content API.
@@ -942,6 +985,11 @@ export const getMemberActiveSubscriptions = async (memberId: string) => {
   return subscriptions.data.subscriptions.filter((sub) => sub.status === "active");
 };
 ```
+
+<ContentNavigation
+  previous={{ title: "Delete", href: "/docs/admin-api/delete" }}
+  next={{ title: "UPDATE_COLLISION error", href: "/docs/admin-api/posts-update-collision-error" }}
+/>
 # How to avoid post / page "UPDATE_COLLISION" Error
 
 When updating `posts` or `page` with the Admin API, Ghost expects you to send the `updated_at` field with the **current updated_at value** of that Post or Page.
@@ -973,6 +1021,11 @@ const postEditResult = await api.posts.edit(post.id, {
   updated_at: new Date(post.updated_at || ""),
 });
 ```
+
+<ContentNavigation
+  previous={{ title: "Members & Subscriptions", href: "/docs/admin-api/members-recipes" }}
+  next={{ title: "Common Recipes", href: "/docs/admin-api/common-recipes" }}
+/>
 # Commons recipes
 
 Here is a growing collections of things you can achieve with the `@ts-ghost/admin-api`.
@@ -1023,6 +1076,11 @@ if (result.success) {
   //     ^? type Settings {title: string; description: string; ...
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "UPDATE_COLLISION error", href: "/docs/admin-api/posts-update-collision-error" }}
+  next={{ title: "Remix", href: "/docs/admin-api/remix" }}
+/>
 # Remix example
 
 Here is an example using the `@ts-ghost/admin-api` in a Remix loader:
@@ -1089,6 +1147,11 @@ export default function Index() {
 ```
 
 </Steps>
+
+<ContentNavigation
+  next={{ title: "NextJS", href: "/docs/admin-api/nextjs" }}
+  previous={{ title: "Common recipes", href: "/docs/admin-api/common-recipes" }}
+/>
 # NextJS
 
 This is an example for NextJS 13 using the `@ts-ghost/admin-api` with the app Router where we fetch the list of posts and the site settings to display them on the `/blog` of our site.
@@ -1160,6 +1223,11 @@ export default async function HomePage() {
 ```
 
 </Steps>
+
+<ContentNavigation
+  previous={{ title: "Remix", href: "/docs/admin-api/remix" }}
+  next={{ title: "TypeScript recipes", href: "/docs/admin-api/advanced-typescript" }}
+/>
 # TypeScript recipes
 
 Sometimes TypeScript will get in your way, especially with the string-based type-checking on browse parameters. In this section we will show you some tips and tricks to get around those problems, and present you some utilities.
@@ -1213,6 +1281,8 @@ const uncontrolledOrderInput = async (formData: FormData) => {
     .fetch();
 };
 ```
+
+<ContentNavigation previous={{ title: "NextJS", href: "/docs/admin-api/nextjs" }} />
 
 
 ## Roadmap

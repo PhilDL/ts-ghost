@@ -25,9 +25,10 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 
 Lets you query a specific page of results. The default value is `1` and pagination starts at `1`.
 
-### limit `number`
+### limit `number` | `"all"`
 
 Lets you limit the number of results per page. The default value is `15` and the maximum value is `15` (limitation of the Ghost API).
+You can also pass the literal string `"all"` to get all the results.
 
 ### filter `string`
 
@@ -114,7 +115,7 @@ const result: {
     meta: {
         pagination: {
             pages: number;
-            limit: number;
+            limit: number | "all";
             page: number;
             total: number;
             prev: number | null;
@@ -141,7 +142,7 @@ const result: {
     meta: {
         pagination: {
             pages: number;
-            limit: number;
+            limit: number | "all";
             page: number;
             total: number;
             prev: number | null;

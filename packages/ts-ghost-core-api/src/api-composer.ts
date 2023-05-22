@@ -47,7 +47,7 @@ export class APIComposer<
     const FilterStr extends string,
     const P extends {
       order?: OrderStr;
-      limit?: number | string;
+      limit?: number | "all";
       page?: number | string;
       filter?: FilterStr;
     }

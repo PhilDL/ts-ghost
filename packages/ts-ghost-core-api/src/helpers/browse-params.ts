@@ -27,37 +27,25 @@ export type OrderPredicate<S, Shape> = S extends string
     : never
   : never;
 export type FilterQuerySeparator = "+" | "," | "(" | ")";
-export type FilterQueryOperators =
-  | `-${string}`
-  | `>${string}`
-  | `<${string}`
-  | `~${string}`
-  | `-${string}`
-  | `[${string}]`
-  | string;
+export type FilterQueryOperators = `-` | `>` | `<` | `~`;
+export type FilterQuerySetOperators = `-`;
+export type FieldOrSubField<S> = S extends `${infer Field}.${string}` ? Field : S;
+
 export type BrowseFilter<S, Shape> = S extends string
-  ? S extends `${infer Field}:${infer Operation}${FilterQuerySeparator}${infer Rest}`
-    ? Field extends keyof Shape
-      ? Operation extends FilterQueryOperators
-        ? `${Field}:${Operation}${FilterQuerySeparator}${BrowseFilter<Rest, Shape>}`
-        : never
-      : Field extends `${infer Fa}.${infer SubField}`
-      ? Fa extends keyof Shape
-        ? Operation extends FilterQueryOperators
-          ? `${Fa}.${SubField}:${Operation}${FilterQuerySeparator}${BrowseFilter<Rest, Shape>}`
-          : never
-        : never
-      : never
-    : S extends `${infer Field}:${infer Operation}`
-    ? Field extends keyof Shape
-      ? Operation extends FilterQueryOperators
-        ? S
-        : never
-      : Field extends `${infer Fa}.${infer SubField}`
-      ? Fa extends keyof Shape
-        ? Operation extends FilterQueryOperators
-          ? `${Fa}.${SubField}:${Operation}`
-          : never
+  ? S extends `${infer Field}:${infer Rest}`
+    ? FieldOrSubField<Field> extends keyof Shape
+      ? Rest extends `${infer Operator extends FilterQuerySetOperators}[${infer Values}]`
+        ? `${Field}:${Operator}[${Values}]`
+        : Rest extends `[${infer Values}]`
+        ? `${Field}:[${Values}]`
+        : Rest extends `${infer Operator extends FilterQuerySetOperators}[${infer Values}]${infer Separator extends FilterQuerySeparator}${infer NextQuery}`
+        ? `${Field}:${Operator}[${Values}]${Separator}${BrowseFilter<NextQuery, Shape>}`
+        : Rest extends `[${infer Values}]${infer Separator extends FilterQuerySeparator}${infer NextQuery}`
+        ? `${Field}:[${Values}]${Separator}${BrowseFilter<NextQuery, Shape>}`
+        : Rest extends `${infer Value}${infer Separator extends FilterQuerySeparator}${infer NextQuery}`
+        ? `${Field}:${Value}${Separator}${BrowseFilter<NextQuery, Shape>}`
+        : Rest extends `${infer Value}`
+        ? `${Field}:${Value}`
         : never
       : never
     : never
@@ -76,10 +64,12 @@ export type BrowseParams<P, Shape> = P extends { order: infer Order }
 export const browseParamsSchema = z.object({
   order: z.string().optional(),
   limit: z
-    .number()
-    .refine((n) => n && n > 0 && n <= 15, {
-      message: "Limit must be between 1 and 15",
-    })
+    .union([
+      z.literal("all"),
+      z.number().refine((n) => n && n > 0 && n <= 15, {
+        message: "Limit must be between 1 and 15",
+      }),
+    ])
     .optional(),
   page: z
     .number()

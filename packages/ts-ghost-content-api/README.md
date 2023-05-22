@@ -39,6 +39,8 @@ This client is only compatible with Ghost versions 5.x for now.
     polyfill and if you run Node 16, you'll need to run with the
     `--experimental-fetch` flag enabled.
 - TypeScript 5+, the lib make usage of const in generics and other TS5+ features.
+
+<ContentNavigation next={{ title: "Quickstart", href: "/docs/content-api/quickstart" }} />
 # Quickstart
 
 These are the basic steps to follow to interact with the Ghost Content API in your TypeScript project.
@@ -108,6 +110,11 @@ export async function getBlogPosts() {
 ```
 
 
+
+<ContentNavigation
+  previous={{ title: "Introduction", href: "/docs/content-api" }}
+  next={{ title: "Overview", href: "/docs/content-api/overview" }}
+/>
 # Overview
 
 Here you will have an overview of the philosophy of the library and a common workflow for your queries.
@@ -219,6 +226,11 @@ const result: {
     }[];
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "Quickstart", href: "/docs/content-api/quickstart" }}
+  next={{ title: "Browse", href: "/docs/content-api/browse" }}
+/>
 # Browse
 
 The `browse` method is used to get a list of items from a Ghost Content API resource, it is the equivalent of the `GET /posts` endpoint. You have access to different options to paginate, limit, filter and order your results.
@@ -246,9 +258,10 @@ These browse params are then parsed through a `Zod` Schema that will validate al
 
 Lets you query a specific page of results. The default value is `1` and pagination starts at `1`.
 
-### limit `number`
+### limit `number` | `"all"`
 
 Lets you limit the number of results per page. The default value is `15` and the maximum value is `15` (limitation of the Ghost API).
+You can also pass the literal string `"all"` to get all the results.
 
 ### filter `string`
 
@@ -335,7 +348,7 @@ const result: {
     meta: {
         pagination: {
             pages: number;
-            limit: number;
+            limit: number | "all";
             page: number;
             total: number;
             prev: number | null;
@@ -362,7 +375,7 @@ const result: {
     meta: {
         pagination: {
             pages: number;
-            limit: number;
+            limit: number | "all";
             page: number;
             total: number;
             prev: number | null;
@@ -381,6 +394,11 @@ const result: {
 ```
 
 Here you can use the `next` property to get the next page fetcher if it is defined.
+
+<ContentNavigation
+  previous={{ title: "Overview", href: "/docs/content-api/overview" }}
+  next={{ title: "Read", href: "/docs/content-api/read" }}
+/>
 # Read
 
 The `read` method is used to one item from a Ghost Content API resource, it is the equivalent of the `GET /posts/slug/this-is-a-slug` endpoint. You have to give it an identity field to fetch the resource.
@@ -455,6 +473,11 @@ const result: {
     }[];
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "Browse", href: "/docs/content-api/browse" }}
+  next={{ title: "Output Modifiers", href: "/docs/content-api/output-modifiers" }}
+/>
 # Output modifiers
 
 Output modifiers are available for the `read` and `browse` methods. They let you change the output of the result to have only your selected fields, include some additionnal data that the Ghost API doesn't give you by default or get the content in different formats.
@@ -532,6 +555,11 @@ let result = await api.posts
 ```
 
 The output type will be modified to make the formatted fields you include **non-optionals**.
+
+<ContentNavigation
+  previous={{ title: "Read", href: "/docs/content-api/read" }}
+  next={{ title: "Fetching", href: "/docs/content-api/fetching" }}
+/>
 # Fetching
 
 Fetching happens at the end of your chaining of methods, the moment you call the async `fetch` method (or the async `paginate`).
@@ -571,6 +599,11 @@ let query = await api.posts
   })
   .fetch({ next: { revalidate: 10 } }); // NextJS revalidate this data every 10 seconds at most
 ```
+
+<ContentNavigation
+  previous={{ title: "Output Modifiers", href: "/docs/content-api/output-modifiers" }}
+  next={{ title: "Common Recipes", href: "/docs/content-api/common-recipes" }}
+/>
 # Commons recipes
 
 ## Getting all the posts (including Authors) with pagination
@@ -614,6 +647,11 @@ if (result.success) {
   //     ^? type Settings {title: string; description: string; ...
 }
 ```
+
+<ContentNavigation
+  previous={{ title: "Fetching", href: "/docs/content-api/fetching" }}
+  next={{ title: "Remix", href: "/docs/content-api/remix" }}
+/>
 # Remix example
 
 Here is an example using the `@ts-ghost/content-api` in a Remix loader:
@@ -680,6 +718,11 @@ export default function Index() {
 ```
 
 </Steps>
+
+<ContentNavigation
+  previous={{ title: "Common Recipes", href: "/docs/content-api/common-recipes" }}
+  next={{ title: "NextJS", href: "/docs/content-api/nextjs" }}
+/>
 # NextJS
 
 This is an example for NextJS 13 using the `@ts-ghost/content-api` with the app Router where we fetch the list of posts and the site settings to display them on the `/blog` of our site.
@@ -717,11 +760,8 @@ export const api = new TSGhostContentAPI(
 import { api } from "./ghost";
 
 async function getBlogPosts() {
-  const response = await api.posts
-    .browse()
-    .fields({title: true, slug:true, id:true})
-    .fetch();
-  if(!response.success) {
+  const response = await api.posts.browse().fields({ title: true, slug: true, id: true }).fetch();
+  if (!response.success) {
     throw new Error(response.errors.join(", "));
   }
   return response.data;
@@ -729,7 +769,7 @@ async function getBlogPosts() {
 
 async function getSiteSettings() {
   const response = await api.settings.fetch();
-  if(!response.success) {
+  if (!response.success) {
     throw new Error(response.errors.join(", "));
   }
   return response.data;
@@ -737,21 +777,28 @@ async function getSiteSettings() {
 
 // async Server Component
 export default async function HomePage() {
-  const [posts, settings] = await Promise.all([
-    getBlogPosts(),
-    getSiteSettings()
-  ])
-  return <div>
-    <h1>This is a list of posts for {settings.title}:</h1>
-    <ul>
-      {(posts).map(post => <li key={post.id}>{post.title} ({post.slug})</li>)}
-    </ul>
-
-  </div>;
+  const [posts, settings] = await Promise.all([getBlogPosts(), getSiteSettings()]);
+  return (
+    <div>
+      <h1>This is a list of posts for {settings.title}:</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            {post.title} ({post.slug})
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 ```
 
 </Steps>
+
+<ContentNavigation
+  previous={{ title: "Remix", href: "/docs/content-api/remix" }}
+  next={{ title: "TypeScript Recipes", href: "/docs/content-api/advanced-typescript" }}
+/>
 # TypeScript recipes
 
 Sometimes TypeScript will get in your way, especially with the string-based type-checking on browse parameters. In this section we will show you some tips and tricks to get around those problems, and present you some utilities.
@@ -805,6 +852,8 @@ const uncontrolledOrderInput = async (formData: FormData) => {
     .fetch();
 };
 ```
+
+<ContentNavigation previous={{ title: "NextJS", href: "/docs/content-api/nextjs" }} />
 
 
 ## Roadmap
