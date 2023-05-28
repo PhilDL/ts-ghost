@@ -1,8 +1,6 @@
 import fs from "fs";
 import path from "path";
 import { PlopTypes } from "@turbo/gen";
-import { loadFile, writeFile } from "magicast";
-import ts from "typescript";
 
 import { siteConfig } from "../../docs/src/app/site-config";
 
