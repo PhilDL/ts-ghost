@@ -40,7 +40,7 @@
     "playground": "jiti ./src/playground.ts"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.1",
+    "@faker-js/faker": "^8.0.2",
     "@ts-ghost/core-api": "*",
     "@ts-ghost/tsconfig": "*",
     "@types/node": "^20.2.5",
