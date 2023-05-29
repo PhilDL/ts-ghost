@@ -805,7 +805,6 @@ packages:
   /@babel/parser@7.22.3:
     resolution: {integrity: sha512-vrukxyW/ep8UD1UDzOYpTKQ6abgjFoeG6L+4ar9+c5TN9QnlqiOi6QK7LSR5ewm/ERyGkT/Ai6VboNrxhbr9Uw==}
     engines: {node: '>=6.0.0'}
-    hasBin: true
     dependencies:
       '@babel/types': 7.22.3
     dev: false
@@ -3357,7 +3356,6 @@ packages:
   /@remix-run/dev@1.16.1(@remix-run/serve@1.16.1)(@types/node@20.2.5):
     resolution: {integrity: sha512-PrCIOa4qkZISW9l2tAX9+KMPSfO9QfMGfBZz6rd79v/GQ9N2bhWgKGWwzWhlGWJoVnnRZT5VRIy6YZsepa52/A==}
     engines: {node: '>=14'}
-    hasBin: true
     peerDependencies:
       '@remix-run/serve': ^1.16.1
     peerDependenciesMeta:
@@ -3625,7 +3623,6 @@ packages:
 
   /@turbo/gen@1.9.9(@types/node@20.2.5)(typescript@5.0.4):
     resolution: {integrity: sha512-g+DpJWwwuynTuKvpt29RXWaBWd7tS3B/Hk9qxE5BkUhwtNaNcluIuq5oUVfd2sWlQF3+E8hvoj9W0hdm9pBHmg==}
-    hasBin: true
     dependencies:
       chalk: 2.4.2
       commander: 10.0.1
@@ -4559,7 +4556,6 @@ packages:
   /autoprefixer@10.4.14(postcss@8.4.23):
     resolution: {integrity: sha512-FQzyfOsTlwVzjHxKEqRIAdJx9niO6VCBCoEwax/VLSoQF29ggECcPuBqUMZ+u8jCZOPSy8b8/8KnuFbp0SaFZQ==}
     engines: {node: ^10 || ^12 || >=14}
-    hasBin: true
     peerDependencies:
       postcss: ^8.1.0
     dependencies:
@@ -5791,7 +5787,6 @@ packages:
   /esbuild@0.17.19:
     resolution: {integrity: sha512-XQ0jAPFkK/u3LcVRcvVHQcTIqD6E2H1fvZMA5dQPSOWb3suUbWbfbRf94pjc0bNzRYLfIrDRQXr7X+LHIm5oHw==}
     engines: {node: '>=12'}
-    hasBin: true
     requiresBuild: true
     optionalDependencies:
       '@esbuild/android-arm': 0.17.19
@@ -5903,7 +5898,6 @@ packages:
 
   /eslint-config-prettier@8.8.0(eslint@8.41.0):
     resolution: {integrity: sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==}
-    hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
     dependencies:
@@ -6263,7 +6257,6 @@ packages:
   /eslint@8.41.0:
     resolution: {integrity: sha512-WQDQpzGBOP5IrXPo4Hc0814r4/v2rrIsB0rhT7jtunIalgg6gYXWhRMOejVO8yH21T/FGaxjmFjBMNqcIlmH1Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    hasBin: true
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.41.0)
       '@eslint-community/regexpp': 4.5.1
@@ -6950,7 +6943,6 @@ packages:
   /handlebars@4.7.7:
     resolution: {integrity: sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==}
     engines: {node: '>=0.4.7'}
-    hasBin: true
     dependencies:
       minimist: 1.2.8
       neo-async: 2.6.2
@@ -8589,7 +8581,6 @@ packages:
 
   /mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
-    hasBin: true
     dependencies:
       minimist: 1.2.8
     dev: false
@@ -8686,7 +8677,6 @@ packages:
   /next@13.4.4(@babel/core@7.22.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-C5S0ysM0Ily9McL4Jb48nOQHT1BukOWI59uC3X/xCMlYIh9rJZCv7nzG92J6e1cOBqQbKovlpgvHWFmz4eKKEA==}
     engines: {node: '>=16.8.0'}
-    hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
       fibers: '>= 3.1.0'
@@ -10046,7 +10036,6 @@ packages:
   /rollup@3.23.0:
     resolution: {integrity: sha512-h31UlwEi7FHihLe1zbk+3Q7z1k/84rb9BSwmBSr/XjOCEaBJ2YyedQDuM0t/kfOS0IxM+vk1/zI9XxYj9V+NJQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
-    hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -10845,7 +10834,6 @@ packages:
 
   /ts-node@10.9.1(@types/node@20.2.5)(typescript@5.0.4):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
-    hasBin: true
     peerDependencies:
       '@swc/core': '>=1.2.50'
       '@swc/wasm': '>=1.2.50'
@@ -10876,7 +10864,6 @@ packages:
   /tsconfck@2.1.1(typescript@5.0.4):
     resolution: {integrity: sha512-ZPCkJBKASZBmBUNqGHmRhdhM8pJYDdOXp4nRgj/O0JwUwsMq50lCDRQP/M5GBNAA0elPrq4gAeu4dkaVCuKWww==}
     engines: {node: ^14.13.1 || ^16 || >=18}
-    hasBin: true
     peerDependencies:
       typescript: ^4.3.5 || ^5.0.0
     peerDependenciesMeta:
@@ -10912,7 +10899,6 @@ packages:
   /tsup@6.7.0(ts-node@10.9.1)(typescript@5.0.4):
     resolution: {integrity: sha512-L3o8hGkaHnu5TdJns+mCqFsDBo83bJ44rlK7e6VdanIvpea4ArPcU3swWGsLVbXak1PqQx/V+SSmFPujBK+zEQ==}
     engines: {node: '>=14.18'}
-    hasBin: true
     peerDependencies:
       '@swc/core': ^1
       postcss: ^8.4.12
@@ -11023,7 +11009,6 @@ packages:
 
   /turbo@1.9.9:
     resolution: {integrity: sha512-+ZS66LOT7ahKHxh6XrIdcmf2Yk9mNpAbPEj4iF2cs0cAeaDU3xLVPZFF0HbSho89Uxwhx7b5HBgPbdcjQTwQkg==}
-    hasBin: true
     requiresBuild: true
     optionalDependencies:
       turbo-darwin-64: 1.9.9
@@ -11109,7 +11094,6 @@ packages:
   /uglify-js@3.17.4:
     resolution: {integrity: sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==}
     engines: {node: '>=0.8.0'}
-    hasBin: true
     requiresBuild: true
     dev: false
     optional: true
@@ -11235,7 +11219,6 @@ packages:
 
   /update-browserslist-db@1.0.10(browserslist@4.21.5):
     resolution: {integrity: sha512-OztqDenkfFkbSG+tRxBeAnCVPckDBcvibKd35yDONx6OU8N7sqgwc7rCbkJ/WcYtVRZ4ba68d6byhC21GFh7sQ==}
-    hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
     dependencies:
@@ -11431,7 +11414,6 @@ packages:
   /vite@4.3.9(@types/node@20.2.5):
     resolution: {integrity: sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==}
     engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
     peerDependencies:
       '@types/node': '>= 14'
       less: '*'
@@ -11475,7 +11457,6 @@ packages:
   /vitest@0.31.1:
     resolution: {integrity: sha512-/dOoOgzoFk/5pTvg1E65WVaobknWREN15+HF+0ucudo3dDG/vCZoXTQrjIfEaWvQXmqScwkRodrTbM/ScMpRcQ==}
     engines: {node: '>=v14.18.0'}
-    hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
       '@vitest/browser': '*'
