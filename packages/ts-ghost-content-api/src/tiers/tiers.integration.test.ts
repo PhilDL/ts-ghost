@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "vitest";
+import { assert, beforeEach, describe, expect, test } from "vitest";
 
 import { TSGhostContentAPI } from "../content-api";
 
@@ -90,12 +90,18 @@ describe("tiers integration tests browse", () => {
     }
   });
 
-  test("tiers.browse() with mix of incude and fields... ghost doesn't answer to that query", async () => {
+  test("tiers.browse() with fields", async () => {
     const result = await api.tiers.browse().fields({ slug: true, name: true }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
     // Right now this doesn't work in Ghost API
-    expect(result.success).toBe(false);
+    assert(result.success === true);
+    expect(result.data.length).toBeGreaterThanOrEqual(1);
+    const tier = result.data[0];
+    expect(tier).toBeDefined();
+    // @ts-expect-error
+    expect(tier.description).toBeUndefined();
+    expect(tier.name).toBe(stub[0].name);
   });
 
   test("tiers.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
@@ -106,7 +112,13 @@ describe("tiers integration tests browse", () => {
       .fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
-    expect(result.success).toBe(false);
+    assert(result.success === true);
+    expect(result.data.length).toBeGreaterThanOrEqual(1);
+    const tier = result.data[0];
+    expect(tier).toBeDefined();
+    // @ts-expect-error
+    expect(tier.description).toBeUndefined();
+    expect(tier.name).toBe(stub[0].name);
   });
 });
 
@@ -116,7 +128,7 @@ describe("tiers integration tests read doesn't work on GHOST API", () => {
     api = new TSGhostContentAPI(url, key, "v5.0");
   });
 
-  test("tiers.read() by id doesn't work on ghost", async () => {
+  test("tiers.read()", async () => {
     const result = await api.tiers.read({ id: "63887bd07f2cf30001fec7a2" }).fetch();
     expect(result).not.toBeUndefined();
     expect(result).not.toBeNull();
