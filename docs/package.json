@@ -25,7 +25,7 @@
     "remark-gfm": "^3.0.1",
     "sharp": "^0.32.1",
     "shiki": "^0.14.2",
-    "tailwind-merge": "^1.12.0",
+    "tailwind-merge": "^1.13.0",
     "tailwindcss-animate": "^1.0.5"
   },
   "devDependencies": {
@@ -34,10 +34,10 @@
     "@types/react": "18.2.8",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "^10.4.14",
-    "eslint": "^8.41.0",
+    "eslint": "^8.42.0",
     "eslint-config-next": "^13.4.4",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.3"
   }
 }
