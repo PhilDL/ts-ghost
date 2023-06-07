@@ -43,14 +43,14 @@
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^20.2.5",
     "@types/yargs": "^17.0.24",
-    "eslint": "^8.41.0",
+    "eslint": "^8.42.0",
     "jiti": "^1.18.2",
     "ts-node": "^10.9.1",
     "tsup": "^6.7.0",
     "typescript": "5.0.4",
     "vite": "^4.3.9",
-    "vite-tsconfig-paths": "^4.0.7",
-    "vitest": "^0.31.1"
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.31.4"
   },
   "dependencies": {
     "@clack/core": "^0.3.2",
