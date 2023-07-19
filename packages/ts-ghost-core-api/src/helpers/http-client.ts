@@ -44,7 +44,12 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
   protected _baseURL: URL | undefined = undefined;
 
   constructor(protected config: Options) {
-    this._baseURL = new URL(`/ghost/api/${config.endpoint}/`, config.url);
+    let prefixPath = new URL(config.url).pathname;
+    if(prefixPath.slice(-1) === "/") {
+      prefixPath = prefixPath.slice(0, -1)
+    }
+
+    this._baseURL = new URL(`${prefixPath}/ghost/api/${config.endpoint}/`, config.url);
   }
 
   get baseURL() {
