@@ -45,8 +45,8 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
 
   constructor(protected config: Options) {
     let prefixPath = new URL(config.url).pathname;
-    if(prefixPath.slice(-1) === "/") {
-      prefixPath = prefixPath.slice(0, -1)
+    if (prefixPath.slice(-1) === "/") {
+      prefixPath = prefixPath.slice(0, -1);
     }
 
     this._baseURL = new URL(`${prefixPath}/ghost/api/${config.endpoint}/`, config.url);

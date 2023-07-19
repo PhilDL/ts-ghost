@@ -27,6 +27,22 @@ describe("HTTPClient Content API", () => {
   });
 });
 
+describe("HTTPClient with subpath", () => {
+  const httpClient = new HTTPClient({
+    key: "a",
+    version: "v5.0",
+    endpoint: "content",
+    url: "https://ghost.org/blog",
+  });
+
+  test("expect instanciation OK with subpath", async () => {
+    expect(httpClient).toBeDefined();
+    expect(httpClient.jwt).toBeUndefined();
+    expect(httpClient.baseURL).toBeDefined();
+    expect(httpClient.baseURL?.toString()).toBe("https://ghost.org/blog/ghost/api/content/");
+  });
+});
+
 describe("HTTPClient Admin API", () => {
   const httpClient = new HTTPClient({
     key: "a:b",
