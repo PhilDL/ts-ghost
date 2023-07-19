@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 3.0.7
+
+### Patch Changes
+
+- 4b27b40: This is a minor release that fixes URL construction of the inner HTTPClient allowing URL with subpath thanks to @CruelMoney PR #119
+- Updated dependencies [4b27b40]
+  - @ts-ghost/core-api@5.0.7
+
 ## 3.0.6
 
 ### Patch Changes
