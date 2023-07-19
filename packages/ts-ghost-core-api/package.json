@@ -37,7 +37,7 @@
   "devDependencies": {
     "@ts-ghost/tsconfig": "*",
     "@types/node": "^20.4.2",
-    "@vitest/coverage-c8": "^0.32.4",
+    "@vitest/coverage-c8": "^0.33.0",
     "eslint": "^8.45.0",
     "tsup": "^6.7.0",
     "typescript": "5.1.3",
