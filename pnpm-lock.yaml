@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -56,10 +60,10 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       '@ts-ghost/admin-api':
-        specifier: ^3.0.3
+        specifier: ^3.0.7
         version: link:../../packages/ts-ghost-admin-api
       '@ts-ghost/content-api':
-        specifier: ^4.0.2
+        specifier: ^4.0.6
         version: link:../../packages/ts-ghost-content-api
       configstore:
         specifier: ^6.0.0
@@ -302,7 +306,7 @@ importers:
   packages/ts-ghost-admin-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^5.0.6
+        specifier: ^5.0.7
         version: link:../ts-ghost-core-api
       validator:
         specifier: ^13.9.0
@@ -351,7 +355,7 @@ importers:
   packages/ts-ghost-content-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^5.0.6
+        specifier: ^5.0.7
         version: link:../ts-ghost-core-api
       zod:
         specifier: ^3.21.4
@@ -12068,7 +12072,3 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

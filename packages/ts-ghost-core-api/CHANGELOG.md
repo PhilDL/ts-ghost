@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 5.0.7
+
+### Patch Changes
+
+- 4b27b40: This is a minor release that fixes URL construction of the inner HTTPClient allowing URL with subpath thanks to @CruelMoney PR #119
+
 ## 5.0.6
 
 ### Patch Changes
