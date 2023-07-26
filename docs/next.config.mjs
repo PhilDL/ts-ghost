@@ -20,6 +20,7 @@ export default withMdx({
         /** @type {import("rehype-pretty-code").Options} */
         ({
           theme: { dark: "poimandres", light: "min-light" },
+          keepBackground: false,
           getHighlighter,
           onVisitLine(node) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty

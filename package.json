@@ -16,6 +16,8 @@
     "dev": "turbo run dev",
     "start": "pnpm --filter=@ts-ghost/ghost-blog-buster start",
     "playground:admin-api": "pnpm --filter=@ts-ghost/admin-api playground",
+    "playground:content-api": "pnpm --filter=@ts-ghost/content-api playground",
+    "docs:dev": "pnpm --filter=@ts-ghost/docs dev",
     "build": "turbo run build",
     "test": "turbo run test",
     "test:integration": "turbo run test:integration",

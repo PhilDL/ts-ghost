@@ -36,7 +36,7 @@ In that case you will **keep type-safety** and the output will be of type `Post`
 
 ## Unknown order/filter string with `as` to force the type
 
-If you don't build the `order` or `filter` string yourself, for example if that comes from a user input or `FormData`, then you TypeScript will shout at you because the inner-types will be converted to never as the content of the string cannot be templated.
+If you don't build the `order` or `filter` string yourself, for example if that comes from a user input or `FormData`, then TypeScript will shout at you because the inner-types would be converted to never as the content of the string cannot be templated.
 
 To alleviate that problem you have access to a type helper generics `BrowseParams` that accepts a shape of params and the corresponding resource type. Allowing you to make your query, that will be runtime checked anyway.
 
@@ -52,4 +52,7 @@ const uncontrolledOrderInput = async (formData: FormData) => {
 };
 ```
 
-<ContentNavigation previous={{ title: "NextJS", href: "/docs/admin-api/nextjs" }} />
+<ContentNavigation
+  next={{ title: "Migrating from Ghost SDK", href: "/docs/admin-api/migrating-from-ghost-sdk" }}
+  previous={{ title: "NextJS", href: "/docs/admin-api/nextjs" }}
+/>

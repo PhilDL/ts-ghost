@@ -1,0 +1,35 @@
+# Migrating from Ghost SDK
+
+## Introduction
+
+Ghost SDK is a great library to interact with the Ghost Content API. It is a very mature library, but if you prefer a more strongly typed and checked library you can use this one. Generally speaking, the API is very similar, but there are some differences.
+
+## Common "gotchas"
+
+Filtering posts by `author` or `tag` is not supported. You can only filter by `authors` or `tags` (plural).
+
+```ts title
+import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
+
+let url = "https://demo.ghost.io";
+let key = "22444f78447824223cefc48062"; // Content API KEY
+const api = new TSGhostContentAPI(url, key, "v5.0");
+
+let posts: Post[] = [];
+let cursor = await api.posts
+  .browse({ filter: "tags:hash-tag" })
+  .include({ authors: true, tags: true })
+  .fetch();
+if (result.success) {
+  posts = result.data;
+}
+return posts
+```
+
+### Why ?
+
+The Ghost Content API is a bit inconsistent in the way it handles filtering. For example, you can filter by `authors` but also by `author`. The same goes for `tags` and `tag`. But in the result `author` and `tag` are not present, it's only `primary_author`, `authors`, `primary_tag`, `tags`. So ts-ghost tries to be more consistent and only supports filtering by attributes present on the result object.
+
+<ContentNavigation
+  previous={{ title: "TypeScript recipes", href: "/docs/content-api/advanced-typescript" }}
+/>
