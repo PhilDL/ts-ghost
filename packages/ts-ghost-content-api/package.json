@@ -36,7 +36,8 @@
     "test:integration:watch": "vitest -c ./vitest.config.integration.ts",
     "test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
     "lint": "eslint ./src --fix",
-    "typecheck": "tsc --project ./tsconfig.json --noEmit"
+    "typecheck": "tsc --project ./tsconfig.json --noEmit",
+    "playground": "jiti ./src/playground.ts"
   },
   "devDependencies": {
     "@ts-ghost/core-api": "*",
@@ -50,7 +51,8 @@
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.33.0",
     "vitest-fetch-mock": "^0.2.2",
-    "zod": "^3.20.6"
+    "zod": "^3.20.6",
+    "jiti": "^1.19.1"
   },
   "dependencies": {
     "@ts-ghost/core-api": "^5.0.7",

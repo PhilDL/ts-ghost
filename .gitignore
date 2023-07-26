@@ -50,6 +50,7 @@ examples/remix/build
 .output
 apps/**/public/build
 packages/ts-ghost-admin-api/src/playground.ts
+packages/ts-ghost-content-api/src/playground.ts
 
 # macOS
 ._*
