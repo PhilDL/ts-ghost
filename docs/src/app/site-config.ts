@@ -104,6 +104,10 @@ export const siteConfig: SiteConfig = {
               title: "TypeScript recipes",
               href: "/docs/content-api/advanced-typescript",
             },
+            {
+              title: "Migrating from Ghost SDK",
+              href: "/docs/content-api/migrating-from-ghost-sdk",
+            },
           ],
         },
       ],
@@ -198,6 +202,10 @@ export const siteConfig: SiteConfig = {
             {
               title: "TypeScript recipes",
               href: "/docs/admin-api/advanced-typescript",
+            },
+            {
+              title: "Migrating from Ghost SDK",
+              href: "/docs/admin-api/migrating-from-ghost-sdk",
             },
           ],
         },

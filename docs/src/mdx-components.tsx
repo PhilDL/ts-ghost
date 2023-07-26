@@ -1,9 +1,9 @@
-import type { MDXComponents } from "mdx/types";
-import Link from "next/link";
-import * as React from "react";
 import { Callout } from "~/components/mdx/callout";
 import { Codeblock } from "~/components/mdx/code-block";
 import { ContentNavigation } from "~/components/mdx/content-navigation";
+import type { MDXComponents } from "mdx/types";
+import Link from "next/link";
+import * as React from "react";
 
 // This file is required to use MDX in `app` directory.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
