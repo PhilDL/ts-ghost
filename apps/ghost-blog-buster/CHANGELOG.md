@@ -1,5 +1,11 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.10
+
+### Patch Changes
+
+- bed1030: chore(deps): update dependency @clack/prompts to ^0.7.0
+
 ## 0.6.9
 
 ### Patch Changes
