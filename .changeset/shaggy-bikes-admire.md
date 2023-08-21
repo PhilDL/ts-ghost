@@ -5,4 +5,5 @@
 "@ts-ghost/ghost-blog-buster": patch
 ---
 
-Upgrade zod
+Upgrade deps zod
+Upgrade deps clack
