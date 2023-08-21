@@ -42,21 +42,21 @@
   "devDependencies": {
     "@ts-ghost/core-api": "*",
     "@ts-ghost/tsconfig": "*",
-    "@types/node": "^20.4.2",
+    "@types/node": "^20.5.1",
     "@vitest/coverage-c8": "^0.33.0",
-    "eslint": "^8.45.0",
-    "tsup": "^7.1.0",
+    "eslint": "^8.47.0",
+    "jiti": "^1.19.3",
+    "tsup": "^7.2.0",
     "typescript": "5.1.6",
-    "vite": "^4.4.4",
+    "vite": "^4.4.9",
     "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "^0.33.0",
+    "vitest": "^0.34.2",
     "vitest-fetch-mock": "^0.2.2",
-    "zod": "^3.20.6",
-    "jiti": "^1.19.1"
+    "zod": "^3.20.6"
   },
   "dependencies": {
     "@ts-ghost/core-api": "^5.0.7",
-    "zod": "^3.21.4"
+    "zod": "^3.22.2"
   },
   "publishConfig": {
     "access": "public"
