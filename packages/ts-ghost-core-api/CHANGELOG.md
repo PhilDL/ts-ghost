@@ -1,5 +1,12 @@
 # @ts-ghost/core-api
 
+## 5.0.8
+
+### Patch Changes
+
+- b496092: Upgrade deps zod
+  Upgrade deps clack
+
 ## 5.0.7
 
 ### Patch Changes
@@ -239,7 +246,7 @@
         option_1: z.boolean(),
       }),
     },
-    api
+    api,
   );
 
   const res = await composer
@@ -354,7 +361,7 @@
 
   const qb = new QueryBuilder(
     { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-    api
+    api,
   );
   ```
 
@@ -375,7 +382,7 @@
   export class MemberQueryBuilder<
     Shape extends typeof adminMembersSchema.shape,
     Identity extends typeof queryIdentitySchema,
-    IncludeShape extends typeof membersIncludeSchema.shape
+    IncludeShape extends typeof membersIncludeSchema.shape,
   > extends QueryBuilder<Shape, Identity, IncludeShape> {
     // ...
   }
@@ -501,7 +508,7 @@
   ```ts
   const qb = new QueryBuilder(
     { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
-    api
+    api,
   );
   let query = qb.browse({
     input: {
@@ -535,7 +542,7 @@
   ```ts
   const qb = new QueryBuilder(
     { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
-    api
+    api,
   );
   let browseQuery = qb
     .browse({

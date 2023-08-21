@@ -1,5 +1,14 @@
 # @ts-ghost/admin-api
 
+## 3.0.8
+
+### Patch Changes
+
+- b496092: Upgrade deps zod
+  Upgrade deps clack
+- Updated dependencies [b496092]
+  - @ts-ghost/core-api@5.0.8
+
 ## 3.0.7
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.11
+
+### Patch Changes
+
+- b496092: Upgrade deps zod
+  Upgrade deps clack
+- Updated dependencies [b496092]
+  - @ts-ghost/content-api@4.0.7
+  - @ts-ghost/admin-api@3.0.8
+
 ## 0.6.10
 
 ### Patch Changes
