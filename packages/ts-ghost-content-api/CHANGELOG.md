@@ -1,5 +1,11 @@
 # @ts-ghost/content-api
 
+## 4.0.8
+
+### Patch Changes
+
+- 94693fe: Fix Post/Page catch html and excerpt null to empty string
+
 ## 4.0.7
 
 ### Patch Changes
