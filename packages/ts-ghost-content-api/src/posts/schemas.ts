@@ -17,7 +17,7 @@ export const postsSchema = z.object({
   ...ghostIdentitySchema.shape,
   ...ghostMetadataSchema.shape,
   title: z.string(),
-  html: z.string(),
+  html: z.string().catch(""),
   plaintext: z.string().nullish(),
   comment_id: z.string().nullable(),
   feature_image: z.string().nullable(),
