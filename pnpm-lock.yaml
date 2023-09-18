@@ -251,8 +251,8 @@ importers:
   examples/remix:
     dependencies:
       '@remix-run/css-bundle':
-        specifier: ^1.19.3
-        version: 1.19.3
+        specifier: ^2.0.0
+        version: 2.0.0
       '@remix-run/node':
         specifier: ^1.19.3
         version: 1.19.3
@@ -3374,9 +3374,9 @@ packages:
       '@babel/runtime': 7.22.3
     dev: false
 
-  /@remix-run/css-bundle@1.19.3:
-    resolution: {integrity: sha512-XccfuPmTdtXT+Kx7Df62cyk8d2I6DrHIB02uDyIGOTq8lPlMXznErMW14asVcbGOV5ieAOvnch/pUJrsKoWRmw==}
-    engines: {node: '>=14.0.0'}
+  /@remix-run/css-bundle@2.0.0:
+    resolution: {integrity: sha512-fwCqWUxRD6gJVJXeCF14knJzUjtPUPQi9sdFCF8Wzg3gNba6p1rgA4333oDaJdlRPfaXK3dgGojIpI1hgMMo8w==}
+    engines: {node: '>=18.0.0'}
     dev: false
 
   /@remix-run/dev@1.19.3(@remix-run/serve@1.19.3)(@types/node@20.5.1):
