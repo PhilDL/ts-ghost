@@ -7,10 +7,4 @@ module.exports = {
   // publicPath: "/build/",
   serverModuleFormat: "cjs",
   devServerPort: 3001,
-  future: {
-    v2_errorBoundary: true,
-    v2_meta: true,
-    v2_normalizeFormMethod: true,
-    v2_routeConvention: true,
-  },
 };
