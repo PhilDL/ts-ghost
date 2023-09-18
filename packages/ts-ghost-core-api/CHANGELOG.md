@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 5.0.9
+
+### Patch Changes
+
+- dcf2c79: Upgrade jose dependency (minor)
+
 ## 5.0.8
 
 ### Patch Changes
