@@ -9,24 +9,24 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@remix-run/css-bundle": "^2.0.0",
-    "@remix-run/node": "^2.0.0",
-    "@remix-run/react": "^2.0.0",
-    "@remix-run/serve": "^2.0.0",
+    "@remix-run/css-bundle": "^2.0.1",
+    "@remix-run/node": "^2.0.1",
+    "@remix-run/react": "^2.0.1",
+    "@remix-run/serve": "^2.0.1",
     "@ts-ghost/admin-api": "*",
     "@ts-ghost/content-api": "*",
-    "isbot": "^3.6.13",
+    "isbot": "^3.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.0.0",
-    "@remix-run/eslint-config": "^2.0.0",
+    "@remix-run/dev": "^2.0.1",
+    "@remix-run/eslint-config": "^2.0.1",
     "@types/cookie": "^0.5.2",
-    "@types/node": "^20.6.2",
-    "@types/react": "^18.2.21",
+    "@types/node": "^20.7.0",
+    "@types/react": "^18.2.23",
     "@types/react-dom": "^18.2.7",
-    "eslint": "^8.49.0",
+    "eslint": "^8.50.0",
     "typescript": "^5.2.2"
   },
   "engines": {
