@@ -41,16 +41,16 @@
     "@ts-ghost/tsconfig": "*",
     "@types/configstore": "^6.0.0",
     "@types/js-yaml": "^4.0.6",
-    "@types/node": "^20.6.2",
-    "@types/yargs": "^17.0.24",
-    "eslint": "^8.49.0",
+    "@types/node": "^20.7.0",
+    "@types/yargs": "^17.0.25",
+    "eslint": "^8.50.0",
     "jiti": "^1.20.0",
     "ts-node": "^10.9.1",
     "tsup": "^7.2.0",
     "typescript": "5.2.2",
     "vite": "^4.4.9",
     "vite-tsconfig-paths": "^4.2.1",
-    "vitest": "^0.34.4"
+    "vitest": "^0.34.5"
   },
   "dependencies": {
     "@clack/core": "^0.3.3",
