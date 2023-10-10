@@ -1,5 +1,14 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.12
+
+### Patch Changes
+
+- 9e087f7: minor upgrade zod and jose dependencies
+- Updated dependencies [9e087f7]
+  - @ts-ghost/content-api@4.0.9
+  - @ts-ghost/admin-api@3.0.9
+
 ## 0.6.11
 
 ### Patch Changes

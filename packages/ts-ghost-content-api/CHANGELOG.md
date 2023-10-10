@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 4.0.9
+
+### Patch Changes
+
+- 9e087f7: minor upgrade zod and jose dependencies
+- Updated dependencies [9e087f7]
+  - @ts-ghost/core-api@5.0.10
+
 ## 4.0.8
 
 ### Patch Changes
