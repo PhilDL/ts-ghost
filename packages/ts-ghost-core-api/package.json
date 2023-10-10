@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/tree/main/packages/ts-ghost-core-api"
   },
-  "version": "5.0.9",
+  "version": "5.0.10",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
