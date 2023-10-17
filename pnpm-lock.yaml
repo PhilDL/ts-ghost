@@ -60,10 +60,10 @@ importers:
         specifier: ^0.7.0
         version: 0.7.0
       '@ts-ghost/admin-api':
-        specifier: ^3.0.9
+        specifier: ^3.0.10
         version: link:../../packages/ts-ghost-admin-api
       '@ts-ghost/content-api':
-        specifier: ^4.0.9
+        specifier: ^4.0.10
         version: link:../../packages/ts-ghost-content-api
       configstore:
         specifier: ^6.0.0
@@ -306,7 +306,7 @@ importers:
   packages/ts-ghost-admin-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^5.0.10
+        specifier: ^5.0.11
         version: link:../ts-ghost-core-api
       validator:
         specifier: ^13.11.0
@@ -338,7 +338,7 @@ importers:
         version: 1.20.0
       tsup:
         specifier: ^7.2.0
-        version: 7.2.0(ts-node@10.9.1)(typescript@5.2.2)
+        version: 7.2.0(typescript@5.2.2)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
@@ -355,7 +355,7 @@ importers:
   packages/ts-ghost-content-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^5.0.10
+        specifier: ^5.0.11
         version: link:../ts-ghost-core-api
       zod:
         specifier: ^3.22.4
@@ -378,7 +378,7 @@ importers:
         version: 1.20.0
       tsup:
         specifier: ^7.2.0
-        version: 7.2.0(ts-node@10.9.1)(typescript@5.2.2)
+        version: 7.2.0(typescript@5.2.2)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
@@ -8590,22 +8590,6 @@ packages:
       camelcase-css: 2.0.1
       postcss: 8.4.31
 
-  /postcss-load-config@4.0.1:
-    resolution: {integrity: sha512-vEJIc8RdiBRu3oRAI0ymerOn+7rPuMvRXslTvZUKZonDHFIczxztIyJ1urxM1x9JXEikvpWWTUUqal5j/8QgvA==}
-    engines: {node: '>= 14'}
-    peerDependencies:
-      postcss: '>=8.0.9'
-      ts-node: '>=9.0.0'
-    peerDependenciesMeta:
-      postcss:
-        optional: true
-      ts-node:
-        optional: true
-    dependencies:
-      lilconfig: 2.1.0
-      yaml: 2.3.1
-    dev: true
-
   /postcss-load-config@4.0.1(postcss@8.4.31):
     resolution: {integrity: sha512-vEJIc8RdiBRu3oRAI0ymerOn+7rPuMvRXslTvZUKZonDHFIczxztIyJ1urxM1x9JXEikvpWWTUUqal5j/8QgvA==}
     engines: {node: '>= 14'}
@@ -10462,7 +10446,7 @@ packages:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.1
+      postcss-load-config: 4.0.1(postcss@8.4.31)
       resolve-from: 5.0.0
       rollup: 3.28.0
       source-map: 0.8.0-beta.0
