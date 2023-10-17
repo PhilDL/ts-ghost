@@ -1,5 +1,21 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.13
+
+### Patch Changes
+
+- 2d03006: ## All:
+
+  - upgrade jose lib
+
+  ## @ts-ghost/admin-api:
+
+  - fix `members` admin-api schema. The `newsletter` array returns a less complete than before data type. It is now reflected in our schema.
+
+- Updated dependencies [2d03006]
+  - @ts-ghost/content-api@4.0.10
+  - @ts-ghost/admin-api@3.0.10
+
 ## 0.6.12
 
 ### Patch Changes

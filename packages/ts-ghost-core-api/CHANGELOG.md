@@ -1,5 +1,17 @@
 # @ts-ghost/core-api
 
+## 5.0.11
+
+### Patch Changes
+
+- 2d03006: ## All:
+
+  - upgrade jose lib
+
+  ## @ts-ghost/admin-api:
+
+  - fix `members` admin-api schema. The `newsletter` array returns a less complete than before data type. It is now reflected in our schema.
+
 ## 5.0.10
 
 ### Patch Changes
