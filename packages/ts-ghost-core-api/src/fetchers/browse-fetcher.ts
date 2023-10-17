@@ -11,7 +11,7 @@ export class BrowseFetcher<
   Fields extends Mask<OutputShape> = any,
   BaseShape extends ZodRawShape = any,
   OutputShape extends ZodRawShape = any,
-  IncludeShape extends ZodRawShape = any
+  IncludeShape extends ZodRawShape = any,
 > {
   protected _urlParams: Record<string, string> = {};
   protected _urlSearchParams: URLSearchParams | undefined = undefined;
@@ -30,7 +30,7 @@ export class BrowseFetcher<
       fields?: Fields;
       formats?: string[];
     } = { browseParams: {} as Params, include: [], fields: {} as z.noUnrecognized<Fields, OutputShape> },
-    protected httpClient: HTTPClient
+    protected httpClient: HTTPClient,
   ) {
     this._buildUrlParams();
   }
@@ -44,7 +44,7 @@ export class BrowseFetcher<
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
   public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
-    formats: z.noUnrecognized<Formats, OutputShape>
+    formats: z.noUnrecognized<Formats, OutputShape>,
   ) {
     const params = {
       ...this._params,
@@ -58,7 +58,7 @@ export class BrowseFetcher<
         include: this.config.include,
       },
       params,
-      this.httpClient
+      this.httpClient,
     );
   }
 
@@ -83,7 +83,7 @@ export class BrowseFetcher<
         include: this.config.include,
       },
       params,
-      this.httpClient
+      this.httpClient,
     );
   }
 
@@ -104,7 +104,7 @@ export class BrowseFetcher<
         include: this.config.include,
       },
       this._params,
-      this.httpClient
+      this.httpClient,
     );
   }
 
@@ -183,7 +183,7 @@ export class BrowseFetcher<
           z.object({
             type: z.string(),
             message: z.string(),
-          })
+          }),
         ),
       }),
     ]);

@@ -19,7 +19,7 @@ export const adminMembersCreateSchema = z.object({
           slug: z.string({ description: "The slug of the label" }),
         }),
       ]),
-      { description: "The labels associated with the member" }
+      { description: "The labels associated with the member" },
     )
     .optional(),
   products: z
@@ -38,7 +38,7 @@ export const adminMembersCreateSchema = z.object({
       {
         description: `The products associated with the member, they correspond to a stripe product. 
           If given the member status will be 'comped' as given away a subscription.`,
-      }
+      },
     )
     .optional(),
   // newsletters and subscribed exclude each other. `subscribed`
@@ -54,7 +54,7 @@ export const adminMembersCreateSchema = z.object({
       ]),
       {
         description: `Specifing newsletter to subscribe to via id or name, incompatible with the \`subscribed\` property`,
-      }
+      },
     )
     .optional(),
   subscribed: z
@@ -78,7 +78,17 @@ export const adminMembersSchema = baseMembersSchema.merge(
         info: z.string().nullish(),
       })
       .nullish(),
-  })
+    newsletters: z.array(
+      z.object({
+        id: z.string(),
+        name: z.string({ description: "Public name for the newsletter" }),
+        description: z.string({ description: "(nullable) Public description of the newsletter" }).nullish(),
+        status: z.union([z.literal("active"), z.literal("archived")], {
+          description: "active or archived - denotes if the newsletter is active or archived",
+        }),
+      }),
+    ),
+  }),
 );
 
 export type Member = z.infer<typeof adminMembersSchema>;
