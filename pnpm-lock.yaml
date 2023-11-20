@@ -130,8 +130,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0(webpack@5.89.0)
       '@next/mdx':
-        specifier: ^13.5.5
-        version: 13.5.5(@mdx-js/loader@2.3.0)
+        specifier: ^14.0.0
+        version: 14.0.3(@mdx-js/loader@2.3.0)
       '@radix-ui/react-popover':
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.15)(@types/react@18.2.37)(react-dom@18.2.0)(react@18.2.0)
@@ -1758,8 +1758,8 @@ packages:
       glob: 7.1.7
     dev: true
 
-  /@next/mdx@13.5.5(@mdx-js/loader@2.3.0):
-    resolution: {integrity: sha512-vIUvyICrCHiCAYU4HY/h0DgeFyEZBdRTPR9TTU79Q2u01M9DxrciE5hBwXKIJkzUTa4Ia5nszLt0o9GxpBIgMQ==}
+  /@next/mdx@14.0.3(@mdx-js/loader@2.3.0):
+    resolution: {integrity: sha512-RhiANppBndB7ELjPc3SEdEywLWgsy69Vj1bJtfDWqCl8yIVX9aps1D7kwby1pBAweHvZVpiI91Xu/78citVQrQ==}
     peerDependencies:
       '@mdx-js/loader': '>=0.15.0'
       '@mdx-js/react': '>=0.15.0'

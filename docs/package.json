@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@mdx-js/loader": "^2.3.0",
-    "@next/mdx": "^13.5.5",
+    "@next/mdx": "^14.0.0",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@vercel/analytics": "^1.1.1",
