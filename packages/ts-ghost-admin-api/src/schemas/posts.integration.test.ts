@@ -463,25 +463,29 @@ describe("posts integration tests browse", () => {
 
     const title = faker.hacker.phrase();
 
-    const postAdd = await api.posts.add({
-      title: title,
-      html: "<p>Hello from ts-ghost</p>",
-      tags: [{ name: "ts-ghost" }],
-      tiers: [{ name: "ts-ghost" }],
-      custom_excerpt: "This is custom excerpt from ts-ghost",
-      meta_title: "Meta Title from ts-ghost",
-      meta_description: "Description from ts-ghost",
-      featured: true,
-      og_title: "OG Title from ts-ghost",
-      og_description: "OG Description from ts-ghost",
-      twitter_title: "Twitter Title from ts-ghost",
-      twitter_description: "Twitter Description from ts-ghost",
-      visibility: "public",
-    });
+    const postAdd = await api.posts.add(
+      {
+        title: title,
+        html: "<p>Hello from ts-ghost</p>",
+        tags: [{ name: "ts-ghost" }],
+        tiers: [{ name: "ts-ghost" }],
+        custom_excerpt: "This is custom excerpt from ts-ghost",
+        meta_title: "Meta Title from ts-ghost",
+        meta_description: "Description from ts-ghost",
+        featured: true,
+        og_title: "OG Title from ts-ghost",
+        og_description: "OG Description from ts-ghost",
+        twitter_title: "Twitter Title from ts-ghost",
+        twitter_description: "Twitter Description from ts-ghost",
+        visibility: "public",
+      },
+      { source: "html" },
+    );
     assert(postAdd.success);
     const newPost = postAdd.data;
     expect(newPost.title).toBe(title);
     expect(newPost.slug).toBeDefined();
+    expect(newPost.lexical).toContain("Hello from ts-ghost");
     expect(newPost.custom_excerpt).toBe("This is custom excerpt from ts-ghost");
     expect(newPost.meta_title).toBe("Meta Title from ts-ghost");
     expect(newPost.meta_description).toBe("Description from ts-ghost");
@@ -510,7 +514,7 @@ describe("posts integration tests browse", () => {
     const api = new TSGhostAdminAPI(
       process.env.VITE_GHOST_URL!,
       "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-      "v5.0"
+      "v5.0",
     );
     expect(api.posts).toBeDefined();
     const result = await api.posts
@@ -535,7 +539,7 @@ describe("posts integration tests browse", () => {
     const api = new TSGhostAdminAPI(
       "https://codingdodoes.com",
       "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-      "v5.0"
+      "v5.0",
     );
     expect(api.posts).toBeDefined();
     const result = await api.posts
