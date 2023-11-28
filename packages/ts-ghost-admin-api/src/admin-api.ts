@@ -86,6 +86,15 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         include: pagesIncludeSchema,
         createSchema: adminPagesCreateSchema,
         updateSchema: adminPagesUpdateSchema,
+        updateOptionsSchema: z.object({
+          force_rerender: z.boolean().optional(),
+          save_revision: z.boolean().optional(),
+          convert_to_lexical: z.boolean().optional(),
+          source: z.literal("html").optional(),
+        }),
+        createOptionsSchema: z.object({
+          source: z.literal("html").optional(),
+        }),
       },
       this.httpClient,
     ).access(["browse", "read", "add", "edit", "delete"]);
