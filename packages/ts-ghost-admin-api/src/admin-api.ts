@@ -30,7 +30,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
   constructor(
     protected readonly url: string,
     protected readonly key: string,
-    protected readonly version: Version
+    protected readonly version: Version,
   ) {
     const apiCredentials = adminAPICredentialsSchema.parse({
       key,
@@ -56,8 +56,19 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         include: postsIncludeSchema,
         createSchema: adminPostsCreateSchema,
         updateSchema: adminPostsUpdateSchema,
+        updateOptionsSchema: z.object({
+          newsletter: z.string().optional(),
+          email_segment: z.string().optional(),
+          force_rerender: z.boolean().optional(),
+          save_revision: z.boolean().optional(),
+          convert_to_lexical: z.boolean().optional(),
+          source: z.literal("html").optional(),
+        }),
+        createOptionsSchema: z.object({
+          source: z.literal("html").optional(),
+        }),
       },
-      this.httpClient
+      this.httpClient,
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -76,7 +87,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminPagesCreateSchema,
         updateSchema: adminPagesUpdateSchema,
       },
-      this.httpClient
+      this.httpClient,
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -92,8 +103,12 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           send_email: z.boolean().optional(),
           email_type: z.union([z.literal("signin"), z.literal("subscribe"), z.literal("signup")]).optional(),
         }),
+        updateOptionsSchema: z.object({
+          send_email: z.boolean().optional(),
+          email_type: z.union([z.literal("signin"), z.literal("subscribe"), z.literal("signup")]).optional(),
+        }),
       },
-      this.httpClient
+      this.httpClient,
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -111,7 +126,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         include: tiersIncludeSchema,
         createSchema: adminTiersCreateSchema,
       },
-      this.httpClient
+      this.httpClient,
     ).access(["browse", "read"]); // for now tiers mutations don't really work in the admin api
   }
 
@@ -128,7 +143,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           opt_in_existing: z.boolean(),
         }),
       },
-      this.httpClient
+      this.httpClient,
     ).access(["browse", "read", "add", "edit"]);
   }
 
@@ -143,7 +158,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminOffersCreateSchema,
         updateSchema: adminOffersUpdateSchema,
       },
-      this.httpClient
+      this.httpClient,
     ).access(["browse", "read", "add", "edit"]);
   }
 
@@ -160,7 +175,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminTagsCreateSchema,
         updateSchema: adminTagsUpdateSchema,
       },
-      this.httpClient
+      this.httpClient,
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -173,7 +188,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         identitySchema: emailOrIdSchema,
         include: usersIncludeSchema,
       },
-      this.httpClient
+      this.httpClient,
     ).access(["browse", "read"]);
   }
 
@@ -187,7 +202,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminWebhookCreateSchema,
         updateSchema: adminWebhookUpdateSchema,
       },
-      this.httpClient
+      this.httpClient,
     ).access(["add", "edit", "delete"]);
   }
 
@@ -203,10 +218,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           z.object({
             key: z.string(),
             value: z.string().nullable().or(z.number().nullable()).or(z.boolean().nullable()),
-          })
+          }),
         ),
       },
-      this.httpClient
+      this.httpClient,
     );
   }
 }
