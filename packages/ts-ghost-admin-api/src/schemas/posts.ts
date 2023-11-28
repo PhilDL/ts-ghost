@@ -24,9 +24,15 @@ export const adminPostsSchema = basePostsSchema.merge(
       .nullish(),
     authors: z.array(adminAuthorsSchema),
     primary_author: adminAuthorsSchema,
+    lexical: z
+      .string()
+      .catch(
+        '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}',
+      )
+      .optional(),
     html: z.string().catch("").optional(),
     plaintext: z.string().catch("").optional(),
-  })
+  }),
 );
 
 export type Post = z.infer<typeof adminPostsSchema>;
@@ -93,7 +99,7 @@ export const adminPostsCreateSchema = z.object({
       ]),
       {
         description: `The tags associated with the post array of either slug, id or name`,
-      }
+      },
     )
     .optional(),
   tiers: z
@@ -111,7 +117,7 @@ export const adminPostsCreateSchema = z.object({
       ]),
       {
         description: `The tiers associated with the post array of either slug, id or name`,
-      }
+      },
     )
     .optional(),
   authors: z
@@ -129,7 +135,7 @@ export const adminPostsCreateSchema = z.object({
       ]),
       {
         description: `Specifing author via id, name or slug.`,
-      }
+      },
     )
     .optional(),
 });
@@ -139,7 +145,7 @@ export type CreatePost = z.infer<typeof adminPostsCreateSchema>;
 export const adminPostsUpdateSchema = adminPostsCreateSchema.partial({ title: true }).merge(
   z.object({
     updated_at: z.date().transform((val) => val.toISOString()),
-  })
+  }),
 );
 
 export type UpdatePost = z.infer<typeof adminPostsUpdateSchema>;

@@ -4,6 +4,7 @@ import { BrowseParamsSchema } from "../helpers/browse-params";
 import type { HTTPClient } from "../helpers/http-client";
 import { ghostMetaSchema, type APIResource } from "../schemas/shared";
 import type { Mask } from "../utils";
+import { contentFormats, type ContentFormats } from "./formats";
 
 export class BrowseFetcher<
   const Resource extends APIResource = any,
@@ -43,12 +44,12 @@ export class BrowseFetcher<
    * @param formats html, mobiledoc or plaintext
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
+  public formats<Formats extends Mask<Pick<OutputShape, ContentFormats>>>(
     formats: z.noUnrecognized<Formats, OutputShape>,
   ) {
     const params = {
       ...this._params,
-      formats: Object.keys(formats).filter((key) => ["html", "mobiledoc", "plaintext"].includes(key)),
+      formats: Object.keys(formats).filter((key) => contentFormats.includes(key)),
     };
     return new BrowseFetcher(
       this.resource,

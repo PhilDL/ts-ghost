@@ -23,7 +23,8 @@ export class APIComposer<
   IncludeShape extends ZodRawShape = any,
   CreateShape extends ZodTypeAny = any,
   CreateOptions extends ZodTypeAny = any,
-  UpdateShape extends ZodTypeAny = any
+  UpdateShape extends ZodTypeAny = any,
+  UpdateOptions extends ZodTypeAny = any,
 > {
   constructor(
     protected resource: Resource,
@@ -34,8 +35,9 @@ export class APIComposer<
       createSchema?: CreateShape;
       createOptionsSchema?: CreateOptions;
       updateSchema?: UpdateShape;
+      updateOptionsSchema?: UpdateOptions;
     },
-    protected httpClient: HTTPClient
+    protected httpClient: HTTPClient,
   ) {}
 
   /**
@@ -50,7 +52,7 @@ export class APIComposer<
       limit?: number | "all";
       page?: number | string;
       filter?: FilterStr;
-    }
+    },
   >(options?: BrowseParams<P, Shape & IncludeShape>) {
     return new BrowseFetcher(
       this.resource,
@@ -63,7 +65,7 @@ export class APIComposer<
         browseParams:
           (options && parseBrowseParams(options, this.config.schema, this.config.include)) || undefined,
       },
-      this.httpClient
+      this.httpClient,
     );
   }
 
@@ -82,7 +84,7 @@ export class APIComposer<
       {
         identity: this.config.identitySchema.parse(options),
       },
-      this.httpClient
+      this.httpClient,
     );
   }
 
@@ -103,7 +105,7 @@ export class APIComposer<
       },
       parsedOptions,
       { method: "POST", body: parsedData },
-      this.httpClient
+      this.httpClient,
     );
     return fetcher.submit();
   }
@@ -111,7 +113,7 @@ export class APIComposer<
   public async edit(
     id: string,
     data: IsAny<UpdateShape> extends true ? Partial<z.input<CreateShape>> : z.input<UpdateShape>,
-    options?: z.infer<CreateOptions>
+    options?: z.infer<UpdateOptions>,
   ) {
     let updateSchema: z.ZodTypeAny | z.ZodObject<any> | undefined = this.config.updateSchema;
     if (!this.config.updateSchema && this.config.createSchema && isZodObject(this.config.createSchema)) {
@@ -123,7 +125,7 @@ export class APIComposer<
     const cleanId = z.string().nonempty().parse(id);
     const parsedData = updateSchema.parse(data);
     const parsedOptions =
-      this.config.createOptionsSchema && options ? this.config.createOptionsSchema.parse(options) : {};
+      this.config.updateOptionsSchema && options ? this.config.updateOptionsSchema.parse(options) : {};
 
     if (Object.keys(parsedData).length === 0) {
       throw new Error("No data to edit");
@@ -132,11 +134,11 @@ export class APIComposer<
       this.resource,
       {
         output: this.config.schema,
-        paramsShape: this.config.createOptionsSchema,
+        paramsShape: this.config.updateOptionsSchema,
       },
       { id: cleanId, ...parsedOptions },
       { method: "PUT", body: parsedData },
-      this.httpClient
+      this.httpClient,
     );
     return fetcher.submit();
   }
