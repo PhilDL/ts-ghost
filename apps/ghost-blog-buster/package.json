@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster"
   },
-  "version": "0.6.13",
+  "version": "0.6.14",
   "main": "./dist/cli.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -55,7 +55,7 @@
   "dependencies": {
     "@clack/core": "^0.3.3",
     "@clack/prompts": "^0.7.0",
-    "@ts-ghost/admin-api": "^3.0.10",
+    "@ts-ghost/admin-api": "^4.0.0",
     "@ts-ghost/content-api": "^4.0.10",
     "configstore": "^6.0.0",
     "js-yaml": "^4.1.0",

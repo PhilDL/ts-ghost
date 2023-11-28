@@ -1,5 +1,12 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.14
+
+### Patch Changes
+
+- Updated dependencies [0631a22]
+  - @ts-ghost/admin-api@4.0.0
+
 ## 0.6.13
 
 ### Patch Changes
