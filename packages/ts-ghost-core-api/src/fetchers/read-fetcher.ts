@@ -3,13 +3,14 @@ import { z, ZodRawShape } from "zod";
 import type { HTTPClient } from "../helpers/http-client";
 import { type APIResource, type GhostIdentityInput } from "../schemas/shared";
 import type { Mask } from "../utils";
+import { contentFormats, type ContentFormats } from "./formats";
 
 export class ReadFetcher<
   const Resource extends APIResource = any,
   Fields extends Mask<OutputShape> = any,
   BaseShape extends ZodRawShape = any,
   OutputShape extends ZodRawShape = any,
-  IncludeShape extends ZodRawShape = any
+  IncludeShape extends ZodRawShape = any,
 > {
   protected _urlParams: Record<string, string> = {};
   protected _urlSearchParams: URLSearchParams | undefined = undefined;
@@ -29,7 +30,7 @@ export class ReadFetcher<
       fields?: Fields;
       formats?: string[];
     },
-    protected httpClient: HTTPClient
+    protected httpClient: HTTPClient,
   ) {
     this._buildUrlParams();
   }
@@ -42,12 +43,12 @@ export class ReadFetcher<
    * @param formats html, mobiledoc or plaintext
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public formats<Formats extends Mask<Pick<OutputShape, "html" | "mobiledoc" | "plaintext">>>(
-    formats: z.noUnrecognized<Formats, OutputShape>
+  public formats<Formats extends Mask<Pick<OutputShape, ContentFormats>>>(
+    formats: z.noUnrecognized<Formats, OutputShape>,
   ) {
     const params = {
       ...this._params,
-      formats: Object.keys(formats).filter((key) => ["html", "mobiledoc", "plaintext"].includes(key)),
+      formats: Object.keys(formats).filter((key) => contentFormats.includes(key)),
     };
     return new ReadFetcher(
       this.resource,
@@ -57,7 +58,7 @@ export class ReadFetcher<
         include: this.config.include,
       },
       params,
-      this.httpClient
+      this.httpClient,
     );
   }
 
@@ -82,7 +83,7 @@ export class ReadFetcher<
         include: this.config.include,
       },
       params,
-      this.httpClient
+      this.httpClient,
     );
   }
 
@@ -103,7 +104,7 @@ export class ReadFetcher<
         include: this.config.include,
       },
       this._params,
-      this.httpClient
+      this.httpClient,
     );
   }
 
@@ -168,7 +169,7 @@ export class ReadFetcher<
           z.object({
             type: z.string(),
             message: z.string(),
-          })
+          }),
         ),
       }),
     ]);

@@ -230,7 +230,7 @@ describe("posts integration tests browse", () => {
         limit: 1,
         order: "created_at ASC",
       })
-      .formats({ html: true, plaintext: true })
+      .formats({ html: true, plaintext: true, lexical: true })
       .fetch();
 
     assert(result.success);
@@ -241,6 +241,7 @@ describe("posts integration tests browse", () => {
     expect(post.slug).toBe(stubPost.slug);
     expect(post.title).toBe(stubPost.title);
     expect(post.html).toBeDefined();
+    expect(post.lexical).toBeDefined();
     expect(post.comment_id).toBe(stubPost.comment_id);
     expect(post.feature_image).toBe(stubPost.feature_image);
     expect(post.featured).toBe(stubPost.featured);
