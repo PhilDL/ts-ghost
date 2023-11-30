@@ -13,9 +13,10 @@ export const baseEmailSchema = z.object({
   failed_count: z.number(),
   subject: z.string(),
   from: z.string(),
-  reply_to: z.string(),
-  html: z.string(),
-  plaintext: z.string(),
+  reply_to: z.string().nullable(),
+  source: z.string(), // lexical format
+  html: z.string().nullable(),
+  plaintext: z.string().nullable(),
   track_opens: z.boolean(),
   submitted_at: z.string(),
   created_at: z.string(),
