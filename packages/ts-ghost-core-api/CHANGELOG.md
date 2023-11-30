@@ -1,5 +1,14 @@
 # @ts-ghost/core-api
 
+## 5.1.1
+
+### Patch Changes
+
+- ae993f6: fix bug of parsing response when publishing a post with a newsletter. The email object was not correct, schema was out of date with the new lexical norm:
+
+  - `plaintext`, `html` are now nullable
+  - `source` is a new string containing the lexical tree
+
 ## 5.1.0
 
 ### Minor Changes
