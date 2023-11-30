@@ -338,7 +338,7 @@ importers:
         version: 1.20.0
       tsup:
         specifier: ^8.0.0
-        version: 8.0.1(typescript@5.3.2)
+        version: 8.0.1(ts-node@10.9.1)(typescript@5.3.2)
       typescript:
         specifier: 5.3.2
         version: 5.3.2
@@ -378,7 +378,7 @@ importers:
         version: 1.20.0
       tsup:
         specifier: ^8.0.0
-        version: 8.0.1(typescript@5.3.2)
+        version: 8.0.1(ts-node@10.9.1)(typescript@5.3.2)
       typescript:
         specifier: 5.3.2
         version: 5.3.2
@@ -398,8 +398,8 @@ importers:
   packages/ts-ghost-core-api:
     dependencies:
       jose:
-        specifier: ^4.15.4
-        version: 4.15.4
+        specifier: ^5.0.0
+        version: 5.1.2
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -418,7 +418,7 @@ importers:
         version: 8.51.0
       tsup:
         specifier: ^8.0.0
-        version: 8.0.1(typescript@5.3.2)
+        version: 8.0.1(ts-node@10.9.1)(typescript@5.3.2)
       typescript:
         specifier: 5.3.2
         version: 5.3.2
@@ -7204,8 +7204,8 @@ packages:
     resolution: {integrity: sha512-3TV69ZbrvV6U5DfQimop50jE9Dl6J8O1ja1dvBbMba/sZ3YBEQqJ2VZRoQPVnhlzjNtU1vaXRZVrVjU4qtm8yA==}
     hasBin: true
 
-  /jose@4.15.4:
-    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+  /jose@5.1.2:
+    resolution: {integrity: sha512-X7TOC/d8KPvx4wPUuLHVgTSdoWw0UW5TQOUwhvCvj+ZPfsf9vUPhhksYPjNBWVGPQ/6yd/JrL1gQxBnIDwYdFg==}
     dev: false
 
   /joycon@3.1.1:
@@ -10828,45 +10828,6 @@ packages:
       globby: 11.1.0
       joycon: 3.1.1
       postcss-load-config: 4.0.1(ts-node@10.9.1)
-      resolve-from: 5.0.0
-      rollup: 4.6.0
-      source-map: 0.8.0-beta.0
-      sucrase: 3.34.0
-      tree-kill: 1.2.2
-      typescript: 5.3.2
-    transitivePeerDependencies:
-      - supports-color
-      - ts-node
-    dev: true
-
-  /tsup@8.0.1(typescript@5.3.2):
-    resolution: {integrity: sha512-hvW7gUSG96j53ZTSlT4j/KL0q1Q2l6TqGBFc6/mu/L46IoNWqLLUzLRLP1R8Q7xrJTmkDxxDoojV5uCVs1sVOg==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      '@microsoft/api-extractor': ^7.36.0
-      '@swc/core': ^1
-      postcss: ^8.4.12
-      typescript: '>=4.5.0'
-    peerDependenciesMeta:
-      '@microsoft/api-extractor':
-        optional: true
-      '@swc/core':
-        optional: true
-      postcss:
-        optional: true
-      typescript:
-        optional: true
-    dependencies:
-      bundle-require: 4.0.1(esbuild@0.19.8)
-      cac: 6.7.14
-      chokidar: 3.5.3
-      debug: 4.3.4
-      esbuild: 0.19.8
-      execa: 5.1.1
-      globby: 11.1.0
-      joycon: 3.1.1
-      postcss-load-config: 4.0.1(postcss@8.4.31)
       resolve-from: 5.0.0
       rollup: 4.6.0
       source-map: 0.8.0-beta.0
