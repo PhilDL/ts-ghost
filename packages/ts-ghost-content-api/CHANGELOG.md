@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 4.0.11
+
+### Patch Changes
+
+- 53d86aa: Upgrade jose dep and admin-api minor fix for post email publishing
+- Updated dependencies [53d86aa]
+  - @ts-ghost/core-api@5.1.2
+
 ## 4.0.10
 
 ### Patch Changes

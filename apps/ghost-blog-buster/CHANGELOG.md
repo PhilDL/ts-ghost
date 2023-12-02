@@ -1,5 +1,14 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.15
+
+### Patch Changes
+
+- 53d86aa: Upgrade jose dep and admin-api minor fix for post email publishing
+- Updated dependencies [53d86aa]
+  - @ts-ghost/content-api@4.0.11
+  - @ts-ghost/admin-api@4.0.1
+
 ## 0.6.14
 
 ### Patch Changes
