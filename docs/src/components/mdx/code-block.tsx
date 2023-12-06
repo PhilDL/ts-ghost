@@ -58,8 +58,11 @@ export function Codeblock(props: CodeblockProps) {
       </button>
       <pre
         ref={ref}
-        className="bg-muted text-muted-foreground relative my-4 overflow-x-auto rounded-lg border p-4 font-mono text-sm font-semibold"
         {...rest}
+        className={cn(
+          rest.className,
+          "bg-muted text-muted-foreground relative my-4 overflow-x-auto rounded-lg border p-4 font-mono text-sm font-semibold",
+        )}
       >
         {children}
       </pre>
