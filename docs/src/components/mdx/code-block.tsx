@@ -61,7 +61,7 @@ export function Codeblock(props: CodeblockProps) {
         {...rest}
         className={cn(
           rest.className,
-          "bg-muted text-muted-foreground relative my-4 overflow-x-auto rounded-lg border p-4 font-mono text-sm font-semibold",
+          "text-muted-foreground relative my-4 overflow-x-auto rounded-lg border bg-slate-950 p-4 font-mono text-sm font-semibold",
         )}
       >
         {children}

@@ -37,7 +37,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     td: (props) => <td className="p-2" {...props} />,
     code: (props) => (
       <code
-        className="bg-muted text-muted-foreground relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold"
+        className="text-muted-foreground relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold"
         {...props}
       />
     ),
