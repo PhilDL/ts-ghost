@@ -4,7 +4,7 @@
 import withMdx from "@next/mdx";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
-import { getHighlighter } from "shiki";
+import { getHighlighter } from "shikiji";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -19,23 +19,23 @@ export default withMdx({
         rehypePrettyCode,
         /** @type {import("rehype-pretty-code").Options} */
         ({
-          theme: { dark: "poimandres", light: "min-light" },
+          theme: "nord",
           keepBackground: false,
           getHighlighter,
-          onVisitLine(node) {
-            // Prevent lines from collapsing in `display: grid` mode, and allow empty
-            // lines to be copy/pasted
-            if (node.children.length === 0) {
-              node.children = [{ type: "text", value: " " }];
-            }
-          },
-          onVisitHighlightedLine(node) {
-            node.properties.className.push("line--highlighted");
-          },
-          onVisitHighlightedWord(node, id) {
-            node.properties.className = ["word"];
-            node.properties["data-word-id"] = id;
-          },
+          // onVisitLine(node) {
+          //   // Prevent lines from collapsing in `display: grid` mode, and allow empty
+          //   // lines to be copy/pasted
+          //   if (node.children.length === 0) {
+          //     node.children = [{ type: "text", value: " " }];
+          //   }
+          // },
+          // onVisitHighlightedLine(node) {
+          //   node.properties.className.push("line--highlighted");
+          // },
+          // onVisitHighlightedWord(node, id) {
+          //   node.properties.className = ["word"];
+          //   node.properties["data-word-id"] = id;
+          // },
         }),
       ],
     ],
