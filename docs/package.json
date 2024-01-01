@@ -15,7 +15,7 @@
     "@vercel/analytics": "^1.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "lucide-react": "0.299.0",
+    "lucide-react": "0.303.0",
     "next": "^14.0.4",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@types/mdx": "^2.0.10",
     "@types/node": "^20.10.5",
-    "@types/react": "18.2.45",
+    "@types/react": "18.2.46",
     "@types/react-dom": "18.2.18",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.56.0",
