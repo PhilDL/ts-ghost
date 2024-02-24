@@ -38,6 +38,18 @@ export interface IHTTPClient {
   }): Promise<Response>;
 }
 
+export interface IHTTPClientFactory {
+  create(config: HTTPClientOptions): HTTPClient;
+}
+
+export class HTTPClientFactory implements IHTTPClientFactory {
+  constructor(private config: HTTPClientOptions) {}
+
+  public create() {
+    return new HTTPClient(this.config);
+  }
+}
+
 export class HTTPClient<const Options extends HTTPClientOptions = any> implements IHTTPClient {
   private _jwt: string | undefined;
   private _jwtExpiresAt: number | undefined;
@@ -69,7 +81,7 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
       .setIssuedAt()
       .setAudience("/admin/")
       .sign(
-        Uint8Array.from((_secret.match(/.{1,2}/g) as RegExpMatchArray).map((byte) => parseInt(byte, 16)))
+        Uint8Array.from((_secret.match(/.{1,2}/g) as RegExpMatchArray).map((byte) => parseInt(byte, 16))),
       );
   }
 

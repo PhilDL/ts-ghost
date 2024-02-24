@@ -2,7 +2,7 @@ import {
   APIComposer,
   BasicFetcher,
   contentAPICredentialsSchema,
-  HTTPClient,
+  HTTPClientFactory,
   slugOrIdSchema,
 } from "@ts-ghost/core-api";
 
@@ -25,19 +25,19 @@ export enum BrowseEndpointType {
 }
 
 export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
-  private httpClient: HTTPClient;
+  private HTTPClientFactoryFactory: HTTPClientFactory;
 
   constructor(
     protected readonly url: string,
     protected readonly key: string,
-    protected readonly version: Version
+    protected readonly version: Version,
   ) {
     const apiCredentials = contentAPICredentialsSchema.parse({
       key,
       version,
       url,
     });
-    this.httpClient = new HTTPClient({
+    this.HTTPClientFactoryFactory = new HTTPClientFactory({
       ...apiCredentials,
       endpoint: "content",
     });
@@ -51,14 +51,14 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: authorsIncludeSchema,
       },
-      this.httpClient
+      this.HTTPClientFactoryFactory,
     ).access(["read", "browse"]);
   }
   get tiers() {
     return new APIComposer(
       "tiers",
       { schema: tiersSchema, identitySchema: slugOrIdSchema, include: tiersIncludeSchema },
-      this.httpClient
+      this.HTTPClientFactoryFactory,
     ).access(["browse", "read"]);
   }
   get posts() {
@@ -69,7 +69,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: postsIncludeSchema,
       },
-      this.httpClient
+      this.HTTPClientFactoryFactory,
     ).access(["browse", "read"]);
   }
   get pages() {
@@ -80,18 +80,18 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: pagesIncludeSchema,
       },
-      this.httpClient
+      this.HTTPClientFactoryFactory,
     ).access(["browse", "read"]);
   }
   get tags() {
     return new APIComposer(
       "tags",
       { schema: tagsSchema, identitySchema: slugOrIdSchema, include: tagsIncludeSchema },
-      this.httpClient
+      this.HTTPClientFactoryFactory,
     ).access(["browse", "read"]);
   }
 
   get settings() {
-    return new BasicFetcher("settings", { output: settingsSchema }, this.httpClient);
+    return new BasicFetcher("settings", { output: settingsSchema }, this.HTTPClientFactoryFactory.create());
   }
 }

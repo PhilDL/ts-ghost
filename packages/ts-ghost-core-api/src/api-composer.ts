@@ -5,7 +5,7 @@ import { BrowseFetcher } from "./fetchers/browse-fetcher";
 import { MutationFetcher } from "./fetchers/mutation-fetcher";
 import { ReadFetcher } from "./fetchers/read-fetcher";
 import { parseBrowseParams, type BrowseParams } from "./helpers/browse-params";
-import type { HTTPClient } from "./helpers/http-client";
+import type { HTTPClientFactory } from "./helpers/http-client";
 import type { APIResource } from "./schemas";
 import type { IsAny } from "./utils";
 
@@ -37,7 +37,7 @@ export class APIComposer<
       updateSchema?: UpdateShape;
       updateOptionsSchema?: UpdateOptions;
     },
-    protected httpClient: HTTPClient,
+    protected httpClientFactory: HTTPClientFactory,
   ) {}
 
   /**
@@ -65,7 +65,7 @@ export class APIComposer<
         browseParams:
           (options && parseBrowseParams(options, this.config.schema, this.config.include)) || undefined,
       },
-      this.httpClient,
+      this.httpClientFactory.create(),
     );
   }
 
@@ -84,7 +84,7 @@ export class APIComposer<
       {
         identity: this.config.identitySchema.parse(options),
       },
-      this.httpClient,
+      this.httpClientFactory.create(),
     );
   }
 
@@ -105,7 +105,7 @@ export class APIComposer<
       },
       parsedOptions,
       { method: "POST", body: parsedData },
-      this.httpClient,
+      this.httpClientFactory.create(),
     );
     return fetcher.submit();
   }
@@ -138,14 +138,14 @@ export class APIComposer<
       },
       { id: cleanId, ...parsedOptions },
       { method: "PUT", body: parsedData },
-      this.httpClient,
+      this.httpClientFactory.create(),
     );
     return fetcher.submit();
   }
 
   public async delete(id: string) {
     const cleanId = z.string().nonempty().parse(id);
-    const fetcher = new DeleteFetcher(this.resource, { id: cleanId }, this.httpClient);
+    const fetcher = new DeleteFetcher(this.resource, { id: cleanId }, this.httpClientFactory.create());
     return fetcher.submit();
   }
 
