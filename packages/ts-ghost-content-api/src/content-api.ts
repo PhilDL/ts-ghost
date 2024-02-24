@@ -25,21 +25,21 @@ export enum BrowseEndpointType {
 }
 
 export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
-  private httpClient: HTTPClient;
+  private credentials: {
+    url: string;
+    key: string;
+    version: string;
+  };
 
   constructor(
     protected readonly url: string,
     protected readonly key: string,
-    protected readonly version: Version
+    protected readonly version: Version,
   ) {
-    const apiCredentials = contentAPICredentialsSchema.parse({
+    this.credentials = contentAPICredentialsSchema.parse({
       key,
       version,
       url,
-    });
-    this.httpClient = new HTTPClient({
-      ...apiCredentials,
-      endpoint: "content",
     });
   }
 
@@ -51,14 +51,20 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: authorsIncludeSchema,
       },
-      this.httpClient
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "content",
+      }),
     ).access(["read", "browse"]);
   }
   get tiers() {
     return new APIComposer(
       "tiers",
       { schema: tiersSchema, identitySchema: slugOrIdSchema, include: tiersIncludeSchema },
-      this.httpClient
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "content",
+      }),
     ).access(["browse", "read"]);
   }
   get posts() {
@@ -69,7 +75,10 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: postsIncludeSchema,
       },
-      this.httpClient
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "content",
+      }),
     ).access(["browse", "read"]);
   }
   get pages() {
@@ -80,18 +89,31 @@ export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
         identitySchema: slugOrIdSchema,
         include: pagesIncludeSchema,
       },
-      this.httpClient
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "content",
+      }),
     ).access(["browse", "read"]);
   }
   get tags() {
     return new APIComposer(
       "tags",
       { schema: tagsSchema, identitySchema: slugOrIdSchema, include: tagsIncludeSchema },
-      this.httpClient
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "content",
+      }),
     ).access(["browse", "read"]);
   }
 
   get settings() {
-    return new BasicFetcher("settings", { output: settingsSchema }, this.httpClient);
+    return new BasicFetcher(
+      "settings",
+      { output: settingsSchema },
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "content",
+      }),
+    );
   }
 }

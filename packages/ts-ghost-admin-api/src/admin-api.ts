@@ -25,21 +25,21 @@ import { adminWebhookCreateSchema, adminWebhookSchema, adminWebhookUpdateSchema 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
 
 export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
-  private httpClient: HTTPClient;
+  private credentials: {
+    key: string;
+    version: string;
+    url: string;
+  };
 
   constructor(
     protected readonly url: string,
     protected readonly key: string,
     protected readonly version: Version,
   ) {
-    const apiCredentials = adminAPICredentialsSchema.parse({
+    this.credentials = adminAPICredentialsSchema.parse({
       key,
       version,
       url,
-    });
-    this.httpClient = new HTTPClient({
-      ...apiCredentials,
-      endpoint: "admin",
     });
   }
   get posts() {
@@ -68,7 +68,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           source: z.literal("html").optional(),
         }),
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -96,7 +99,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           source: z.literal("html").optional(),
         }),
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -117,7 +123,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           email_type: z.union([z.literal("signin"), z.literal("subscribe"), z.literal("signup")]).optional(),
         }),
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -135,7 +144,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         include: tiersIncludeSchema,
         createSchema: adminTiersCreateSchema,
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["browse", "read"]); // for now tiers mutations don't really work in the admin api
   }
 
@@ -152,7 +164,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           opt_in_existing: z.boolean(),
         }),
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["browse", "read", "add", "edit"]);
   }
 
@@ -167,7 +182,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminOffersCreateSchema,
         updateSchema: adminOffersUpdateSchema,
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["browse", "read", "add", "edit"]);
   }
 
@@ -184,7 +202,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminTagsCreateSchema,
         updateSchema: adminTagsUpdateSchema,
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -197,7 +218,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         identitySchema: emailOrIdSchema,
         include: usersIncludeSchema,
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["browse", "read"]);
   }
 
@@ -211,12 +235,22 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminWebhookCreateSchema,
         updateSchema: adminWebhookUpdateSchema,
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     ).access(["add", "edit", "delete"]);
   }
 
   get site() {
-    return new BasicFetcher("site", { output: baseSiteSchema }, this.httpClient);
+    return new BasicFetcher(
+      "site",
+      { output: baseSiteSchema },
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
+    );
   }
 
   get settings() {
@@ -230,7 +264,10 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           }),
         ),
       },
-      this.httpClient,
+      new HTTPClient({
+        ...this.credentials,
+        endpoint: "admin",
+      }),
     );
   }
 }
