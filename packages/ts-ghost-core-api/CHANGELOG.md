@@ -1,5 +1,41 @@
 # @ts-ghost/core-api
 
+## 6.0.0
+
+### Major Changes
+
+- 5544e8a: API Composer now require an HTTPClientFactory instead of a HTTPClient.
+
+  Passing directly an instanciated HTTPClient was creating a lot of issues with the HttpClient lifecycle. Now, you need to pass a factory that will be used to create a new HttpClient for each request.
+
+  The HTTPClientFactory takes the same parameters as the HttpClient constructor, so you can pass the same configuration.
+
+  ```typescript
+  export type HTTPClientOptions = {
+    key: string;
+    version: APICredentials["version"];
+    url: APICredentials["url"];
+    endpoint: "content" | "admin";
+  };
+
+  export interface IHTTPClientFactory {
+    create(config: HTTPClientOptions): HTTPClient;
+  }
+
+  export class HTTPClientFactory implements IHTTPClientFactory {
+    constructor(private config: HTTPClientOptions) {}
+
+    public create() {
+      return new HTTPClient(this.config);
+    }
+  }
+  ```
+
+### Minor Changes
+
+- 5544e8a: Internals change of the API Composer instantiation to use the new HTTPClientFactory instead of direct instances.
+  There is no user-level change required.
+
 ## 5.1.2
 
 ### Patch Changes
@@ -27,26 +63,26 @@
 
   ```ts
   return new APIComposer(
-      "posts",
-      {
+    "posts",
+    {
       schema: adminPostsSchema,
       identitySchema: slugOrIdSchema,
       include: postsIncludeSchema,
       createSchema: adminPostsCreateSchema,
       updateSchema: adminPostsUpdateSchema,
       updateOptionsSchema: z.object({
-          newsletter: z.string().optional(),
-          email_segment: z.string().optional(),
-          force_rerender: z.boolean().optional(),
-          save_revision: z.boolean().optional(),
-          convert_to_lexical: z.boolean().optional(),
-          source: z.literal("html").optional(),
+        newsletter: z.string().optional(),
+        email_segment: z.string().optional(),
+        force_rerender: z.boolean().optional(),
+        save_revision: z.boolean().optional(),
+        convert_to_lexical: z.boolean().optional(),
+        source: z.literal("html").optional(),
       }),
       createOptionsSchema: z.object({
-          source: z.literal("html").optional(),
+        source: z.literal("html").optional(),
       }),
-      },
-      this.httpClient,
+    },
+    this.httpClient,
   ).access(["browse", "read", "add", "edit", "delete"]);
   ```
 
@@ -200,52 +236,56 @@
 
   ```ts
   // example for the browse query (the data is an array of objects)
-  const result: {
-      status: "success";
-      data: Post[];
-      meta: {
+  const result:
+    | {
+        status: "success";
+        data: Post[];
+        meta: {
           pagination: {
-              pages: number;
-              limit: number;
-              page: number;
-              total: number;
-              prev: number | null;
-              next: number | null;
+            pages: number;
+            limit: number;
+            page: number;
+            total: number;
+            prev: number | null;
+            next: number | null;
           };
-      };
-  } | {
-      status: "error";
-      errors: {
+        };
+      }
+    | {
+        status: "error";
+        errors: {
           message: string;
           type: string;
-      }[];
-  }
+        }[];
+      };
   ```
 
   ### After
 
   ```ts
   // example for the browse query (the data is an array of objects)
-  const result: {
-      success: true;
-      data: Post[];
-      meta: {
+  const result:
+    | {
+        success: true;
+        data: Post[];
+        meta: {
           pagination: {
-              pages: number;
-              limit: number;
-              page: number;
-              total: number;
-              prev: number | null;
-              next: number | null;
+            pages: number;
+            limit: number;
+            page: number;
+            total: number;
+            prev: number | null;
+            next: number | null;
           };
-      };
-  } | {
-      success: false;
-      errors: {
+        };
+      }
+    | {
+        success: false;
+        errors: {
           message: string;
           type: string;
-      }[];
-  }
+        }[];
+      };
   ```
 
   It is now easier to check if the result is a success or an error:
@@ -373,7 +413,7 @@
       identitySchema: slugOrIdSchema,
       include: postsIncludeSchema,
     },
-    api
+    api,
   );
   ```
 
@@ -390,7 +430,7 @@
       identitySchema: slugOrIdSchema,
       include: postsIncludeSchema,
     },
-    api
+    api,
   ).access(["read", "browse"]);
   ```
 
@@ -427,14 +467,21 @@
   });
 
   // the "identity" schema is used to validate the inputs of the `read`method of the QueryBuilder
-  const identitySchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
+  const identitySchema = z.union([
+    z.object({ slug: z.string() }),
+    z.object({ id: z.string() }),
+  ]);
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),
   });
 
   const qb = new QueryBuilder(
-    { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
+    {
+      schema: simplifiedSchema,
+      identitySchema: identitySchema,
+      include: simplifiedIncludeSchema,
+    },
     api,
   );
   ```
@@ -557,7 +604,9 @@
   Given a fetcher, it will predict the data shape type, before calling `fetch()` or `paginate()`
 
   ```ts
-  const exampleQuery = api.users.read({ id: "1" }).fields({ id: true, name: true, email: true });
+  const exampleQuery = api.users
+    .read({ id: "1" })
+    .fields({ id: true, name: true, email: true });
   export type ExampleQueryOutput = InferFetcherDataShape<typeof exampleQuery>;
   ```
 
@@ -581,7 +630,11 @@
 
   ```ts
   const qb = new QueryBuilder(
-    { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+    {
+      schema: simplifiedSchema,
+      output: simplifiedSchema,
+      include: simplifiedIncludeSchema,
+    },
     api,
   );
   let query = qb.browse({
@@ -615,7 +668,11 @@
 
   ```ts
   const qb = new QueryBuilder(
-    { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
+    {
+      schema: simplifiedSchema,
+      output: simplifiedSchema,
+      include: simplifiedIncludeSchema,
+    },
     api,
   );
   let browseQuery = qb
