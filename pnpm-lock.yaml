@@ -306,7 +306,7 @@ importers:
   packages/ts-ghost-admin-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^5.1.2
+        specifier: ^6.0.0
         version: link:../ts-ghost-core-api
       validator:
         specifier: ^13.11.0
@@ -355,7 +355,7 @@ importers:
   packages/ts-ghost-content-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^5.1.2
+        specifier: ^6.0.0
         version: link:../ts-ghost-core-api
       zod:
         specifier: ^3.22.4

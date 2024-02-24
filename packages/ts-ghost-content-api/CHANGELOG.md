@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 4.0.12
+
+### Patch Changes
+
+- Updated dependencies [5544e8a]
+- Updated dependencies [5544e8a]
+  - @ts-ghost/core-api@6.0.0
+
 ## 4.0.11
 
 ### Patch Changes
@@ -211,52 +219,56 @@
 
   ```ts
   // example for the browse query (the data is an array of objects)
-  const result: {
-      status: "success";
-      data: Post[];
-      meta: {
+  const result:
+    | {
+        status: "success";
+        data: Post[];
+        meta: {
           pagination: {
-              pages: number;
-              limit: number;
-              page: number;
-              total: number;
-              prev: number | null;
-              next: number | null;
+            pages: number;
+            limit: number;
+            page: number;
+            total: number;
+            prev: number | null;
+            next: number | null;
           };
-      };
-  } | {
-      status: "error";
-      errors: {
+        };
+      }
+    | {
+        status: "error";
+        errors: {
           message: string;
           type: string;
-      }[];
-  }
+        }[];
+      };
   ```
 
   #### After
 
   ```ts
   // example for the browse query (the data is an array of objects)
-  const result: {
-      success: true;
-      data: Post[];
-      meta: {
+  const result:
+    | {
+        success: true;
+        data: Post[];
+        meta: {
           pagination: {
-              pages: number;
-              limit: number;
-              page: number;
-              total: number;
-              prev: number | null;
-              next: number | null;
+            pages: number;
+            limit: number;
+            page: number;
+            total: number;
+            prev: number | null;
+            next: number | null;
           };
-      };
-  } | {
-      success: false;
-      errors: {
+        };
+      }
+    | {
+        success: false;
+        errors: {
           message: string;
           type: string;
-      }[];
-  }
+        }[];
+      };
   ```
 
   It is now easier to check if the result is a success or an error:
@@ -301,7 +313,10 @@
   - The `members` resource now have a `add` and `edit` method that allow them to be created and updated.
 
   ```ts
-  const createNewMember = await api.members.add({ email: "abcdefgh@msn.com" }, { send_email: true });
+  const createNewMember = await api.members.add(
+    { email: "abcdefgh@msn.com" },
+    { send_email: true },
+  );
   assert(createNewMember.success);
   const newMember = createNewMember.data;
   // id => 6438cc365a8fdb00013a8783
