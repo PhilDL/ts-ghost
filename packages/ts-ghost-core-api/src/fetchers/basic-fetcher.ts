@@ -9,7 +9,7 @@ export class BasicFetcher<const Resource extends APIResource = any, OutputShape 
     protected config: {
       output: OutputShape;
     },
-    protected httpClient: HTTPClient
+    protected httpClient: HTTPClient,
   ) {}
 
   public getResource() {
@@ -28,7 +28,7 @@ export class BasicFetcher<const Resource extends APIResource = any, OutputShape 
           z.object({
             type: z.string(),
             message: z.string(),
-          })
+          }),
         ),
       }),
     ]);

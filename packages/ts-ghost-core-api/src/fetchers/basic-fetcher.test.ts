@@ -36,7 +36,7 @@ describe("BasicFetcher", () => {
           foo: "foo",
           bar: "eaoizdjoa1321123",
         },
-      })
+      }),
     );
     const result = await fetcher.fetch();
 
@@ -69,7 +69,7 @@ describe("BasicFetcher", () => {
             message: "error message",
           },
         ],
-      })
+      }),
     );
 
     const result = await fetcher.fetch();

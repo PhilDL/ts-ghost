@@ -5,7 +5,7 @@ import { z } from "zod";
 import { APIComposer } from "./api-composer";
 import { BrowseFetcher, ReadFetcher } from "./fetchers";
 import type { BrowseParams } from "./helpers/browse-params";
-import { HTTPClient, HTTPClientOptions } from "./helpers/http-client";
+import { HTTPClientFactory, HTTPClientOptions } from "./helpers/http-client";
 
 const fetchMocker = createFetchMock(vi);
 
@@ -16,7 +16,7 @@ describe("APIComposer Read / Browse", () => {
     version: "v5.0",
     endpoint: "content",
   };
-  let httpClient: HTTPClient;
+  let httpClientFactory: HTTPClientFactory;
 
   const simplifiedSchema = z.object({
     foo: z.string(),
@@ -37,7 +37,7 @@ describe("APIComposer Read / Browse", () => {
   ]);
 
   beforeEach(() => {
-    httpClient = new HTTPClient(credentials);
+    httpClientFactory = new HTTPClientFactory(credentials);
     fetchMocker.enableMocks();
   });
   afterEach(() => {
@@ -48,7 +48,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClient,
+      httpClientFactory,
     );
     expect(composer).toBeDefined();
     expect(composer.browse()).toBeInstanceOf(BrowseFetcher);
@@ -65,7 +65,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClient,
+      new HTTPClientFactory(credentials),
     );
     test("pagination params", () => {
       expect(
@@ -102,7 +102,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClient,
+      new HTTPClientFactory(credentials),
     );
     test("order params should accept a string with correct fields", () => {
       expect(
@@ -164,7 +164,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClient,
+      new HTTPClientFactory(credentials),
     );
     test("filter params should accept a string with correct fields", () => {
       expect(
@@ -226,7 +226,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClient,
+      new HTTPClientFactory(credentials),
     );
     test("identity read fields params should only accept key from the identity read schema", () => {
       expect(
@@ -256,7 +256,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClient,
+      new HTTPClientFactory(credentials),
     );
     test("include params should only accept key from the include schema", () => {
       expect(composer.browse()).toBeInstanceOf(BrowseFetcher);
@@ -272,7 +272,7 @@ describe("APIComposer add / edit", () => {
     version: "v5.0",
     endpoint: "content",
   };
-  let httpClient: HTTPClient;
+  let httpClientFactory: HTTPClientFactory;
 
   const simplifiedSchema = z.object({
     id: z.string(),
@@ -300,7 +300,7 @@ describe("APIComposer add / edit", () => {
   });
 
   beforeEach(() => {
-    httpClient = new HTTPClient(credentials);
+    httpClientFactory = new HTTPClientFactory(credentials);
     fetchMocker.enableMocks();
     fetchMocker.enableMocks();
   });
@@ -326,7 +326,7 @@ describe("APIComposer add / edit", () => {
           update_option_1: z.boolean(),
         }),
       },
-      httpClient,
+      httpClientFactory,
     );
     expect(composer).toBeDefined();
     expect(composer.browse()).toBeInstanceOf(BrowseFetcher);
@@ -367,7 +367,7 @@ describe("APIComposer add / edit", () => {
         //   foobar: z.string(),
         // }),
       },
-      httpClient,
+      httpClientFactory,
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -433,7 +433,7 @@ describe("APIComposer add / edit", () => {
         //   foobar: z.string(),
         // }),
       },
-      httpClient,
+      httpClientFactory,
     );
     const mockData = {
       id: "abc",
@@ -480,7 +480,7 @@ describe("APIComposer add / edit", () => {
         //   foobar: z.string(),
         // }),
       },
-      httpClient,
+      httpClientFactory,
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -540,7 +540,7 @@ describe("APIComposer add / edit", () => {
         //   foobar: z.string(),
         // }),
       },
-      httpClient,
+      httpClientFactory,
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -595,7 +595,7 @@ describe("APIComposer add / edit", () => {
           newsletter: z.string().optional(),
         }),
       },
-      httpClient,
+      httpClientFactory,
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -650,7 +650,7 @@ describe("APIComposer add / edit", () => {
         //   foobar: z.string(),
         // }),
       },
-      httpClient,
+      httpClientFactory,
     );
     fetchMocker.doMockOnce(
       JSON.stringify({

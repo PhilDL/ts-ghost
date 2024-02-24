@@ -511,6 +511,34 @@ describe("posts integration tests browse", () => {
     assert(postDelete.success);
   });
 
+  test("fetchers are seperated instances", async () => {
+    expect(api.posts).toBeDefined();
+
+    const result = await api.posts.add(
+      {
+        title: faker.hacker.phrase(),
+        html: "<p>Super Hello from ts-ghost</p>",
+      },
+      { source: "html" },
+    );
+    expect(result.success).toBeTruthy();
+    const result2 = await api.posts.add(
+      {
+        title: faker.hacker.phrase(),
+        html: "<p>Super Hello from ts-ghost2</p>",
+      },
+      { source: "html" },
+    );
+    expect(result2.success).toBeTruthy();
+
+    const [a, b] = await Promise.all([
+      api.posts.delete((result.success && result.data.id) || ""),
+      api.posts.delete((result2.success && result2.data.id) || ""),
+    ]);
+    expect(a.success).toBeTruthy();
+    expect(b.success).toBeTruthy();
+  });
+
   test("posts api with bad key", async () => {
     const api = new TSGhostAdminAPI(
       process.env.VITE_GHOST_URL!,

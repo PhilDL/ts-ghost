@@ -8,7 +8,7 @@ import {
   baseTagsSchema,
   BasicFetcher,
   emailOrIdSchema,
-  HTTPClient,
+  HTTPClientFactory,
   slugOrIdSchema,
 } from "@ts-ghost/core-api";
 
@@ -25,7 +25,7 @@ import { adminWebhookCreateSchema, adminWebhookSchema, adminWebhookUpdateSchema 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
 
 export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
-  private httpClient: HTTPClient;
+  private httpClientFactory: HTTPClientFactory;
 
   constructor(
     protected readonly url: string,
@@ -37,7 +37,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
       version,
       url,
     });
-    this.httpClient = new HTTPClient({
+    this.httpClientFactory = new HTTPClientFactory({
       ...apiCredentials,
       endpoint: "admin",
     });
@@ -68,7 +68,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           source: z.literal("html").optional(),
         }),
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -96,7 +96,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           source: z.literal("html").optional(),
         }),
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -117,7 +117,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           email_type: z.union([z.literal("signin"), z.literal("subscribe"), z.literal("signup")]).optional(),
         }),
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -135,7 +135,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         include: tiersIncludeSchema,
         createSchema: adminTiersCreateSchema,
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["browse", "read"]); // for now tiers mutations don't really work in the admin api
   }
 
@@ -152,7 +152,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           opt_in_existing: z.boolean(),
         }),
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["browse", "read", "add", "edit"]);
   }
 
@@ -167,7 +167,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminOffersCreateSchema,
         updateSchema: adminOffersUpdateSchema,
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["browse", "read", "add", "edit"]);
   }
 
@@ -184,7 +184,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminTagsCreateSchema,
         updateSchema: adminTagsUpdateSchema,
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["browse", "read", "add", "edit", "delete"]);
   }
 
@@ -197,7 +197,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         identitySchema: emailOrIdSchema,
         include: usersIncludeSchema,
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["browse", "read"]);
   }
 
@@ -211,12 +211,12 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
         createSchema: adminWebhookCreateSchema,
         updateSchema: adminWebhookUpdateSchema,
       },
-      this.httpClient,
+      this.httpClientFactory,
     ).access(["add", "edit", "delete"]);
   }
 
   get site() {
-    return new BasicFetcher("site", { output: baseSiteSchema }, this.httpClient);
+    return new BasicFetcher("site", { output: baseSiteSchema }, this.httpClientFactory.create());
   }
 
   get settings() {
@@ -230,7 +230,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
           }),
         ),
       },
-      this.httpClient,
+      this.httpClientFactory.create(),
     );
   }
 }
