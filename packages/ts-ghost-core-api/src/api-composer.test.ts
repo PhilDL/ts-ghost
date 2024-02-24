@@ -65,7 +65,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClientFactory,
+      new HTTPClientFactory(credentials),
     );
     test("pagination params", () => {
       expect(
@@ -102,7 +102,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClientFactory,
+      new HTTPClientFactory(credentials),
     );
     test("order params should accept a string with correct fields", () => {
       expect(
@@ -164,7 +164,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClientFactory,
+      new HTTPClientFactory(credentials),
     );
     test("filter params should accept a string with correct fields", () => {
       expect(
@@ -226,7 +226,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClientFactory,
+      new HTTPClientFactory(credentials),
     );
     test("identity read fields params should only accept key from the identity read schema", () => {
       expect(
@@ -256,7 +256,7 @@ describe("APIComposer Read / Browse", () => {
     const composer = new APIComposer(
       "posts",
       { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-      httpClientFactory,
+      new HTTPClientFactory(credentials),
     );
     test("include params should only accept key from the include schema", () => {
       expect(composer.browse()).toBeInstanceOf(BrowseFetcher);
