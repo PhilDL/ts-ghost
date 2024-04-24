@@ -41,8 +41,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@ts-ghost/core-api": "*",
-    "@ts-ghost/tsconfig": "*",
+    "@ts-ghost/core-api": "workspace:*",
+    "@ts-ghost/tsconfig": "workspace:*",
     "@types/node": "^20.12.7",
     "@types/validator": "^13.11.9",
     "@vitest/coverage-v8": "^1.5.0",
