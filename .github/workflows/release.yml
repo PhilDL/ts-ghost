@@ -22,15 +22,15 @@ jobs:
       - name: ⬇️ Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Setup pnpm 8
+      - name: Setup pnpm 9
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 9
 
-      - name: ⎔ Setup Node.js 18
+      - name: ⎔ Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: "pnpm"
 
       - name: 📥 Install Dependencies
