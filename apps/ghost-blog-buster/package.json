@@ -36,9 +36,9 @@
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
   "devDependencies": {
-    "@ts-ghost/admin-api": "*",
-    "@ts-ghost/content-api": "*",
-    "@ts-ghost/tsconfig": "*",
+    "@ts-ghost/admin-api": "workspace:*",
+    "@ts-ghost/content-api": "workspace:*",
+    "@ts-ghost/tsconfig": "workspace:*",
     "@types/configstore": "^6.0.2",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.12.7",

@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ts-ghost/admin-api": "*",
-    "@ts-ghost/content-api": "*",
+    "@ts-ghost/admin-api": "workspace:*",
+    "@ts-ghost/content-api": "workspace:*",
     "@types/node": "^20.12.7",
     "@types/react": "18.2.79",
     "@types/react-dom": "18.2.25",

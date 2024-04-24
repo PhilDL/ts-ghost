@@ -35,7 +35,7 @@
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
   "devDependencies": {
-    "@ts-ghost/tsconfig": "*",
+    "@ts-ghost/tsconfig": "workspace:*",
     "@types/node": "^20.12.7",
     "@vitest/coverage-v8": "^1.5.0",
     "eslint": "^8.57.0",
