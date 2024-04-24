@@ -40,19 +40,19 @@
     "playground": "jiti ./src/playground.ts"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.3.1",
+    "@faker-js/faker": "^8.4.1",
     "@ts-ghost/core-api": "*",
     "@ts-ghost/tsconfig": "*",
-    "@types/node": "^20.10.5",
-    "@types/validator": "^13.11.7",
-    "@vitest/coverage-c8": "^0.33.0",
-    "eslint": "^8.56.0",
+    "@types/node": "^20.12.7",
+    "@types/validator": "^13.11.9",
+    "@vitest/coverage-v8": "^1.5.0",
+    "eslint": "^8.57.0",
     "jiti": "^1.21.0",
-    "tsup": "^8.0.0",
+    "tsup": "^8.0.2",
     "typescript": "5.4.5",
-    "vite": "^5.0.10",
-    "vite-tsconfig-paths": "^4.2.2",
-    "vitest": "^1.1.0",
+    "vite": "^5.2.10",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.5.0",
     "zod": "^3.22.2"
   },
   "dependencies": {
