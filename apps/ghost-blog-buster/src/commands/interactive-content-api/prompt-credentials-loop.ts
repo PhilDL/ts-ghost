@@ -44,7 +44,7 @@ export const promptCredentialsLoop = async (config: Configstore) => {
       process.exit(0);
     }
     try {
-      const ghost = new TSGhostContentAPI(`${url.protocol}//${url.hostname}`, ghostContentApiKey, "v5.0");
+      const ghost = new TSGhostContentAPI(`${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ''}`, ghostContentApiKey, "v5.0");
       s.start("Validating credentials");
       const res = await ghost.settings.fetch();
       if (res.success) {
