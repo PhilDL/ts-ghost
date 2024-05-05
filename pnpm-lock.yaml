@@ -54,7 +54,7 @@ importers:
   apps/ghost-blog-buster:
     dependencies:
       '@clack/core':
-        specifier: ^0.3.4
+        specifier: ^0.3.3
         version: 0.3.4
       '@clack/prompts':
         specifier: ^0.7.0
@@ -398,7 +398,7 @@ importers:
   packages/ts-ghost-core-api:
     dependencies:
       jose:
-        specifier: ^5.2.4
+        specifier: ^5.1.3
         version: 5.2.4
       zod:
         specifier: ^3.22.4
