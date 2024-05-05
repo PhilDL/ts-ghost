@@ -53,7 +53,7 @@
     "vitest": "^1.5.0"
   },
   "dependencies": {
-    "@clack/core": "^0.3.3",
+    "@clack/core": "^0.3.4",
     "@clack/prompts": "^0.7.0",
     "@ts-ghost/admin-api": "^4.0.1",
     "@ts-ghost/content-api": "^4.0.11",
@@ -62,7 +62,7 @@
     "node-html-markdown": "^1.3.0",
     "picocolors": "^1.0.0",
     "yargs": "^17.7.2",
-    "zod": "^3.22.4"
+    "zod": "^3.23.6"
   },
   "publishConfig": {
     "access": "public"

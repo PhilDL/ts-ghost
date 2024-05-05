@@ -58,7 +58,7 @@
   "dependencies": {
     "@ts-ghost/core-api": "^6.0.0",
     "validator": "^13.11.0",
-    "zod": "^3.22.4"
+    "zod": "^3.23.6"
   },
   "publishConfig": {
     "access": "public"
