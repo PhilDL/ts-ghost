@@ -1,5 +1,11 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.6.16
+
+### Patch Changes
+
+- f71ff87: fix connection to ghost instances deployed on custom ports
+
 ## 0.6.15
 
 ### Patch Changes
@@ -197,7 +203,10 @@
   - The `members` resource now have a `add` and `edit` method that allow them to be created and updated.
 
   ```ts
-  const createNewMember = await api.members.add({ email: "abcdefgh@msn.com" }, { send_email: true });
+  const createNewMember = await api.members.add(
+    { email: "abcdefgh@msn.com" },
+    { send_email: true },
+  );
   assert(createNewMember.success);
   const newMember = createNewMember.data;
   // id => 6438cc365a8fdb00013a8783
