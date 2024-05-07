@@ -30,7 +30,7 @@ export const promptCredentialsLoop = async (config: Configstore) => {
       process.exit(0);
     }
     const url = new URL(ghostUrl);
-    lastUrlInput = `${url.protocol}//${url.hostname}`;
+    lastUrlInput = url.origin;
     const ghostAdminApiKey = await text({
       message: `Enter a Ghost Admin API key. Here you can use a Staff Access token (RECOMMENDED: found on a User) or create a new Integration at ${url.protocol}//${url.hostname}/ghost/#/settings/integrations and copy the Admin API Key`,
       placeholder:
@@ -46,12 +46,12 @@ export const promptCredentialsLoop = async (config: Configstore) => {
       process.exit(0);
     }
     try {
-      const ghost = new TSGhostAdminAPI(`${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ''}`, ghostAdminApiKey, "v5.0");
+      const ghost = new TSGhostAdminAPI(url.origin, ghostAdminApiKey, "v5.0");
       s.start("Validating credentials");
       const res = await ghost.site.fetch();
       if (res.success) {
         const settings = res.data;
-        config.set("ghostUrl", `${url.protocol}//${url.hostname}`);
+        config.set("ghostUrl", url.origin);
         config.set("ghostAdminApiKey", ghostAdminApiKey);
         config.set("siteName", settings.title);
         s.stop(`✅ Connected to ${settings.title}`);
