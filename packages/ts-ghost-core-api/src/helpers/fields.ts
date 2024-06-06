@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { Mask } from "../utils";
+import type { Exactly, Mask } from "../utils";
 
 /**
  * Parse a Fields object and generate a new Output Schema
@@ -11,7 +11,7 @@ import type { Mask } from "../utils";
  */
 export const schemaWithPickedFields = <Shape extends z.ZodRawShape, Fields extends Mask<Shape>>(
   schema: z.ZodObject<Shape>,
-  fields?: Fields
+  fields?: Fields,
 ) => {
-  return schema.pick(fields || ({} as z.noUnrecognized<Fields, Shape>));
+  return schema.pick((fields as Exactly<Fields, Fields>) || ({} as z.noUnrecognized<Fields, Shape>));
 };

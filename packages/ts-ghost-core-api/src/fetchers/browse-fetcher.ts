@@ -3,7 +3,7 @@ import { z, ZodRawShape } from "zod";
 import { BrowseParamsSchema } from "../helpers/browse-params";
 import type { HTTPClient } from "../helpers/http-client";
 import { ghostMetaSchema, type APIResource } from "../schemas/shared";
-import type { Mask } from "../utils";
+import type { Exactly, Mask } from "../utils";
 import { contentFormats, type ContentFormats } from "./formats";
 
 export class BrowseFetcher<
@@ -55,7 +55,7 @@ export class BrowseFetcher<
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(formats as Formats),
+        output: this.config.output.required(formats as Exactly<Formats, Formats>),
         include: this.config.include,
       },
       params,
@@ -80,7 +80,7 @@ export class BrowseFetcher<
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(include as Includes),
+        output: this.config.output.required(include as Exactly<Includes, Includes>),
         include: this.config.include,
       },
       params,
@@ -96,7 +96,7 @@ export class BrowseFetcher<
    * @returns A new Fetcher with the fixed output shape having only the selected Fields
    */
   public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
-    const newOutput = this.config.output.pick(fields);
+    const newOutput = this.config.output.pick(fields as Exactly<Fields, Fields>);
     return new BrowseFetcher(
       this.resource,
       {
