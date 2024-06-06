@@ -11,5 +11,8 @@ export default defineConfig({
     include: ["./**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     watchExclude: [".*\\/node_modules\\/.*", ".*\\/build\\/.*"],
     exclude: ["node_modules", "dist", ".idea", ".git", ".cache", "**/*integration.test.ts"],
+    typecheck: {
+      include: ["./**/*.{ts,tsx}"],
+    },
   },
 });
