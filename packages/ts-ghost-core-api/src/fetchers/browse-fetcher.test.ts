@@ -81,7 +81,7 @@ describe("BrowseFetcher", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      httpClient
+      httpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -119,7 +119,7 @@ describe("BrowseFetcher", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      adminHttpClient
+      adminHttpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -157,7 +157,7 @@ describe("BrowseFetcher", () => {
         include: simplifiedIncludeSchema,
       },
       undefined,
-      httpClient
+      httpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -205,7 +205,7 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      httpClient
+      httpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -242,7 +242,7 @@ describe("BrowseFetcher", () => {
             prev: null,
           },
         },
-      })
+      }),
     );
     const result = await browseFetcher.fetch();
     expect(fetchMocker).toHaveBeenCalledWith(
@@ -252,7 +252,7 @@ describe("BrowseFetcher", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
     expect(result.success).toBe(true);
     if (result.success) {
@@ -314,12 +314,12 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      httpClient
+      httpClient,
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [],
-      })
+      }),
     );
     const result = await browseFetcher.fetch();
     expect(result.success).toBe(true);
@@ -364,12 +364,12 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      httpClient
+      httpClient,
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
         posts: [],
-      })
+      }),
     );
     const result = await browseFetcher.paginate();
     expect(result.current.success).toBe(true);
@@ -414,7 +414,7 @@ describe("BrowseFetcher", () => {
           count: true,
         },
       },
-      adminHttpClient
+      adminHttpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -442,7 +442,7 @@ describe("BrowseFetcher", () => {
           "Accept-Version": "v5.0",
           Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
         },
-      }
+      },
     );
   });
 
@@ -457,7 +457,7 @@ describe("BrowseFetcher", () => {
       {
         formats: ["html", "plaintext"],
       },
-      httpClient
+      httpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     expect(browseFetcher.getResource()).toBe("posts");
@@ -474,7 +474,7 @@ describe("BrowseFetcher", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
 
@@ -491,7 +491,7 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      httpClient
+      httpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
 
@@ -515,7 +515,7 @@ describe("BrowseFetcher", () => {
             prev: null,
           },
         },
-      })
+      }),
     );
     const result = await browseFetcher.paginate();
     assert(result.current.success);
@@ -558,7 +558,7 @@ describe("BrowseFetcher", () => {
             prev: null,
           },
         },
-      })
+      }),
     );
     const nextResult = await result.next.paginate();
     assert(nextResult.current.success);
@@ -579,7 +579,7 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      httpClient
+      httpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
@@ -609,7 +609,7 @@ describe("BrowseFetcher", () => {
           limit: 1,
         },
       },
-      httpClient
+      httpClient,
     );
     expect(browseFetcher).toBeInstanceOf(BrowseFetcher);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
@@ -635,7 +635,7 @@ describe("BrowseFetcher", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      httpClient
+      httpClient,
     );
     // @ts-expect-error - _URL is private
     fetcher.httpClient._baseURL = undefined;
@@ -711,7 +711,7 @@ describe("BrowseFetcher output tests suite", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      httpClient
+      httpClient,
     );
     fetchMocker.doMockOnce(
       JSON.stringify({
@@ -730,12 +730,14 @@ describe("BrowseFetcher output tests suite", () => {
             prev: null,
           },
         },
-      })
+      }),
     );
     const res = await fetcher.formats({ html: true }).fields({ html: true }).fetch();
     assert(res.success);
     expect(res.data.length).toBe(1);
     expect(res.data[0].html).toBe("<h1>Hello world</h1>");
+    // @ts-expect-error - plaintext is not defined
+    expect(res.data[0].title).toBeUndefined();
     // @ts-expect-error - plaintext is not defined
     expect(res.data[0].plaintext).toBeUndefined();
   });
@@ -749,7 +751,7 @@ describe("BrowseFetcher output tests suite", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      httpClient
+      httpClient,
     );
     const res = fetcher
       .formats({ html: true })
@@ -768,7 +770,7 @@ describe("BrowseFetcher output tests suite", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
   test("new formats, fields, and include should indicate wrong fields", async () => {
@@ -780,7 +782,7 @@ describe("BrowseFetcher output tests suite", () => {
         include: simplifiedIncludeSchema,
       },
       {},
-      httpClient
+      httpClient,
     );
     const res = fetcher
       // @ts-expect-error - foobar is not defined
@@ -801,7 +803,7 @@ describe("BrowseFetcher output tests suite", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
 });

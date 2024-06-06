@@ -1,3 +1,5 @@
+export type Exactly<T, X> = T & Record<Exclude<keyof X, keyof T>, never>;
+
 export declare type Mask<Obj> = {
   [k in keyof Obj]?: true;
 };

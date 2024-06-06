@@ -64,7 +64,7 @@ describe("ReadFetcher", () => {
       {
         identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
       },
-      httpClient
+      httpClient,
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -84,7 +84,7 @@ describe("ReadFetcher", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
 
@@ -99,7 +99,7 @@ describe("ReadFetcher", () => {
       {
         identity: { id: "eh873jdLsnaUDj7149DSASJhdqsdj" },
       },
-      adminHttpClient
+      adminHttpClient,
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -119,7 +119,7 @@ describe("ReadFetcher", () => {
           "Accept-Version": "v5.0",
           Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
         },
-      }
+      },
     );
   });
 
@@ -134,7 +134,7 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      httpClient
+      httpClient,
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -152,7 +152,7 @@ describe("ReadFetcher", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
 
@@ -172,8 +172,8 @@ describe("ReadFetcher", () => {
               foo: "foobarbaz",
             },
           },
-          httpClient
-        )
+          httpClient,
+        ),
     ).toThrow();
   });
 
@@ -193,7 +193,7 @@ describe("ReadFetcher", () => {
         fields: { title: true, slug: true, count: true },
         include: ["count"],
       },
-      httpClient
+      httpClient,
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -213,7 +213,7 @@ describe("ReadFetcher", () => {
             count: 1,
           },
         ],
-      })
+      }),
     );
     const result = await readFetcher.fetch();
     expect(fetchMocker).toHaveBeenCalledWith(
@@ -223,7 +223,7 @@ describe("ReadFetcher", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
     assert(result.success);
     expect(result.data).toStrictEqual({
@@ -245,7 +245,7 @@ describe("ReadFetcher", () => {
         identity: { slug: "this-is-a-slug" },
         formats: ["html", "plaintext"],
       },
-      httpClient
+      httpClient,
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -263,7 +263,7 @@ describe("ReadFetcher", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
 
@@ -283,7 +283,7 @@ describe("ReadFetcher", () => {
         fields: { title: true, slug: true, count: true },
         include: ["count"],
       },
-      httpClient
+      httpClient,
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     expect(readFetcher.getResource()).toBe("posts");
@@ -298,7 +298,7 @@ describe("ReadFetcher", () => {
     fetchMocker.doMockOnce(
       JSON.stringify({
         errors: [{ message: "Validation error, cannot read author.", type: "ValidationError" }],
-      })
+      }),
     );
 
     const result = await readFetcher.fetch();
@@ -309,7 +309,7 @@ describe("ReadFetcher", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
     assert(!result.success);
     expect(result.errors).toStrictEqual([
@@ -328,7 +328,7 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      httpClient
+      httpClient,
     );
     expect(readFetcher).toBeInstanceOf(ReadFetcher);
     fetchMocker.mockRejectOnce(() => Promise.reject("Fake Fetch Error"));
@@ -356,7 +356,7 @@ describe("ReadFetcher", () => {
       {
         identity: { slug: "this-is-a-slug" },
       },
-      httpClient
+      httpClient,
     );
     // @ts-expect-error - _URL is private
     fetcher.httpClient._baseURL = undefined;
@@ -422,7 +422,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
         include: simplifiedIncludeSchema,
       },
       { identity: { slug: "this-is-a-slug" } },
-      httpClient
+      httpClient,
     );
     const res = fetcher
       .formats({ html: true })
@@ -442,7 +442,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
 
@@ -455,7 +455,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
         include: simplifiedIncludeSchema,
       },
       { identity: { email: "abc@foo.com" } },
-      httpClient
+      httpClient,
     );
     const res = fetcher
       .formats({ html: true })
@@ -474,7 +474,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
 
@@ -487,7 +487,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
         include: simplifiedIncludeSchema,
       },
       { identity: { slug: "this-is-a-slug" } },
-      httpClient
+      httpClient,
     );
     const res = fetcher
       // @ts-expect-error - foobar is not defined
@@ -509,7 +509,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.0",
         },
-      }
+      },
     );
   });
 });
