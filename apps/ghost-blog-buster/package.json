@@ -55,8 +55,8 @@
   "dependencies": {
     "@clack/core": "^0.3.3",
     "@clack/prompts": "^0.7.0",
-    "@ts-ghost/admin-api": "^4.0.1",
-    "@ts-ghost/content-api": "^4.0.11",
+    "@ts-ghost/admin-api": "^4.2.0",
+    "@ts-ghost/content-api": "^4.1.0",
     "configstore": "^6.0.0",
     "js-yaml": "^4.1.0",
     "node-html-markdown": "^1.3.0",

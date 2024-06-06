@@ -1,5 +1,26 @@
 # @ts-ghost/content-api
 
+## 4.1.0
+
+### Minor Changes
+
+- 0586744: ## Global
+
+  - Upgrade Zod version and fix types, no breaking changes were introduced.
+
+  ## `@ts-ghost/content-api`
+
+  Change type of `url` on `Author` for the content API to align with the `post.authors` and `page.authors` type.
+  An author can have an undefined or null `url` if the author is not set as visible.
+
+  - New type is now `string | undefined | null` instead of `string`.
+  - Updated the `Author` type in the `content-api` package to reflect this change.
+
+### Patch Changes
+
+- Updated dependencies [0586744]
+  - @ts-ghost/core-api@6.1.0
+
 ## 4.0.12
 
 ### Patch Changes
