@@ -17,7 +17,7 @@ export const authorsSchema = z.object({
       posts: z.number(),
     })
     .optional(),
-  url: z.string(),
+  url: z.string().nullish(),
 });
 
 export type Author = z.infer<typeof authorsSchema>;

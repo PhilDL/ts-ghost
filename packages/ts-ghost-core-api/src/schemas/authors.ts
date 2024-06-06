@@ -18,5 +18,5 @@ export const baseAuthorsSchema = z.object({
       posts: z.number(),
     })
     .optional(),
-  url: z.string(),
+  url: z.string().nullish(),
 });
