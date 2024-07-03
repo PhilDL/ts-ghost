@@ -1,13 +1,40 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
+  "globalDependencies": [
+    ".env"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "GHOST_URL",
+    "GHOST_CONTENT_API_KEY",
+    "GHOST_ADMIN_API_KEY",
+    "GHOST_VERSION",
+    "VITE_GHOST_URL",
+    "VITE_GHOST_CONTENT_API_KEY",
+    "VITE_GHOST_ADMIN_API_KEY",
+    "VITE_GHOST_VERSION",
+    "VITE_GHOST_INTEGRATION_ID"
+  ],
+  "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".cache", ".next/**", "public/build/**", "build/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".cache",
+        ".next/**",
+        "public/build/**",
+        "build/**"
+      ]
     },
     "start": {
-      "dependsOn": ["^build"],
-      "outputs": ["public/build/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "public/build/**"
+      ]
     },
     "dev": {
       "cache": false,
@@ -29,10 +56,14 @@
       "outputs": []
     },
     "test:coverage": {
-      "outputs": ["coverage"]
+      "outputs": [
+        "coverage"
+      ]
     },
     "test-ci": {
-      "outputs": ["coverage"]
+      "outputs": [
+        "coverage"
+      ]
     },
     "typecheck": {
       "outputs": []
@@ -43,18 +74,5 @@
     "format": {
       "outputs": []
     }
-  },
-  "globalDependencies": [".env"],
-  "globalEnv": [
-    "NODE_ENV",
-    "GHOST_URL",
-    "GHOST_CONTENT_API_KEY",
-    "GHOST_ADMIN_API_KEY",
-    "GHOST_VERSION",
-    "VITE_GHOST_URL",
-    "VITE_GHOST_CONTENT_API_KEY",
-    "VITE_GHOST_ADMIN_API_KEY",
-    "VITE_GHOST_VERSION",
-    "VITE_GHOST_INTEGRATION_ID"
-  ]
+  }
 }
