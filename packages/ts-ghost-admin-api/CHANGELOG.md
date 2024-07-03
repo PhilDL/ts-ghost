@@ -1,5 +1,11 @@
 # @ts-ghost/admin-api
 
+## 4.2.1
+
+### Patch Changes
+
+- d1f6d34: fix(admin-api): lexical output for pages
+
 ## 4.2.0
 
 ### Minor Changes
