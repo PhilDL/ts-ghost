@@ -148,8 +148,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       lucide-react:
-        specifier: 0.400.0
-        version: 0.400.0(react@18.3.1)
+        specifier: 0.407.0
+        version: 0.407.0(react@18.3.1)
       next:
         specifier: ^14.2.3
         version: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -392,8 +392,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@20.12.7)(terser@5.31.0)
       vitest-fetch-mock:
-        specifier: ^0.2.2
-        version: 0.2.2(vitest@1.5.0(@types/node@20.12.7)(terser@5.31.0))
+        specifier: ^0.3.0
+        version: 0.3.0(vitest@1.5.0(@types/node@20.12.7)(terser@5.31.0))
 
   packages/ts-ghost-core-api:
     dependencies:
@@ -432,8 +432,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@20.12.7)(terser@5.31.0)
       vitest-fetch-mock:
-        specifier: ^0.2.2
-        version: 0.2.2(vitest@1.5.0(@types/node@20.12.7)(terser@5.31.0))
+        specifier: ^0.3.0
+        version: 0.3.0(vitest@1.5.0(@types/node@20.12.7)(terser@5.31.0))
 
   packages/tsconfig: {}
 
@@ -3061,8 +3061,8 @@ packages:
   create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
 
-  cross-fetch@3.1.6:
-    resolution: {integrity: sha512-riRvo06crlE8HiqOwIpQhxwdOk4fOeR7FVM/wXoxchFEqMNUjvbs3bfo4OTgMEMHzppd4DxFBDbyySj8Cv781g==}
+  cross-fetch@4.0.0:
+    resolution: {integrity: sha512-e4a5N8lVvuLgAWgnCrLr2PP0YyDOTHa9H/Rj54dirp61qXnNq46m82bRhNqIA5VccJtWBvPTFRV3TtvHUKPB1g==}
 
   cross-spawn@5.1.0:
     resolution: {integrity: sha512-pTgQJ5KC0d2hcY8eyL1IzlBPYjTkyH72XRZPnLyKus2mBfNjQs3klqbJU2VILqZryAZUt9JOb3h/mWMy23/f5A==}
@@ -4715,8 +4715,8 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
-  lucide-react@0.400.0:
-    resolution: {integrity: sha512-rpp7pFHh3Xd93KHixNgB0SqThMHpYNzsGUu69UaQbSZ75Q/J3m5t6EhKyMT3m4w2WOxmJ2mY0tD3vebnXqQryQ==}
+  lucide-react@0.407.0:
+    resolution: {integrity: sha512-+dRIu9Sry+E8wPF9+sY5eKld2omrU4X5IKXxrgqBt+o11IIHVU0QOfNoVWFuj0ZRDrxr4Wci26o2mKZqLGE0lA==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -5242,15 +5242,6 @@ packages:
 
   no-case@2.3.2:
     resolution: {integrity: sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==}
-
-  node-fetch@2.6.11:
-    resolution: {integrity: sha512-4I6pdBY1EthSqDmJkiNk3JIT8cswwR9nfeW/cPdUagJYEQG7R95WRH74wpz7ma8Gh/9dI9FP+OU+0E4FvtA55w==}
-    engines: {node: 4.x || >=6.0.0}
-    peerDependencies:
-      encoding: ^0.1.0
-    peerDependenciesMeta:
-      encoding:
-        optional: true
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -7065,11 +7056,11 @@ packages:
       terser:
         optional: true
 
-  vitest-fetch-mock@0.2.2:
-    resolution: {integrity: sha512-XmH6QgTSjCWrqXoPREIdbj40T7i1xnGmAsTAgfckoO75W1IEHKR8hcPCQ7SO16RsdW1t85oUm6pcQRLeBgjVYQ==}
+  vitest-fetch-mock@0.3.0:
+    resolution: {integrity: sha512-g6upWcL8/32fXL43/5f4VHcocuwQIi9Fj5othcK9gPO8XqSEGtnIZdenr2IaipDr61ReRFt+vaOEgo8jiUUX5w==}
     engines: {node: '>=14.14.0'}
     peerDependencies:
-      vitest: '>=0.16.0'
+      vitest: '>=2.0.0'
 
   vitest@1.5.0:
     resolution: {integrity: sha512-d8UKgR0m2kjdxDWX6911uwxout6GHS0XaGH1cksSIVVG8kRlE7G7aBw7myKQCvDI5dT4j7ZMa+l706BIORMDLw==}
@@ -10164,9 +10155,9 @@ snapshots:
 
   create-require@1.1.1: {}
 
-  cross-fetch@3.1.6:
+  cross-fetch@4.0.0:
     dependencies:
-      node-fetch: 2.6.11
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
 
@@ -12313,7 +12304,7 @@ snapshots:
 
   lru-cache@7.18.3: {}
 
-  lucide-react@0.400.0(react@18.3.1):
+  lucide-react@0.407.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -13316,10 +13307,6 @@ snapshots:
   no-case@2.3.2:
     dependencies:
       lower-case: 1.1.4
-
-  node-fetch@2.6.11:
-    dependencies:
-      whatwg-url: 5.0.0
 
   node-fetch@2.7.0:
     dependencies:
@@ -15414,9 +15401,9 @@ snapshots:
       terser: 5.31.0
     optional: true
 
-  vitest-fetch-mock@0.2.2(vitest@1.5.0(@types/node@20.12.7)(terser@5.31.0)):
+  vitest-fetch-mock@0.3.0(vitest@1.5.0(@types/node@20.12.7)(terser@5.31.0)):
     dependencies:
-      cross-fetch: 3.1.6
+      cross-fetch: 4.0.0
       vitest: 1.5.0(@types/node@20.12.7)(terser@5.31.0)
     transitivePeerDependencies:
       - encoding
