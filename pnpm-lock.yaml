@@ -103,8 +103,8 @@ importers:
         specifier: ^8.57.0
         version: 8.57.0
       jiti:
-        specifier: ^1.21.0
-        version: 1.21.0
+        specifier: ^2.0.0
+        version: 2.0.0
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.12.7)(typescript@5.6.2)
@@ -334,8 +334,8 @@ importers:
         specifier: ^8.57.0
         version: 8.57.0
       jiti:
-        specifier: ^1.21.0
-        version: 1.21.0
+        specifier: ^2.0.0
+        version: 2.0.0
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.6.2))(typescript@5.6.2)
@@ -374,8 +374,8 @@ importers:
         specifier: ^8.57.0
         version: 8.57.0
       jiti:
-        specifier: ^1.21.0
-        version: 1.21.0
+        specifier: ^2.0.0
+        version: 2.0.0
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.6.2))(typescript@5.6.2)
@@ -4512,6 +4512,10 @@ packages:
 
   jiti@1.21.0:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
+    hasBin: true
+
+  jiti@2.0.0:
+    resolution: {integrity: sha512-CJ7e7Abb779OTRv3lomfp7Mns/Sy1+U4pcAx5VbjxCZD5ZM/VJaXPpPjNKjtSvWQy/H86E49REXR34dl1JEz9w==}
     hasBin: true
 
   jose@5.2.4:
@@ -12129,6 +12133,8 @@ snapshots:
       supports-color: 8.1.1
 
   jiti@1.21.0: {}
+
+  jiti@2.0.0: {}
 
   jose@5.2.4: {}
 
