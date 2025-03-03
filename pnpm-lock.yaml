@@ -118,8 +118,8 @@ importers:
         specifier: ^5.2.10
         version: 5.2.10(@types/node@20.12.7)(terser@5.31.0)
       vite-tsconfig-paths:
-        specifier: ^4.3.2
-        version: 4.3.2(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0))
+        specifier: ^5.0.0
+        version: 5.1.4(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0))
       vitest:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@20.12.7)(terser@5.31.0)
@@ -346,8 +346,8 @@ importers:
         specifier: ^5.2.10
         version: 5.2.10(@types/node@20.12.7)(terser@5.31.0)
       vite-tsconfig-paths:
-        specifier: ^4.3.2
-        version: 4.3.2(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0))
+        specifier: ^5.0.0
+        version: 5.1.4(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0))
       vitest:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@20.12.7)(terser@5.31.0)
@@ -386,8 +386,8 @@ importers:
         specifier: ^5.2.10
         version: 5.2.10(@types/node@20.12.7)(terser@5.31.0)
       vite-tsconfig-paths:
-        specifier: ^4.3.2
-        version: 4.3.2(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0))
+        specifier: ^5.0.0
+        version: 5.1.4(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0))
       vitest:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@20.12.7)(terser@5.31.0)
@@ -426,8 +426,8 @@ importers:
         specifier: ^5.2.10
         version: 5.2.10(@types/node@20.12.7)(terser@5.31.0)
       vite-tsconfig-paths:
-        specifier: ^4.3.2
-        version: 4.3.2(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0))
+        specifier: ^5.0.0
+        version: 5.1.4(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0))
       vitest:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@20.12.7)(terser@5.31.0)
@@ -1808,6 +1808,7 @@ packages:
   '@remix-run/eslint-config@2.9.1':
     resolution: {integrity: sha512-2ij9MNX5dd7qDCLAlPmIasZ4JkRydFwd9CaIq9JlBsW0HJEGhIMjg27ofLu4aToWLr5yW9RduCSq2/ypjhiy1g==}
     engines: {node: '>=18.0.0'}
+    deprecated: Will no longer be maintained in React Router v7
     peerDependencies:
       eslint: ^8.0.0
       react: ^18.0.0
@@ -4658,6 +4659,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -6193,11 +6195,11 @@ packages:
 
   shikiji-core@0.10.2:
     resolution: {integrity: sha512-9Of8HMlF96usXJHmCL3Gd0Fcf0EcyJUF9m8EoAKKd98mHXi0La2AZl1h6PegSFGtiYcBDK/fLuKbDa1l16r1fA==}
-    deprecated: Shikiji is merged back to Shiki v1.0, please migrate over to get the latest updates
+    deprecated: Deprecated, use @shikijs/core instead
 
   shikiji@0.10.2:
     resolution: {integrity: sha512-wtZg3T0vtYV2PnqusWQs3mDaJBdCPWxFDrBM/SE5LfrX92gjUvfEMlc+vJnoKY6Z/S44OWaCRzNIsdBRWcTAiw==}
-    deprecated: Shikiji is merged back to Shiki v1.0, please migrate over to get the latest updates
+    deprecated: Deprecated, use shiki instead
 
   side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
@@ -6963,8 +6965,8 @@ packages:
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
-  vite-tsconfig-paths@4.3.2:
-    resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
+  vite-tsconfig-paths@5.1.4:
+    resolution: {integrity: sha512-cYj0LRuLV2c2sMqhqhGpaO3LretdtMn/BVX4cPLanIZuwwrkVl+lK84E/miEXkCHWXuq65rhNN4rXsBcOB3S4w==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
@@ -15360,7 +15362,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@4.3.2(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0)):
+  vite-tsconfig-paths@5.1.4(typescript@5.6.2)(vite@5.2.10(@types/node@20.12.7)(terser@5.31.0)):
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
