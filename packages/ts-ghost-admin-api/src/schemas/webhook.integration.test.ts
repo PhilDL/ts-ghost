@@ -19,6 +19,10 @@ describe("webhook integration tests", () => {
       target_url: "https://example.com/hook/ts-ghost-integration",
       integration_id,
     });
+    if (add.success === false) {
+      console.error(add.errors);
+      expect(add.errors).toBe([]);
+    }
     assert(add.success === true);
     const webhook = add.data;
     expect(webhook.event).toBe("post.added");
