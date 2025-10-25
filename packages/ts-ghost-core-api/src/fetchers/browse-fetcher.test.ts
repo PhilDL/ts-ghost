@@ -70,6 +70,7 @@ describe("BrowseFetcher", () => {
   });
   afterEach(() => {
     vi.restoreAllMocks();
+    fetchMocker.resetMocks();
   });
 
   test("should return a BrowseFetcher instance", async () => {
