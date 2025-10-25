@@ -1,11 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 16",
+  "display": "Node 22",
   "extends": "./base.json",
   "compilerOptions": {
-    "lib": ["ES2021", "ESNext", "DOM"],
+    "lib": ["ES2022", "ESNext", "DOM", "DOM.Iterable"],
     "module": "commonjs",
-    "target": "ES2021",
+    "target": "ES2022",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

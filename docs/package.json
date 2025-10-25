@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/mdx": "^2.0.13",
-    "@types/node": "^22.0.0",
+    "@types/node": "catalog:",
     "@types/react": "18.3.8",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "^10.4.19",
@@ -38,6 +38,6 @@
     "eslint-config-next": "^14.2.2",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.5"
+    "typescript": "catalog:"
   }
 }
