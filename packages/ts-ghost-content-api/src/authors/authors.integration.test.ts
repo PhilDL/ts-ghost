@@ -6,7 +6,7 @@ const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
 const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
 
 const stub = {
-  id: "1",
+  id: "68f8bdb4c2a74e000108c75d",
   name: "PhilDL",
   slug: "phildl",
   profile_image: "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp",
@@ -106,20 +106,20 @@ describe("authors integration tests read", () => {
   const api = new TSGhostContentAPI(url, key, "v5.0");
 
   test("should fetch one author correctly by id", async () => {
-    const readQuery = api.authors.read({ id: "1" });
+    const readQuery = api.authors.read({ id: "68f8bdb4c2a74e000108c75d" });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams().fields).toBeUndefined();
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     if (result.success) {
-      expect(result.data.id).toBe("1");
+      expect(result.data.id).toBe(stub.id);
       expect(result.data.slug).toBe("phildl");
       expect(result.data.name).toBe("PhilDL");
       expect(result.data.website).toBe("https://github.com/PhilDL");
       expect(result.data.facebook).toBeNull();
       expect(result.data.url).toBe("https://astro-starter.digitalpress.blog/author/phildl/");
       expect(result.data.profile_image).toBe(
-        "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp"
+        "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp",
       );
     }
   });
@@ -131,20 +131,20 @@ describe("authors integration tests read", () => {
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     if (result.success) {
-      expect(result.data.id).toBe("1");
+      expect(result.data.id).toBe(stub.id);
       expect(result.data.slug).toBe("phildl");
       expect(result.data.name).toBe("PhilDL");
       expect(result.data.website).toBe("https://github.com/PhilDL");
       expect(result.data.facebook).toBeNull();
       expect(result.data.url).toBe("https://astro-starter.digitalpress.blog/author/phildl/");
       expect(result.data.profile_image).toBe(
-        "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp"
+        "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp",
       );
     }
   });
 
   test("should fetch author correctly and accept specific field", async () => {
-    const readQuery = api.authors.read({ id: "1" }).fields({ name: true });
+    const readQuery = api.authors.read({ id: "68f8bdb4c2a74e000108c75d" }).fields({ name: true });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getOutputFields()).toStrictEqual(["name"]);
     const result = await readQuery.fetch();
@@ -159,7 +159,7 @@ describe("authors integration tests read", () => {
   });
 
   test("should fetch author correctly and accept include", async () => {
-    const readQuery = api.authors.read({ id: "1" }).include({ "count.posts": true });
+    const readQuery = api.authors.read({ id: "68f8bdb4c2a74e000108c75d" }).include({ "count.posts": true });
     expect(readQuery).not.toBeUndefined();
     expect(readQuery.getParams()?.fields).toBeUndefined();
     expect(readQuery.getParams()?.include).toStrictEqual(["count.posts"]);

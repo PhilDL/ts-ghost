@@ -47,7 +47,7 @@ const stubPage = {
   tags: [],
   authors: [
     {
-      id: "1",
+      id: "68f8bdb4c2a74e000108c75d",
       name: "PhilDL",
       slug: "phildl",
       email: "philippe.lattention@hotmail.fr",
@@ -129,7 +129,7 @@ const stubPage = {
     negative_feedback: 0,
   },
   primary_author: {
-    id: "1",
+    id: "68f8bdb4c2a74e000108c75d",
     name: "PhilDL",
     slug: "phildl",
     email: "philippe.lattention@hotmail.fr",
@@ -474,7 +474,7 @@ describe("pages integration tests browse", () => {
     const api = new TSGhostAdminAPI(
       process.env.VITE_GHOST_URL!,
       "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-      "v5.0"
+      "v5.0",
     );
     expect(api.pages).toBeDefined();
     const result = await api.pages
@@ -499,7 +499,7 @@ describe("pages integration tests browse", () => {
     const api = new TSGhostAdminAPI(
       "https://codingdodoes.com",
       "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-      "v5.0"
+      "v5.0",
     );
     expect(api.pages).toBeDefined();
     const result = await api.pages

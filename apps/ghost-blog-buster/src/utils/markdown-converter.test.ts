@@ -25,7 +25,7 @@ describe("frontMatterGenerator", () => {
     canonical_url: "https://codingdodo.com/odoo-15-javascript-reference",
     authors: [
       {
-        id: "1",
+        id: "68f8bdb4c2a74e000108c75d",
         name: "Philippe L'ATTENTION",
         slug: "coding-dodo",
         profile_image: "https://codingdodo.com/content/images/2021/04/small-logo-1.png",
@@ -131,7 +131,7 @@ describe("frontMatterGenerator", () => {
       },
     ],
     primary_author: {
-      id: "1",
+      id: "68f8bdb4c2a74e000108c75d",
       name: "Philippe L'ATTENTION",
       slug: "coding-dodo",
       profile_image: "https://codingdodo.com/content/images/2021/04/small-logo-1.png",

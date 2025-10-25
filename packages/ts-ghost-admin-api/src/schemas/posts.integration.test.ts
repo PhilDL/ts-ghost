@@ -51,7 +51,7 @@ const stub = {
       ],
       authors: [
         {
-          id: "1",
+          id: "68f8bdb4c2a74e000108c75d",
           name: "PhilDL",
           slug: "phildl",
           email: "philippe.lattention@hotmail.fr",
@@ -128,7 +128,7 @@ const stub = {
       ],
       count: { clicks: 0, positive_feedback: 0, negative_feedback: 0 },
       primary_author: {
-        id: "1",
+        id: "68f8bdb4c2a74e000108c75d",
         name: "PhilDL",
         slug: "phildl",
         email: "philippe.lattention@hotmail.fr",

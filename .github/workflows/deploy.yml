@@ -28,7 +28,7 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
 
       - name: 📥 Download deps
@@ -59,7 +59,7 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
 
       - name: 📥 Download deps
@@ -89,7 +89,7 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
 
       - name: 🏄 Copy example env vars to nextjs app
@@ -123,7 +123,7 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
 
       # - name: 🏄 Copy test env vars
