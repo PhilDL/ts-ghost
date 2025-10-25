@@ -338,17 +338,17 @@ describe("APIComposer add / edit", () => {
     expect(composer.read({ slug: "this-is-a-slug" })).toBeInstanceOf(ReadFetcher);
     expect(composer.read({ email: "abc@test.com" })).toBeInstanceOf(ReadFetcher);
     // @ts-expect-error - required field missing
-    expect(() => composer.add({ foobar: "abc@test.com" })).rejects.toThrow();
+    await expect(() => composer.add({ foobar: "abc@test.com" })).rejects.toThrow();
     // @ts-expect-error - unknown option
-    expect(() => composer.add({ foo: "bar" }, { unknown: "option unknown" })).rejects.toThrow();
+    await expect(() => composer.add({ foo: "bar" }, { unknown: "option unknown" })).rejects.toThrow();
     // @ts-expect-error - edit only unknown fields
-    expect(() => composer.edit("abc", { foobar: "abc@test.com" })).rejects.toThrow();
+    await expect(() => composer.edit("abc", { foobar: "abc@test.com" })).rejects.toThrow();
     // @ts-expect-error - edit without data
-    expect(() => composer.edit("abc")).rejects.toThrow();
-    expect(() => composer.edit("", { foo: "test" })).rejects.toThrow();
+    await expect(() => composer.edit("abc")).rejects.toThrow();
+    await expect(() => composer.edit("", { foo: "test" })).rejects.toThrow();
 
     // @ts-expect-error - edit known fields but unknown option
-    expect(() => composer.edit("abc", { foo: "test" }, { update_otion_1: true })).rejects.toThrow();
+    await expect(() => composer.edit("abc", { foo: "test" }, { update_otion_1: true })).rejects.toThrow();
     expect(await composer.edit("abc", { foo: "test" }, { update_option_1: true })).toBeDefined();
   });
 

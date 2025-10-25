@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+/// <reference types="vitest/config" />
 /// <reference types="vite/client" />
 
 import { defineConfig } from "vite";
@@ -9,7 +9,6 @@ export default defineConfig({
   test: {
     globals: true,
     include: ["./**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    watchExclude: [".*\\/node_modules\\/.*", ".*\\/build\\/.*"],
     exclude: ["node_modules", "dist", ".idea", ".git", ".cache", "**/*integration.test.ts"],
     typecheck: {
       include: ["./**/*.{ts,tsx}"],
