@@ -112,7 +112,7 @@ describe("authors integration tests read", () => {
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     if (result.success) {
-      expect(result.data.id).toBe("1");
+      expect(result.data.id).toBe(stub.id);
       expect(result.data.slug).toBe("phildl");
       expect(result.data.name).toBe("PhilDL");
       expect(result.data.website).toBe("https://github.com/PhilDL");
@@ -131,7 +131,7 @@ describe("authors integration tests read", () => {
     const result = await readQuery.fetch();
     expect(result).not.toBeUndefined();
     if (result.success) {
-      expect(result.data.id).toBe("1");
+      expect(result.data.id).toBe(stub.id);
       expect(result.data.slug).toBe("phildl");
       expect(result.data.name).toBe("PhilDL");
       expect(result.data.website).toBe("https://github.com/PhilDL");
