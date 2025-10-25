@@ -36,10 +36,10 @@
   },
   "devDependencies": {
     "@ts-ghost/tsconfig": "workspace:*",
-    "@types/node": "^22.0.0",
+    "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "^8.57.0",
-    "tsup": "^8.0.2",
+    "tsup": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",

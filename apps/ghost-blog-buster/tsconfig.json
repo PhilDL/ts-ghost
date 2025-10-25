@@ -2,7 +2,7 @@
   "extends": "@ts-ghost/tsconfig/node16.json",
   "include": ["**/*.ts", "tsup.config.ts"],
   "compilerOptions": {
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "node"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "module": "ESNext",
@@ -13,8 +13,8 @@
       "@ts-ghost/admin-api/*": ["../../packages/ts-ghost-admin-api/src/*"],
       "@ts-ghost/admin-api": ["../../packages/ts-ghost-admin-api/src/index"],
       "@ts-ghost/core-api/*": ["../../packages/ts-ghost-core-api/src/*"],
-      "@ts-ghost/core-api": ["../../packages/ts-ghost-core-api/src/index"],
-    },
+      "@ts-ghost/core-api": ["../../packages/ts-ghost-core-api/src/index"]
+    }
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

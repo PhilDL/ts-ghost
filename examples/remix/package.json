@@ -23,7 +23,7 @@
     "@remix-run/dev": "2.9.1",
     "@remix-run/eslint-config": "2.9.1",
     "@types/cookie": "^0.6.0",
-    "@types/node": "^20.12.7",
+    "@types/node": "catalog:",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "eslint": "^8.57.0",
