@@ -50,6 +50,7 @@ describe("ReadFetcher", () => {
     fetchMocker.enableMocks();
   });
   afterEach(() => {
+    fetchMocker.resetMocks();
     vi.restoreAllMocks();
   });
 
@@ -410,6 +411,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
     fetchMocker.enableMocks();
   });
   afterEach(() => {
+    fetchMocker.resetMocks();
     vi.restoreAllMocks();
   });
 

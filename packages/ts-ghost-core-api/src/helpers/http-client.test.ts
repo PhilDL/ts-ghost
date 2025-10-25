@@ -75,6 +75,7 @@ describe("HTTPClient test fetch", () => {
     fetchMocker.enableMocks();
   });
   afterEach(() => {
+    fetchMocker.resetMocks();
     vi.restoreAllMocks();
   });
 
@@ -91,7 +92,7 @@ describe("HTTPClient test fetch", () => {
           foo: "content",
           bar: "content",
         },
-      })
+      }),
     );
 
     const result = await httpClient.fetch({ resource: "posts" });
@@ -123,7 +124,7 @@ describe("HTTPClient test fetch", () => {
           foo: "content-with-params",
           bar: "content-with-params",
         },
-      })
+      }),
     );
     const searchParams = new URLSearchParams();
     searchParams.append("page", "2");
@@ -137,7 +138,7 @@ describe("HTTPClient test fetch", () => {
           "Content-Type": "application/json",
           "Accept-Version": "v5.22",
         },
-      }
+      },
     );
     expect(result).toEqual({
       posts: {
@@ -160,7 +161,7 @@ describe("HTTPClient test fetch", () => {
           foo: "foo",
           bar: "eaoizdjoa1321123",
         },
-      })
+      }),
     );
 
     const result = await httpClient.fetch({ resource: "posts" });
@@ -193,7 +194,7 @@ describe("HTTPClient test fetch", () => {
           foo: "foo",
           bar: "eaoizdjoa1321123",
         },
-      })
+      }),
     );
     const searchParams = new URLSearchParams();
     searchParams.append("page", "2");
@@ -228,7 +229,7 @@ describe("HTTPClient test fetch", () => {
           foo: "foo",
           bar: "eaoizdjoa1321123",
         },
-      })
+      }),
     );
     const searchParams = new URLSearchParams();
     searchParams.append("page", "2");
@@ -262,7 +263,7 @@ describe("HTTPClient test fetch", () => {
           foo: "foo",
           bar: "eaoizdjoa1321123",
         },
-      })
+      }),
     );
     const searchParams = new URLSearchParams();
     searchParams.append("page", "2");
@@ -281,7 +282,7 @@ describe("HTTPClient test fetch", () => {
           "Accept-Version": "v5.22",
           Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
         },
-      }
+      },
     );
     expect(result).toEqual({
       posts: {
