@@ -483,10 +483,7 @@
   });
 
   // the "identity" schema is used to validate the inputs of the `read`method of the QueryBuilder
-  const identitySchema = z.union([
-    z.object({ slug: z.string() }),
-    z.object({ id: z.string() }),
-  ]);
+  const identitySchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),
@@ -621,7 +618,7 @@
 
   ```ts
   const exampleQuery = api.users
-    .read({ id: "1" })
+    .read({ id: "68f8bdb4c2a74e000108c75d" })
     .fields({ id: true, name: true, email: true });
   export type ExampleQueryOutput = InferFetcherDataShape<typeof exampleQuery>;
   ```

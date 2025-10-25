@@ -9,7 +9,7 @@ const stubResult = {
   },
   data: [
     {
-      id: "1",
+      id: "68f8bdb4c2a74e000108c75d",
       name: "PhilDL",
       slug: "phildl",
       email: "philippe.lattention@hotmail.fr",
@@ -80,10 +80,10 @@ describe("users integration tests browse", () => {
     expect(user.comment_notifications).toBe(stubUser.comment_notifications);
     expect(user.free_member_signup_notification).toBe(stubUser.free_member_signup_notification);
     expect(user.paid_subscription_started_notification).toBe(
-      stubUser.paid_subscription_started_notification
+      stubUser.paid_subscription_started_notification,
     );
     expect(user.paid_subscription_canceled_notification).toBe(
-      stubUser.paid_subscription_canceled_notification
+      stubUser.paid_subscription_canceled_notification,
     );
     expect(user.created_at).toBe(stubUser.created_at);
     expect(user.updated_at).toBeDefined();
@@ -93,7 +93,7 @@ describe("users integration tests browse", () => {
     expect(api.users).toBeDefined();
     const result = await api.users
       .read({
-        id: "1",
+        id: "68f8bdb4c2a74e000108c75d",
       })
       .fetch();
     assert(result.success);
@@ -119,10 +119,10 @@ describe("users integration tests browse", () => {
     expect(user.comment_notifications).toBe(stubUser.comment_notifications);
     expect(user.free_member_signup_notification).toBe(stubUser.free_member_signup_notification);
     expect(user.paid_subscription_started_notification).toBe(
-      stubUser.paid_subscription_started_notification
+      stubUser.paid_subscription_started_notification,
     );
     expect(user.paid_subscription_canceled_notification).toBe(
-      stubUser.paid_subscription_canceled_notification
+      stubUser.paid_subscription_canceled_notification,
     );
     expect(user.created_at).toBe(stubUser.created_at);
     expect(user.updated_at).toBeDefined();
