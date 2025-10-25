@@ -73,9 +73,13 @@ export const ghostVisibilitySchema = z.union([
 
 export const apiVersionsSchema = z
   .string()
-  .regex(/^v5\.\d+/)
-  .default("v5.0");
-export type TAPIVersion<V> = V extends "v5.0" | `v5.${infer Minor}` ? `v5.${Minor}` : never;
+  .regex(/^v[56]\.\d+/)
+  .default("v6.0");
+export type TAPIVersion<V> = V extends "v5.0" | `v5.${infer Minor}`
+  ? `v5.${Minor}`
+  : V extends "v6.0" | `v6.${infer Minor}`
+    ? `v6.${Minor}`
+    : never;
 export type APIVersions = z.infer<typeof apiVersionsSchema>;
 
 export const contentAPICredentialsSchema = z.object({
