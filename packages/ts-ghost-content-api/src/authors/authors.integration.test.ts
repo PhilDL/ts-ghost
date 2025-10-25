@@ -6,7 +6,7 @@ const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
 const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
 
 const stub = {
-  id: "1",
+  id: "68f8bdb4c2a74e000108c75d",
   name: "PhilDL",
   slug: "phildl",
   profile_image: "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp",
@@ -119,7 +119,7 @@ describe("authors integration tests read", () => {
       expect(result.data.facebook).toBeNull();
       expect(result.data.url).toBe("https://astro-starter.digitalpress.blog/author/phildl/");
       expect(result.data.profile_image).toBe(
-        "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp"
+        "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp",
       );
     }
   });
@@ -138,7 +138,7 @@ describe("authors integration tests read", () => {
       expect(result.data.facebook).toBeNull();
       expect(result.data.url).toBe("https://astro-starter.digitalpress.blog/author/phildl/");
       expect(result.data.profile_image).toBe(
-        "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp"
+        "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=x&d=mp",
       );
     }
   });
