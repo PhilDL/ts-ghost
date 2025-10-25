@@ -24,7 +24,7 @@ import { adminWebhookCreateSchema, adminWebhookSchema, adminWebhookUpdateSchema 
 
 export type { AdminAPICredentials, APIVersions } from "@ts-ghost/core-api";
 
-export class TSGhostAdminAPI<Version extends `v5.${string}` = any> {
+export class TSGhostAdminAPI<Version extends `v5.${string}` | `v6.${string}` = any> {
   private httpClientFactory: HTTPClientFactory;
 
   constructor(
