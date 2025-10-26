@@ -87,11 +87,11 @@ importers:
         specifier: ^0.7.0
         version: 0.7.0
       '@ts-ghost/admin-api':
-        specifier: ^4.2.1
-        version: 4.2.1
+        specifier: ^4.3.0
+        version: 4.3.0
       '@ts-ghost/content-api':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.2.0
+        version: 4.2.0
       configstore:
         specifier: ^7.0.0
         version: 7.0.0
@@ -336,8 +336,8 @@ importers:
   packages/ts-ghost-admin-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^6.1.0
-        version: 6.1.0
+        specifier: ^6.2.0
+        version: 6.2.0
       validator:
         specifier: ^13.11.0
         version: 13.11.0
@@ -385,8 +385,8 @@ importers:
   packages/ts-ghost-content-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^6.1.0
-        version: 6.1.0
+        specifier: ^6.2.0
+        version: 6.2.0
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -2292,14 +2292,14 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@ts-ghost/admin-api@4.2.1':
-    resolution: {integrity: sha512-EG1vdx/IdiiOg2ra9MtONX/CxsPLmeSbEZwRVOds+ibs8GAQ/Ku7G0XF72YyezFHDFw2uqjOyNH2nsNka+bGHg==}
+  '@ts-ghost/admin-api@4.3.0':
+    resolution: {integrity: sha512-tfWVUBdlYXZ8J6FPAXVTQga/EANcks9Vpw7T9KZOFDfl2yq3DowEOGltZ5d59vvN2euWzCl3AFzj+0sugvwbEw==}
 
-  '@ts-ghost/content-api@4.1.0':
-    resolution: {integrity: sha512-pR3+Pu2BtEowu235mUErdTbzU8DMDXK13rqIAj9XrYEaOC7VW4lGqalWlJSd91BkIKCZ7yoMVag1UqEGfm0gyw==}
+  '@ts-ghost/content-api@4.2.0':
+    resolution: {integrity: sha512-aEOK7FJYw7myFsywRF72Q3pgR+p2ADqSvhwNjqCX+fwIGoVD7fWy9KZq95qwTSAm7swEObcYDfhxI6Nc06kdMA==}
 
-  '@ts-ghost/core-api@6.1.0':
-    resolution: {integrity: sha512-C/DhpFGBa3N9rbBohUi5wVGU8HRR7JbS9xvLKdWa7LlZ6q9wEaNqCUmp5GcKmGuI9FLH+GkFUwjTNYGFYBRrhw==}
+  '@ts-ghost/core-api@6.2.0':
+    resolution: {integrity: sha512-vpswD2SZXK/8goXyMkfu5fyspFXhtOFGJchqPpoXIJqrAjVLLXePehuN3RK8L4OgszRgKl4trYeD3U1YRuRUpQ==}
 
   '@tsconfig/node10@1.0.9':
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -9214,18 +9214,18 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@ts-ghost/admin-api@4.2.1':
+  '@ts-ghost/admin-api@4.3.0':
     dependencies:
-      '@ts-ghost/core-api': 6.1.0
+      '@ts-ghost/core-api': 6.2.0
       validator: 13.11.0
       zod: 3.23.8
 
-  '@ts-ghost/content-api@4.1.0':
+  '@ts-ghost/content-api@4.2.0':
     dependencies:
-      '@ts-ghost/core-api': 6.1.0
+      '@ts-ghost/core-api': 6.2.0
       zod: 3.23.8
 
-  '@ts-ghost/core-api@6.1.0':
+  '@ts-ghost/core-api@6.2.0':
     dependencies:
       jose: 5.2.4
       zod: 3.23.8
