@@ -53,7 +53,7 @@ const stub = {
 describe("pages integration tests browse", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
   test("pages.browse()", async () => {
     const result = await api.pages.browse().fetch();
@@ -182,7 +182,7 @@ describe("pages integration tests browse", () => {
 describe("pages integration tests read", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
 
   test("pages.browse() include authors and tags", async () => {

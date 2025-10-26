@@ -7,7 +7,7 @@ const fetchMocker = createFetchMock(vi);
 describe("HTTPClient Content API", () => {
   const httpClient = new HTTPClient({
     key: "a",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
     url: "https://ghost.org",
   });
@@ -22,7 +22,7 @@ describe("HTTPClient Content API", () => {
     const headers = await httpClient.genHeaders();
     expect(headers).toEqual({
       "Content-Type": "application/json",
-      "Accept-Version": "v5.0",
+      "Accept-Version": "v6.0",
     });
   });
 });
@@ -30,7 +30,7 @@ describe("HTTPClient Content API", () => {
 describe("HTTPClient with subpath", () => {
   const httpClient = new HTTPClient({
     key: "a",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
     url: "https://ghost.org/blog",
   });

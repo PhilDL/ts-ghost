@@ -13,7 +13,7 @@ describe("APIComposer Read / Browse", () => {
   const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
   };
   let httpClientFactory: HTTPClientFactory;
@@ -269,7 +269,7 @@ describe("APIComposer add / edit", () => {
   const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
   };
   let httpClientFactory: HTTPClientFactory;
@@ -384,7 +384,7 @@ describe("APIComposer add / edit", () => {
     expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
       method: "POST",
       headers: {
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -398,7 +398,7 @@ describe("APIComposer add / edit", () => {
     expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
       method: "POST",
       headers: {
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -450,7 +450,7 @@ describe("APIComposer add / edit", () => {
     expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?option_1=true&key=1234", {
       method: "POST",
       headers: {
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -504,7 +504,7 @@ describe("APIComposer add / edit", () => {
     expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/?option_1=true&key=1234", {
       method: "POST",
       headers: {
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -557,7 +557,7 @@ describe("APIComposer add / edit", () => {
     expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/abc/?key=1234", {
       method: "PUT",
       headers: {
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -614,7 +614,7 @@ describe("APIComposer add / edit", () => {
       {
         method: "PUT",
         headers: {
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -675,7 +675,7 @@ describe("APIComposer add / edit", () => {
     expect(fetchMocker).toBeCalledWith("https://ghost.org/ghost/api/content/posts/abc/?key=1234", {
       method: "PUT",
       headers: {
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

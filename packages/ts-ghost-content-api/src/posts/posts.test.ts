@@ -7,7 +7,7 @@ const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
 const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
 
 describe("posts api .browse() Args Type-safety", () => {
-  const api = new TSGhostContentAPI(url, key, "v5.0");
+  const api = new TSGhostContentAPI(url, key, "v6.0");
   test(".browse() params shouldnt accept invalid params", () => {
     // @ts-expect-error - shouldnt accept invalid params
     const browse = api.posts.browse({ pp: 2 });
@@ -27,10 +27,13 @@ describe("posts api .browse() Args Type-safety", () => {
     expect(test.getOutputFields()).toEqual(["slug", "title"]);
 
     const fields = ["slug", "title", "foo"] as const;
-    const unknownOriginFields = fields.reduce((acc, k) => {
-      acc[k as keyof Post] = true;
-      return acc;
-    }, {} as { [k in keyof Post]?: true | undefined });
+    const unknownOriginFields = fields.reduce(
+      (acc, k) => {
+        acc[k as keyof Post] = true;
+        return acc;
+      },
+      {} as { [k in keyof Post]?: true | undefined },
+    );
     const result = api.posts.browse().fields(unknownOriginFields);
     expect(result.getOutputFields()).toEqual(["slug", "title"]);
   });

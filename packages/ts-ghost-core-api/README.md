@@ -61,7 +61,7 @@ import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 const api: ContentAPICredentials = {
   url: "https://ghost.org",
   key: "7d2d15d7338526d43c2fadc47c",
-  version: "v5.0",
+  version: "v6.0",
   resource: "posts",
 };
 
@@ -97,7 +97,7 @@ const composedAPI = new APIComposer(
       option_1: z.boolean(),
     }),
   },
-  api
+  api,
 );
 ```
 
@@ -121,7 +121,7 @@ import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 const api: ContentAPICredentials = {
   url: "https://ghost.org",
   key: "7d2d15d7338526d43c2fadc47c",
-  version: "v5.0",
+  version: "v6.0",
   resource: "posts",
 };
 
@@ -137,7 +137,7 @@ const simplifiedIncludeSchema = z.object({
 
 const composedAPI = new APIComposer(
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-  api
+  api,
 );
 let query = composedAPI.browse({
   limit: 5,
@@ -160,7 +160,7 @@ This is an example containing all the available keys in the `input` object
 ```ts
 const composedAPI = new APIComposer(
   { schema: simplifiedSchema, identitySchema: identitySchema, include: simplifiedIncludeSchema },
-  api
+  api,
 );
 let query = composedAPI.browse({
   page: 1,
@@ -227,7 +227,7 @@ const browseFetcher = new BrowseFetcher(
       limit: 1,
     },
   },
-  api
+  api,
 );
 ```
 
@@ -238,7 +238,7 @@ These fetchers have a `fetch` method that will return a discriminated union of 2
 ```ts
 const composedAPI = new APIComposer(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
-  api
+  api,
 );
 const readFetcher = composedAPI.read({ slug: "typescript-is-cool" });
 let result = await readFetcher.fetch();
@@ -360,7 +360,7 @@ const browseFetcher = new BrowseFetcher(
       limit: 1,
     },
   },
-  api
+  api,
 );
 let result = await browseFetcher
   .fields({
@@ -386,7 +386,7 @@ The `include` method lets you include some additionnal data that the Ghost API d
 const bf = new BrowseFetcher(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
-  api
+  api,
 );
 let result = await bf
   .include({
@@ -405,7 +405,7 @@ The `formats` method lets you include some additionnal formats that the Ghost AP
 const bf = new BrowseFetcher(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
-  api
+  api,
 );
 let result = await bf
   .formats({
@@ -425,7 +425,7 @@ You can chain the methods to select the fields, formats, and include you want.
 const bf = new BrowseFetcher(
   { schema: simplifiedSchema, output: simplifiedSchema, include: simplifiedIncludeSchema },
   {},
-  api
+  api,
 );
 let result = await bf
   .fields({
@@ -472,7 +472,7 @@ const composedAPI = new APIComposer(
       option_1: z.boolean(),
     }),
   },
-  api
+  api,
 );
 let newPost = await composedAPI.add(
   {
@@ -480,7 +480,7 @@ let newPost = await composedAPI.add(
   },
   {
     option_1: true,
-  }
+  },
 );
 ```
 

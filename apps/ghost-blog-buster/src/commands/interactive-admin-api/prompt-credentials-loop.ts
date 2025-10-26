@@ -46,7 +46,7 @@ export const promptCredentialsLoop = async (config: Configstore) => {
       process.exit(0);
     }
     try {
-      const ghost = new TSGhostAdminAPI(url.origin, ghostAdminApiKey, "v5.0");
+      const ghost = new TSGhostAdminAPI(url.origin, ghostAdminApiKey, "v6.0");
       s.start("Validating credentials");
       const res = await ghost.site.fetch();
       if (res.success) {
@@ -62,7 +62,7 @@ export const promptCredentialsLoop = async (config: Configstore) => {
     } catch (error: unknown) {
       note(
         `${color.red("There was an error trying to connect with these credentials:")} \n${error}`,
-        `${color.red("Error")}`
+        `${color.red("Error")}`,
       );
     }
   }

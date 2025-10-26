@@ -30,13 +30,13 @@ describe("BrowseFetcher", () => {
   const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
   };
   const adminCredentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "aaiuzhduad:baiuciauhviahuv",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "admin",
   };
   let httpClient: HTTPClient;
@@ -45,7 +45,7 @@ describe("BrowseFetcher", () => {
   // const adminApi: AdminAPICredentials = {
   //   url: "https://ghost.org",
   //   key: "1234",
-  //   version: "v5.0",
+  //   version: "v6.0",
   //   resource: "posts",
   //   endpoint: "admin",
   // };
@@ -98,7 +98,7 @@ describe("BrowseFetcher", () => {
     expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
       headers: {
         "Content-Type": "application/json",
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
       },
     });
     assert(result.success === true);
@@ -135,7 +135,7 @@ describe("BrowseFetcher", () => {
     expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/admin/posts/", {
       headers: {
         "Content-Type": "application/json",
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
         Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
       },
     });
@@ -175,7 +175,7 @@ describe("BrowseFetcher", () => {
     expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
       headers: {
         "Content-Type": "application/json",
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
       },
     });
   });
@@ -251,7 +251,7 @@ describe("BrowseFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -440,7 +440,7 @@ describe("BrowseFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
           Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
         },
       },
@@ -473,7 +473,7 @@ describe("BrowseFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -651,7 +651,7 @@ describe("BrowseFetcher output tests suite", () => {
   const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
   };
   let httpClient: HTTPClient;
@@ -769,7 +769,7 @@ describe("BrowseFetcher output tests suite", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -802,7 +802,7 @@ describe("BrowseFetcher output tests suite", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );

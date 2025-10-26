@@ -46,7 +46,7 @@ const stub = {
 describe("posts integration tests browse", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
   test("posts.browse()", async () => {
     const result = await api.posts.browse().fetch();
@@ -179,7 +179,7 @@ describe("posts integration tests browse", () => {
 describe("posts integration tests read", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
 
   test("posts.browse() include authors and tags", async () => {

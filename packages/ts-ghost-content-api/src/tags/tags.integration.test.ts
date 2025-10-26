@@ -29,7 +29,7 @@ const stub = {
 describe("tags integration tests browse", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
   test("tags.browse()", async () => {
     const result = await api.tags.browse().fetch();
@@ -136,7 +136,7 @@ describe("tags integration tests browse", () => {
 describe("tags integration tests read", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
 
   test("tags.read() by id", async () => {

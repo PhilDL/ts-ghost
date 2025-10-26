@@ -14,7 +14,7 @@ export const entrypoint = async function () {
     await promptCredentialsLoop(config);
   }
 
-  const ghost = new TSGhostAdminAPI(config.get("ghostUrl"), config.get("ghostAdminApiKey"), "v5.0");
+  const ghost = new TSGhostAdminAPI(config.get("ghostUrl"), config.get("ghostAdminApiKey"), "v6.0");
   const siteName = config.get("siteName");
 
   const quit = false;
@@ -84,7 +84,7 @@ export const entrypoint = async function () {
           config.set("siteName", "");
           note(
             `You have been disconnected from ${siteName}. You can reconnect to another blog by running the command again.`,
-            "Disconnected"
+            "Disconnected",
           );
           process.exit(0);
         }

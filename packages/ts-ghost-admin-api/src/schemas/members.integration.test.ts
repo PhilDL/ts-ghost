@@ -59,7 +59,18 @@ describe("members integration tests browse", () => {
     const key =
       process.env.VITE_GHOST_ADMIN_API_KEY ||
       "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
-    api = new TSGhostAdminAPI(url, key, "v5.0");
+    api = new TSGhostAdminAPI(url, key, "v6.0");
+  });
+  test("should browse member with email adress containing a plus sign", async () => {
+    expect(api.members).toBeDefined();
+    const result = await api.members
+      .browse({
+        limit: 1,
+        order: "created_at asc",
+        filter: "email:'test+test@example.com'",
+      })
+      .fetch();
+    expect(result.success).toBe(true);
   });
   test("members.browse()", async () => {
     expect(api.members).toBeDefined();
@@ -85,7 +96,7 @@ describe("members integration tests browse", () => {
     expect(member.labels).toStrictEqual([]);
     expect(member.subscriptions).toStrictEqual([]);
     expect(member.avatar_image).toBe(
-      "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=g&d=blank"
+      "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=g&d=blank",
     );
     expect(member.comped).toBe(false);
     expect(member.email_count).toBe(0);
@@ -118,7 +129,7 @@ describe("members integration tests browse", () => {
     expect(member.labels).toStrictEqual([]);
     expect(member.subscriptions).toStrictEqual([]);
     expect(member.avatar_image).toBe(
-      "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=g&d=blank"
+      "https://www.gravatar.com/avatar/c2baf8feb52fc654cc40c731207c677d?s=250&r=g&d=blank",
     );
     expect(member.comped).toBe(false);
     expect(member.email_count).toBe(0);

@@ -334,7 +334,7 @@
   const api: ContentAPICredentials = {
     url: "https://ghost.org",
     key: "1234",
-    version: "v5.0",
+    version: "v6.0",
     resource: "posts",
     endpoint: "content",
   };
@@ -472,7 +472,7 @@
   const api: ContentAPICredentials = {
     url: "https://ghost.org",
     key: "7d2d15d7338526d43c2fadc47c",
-    version: "v5.0",
+    version: "v6.0",
     resource: "posts",
   };
 

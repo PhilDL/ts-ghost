@@ -11,7 +11,7 @@ If you don't send this field, you will get an `UPDATE_COLLISION` error. Here is 
 ```ts title
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
-const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v6.0");
 
 const result = await api.posts
   .read({

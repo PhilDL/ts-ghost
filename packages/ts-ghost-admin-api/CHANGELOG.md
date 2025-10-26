@@ -422,10 +422,7 @@
   - The `members` resource now have a `add` and `edit` method that allow them to be created and updated.
 
   ```ts
-  const createNewMember = await api.members.add(
-    { email: "abcdefgh@msn.com" },
-    { send_email: true },
-  );
+  const createNewMember = await api.members.add({ email: "abcdefgh@msn.com" }, { send_email: true });
   assert(createNewMember.success);
   const newMember = createNewMember.data;
   // id => 6438cc365a8fdb00013a8783
@@ -474,7 +471,7 @@
 
 - 507b16a: ## Changes
 
-  - Update the TS definition of `APIVersion` to accept only `v5.x` for now.
+  - Update the TS definition of `APIVersion` to accept only `v5.x` and `v6.x` for now.
   - Updated the corresponding zod schema to have regex validation.
   - Updated documentation to give info about the supported versions
 

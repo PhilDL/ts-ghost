@@ -5,7 +5,7 @@ import { TSGhostContentAPI } from "./content-api";
 describe("content-api", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI("https://ghost.org", "59d4bf56c73c04a18c867dc3ba", "v5.0");
+    api = new TSGhostContentAPI("https://ghost.org", "59d4bf56c73c04a18c867dc3ba", "v6.0");
   });
 
   test("content-api", () => {
@@ -14,14 +14,14 @@ describe("content-api", () => {
 
   test("content-api shouldn't instantiate with an incorrect url", () => {
     assert.throws(() => {
-      const api = new TSGhostContentAPI("ghost.org", "59d4bf56c73c04a18c867dc3ba", "v5.0");
+      const api = new TSGhostContentAPI("ghost.org", "59d4bf56c73c04a18c867dc3ba", "v6.0");
       api.settings;
     });
   });
 
   test("content-api shouldn't instantiate with an incorrect key", () => {
     assert.throws(() => {
-      const api = new TSGhostContentAPI("https://ghost.org", "a", "v5.0");
+      const api = new TSGhostContentAPI("https://ghost.org", "a", "v6.0");
       api.settings;
     });
   });
@@ -32,7 +32,7 @@ describe("content-api", () => {
         "https://ghost.org",
         "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
         // @ts-expect-error
-        "v4.0"
+        "v4.0",
       );
       api.settings;
     });

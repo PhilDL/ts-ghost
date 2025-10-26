@@ -8,7 +8,7 @@ describe("admin-api", () => {
     api = new TSGhostAdminAPI(
       "https://ghost.org",
       "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-      "v5.0"
+      "v6.0",
     );
   });
 
@@ -18,14 +18,14 @@ describe("admin-api", () => {
 
   test("admin-api shouldn't instantiate with an incorrect url", () => {
     assert.throws(() => {
-      const api = new TSGhostAdminAPI("ghost.org", "59d4bf56c73c04a18c867dc3ba", "v5.0");
+      const api = new TSGhostAdminAPI("ghost.org", "59d4bf56c73c04a18c867dc3ba", "v6.0");
       api.site;
     });
   });
 
   test("admin-api shouldn't instantiate with an incorrect key", () => {
     assert.throws(() => {
-      const api = new TSGhostAdminAPI("https://ghost.org", "a:b", "v5.0");
+      const api = new TSGhostAdminAPI("https://ghost.org", "a:b", "v6.0");
       api.site;
     });
   });
@@ -36,7 +36,7 @@ describe("admin-api", () => {
         "https://ghost.org",
         "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
         // @ts-expect-error
-        "v4.0"
+        "v4.0",
       );
       api.site;
     });

@@ -9,6 +9,7 @@ describe("parseBrowseParams", () => {
     bar: z.string(),
     baz: z.boolean().optional(),
     count: z.number().optional(),
+    email: z.string().email().optional(),
   });
 
   test("should accept valid params", () => {
@@ -19,7 +20,7 @@ describe("parseBrowseParams", () => {
         order: "foo ASC",
         filter: "foo:bar,bar:baz",
       },
-      simplifiedSchema
+      simplifiedSchema,
     );
     expect(result).toStrictEqual({
       limit: 15,
@@ -38,8 +39,8 @@ describe("parseBrowseParams", () => {
           order: "foo ASC",
           filter: "foo:bar,bar:baz",
         },
-        simplifiedSchema
-      )
+        simplifiedSchema,
+      ),
     ).toThrow();
   });
 
@@ -52,8 +53,8 @@ describe("parseBrowseParams", () => {
           order: "foo ASC",
           filter: "foo:bar,bar:baz",
         },
-        simplifiedSchema
-      )
+        simplifiedSchema,
+      ),
     ).toThrow();
     expect(() =>
       parseBrowseParams(
@@ -63,8 +64,8 @@ describe("parseBrowseParams", () => {
           order: "foo ASC",
           filter: "foo:bar,bar:baz",
         },
-        simplifiedSchema
-      )
+        simplifiedSchema,
+      ),
     ).toThrow();
   });
   test("should throw if order contains invalid fields", () => {
@@ -76,8 +77,8 @@ describe("parseBrowseParams", () => {
           order: "bazbaz ASC",
           filter: "foo:bar,bar:baz",
         },
-        simplifiedSchema
-      )
+        simplifiedSchema,
+      ),
     ).toThrow();
   });
 
@@ -89,8 +90,8 @@ describe("parseBrowseParams", () => {
           page: 1,
           order: "foo BAR",
         },
-        simplifiedSchema
-      )
+        simplifiedSchema,
+      ),
     ).toThrow();
   });
 
@@ -103,8 +104,58 @@ describe("parseBrowseParams", () => {
           order: "foo ASC",
           filter: "foo:bar,bazbaz:baz",
         },
-        simplifiedSchema
-      )
+        simplifiedSchema,
+      ),
+    ).toThrow();
+  });
+
+  test("should accept valid params with email address", () => {
+    const result = parseBrowseParams(
+      {
+        limit: 15,
+        page: 1,
+        order: "foo ASC",
+        filter: "foo:bar,bar:baz,email:test@example.com",
+      },
+      simplifiedSchema,
+    );
+    expect(result).toStrictEqual({
+      limit: 15,
+      page: 1,
+      order: "foo ASC",
+      filter: "foo:bar,bar:baz,email:test@example.com",
+    });
+  });
+
+  test("should accept valid params with email address containing a plus sign", () => {
+    const result = parseBrowseParams(
+      {
+        limit: 15,
+        page: 1,
+        order: "foo ASC",
+        filter: "foo:bar,email:'test+test@example.com',bar:baz",
+      },
+      simplifiedSchema,
+    );
+    expect(result).toStrictEqual({
+      limit: 15,
+      page: 1,
+      order: "foo ASC",
+      filter: "foo:bar,email:'test+test@example.com',bar:baz",
+    });
+  });
+
+  test("email address with plus sign shouldnt break the rest of the validation", () => {
+    expect(() =>
+      parseBrowseParams(
+        {
+          limit: 15,
+          page: 1,
+          order: "foo ASC",
+          filter: "foo:bar,email:'test+test@example.com',bazbaz:baz",
+        },
+        simplifiedSchema,
+      ),
     ).toThrow();
   });
 });

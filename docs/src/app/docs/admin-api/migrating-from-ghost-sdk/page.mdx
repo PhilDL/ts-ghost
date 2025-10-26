@@ -11,7 +11,7 @@ Filtering posts by `author` or `tag` is not supported. You can only filter by `a
 ```ts title
 import { TSGhostAdminAPI, type Post } from "@ts-ghost/admin-api";
 
-const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v6.0");
 
 let posts: Post[] = [];
 let cursor = await api.posts

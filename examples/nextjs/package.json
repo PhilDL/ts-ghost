@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ts-ghost/core-api": "workspace:*",
     "@ts-ghost/admin-api": "workspace:*",
     "@ts-ghost/content-api": "workspace:*",
     "@types/node": "catalog:",

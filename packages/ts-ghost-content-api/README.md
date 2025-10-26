@@ -41,11 +41,10 @@ This client is only compatible with Ghost versions 5.x for now.
 - TypeScript 5+, the lib make usage of const in generics and other TS5+ features.
 
 <ContentNavigation next={{ title: "Quickstart", href: "/docs/content-api/quickstart" }} />
+
 # Quickstart
 
 These are the basic steps to follow to interact with the Ghost Content API in your TypeScript project.
-
-
 
 ### Get your Ghost API Key and Ghost version number
 
@@ -82,7 +81,7 @@ import { TSGhostContentAPI } from "@ts-ghost/content-api";
 const api = new TSGhostContentAPI(
   process.env.GHOST_URL || "",
   process.env.GHOST_CONTENT_API_KEY || "",
-  "v5.47.0"
+  "v5.47.0",
 );
 
 export async function getBlogPosts() {
@@ -109,12 +108,11 @@ export async function getBlogPosts() {
 }
 ```
 
-
-
 <ContentNavigation
-  previous={{ title: "Introduction", href: "/docs/content-api" }}
-  next={{ title: "Overview", href: "/docs/content-api/overview" }}
+previous={{ title: "Introduction", href: "/docs/content-api" }}
+next={{ title: "Overview", href: "/docs/content-api/overview" }}
 />
+
 # Overview
 
 Here you will have an overview of the philosophy of the library and a common workflow for your queries.
@@ -124,7 +122,7 @@ The `TSGhostContentAPI` object is your entry-point, it will contains all the ava
 ```ts
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
-const api = new TSGhostContentAPI("https://demo.ghost.io", "22444f78447824223cefc48062", "v5.0");
+const api = new TSGhostContentAPI("https://demo.ghost.io", "22444f78447824223cefc48062", "v6.0");
 ```
 
 From this `api` instance you will be able to call any resource available in the Ghost Content API and have the available methods exposed.
@@ -228,9 +226,10 @@ const result: {
 ```
 
 <ContentNavigation
-  previous={{ title: "Quickstart", href: "/docs/content-api/quickstart" }}
-  next={{ title: "Browse", href: "/docs/content-api/browse" }}
+previous={{ title: "Quickstart", href: "/docs/content-api/quickstart" }}
+next={{ title: "Browse", href: "/docs/content-api/browse" }}
 />
+
 # Browse
 
 The `browse` method is used to get a list of items from a Ghost Content API resource, it is the equivalent of the `GET /posts` endpoint. You have access to different options to paginate, limit, filter and order your results.
@@ -399,9 +398,10 @@ const result: {
 Here you can use the `next` property to get the next page fetcher if it is defined.
 
 <ContentNavigation
-  previous={{ title: "Overview", href: "/docs/content-api/overview" }}
-  next={{ title: "Read", href: "/docs/content-api/read" }}
+previous={{ title: "Overview", href: "/docs/content-api/overview" }}
+next={{ title: "Read", href: "/docs/content-api/read" }}
 />
+
 # Read
 
 The `read` method is used to one item from a Ghost Content API resource, it is the equivalent of the `GET /posts/slug/this-is-a-slug` endpoint. You have to give it an identity field to fetch the resource.
@@ -478,9 +478,10 @@ const result: {
 ```
 
 <ContentNavigation
-  previous={{ title: "Browse", href: "/docs/content-api/browse" }}
-  next={{ title: "Output Modifiers", href: "/docs/content-api/output-modifiers" }}
+previous={{ title: "Browse", href: "/docs/content-api/browse" }}
+next={{ title: "Output Modifiers", href: "/docs/content-api/output-modifiers" }}
 />
+
 # Output modifiers
 
 Output modifiers are available for the `read` and `browse` methods. They let you change the output of the result to have only your selected fields, include some additionnal data that the Ghost API doesn't give you by default or get the content in different formats.
@@ -560,9 +561,10 @@ let result = await api.posts
 The output type will be modified to make the formatted fields you include **non-optionals**.
 
 <ContentNavigation
-  previous={{ title: "Read", href: "/docs/content-api/read" }}
-  next={{ title: "Fetching", href: "/docs/content-api/fetching" }}
+previous={{ title: "Read", href: "/docs/content-api/read" }}
+next={{ title: "Fetching", href: "/docs/content-api/fetching" }}
 />
+
 # Fetching
 
 Fetching happens at the end of your chaining of methods, the moment you call the async `fetch` method (or the async `paginate`).
@@ -604,9 +606,10 @@ let query = await api.posts
 ```
 
 <ContentNavigation
-  previous={{ title: "Output Modifiers", href: "/docs/content-api/output-modifiers" }}
-  next={{ title: "Common Recipes", href: "/docs/content-api/common-recipes" }}
+previous={{ title: "Output Modifiers", href: "/docs/content-api/output-modifiers" }}
+next={{ title: "Common Recipes", href: "/docs/content-api/common-recipes" }}
 />
+
 # Commons recipes
 
 ## Getting all the posts (including Authors) with pagination
@@ -618,7 +621,7 @@ import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
 let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
+const api = new TSGhostContentAPI(url, key, "v6.0");
 
 const posts: Post[] = [];
 let cursor = await api.posts
@@ -642,7 +645,7 @@ import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
 let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
+const api = new TSGhostContentAPI(url, key, "v6.0");
 
 let result = await api.settings.fetch();
 if (result.success) {
@@ -652,9 +655,10 @@ if (result.success) {
 ```
 
 <ContentNavigation
-  previous={{ title: "Fetching", href: "/docs/content-api/fetching" }}
-  next={{ title: "Remix", href: "/docs/content-api/remix" }}
+previous={{ title: "Fetching", href: "/docs/content-api/fetching" }}
+next={{ title: "Remix", href: "/docs/content-api/remix" }}
 />
+
 # Remix example
 
 Here is an example using the `@ts-ghost/content-api` in a Remix loader:
@@ -689,7 +693,7 @@ export async function loader({ request }: LoaderArgs) {
   const api = new TSGhostContentAPI(
     process.env.GHOST_URL || "",
     process.env.GHOST_CONTENT_API_KEY || "",
-    "v5.0"
+    "v6.0",
   );
   const [settings, posts] = await Promise.all([api.settings.fetch(), api.posts.browse().fetch()]);
 
@@ -723,9 +727,10 @@ export default function Index() {
 </Steps>
 
 <ContentNavigation
-  previous={{ title: "Common Recipes", href: "/docs/content-api/common-recipes" }}
-  next={{ title: "NextJS", href: "/docs/content-api/nextjs" }}
+previous={{ title: "Common Recipes", href: "/docs/content-api/common-recipes" }}
+next={{ title: "NextJS", href: "/docs/content-api/nextjs" }}
 />
+
 # NextJS
 
 This is an example for NextJS 13 using the `@ts-ghost/content-api` with the app Router where we fetch the list of posts and the site settings to display them on the `/blog` of our site.
@@ -753,7 +758,7 @@ import { TSGhostContentAPI } from "@ts-ghost/content-api";
 export const api = new TSGhostContentAPI(
   process.env.GHOST_URL || "",
   process.env.GHOST_CONTENT_API_KEY || "",
-  "v5.0"
+  "v6.0",
 );
 ```
 
@@ -799,9 +804,10 @@ export default async function HomePage() {
 </Steps>
 
 <ContentNavigation
-  previous={{ title: "Remix", href: "/docs/content-api/remix" }}
-  next={{ title: "TypeScript Recipes", href: "/docs/content-api/advanced-typescript" }}
+previous={{ title: "Remix", href: "/docs/content-api/remix" }}
+next={{ title: "TypeScript Recipes", href: "/docs/content-api/advanced-typescript" }}
 />
+
 # TypeScript recipes
 
 Sometimes TypeScript will get in your way, especially with the string-based type-checking on browse parameters. In this section we will show you some tips and tricks to get around those problems, and present you some utilities.
@@ -813,10 +819,13 @@ You can avoid the type error by casting with `as`.
 
 ```ts
 // `fieldsKeys` comes from outside
-const outputFields = fieldsKeys.reduce((acc, k) => {
-  acc[k as keyof Post] = true;
-  return acc;
-}, {} as { [k in keyof Post]?: true | undefined });
+const outputFields = fieldsKeys.reduce(
+  (acc, k) => {
+    acc[k as keyof Post] = true;
+    return acc;
+  },
+  {} as { [k in keyof Post]?: true | undefined },
+);
 const result = await api.posts.browse().fields(outputFields).fetch();
 ```
 
@@ -857,7 +866,6 @@ const uncontrolledOrderInput = async (formData: FormData) => {
 ```
 
 <ContentNavigation previous={{ title: "NextJS", href: "/docs/content-api/nextjs" }} />
-
 
 ## Roadmap
 
