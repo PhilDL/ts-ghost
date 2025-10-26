@@ -1,5 +1,15 @@
 # @ts-ghost/core-api
 
+## 6.2.0
+
+### Minor Changes
+
+- 9e6d46b: ## Minor changes:
+
+  - Ghost API v6 compatibility
+  - Upgrade dependencies
+  - Fix email validation containing `+` sign
+
 ## 6.1.0
 
 ### Minor Changes
@@ -483,7 +493,10 @@
   });
 
   // the "identity" schema is used to validate the inputs of the `read`method of the QueryBuilder
-  const identitySchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
+  const identitySchema = z.union([
+    z.object({ slug: z.string() }),
+    z.object({ id: z.string() }),
+  ]);
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),

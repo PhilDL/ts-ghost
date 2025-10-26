@@ -1,5 +1,20 @@
 # @ts-ghost/admin-api
 
+## 4.3.0
+
+### Minor Changes
+
+- 9e6d46b: ## Minor changes:
+
+  - Ghost API v6 compatibility
+  - Upgrade dependencies
+  - Fix email validation containing `+` sign
+
+### Patch Changes
+
+- Updated dependencies [9e6d46b]
+  - @ts-ghost/core-api@6.2.0
+
 ## 4.2.1
 
 ### Patch Changes
@@ -422,7 +437,10 @@
   - The `members` resource now have a `add` and `edit` method that allow them to be created and updated.
 
   ```ts
-  const createNewMember = await api.members.add({ email: "abcdefgh@msn.com" }, { send_email: true });
+  const createNewMember = await api.members.add(
+    { email: "abcdefgh@msn.com" },
+    { send_email: true },
+  );
   assert(createNewMember.success);
   const newMember = createNewMember.data;
   // id => 6438cc365a8fdb00013a8783

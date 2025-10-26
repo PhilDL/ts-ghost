@@ -1,5 +1,21 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.7.0
+
+### Minor Changes
+
+- 9e6d46b: ## Minor changes:
+
+  - Ghost API v6 compatibility
+  - Upgrade dependencies
+  - Fix email validation containing `+` sign
+
+### Patch Changes
+
+- Updated dependencies [9e6d46b]
+  - @ts-ghost/content-api@4.2.0
+  - @ts-ghost/admin-api@4.3.0
+
 ## 0.6.16
 
 ### Patch Changes
