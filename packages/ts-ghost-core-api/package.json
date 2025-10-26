@@ -38,7 +38,7 @@
     "@ts-ghost/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "eslint": "^8.57.0",
+    "eslint": "catalog:eslint",
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

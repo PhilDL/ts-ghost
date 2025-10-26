@@ -26,7 +26,7 @@ export async function postsExportAll(ghost: TSGhostAdminAPI, siteName: string) {
 
   try {
     await fs.promises.access(output);
-  } catch (error) {
+  } catch {
     s.start(`Directory ${output} does not exist, creating...`);
     await fs.promises.mkdir(output);
     s.stop(`📂 Directory ${output} created`);
@@ -38,7 +38,7 @@ export async function postsExportAll(ghost: TSGhostAdminAPI, siteName: string) {
 
   while (currentPage <= pages) {
     s.start(
-      `Fetching Blog Posts, page ${currentPage} ${postsCount > 0 ? "of pages " + String(pages) : ""}...`
+      `Fetching Blog Posts, page ${currentPage} ${postsCount > 0 ? "of pages " + String(pages) : ""}...`,
     );
 
     const res = await ghost.posts
@@ -63,7 +63,7 @@ export async function postsExportAll(ghost: TSGhostAdminAPI, siteName: string) {
 
   note(
     `${postsCount} posts converted to Markdown and saved to ${outputFolder.toString() || "."}`,
-    "Success"
+    "Success",
   );
   return;
 }

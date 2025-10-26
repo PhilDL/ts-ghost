@@ -1,11 +1,11 @@
-import { Book, BookLock, Boxes, ChevronRightSquare } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import Balancer from "react-wrap-balancer";
 import { siteConfig } from "~/app/site-config";
 import { Icons } from "~/components/icons";
 import { PackageCard } from "~/components/package-card";
 import { buttonVariants } from "~/components/ui/button";
+import { Book, BookLock, Boxes, ChevronRightSquare } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import Balancer from "react-wrap-balancer";
 
 import heroLogo from "./hero-logo.png";
 
@@ -23,18 +23,19 @@ export default function IndexPage() {
           <Image src={heroLogo} width={500} alt="ts-ghost logo" />
         </div>
         <h1
-          className="font-cal animate-fade-up from-foreground/80 to-muted-foreground hidden bg-gradient-to-br bg-clip-text text-center text-5xl/[3rem] font-bold text-transparent opacity-0 drop-shadow-sm md:text-7xl/[5rem]"
+          className="hidden animate-fade-up bg-gradient-to-br from-foreground/80 to-muted-foreground bg-clip-text text-center font-cal text-5xl/[3rem] font-bold text-transparent opacity-0 drop-shadow-sm md:text-7xl/[5rem]"
           style={{ animationDelay: "0.20s", animationFillMode: "forwards" }}
         >
           <Balancer>{siteConfig.name}</Balancer>
         </h1>
         <p
-          className="animate-fade-up text-muted-foreground/80 text-center opacity-0 md:text-xl"
+          className="animate-fade-up text-center text-muted-foreground/80 opacity-0 md:text-xl"
           style={{ animationDelay: "0.30s", animationFillMode: "forwards" }}
         >
           <Balancer>
             <strong className="text-primary">
-              @ts-ghost is a collection of tools written in TypeScript to interract with a your Ghost Blog!{" "}
+              @ts-ghost is a collection of tools written in TypeScript to interract with a your Ghost
+              Blog!{" "}
             </strong>
             <br /> End-to-end type-safety 🦾, built on top of Zod, the Content and Admin API clients are
             type-safe and validated at runtime. There is also a beautiful CLI to interract with your Ghost
@@ -44,6 +45,7 @@ export default function IndexPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {siteConfig.docs.map((packageDoc, index) => (
             <PackageCard
+              key={packageDoc.package}
               href={packageDoc.path}
               Icon={IconMap[packageDoc.package]}
               title={packageDoc.package}
@@ -53,7 +55,7 @@ export default function IndexPage() {
           ))}
         </div>
         <div
-          className="animate-fade-up flex justify-center gap-4 opacity-0"
+          className="flex animate-fade-up justify-center gap-4 opacity-0"
           style={{ animationDelay: "0.40s", animationFillMode: "forwards" }}
         >
           <Link

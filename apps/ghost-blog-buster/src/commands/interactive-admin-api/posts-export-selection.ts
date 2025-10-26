@@ -58,7 +58,7 @@ export async function postsExportSelection(ghost: TSGhostAdminAPI, siteName: str
 
   try {
     await fs.promises.access(output);
-  } catch (error) {
+  } catch {
     s.start(`Directory ${output} does not exist, creating...`);
     await fs.promises.mkdir(output);
     s.stop(`📂 Directory ${output} created`);
@@ -68,7 +68,7 @@ export async function postsExportSelection(ghost: TSGhostAdminAPI, siteName: str
   postsToConvert.forEach((p) => createMarkdownFile(p, outputFolder.toString() || "."));
   note(
     `${postsToConvert.length} posts converted to Markdown and saved to ${outputFolder.toString() || "."}`,
-    "Success"
+    "Success",
   );
   return;
 }

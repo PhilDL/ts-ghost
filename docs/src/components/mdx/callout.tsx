@@ -11,7 +11,7 @@ import clsx from "clsx";
 
 export function InformationCircleIcon(
   props: ComponentProps<"svg">
-): ReactElement {
+): ReactElement<any> {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -56,11 +56,11 @@ const classes: Record<CalloutType, string> = {
 
 interface CalloutProps {
   type?: CalloutType;
-  emoji?: string | ReactElement;
+  emoji?: string | ReactElement<any>;
   children: ReactNode;
 }
 
-export function Callout(props: CalloutProps): ReactElement {
+export function Callout(props: CalloutProps): ReactElement<any> {
   const { children, type = "default", emoji = TypeToEmoji[type] } = props;
 
   return (

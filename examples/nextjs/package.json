@@ -6,19 +6,28 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@ts-ghost/core-api": "workspace:*",
     "@ts-ghost/admin-api": "workspace:*",
     "@ts-ghost/content-api": "workspace:*",
+    "@ts-ghost/core-api": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "18.3.1",
-    "@types/react-dom": "18.3.0",
-    "eslint": "^8.57.0",
-    "next": "^14.2.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "next": "16.0.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "typescript": "catalog:"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.2",
+      "@types/react-dom": "19.2.2"
+    }
+  },
+  "devDependencies": {
+    "eslint": "catalog:eslint",
+    "eslint-config-next": "catalog:eslint"
   }
 }

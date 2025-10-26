@@ -14,5 +14,16 @@ catalog:
   vitest: 4.0.3
   vitest-fetch-mock: 0.4.5
 
+catalogs:
+  eslint:
+    eslint: 9.38.0
+    "@eslint/eslintrc": 3.3.1
+    "@eslint/js": 9.38.0
+    typescript-eslint: 8.46.2
+    eslint-config-prettier: 10.1.8
+    eslint-config-turbo: 2.5.8
+    eslint-plugin-prettier: 5.5.4
+    eslint-config-next: 16.0.0
+
 onlyBuiltDependencies:
   - esbuild

@@ -35,7 +35,7 @@ export const builder: CommandBuilder = (yargs) => {
 };
 
 export const handler = async function (
-  argv: ArgumentsCamelCase<{ host?: string; key?: string; output?: string }>
+  argv: ArgumentsCamelCase<{ host?: string; key?: string; output?: string }>,
 ) {
   const api = await requireGhostContentAPI(argv);
   let output = argv.output || null;
@@ -46,7 +46,8 @@ export const handler = async function (
     }
     try {
       await fs.promises.access(output);
-    } catch (error) {
+    } catch {
+      log.info(`Folder ${output} does not exist, creating...`);
       await fs.promises.mkdir(output);
     }
   }
@@ -70,7 +71,7 @@ export const handler = async function (
           log.error(
             `There was an error trying to connect to your Ghost Instance: \n${res.errors
               .map((m) => m.message)
-              .join("\n")}`
+              .join("\n")}`,
           );
           process.exit(0);
         }
@@ -106,7 +107,7 @@ export const handler = async function (
           log.error(
             `There was an error trying to connect to your Ghost Instance: \n${res.errors
               .map((m) => m.message)
-              .join("\n")}`
+              .join("\n")}`,
           );
           process.exit(0);
         }
@@ -134,7 +135,7 @@ export const handler = async function (
         log.error(
           `There was an error trying to connect to your Ghost Instance: \n${res.errors
             .map((m) => m.message)
-            .join("\n")}`
+            .join("\n")}`,
         );
         process.exit(0);
       }
@@ -161,7 +162,7 @@ export const handler = async function (
         log.error(
           `There was an error trying to connect to your Ghost Instance: \n${res.errors
             .map((m) => m.message)
-            .join("\n")}`
+            .join("\n")}`,
         );
         process.exit(0);
       }
@@ -190,7 +191,7 @@ export const handler = async function (
         log.error(
           `There was an error trying to connect to your Ghost Instance: \n${res.errors
             .map((m) => m.message)
-            .join("\n")}`
+            .join("\n")}`,
         );
         process.exit(0);
       }

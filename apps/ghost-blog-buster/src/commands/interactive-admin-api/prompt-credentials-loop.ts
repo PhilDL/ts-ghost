@@ -18,7 +18,7 @@ export const promptCredentialsLoop = async (config: Configstore) => {
         let validUrl: URL;
         try {
           validUrl = new URL(value);
-        } catch (error: unknown) {
+        } catch {
           return `This is not a valid URL. Please try again and include the protocol (http or https)!`;
         }
         if (!validUrl.protocol) return `The URL should contain the protocol (http or https)!`;
