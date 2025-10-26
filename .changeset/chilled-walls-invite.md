@@ -5,4 +5,8 @@
 "@ts-ghost/ghost-blog-buster": minor
 ---
 
-v6 compatibility and bugfixes
+## Minor changes:
+
+- Ghost API v6 compatibility
+- Upgrade dependencies
+- Fix email validation containing `+` sign
