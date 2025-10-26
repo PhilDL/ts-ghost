@@ -8,7 +8,7 @@ const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3b
 describe("settings integration tests browse", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
   test("settings.fetch()", async () => {
     const result = await api.settings.fetch();

@@ -43,11 +43,10 @@ This client is only compatible with Ghost versions 5.x for now.
 - TypeScript 5+, the lib make usage of const in generics and other TS5+ features.
 
 <ContentNavigation next={{ title: "Quickstart", href: "/docs/admin-api/quickstart" }} />
+
 # Quickstart
 
 These are the basic steps to follow to interact with the Ghost Content API in your TypeScript project.
-
-
 
 ### Get your Ghost Admin API Key and Ghost version number
 
@@ -96,7 +95,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   process.env.GHOST_URL || "",
   process.env.GHOST_ADMIN_API_KEY || "",
-  "v5.47.0"
+  "v5.47.0",
 );
 
 export async function getBlogPosts() {
@@ -131,12 +130,11 @@ export async function getBlogPosts() {
 }
 ```
 
-
-
 <ContentNavigation
-  previous={{ title: "Introduction", href: "/docs/admin-api" }}
-  next={{ title: "Overview", href: "/docs/admin-api/overview" }}
+previous={{ title: "Introduction", href: "/docs/admin-api" }}
+next={{ title: "Overview", href: "/docs/admin-api/overview" }}
 />
+
 # Overview
 
 Here you will have an overview of the philosophy of the library and a common workflow for your queries.
@@ -149,7 +147,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   "https://demo.ghost.io",
   "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-  "v5.0"
+  "v6.0",
 );
 ```
 
@@ -274,7 +272,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 let url = "https://demo.ghost.io";
 let key = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
-const api = new TSGhostAdminAPI(url, key, "v5.0");
+const api = new TSGhostAdminAPI(url, key, "v6.0");
 
 // Input data are fully typed and then parsed through the appropriate Zod Schema
 const adding = await api.posts.add({
@@ -327,9 +325,10 @@ if (!postDelete.success) {
 ```
 
 <ContentNavigation
-  previous={{ title: "Quickstart", href: "/docs/admin-api/quickstart" }}
-  next={{ title: "Browse", href: "/docs/admin-api/browse" }}
+previous={{ title: "Quickstart", href: "/docs/admin-api/quickstart" }}
+next={{ title: "Browse", href: "/docs/admin-api/browse" }}
 />
+
 # Browse
 
 The `browse` method is used to get a list of items from a Ghost Admin API resource, it is the equivalent of the `GET /members` endpoint. You have access to different options to paginate, limit, filter and order your results.
@@ -346,7 +345,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   "https://demo.ghost.io",
   "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-  "v5.0"
+  "v6.0",
 );
 
 let query = api.posts.browse({
@@ -506,9 +505,10 @@ const result: {
 Here you can use the `next` property to get the next page fetcher if it is defined.
 
 <ContentNavigation
-  previous={{ title: "Overview", href: "/docs/admin-api/overview" }}
-  next={{ title: "Read", href: "/docs/admin-api/read" }}
+previous={{ title: "Overview", href: "/docs/admin-api/overview" }}
+next={{ title: "Read", href: "/docs/admin-api/read" }}
 />
+
 # Read
 
 The `read` method is used to one item from a Ghost Admin API resource, it is the equivalent of the `GET /posts/slug/this-is-a-slug` endpoint. You have to give it an identity field to fetch the resource.
@@ -527,7 +527,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   "https://demo.ghost.io",
   "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-  "v5.0"
+  "v6.0"
 );
 
 let query = api.users.read({
@@ -597,9 +597,10 @@ const result: {
 ```
 
 <ContentNavigation
-  previous={{ title: "Browse", href: "/docs/admin-api/browse" }}
-  next={{ title: "Output Modfiers", href: "/docs/admin-api/output-modifiers" }}
+previous={{ title: "Browse", href: "/docs/admin-api/browse" }}
+next={{ title: "Output Modfiers", href: "/docs/admin-api/output-modifiers" }}
 />
+
 # Output modifiers
 
 Output modifiers are available for the `read` and `browse` methods. They let you change the output of the result to have only your selected fields, include some additionnal data that the Ghost API doesn't give you by default or get the content in different formats.
@@ -755,9 +756,10 @@ let query = await api.posts
 ```
 
 <ContentNavigation
-  previous={{ title: "Output Modfiers", href: "/docs/admin-api/output-modifiers" }}
-  next={{ title: "Add", href: "/docs/admin-api/add" }}
+previous={{ title: "Output Modfiers", href: "/docs/admin-api/output-modifiers" }}
+next={{ title: "Add", href: "/docs/admin-api/add" }}
 />
+
 # Add
 
 Add lets you create a new record of a given resource. The `add` method is available on the resources that support it. (For example on the `users` resource don't have access to any mutation methods).
@@ -776,7 +778,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   "https://demo.ghost.io",
   "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-  "v5.0"
+  "v6.0",
 );
 
 const postAdd = await api.posts.add({
@@ -794,12 +796,12 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   "https://demo.ghost.io",
   "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-  "v5.0"
+  "v6.0",
 );
 
 const memberAdd = await api.members.add(
   { name: "Philippe", email: "philippe@ts-ghost.com" },
-  { send_email: false }
+  { send_email: false },
 );
 ```
 
@@ -822,9 +824,10 @@ const result: {
 ```
 
 <ContentNavigation
-  previous={{ title: "Fetching", href: "/docs/admin-api/fetching" }}
-  next={{ title: "Edit", href: "/docs/admin-api/edit" }}
+previous={{ title: "Fetching", href: "/docs/admin-api/fetching" }}
+next={{ title: "Edit", href: "/docs/admin-api/edit" }}
 />
+
 # Edit
 
 Edit lets you edit an existing record of a given resource by inputing the resource `id` and the new data. The `edit` method is available on the resources that support it. (For example on the `users` resource don't have access to any mutation methods).
@@ -843,13 +846,13 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   "https://demo.ghost.io",
   "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-  "v5.0"
+  "v6.0",
 );
 
 const membersEdit = await api.members.edit(
   "edHks74hdKqhs34izzahd45",
   { stripe_customer_id: "cus_123456789" },
-  { send_email: false }
+  { send_email: false },
 );
 ```
 
@@ -872,9 +875,10 @@ const result: {
 ```
 
 <ContentNavigation
-  previous={{ title: "Add", href: "/docs/admin-api/add" }}
-  next={{ title: "Delete", href: "/docs/admin-api/delete" }}
+previous={{ title: "Add", href: "/docs/admin-api/add" }}
+next={{ title: "Delete", href: "/docs/admin-api/delete" }}
 />
+
 # Delete
 
 Delete is an async function that requires the `id` of the record to delete. _Some resources don't support deletion, but instead give you accessed to a soft delete through the `status` field in the `edit` method._
@@ -887,7 +891,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   "https://demo.ghost.io",
   "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-  "v5.0"
+  "v6.0",
 );
 const result = await api.members.delete("edHks74hdKqhs34izzahd45");
 
@@ -915,9 +919,10 @@ const result: {
 ```
 
 <ContentNavigation
-  previous={{ title: "Add", href: "/docs/admin-api/add" }}
-  next={{ title: "Members & Subscriptions", href: "/docs/admin-api/members-recipes" }}
+previous={{ title: "Add", href: "/docs/admin-api/add" }}
+next={{ title: "Members & Subscriptions", href: "/docs/admin-api/members-recipes" }}
 />
+
 # Members & Subscriptions recipes
 
 The advantage of using the admin API is that you can create, edit and delete members. This is not possible with the content API.
@@ -929,11 +934,11 @@ Using the admin API you can create a new member with minimal information name an
 ```ts title
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
-const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v6.0");
 
 const membersAdd = await api.members.add(
   { name: "Philippe", email: "philippe@ts-ghost.com" },
-  { send_email: false }
+  { send_email: false },
 );
 ```
 
@@ -942,12 +947,12 @@ Then later update that member to add a stripe customer id
 ```ts
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
-const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v6.0");
 
 const membersEdit = await api.members.edit(
   "edHks74hdKqhs34izzahd45",
   { stripe_customer_id: "cus_123456789" },
-  { send_email: false }
+  { send_email: false },
 );
 ```
 
@@ -958,7 +963,7 @@ You can get all the Tiers you created from your Ghost Blog and filter them by ac
 ```ts title
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
-const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v6.0");
 const tiers = await api.tiers
   .browse({
     filter: "active:true+type:paid",
@@ -980,7 +985,7 @@ This is a quick example to get the subscriptions of a member and filter them by 
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 export const getMemberActiveSubscriptions = async (memberId: string) => {
-  const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+  const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v6.0");
   const subscriptions = await api.members.read({ id: memberId }).fields({ subscriptions: true }).fetch();
   if (!subscriptions.success) {
     throw new Error(subscriptions.errors.join(", "));
@@ -990,9 +995,10 @@ export const getMemberActiveSubscriptions = async (memberId: string) => {
 ```
 
 <ContentNavigation
-  previous={{ title: "Delete", href: "/docs/admin-api/delete" }}
-  next={{ title: "UPDATE_COLLISION error", href: "/docs/admin-api/posts-update-collision-error" }}
+previous={{ title: "Delete", href: "/docs/admin-api/delete" }}
+next={{ title: "UPDATE_COLLISION error", href: "/docs/admin-api/posts-update-collision-error" }}
 />
+
 # How to avoid post / page "UPDATE_COLLISION" Error
 
 When updating `posts` or `page` with the Admin API, Ghost expects you to send the `updated_at` field with the **current updated_at value** of that Post or Page.
@@ -1006,7 +1012,7 @@ If you don't send this field, you will get an `UPDATE_COLLISION` error. Here is 
 ```ts title
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
-const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v5.0");
+const api = new TSGhostAdminAPI(env.GHOST_URL, env.GHOST_ADMIN_API_KEY, "v6.0");
 
 const result = await api.posts
   .read({
@@ -1026,9 +1032,10 @@ const postEditResult = await api.posts.edit(post.id, {
 ```
 
 <ContentNavigation
-  previous={{ title: "Members & Subscriptions", href: "/docs/admin-api/members-recipes" }}
-  next={{ title: "Common Recipes", href: "/docs/admin-api/common-recipes" }}
+previous={{ title: "Members & Subscriptions", href: "/docs/admin-api/members-recipes" }}
+next={{ title: "Common Recipes", href: "/docs/admin-api/common-recipes" }}
 />
+
 # Commons recipes
 
 Here is a growing collections of things you can achieve with the `@ts-ghost/admin-api`.
@@ -1042,7 +1049,7 @@ import { TSGhostAdminAPI, type Post } from "@ts-ghost/admin-api";
 
 let url = "https://demo.ghost.io";
 let key = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8"; // Admin API KEY
-const api = new TSGhostAdminAPI(url, key, "v5.0");
+const api = new TSGhostAdminAPI(url, key, "v6.0");
 
 const posts: Post[] = [];
 let cursor = await api.posts
@@ -1071,7 +1078,7 @@ import { TSGhostAdminAPI, type Post } from "@ts-ghost/admin-api";
 
 let url = "https://demo.ghost.io";
 let key = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8"; // Admin API KEY
-const api = new TSGhostAdminAPI(url, key, "v5.0");
+const api = new TSGhostAdminAPI(url, key, "v6.0");
 
 let result = await api.settings.fetch();
 if (result.success) {
@@ -1081,9 +1088,10 @@ if (result.success) {
 ```
 
 <ContentNavigation
-  previous={{ title: "UPDATE_COLLISION error", href: "/docs/admin-api/posts-update-collision-error" }}
-  next={{ title: "Remix", href: "/docs/admin-api/remix" }}
+previous={{ title: "UPDATE_COLLISION error", href: "/docs/admin-api/posts-update-collision-error" }}
+next={{ title: "Remix", href: "/docs/admin-api/remix" }}
 />
+
 # Remix example
 
 Here is an example using the `@ts-ghost/admin-api` in a Remix loader:
@@ -1118,7 +1126,7 @@ export async function loader({ request }: LoaderArgs) {
   const api = new TSGhostAdminAPI(
     process.env.GHOST_URL || "",
     process.env.GHOST_ADMIN_API_KEY || "",
-    "v5.0"
+    "v6.0",
   );
   const [site, posts] = await Promise.all([api.site.fetch(), api.posts.browse().fetch()]);
 
@@ -1152,9 +1160,10 @@ export default function Index() {
 </Steps>
 
 <ContentNavigation
-  next={{ title: "NextJS", href: "/docs/admin-api/nextjs" }}
-  previous={{ title: "Common recipes", href: "/docs/admin-api/common-recipes" }}
+next={{ title: "NextJS", href: "/docs/admin-api/nextjs" }}
+previous={{ title: "Common recipes", href: "/docs/admin-api/common-recipes" }}
 />
+
 # NextJS
 
 This is an example for NextJS 13 using the `@ts-ghost/admin-api` with the app Router where we fetch the list of posts and the site settings to display them on the `/blog` of our site.
@@ -1182,7 +1191,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 export const api = new TSGhostAdminAPI(
   process.env.GHOST_URL || "",
   process.env.GHOST_ADMIN_API_KEY || "",
-  "v5.0"
+  "v6.0",
 );
 ```
 
@@ -1228,9 +1237,10 @@ export default async function HomePage() {
 </Steps>
 
 <ContentNavigation
-  previous={{ title: "Remix", href: "/docs/admin-api/remix" }}
-  next={{ title: "TypeScript recipes", href: "/docs/admin-api/advanced-typescript" }}
+previous={{ title: "Remix", href: "/docs/admin-api/remix" }}
+next={{ title: "TypeScript recipes", href: "/docs/admin-api/advanced-typescript" }}
 />
+
 # TypeScript recipes
 
 Sometimes TypeScript will get in your way, especially with the string-based type-checking on browse parameters. In this section we will show you some tips and tricks to get around those problems, and present you some utilities.
@@ -1242,10 +1252,13 @@ You can avoid the type error by casting with `as`.
 
 ```ts
 // `fieldsKeys` comes from outside
-const outputFields = fieldsKeys.reduce((acc, k) => {
-  acc[k as keyof Post] = true;
-  return acc;
-}, {} as { [k in keyof Post]?: true | undefined });
+const outputFields = fieldsKeys.reduce(
+  (acc, k) => {
+    acc[k as keyof Post] = true;
+    return acc;
+  },
+  {} as { [k in keyof Post]?: true | undefined },
+);
 const result = await api.posts.browse().fields(outputFields).fetch();
 ```
 
@@ -1286,7 +1299,6 @@ const uncontrolledOrderInput = async (formData: FormData) => {
 ```
 
 <ContentNavigation previous={{ title: "NextJS", href: "/docs/admin-api/nextjs" }} />
-
 
 ## Roadmap
 

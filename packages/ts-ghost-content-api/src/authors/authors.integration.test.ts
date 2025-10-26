@@ -24,7 +24,7 @@ const stub = {
 describe("authors integration tests browse", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
   test("authors.browse()", async () => {
     const result = await api.authors.browse().fetch();
@@ -103,7 +103,7 @@ describe("authors integration tests browse", () => {
 });
 
 describe("authors integration tests read", () => {
-  const api = new TSGhostContentAPI(url, key, "v5.0");
+  const api = new TSGhostContentAPI(url, key, "v6.0");
 
   test("should fetch one author correctly by id", async () => {
     const readQuery = api.authors.read({ id: "68f8bdb4c2a74e000108c75d" });

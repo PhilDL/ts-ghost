@@ -36,7 +36,7 @@ body:
     attributes:
       label: Target Ghost Blog version
       description: Please provide the version of the Ghost Blog you are interacting with, knowing that mosts tools here are tested against Ghost v5 minimum.
-      placeholder: "v5.0"
+      placeholder: "v6.0"
     validations:
       required: true
   - type: textarea

@@ -11,12 +11,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const adminAPI = new TSGhostAdminAPI(
     process.env.GHOST_URL || "",
     process.env.GHOST_ADMIN_API_KEY || "",
-    "v5.0",
+    "v6.0",
   );
   const contentAPI = new TSGhostContentAPI(
     process.env.GHOST_URL || "",
     process.env.GHOST_CONTENT_API_KEY || "",
-    "v5.0",
+    "v6.0",
   );
   const [settings, posts] = await Promise.all([
     contentAPI.settings.fetch(),

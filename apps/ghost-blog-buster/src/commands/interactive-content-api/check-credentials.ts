@@ -9,7 +9,7 @@ export const checkCredentials = async (config: Configstore) => {
     note(`Let's set your ghost URL and API key`, "Welcome");
   } else {
     try {
-      const ghost = new TSGhostContentAPI(config.get("ghostUrl"), config.get("ghostContentApiKey"), "v5.0");
+      const ghost = new TSGhostContentAPI(config.get("ghostUrl"), config.get("ghostContentApiKey"), "v6.0");
       s.start("Connecting to your blog...");
       const res = await ghost.settings.fetch();
       if (!res.success) {

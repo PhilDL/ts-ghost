@@ -46,7 +46,7 @@ describe("users integration tests browse", () => {
     const key =
       process.env.VITE_GHOST_ADMIN_API_KEY ||
       "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
-    api = new TSGhostAdminAPI(url, key, "v5.0");
+    api = new TSGhostAdminAPI(url, key, "v6.0");
   });
   test("users.browse()", async () => {
     expect(api.users).toBeDefined();

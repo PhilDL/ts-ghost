@@ -75,7 +75,7 @@ export const apiVersionsSchema = z
   .string()
   .regex(/^v[56]\.\d+/)
   .default("v6.0");
-export type TAPIVersion<V> = V extends "v5.0" | `v5.${infer Minor}`
+export type TAPIVersion<V> = V extends "v6.0" | `v5.${infer Minor}`
   ? `v5.${Minor}`
   : V extends "v6.0" | `v6.${infer Minor}`
     ? `v6.${Minor}`

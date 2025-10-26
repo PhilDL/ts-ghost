@@ -41,7 +41,7 @@ const stub = [
 describe("tiers integration tests browse", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
   test("tiers.browse()", async () => {
     const result = await api.tiers.browse().fetch();
@@ -125,7 +125,7 @@ describe("tiers integration tests browse", () => {
 describe("tiers integration tests read doesn't work on GHOST API", () => {
   let api: TSGhostContentAPI;
   beforeEach(() => {
-    api = new TSGhostContentAPI(url, key, "v5.0");
+    api = new TSGhostContentAPI(url, key, "v6.0");
   });
 
   test("tiers.read()", async () => {

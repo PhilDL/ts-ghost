@@ -9,7 +9,7 @@ import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
 let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
+const api = new TSGhostContentAPI(url, key, "v6.0");
 
 const posts: Post[] = [];
 let cursor = await api.posts
@@ -33,7 +33,7 @@ import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 
 let url = "https://demo.ghost.io";
 let key = "22444f78447824223cefc48062"; // Content API KEY
-const api = new TSGhostContentAPI(url, key, "v5.0");
+const api = new TSGhostContentAPI(url, key, "v6.0");
 
 let result = await api.settings.fetch();
 if (result.success) {

@@ -23,7 +23,7 @@ describe("MutationFetcher", () => {
   const adminCredentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "aaiuzhduad:baiuciauhviahuv",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "admin",
   };
 
@@ -63,7 +63,7 @@ describe("MutationFetcher", () => {
         method: "POST",
         body,
       },
-      httpClient
+      httpClient,
     );
     expect(mutation).toBeInstanceOf(MutationFetcher);
     expect(mutation.getResource()).toBe("posts");
@@ -78,7 +78,7 @@ describe("MutationFetcher", () => {
       body: JSON.stringify({ posts: [body] }),
       headers: {
         "Content-Type": "application/json",
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
         Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
       },
       method: "POST",

@@ -10,7 +10,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 const api = new TSGhostAdminAPI(
   "https://demo.ghost.io",
   "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8",
-  "v5.0"
+  "v6.0",
 );
 ```
 
@@ -135,7 +135,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 let url = "https://demo.ghost.io";
 let key = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
-const api = new TSGhostAdminAPI(url, key, "v5.0");
+const api = new TSGhostAdminAPI(url, key, "v6.0");
 
 // Input data are fully typed and then parsed through the appropriate Zod Schema
 const adding = await api.posts.add({

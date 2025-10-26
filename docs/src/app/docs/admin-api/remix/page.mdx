@@ -32,7 +32,7 @@ export async function loader({ request }: LoaderArgs) {
   const api = new TSGhostAdminAPI(
     process.env.GHOST_URL || "",
     process.env.GHOST_ADMIN_API_KEY || "",
-    "v5.0"
+    "v6.0",
   );
   const [site, posts] = await Promise.all([api.site.fetch(), api.posts.browse().fetch()]);
 

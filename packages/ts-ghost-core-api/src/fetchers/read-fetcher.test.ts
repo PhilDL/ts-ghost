@@ -21,13 +21,13 @@ describe("ReadFetcher", () => {
   const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
   };
   const adminCredentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "aaiuzhduad:baiuciauhviahuv",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "admin",
   };
   let httpClient: HTTPClient;
@@ -83,7 +83,7 @@ describe("ReadFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -117,7 +117,7 @@ describe("ReadFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
           Authorization: expect.stringMatching(/^Ghost [a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/),
         },
       },
@@ -151,7 +151,7 @@ describe("ReadFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -222,7 +222,7 @@ describe("ReadFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -262,7 +262,7 @@ describe("ReadFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -308,7 +308,7 @@ describe("ReadFetcher", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -372,7 +372,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
   const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
   };
   let httpClient: HTTPClient;
@@ -442,7 +442,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -474,7 +474,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );
@@ -509,7 +509,7 @@ describe("ReadFetcherFetcher outputs test suite", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
       },
     );

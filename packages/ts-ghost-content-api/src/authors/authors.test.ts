@@ -8,7 +8,7 @@ const fetchMocker = createFetchMock(vi);
 describe("authors api .browse() Args Type-safety", () => {
   const url = process.env.VITE_GHOST_URL || "https://my-ghost-blog.com";
   const key = process.env.VITE_GHOST_CONTENT_API_KEY || "59d4bf56c73c04a18c867dc3ba";
-  const api = new TSGhostContentAPI(url, key, "v5.0");
+  const api = new TSGhostContentAPI(url, key, "v6.0");
   test(".browse() params shouldnt accept invalid params", () => {
     // @ts-expect-error - shouldnt accept invalid params
     const browse = api.authors.browse({ pp: 2 });
@@ -26,7 +26,7 @@ describe("authors api .browse() Args Type-safety", () => {
       order: "name ASC,slug DESC",
     });
     expect(
-      api.authors.browse({ order: "name ASC,slug DESC,location ASC" }).getParams().browseParams
+      api.authors.browse({ order: "name ASC,slug DESC,location ASC" }).getParams().browseParams,
     ).toStrictEqual({
       order: "name ASC,slug DESC,location ASC",
     });
@@ -39,14 +39,14 @@ describe("authors api .browse() Args Type-safety", () => {
       api.authors.browse({
         // @ts-expect-error - order should ony contain field
         filter: "foo:bar",
-      })
+      }),
     ).toThrow();
     expect(
       api.authors
         .browse({
           filter: "name:bar",
         })
-        .getParams().browseParams
+        .getParams().browseParams,
     ).toStrictEqual({
       filter: "name:bar",
     });
@@ -55,7 +55,7 @@ describe("authors api .browse() Args Type-safety", () => {
         .browse({
           filter: "name:bar+slug:-test",
         })
-        .getParams().browseParams
+        .getParams().browseParams,
     ).toStrictEqual({
       filter: "name:bar+slug:-test",
     });
@@ -69,7 +69,7 @@ describe("authors api .browse() Args Type-safety", () => {
           // @ts-expect-error - order should ony contain field
           foo: true,
         })
-        .getOutputFields()
+        .getOutputFields(),
     ).toEqual([]);
 
     expect(api.authors.browse().fields({ location: true }).getOutputFields()).toEqual(["location"]);
@@ -84,7 +84,7 @@ describe("authors resource mocked", () => {
   let api: TSGhostContentAPI;
 
   beforeEach(() => {
-    api = new TSGhostContentAPI("https://my-ghost-blog.com", "59d4bf56c73c04a18c867dc3ba", "v5.0");
+    api = new TSGhostContentAPI("https://my-ghost-blog.com", "59d4bf56c73c04a18c867dc3ba", "v6.0");
     fetchMocker.enableMocks();
   });
   afterEach(() => {
@@ -123,7 +123,7 @@ describe("authors resource mocked", () => {
             prev: null,
           },
         },
-      })
+      }),
     );
     const result = await browseQuery.fetch();
     expect(fetchMocker).toHaveBeenCalledTimes(1);
@@ -132,9 +132,9 @@ describe("authors resource mocked", () => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept-Version": "v5.0",
+          "Accept-Version": "v6.0",
         },
-      }
+      },
     );
     expect(result).not.toBeUndefined();
     if (result.success) {

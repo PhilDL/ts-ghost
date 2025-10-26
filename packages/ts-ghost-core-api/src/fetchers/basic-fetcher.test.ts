@@ -11,7 +11,7 @@ describe("BasicFetcher", () => {
   const credentials: HTTPClientOptions = {
     url: "https://ghost.org",
     key: "1234",
-    version: "v5.0",
+    version: "v6.0",
     endpoint: "content",
   };
   let httpClient: HTTPClient;
@@ -44,7 +44,7 @@ describe("BasicFetcher", () => {
     expect(fetchMocker).toHaveBeenCalledWith("https://ghost.org/ghost/api/content/posts/?key=1234", {
       headers: {
         "Content-Type": "application/json",
-        "Accept-Version": "v5.0",
+        "Accept-Version": "v6.0",
       },
     });
 
