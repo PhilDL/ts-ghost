@@ -1,12 +1,12 @@
 "use client";
 
 import { PopoverClose } from "@radix-ui/react-popover";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import * as React from "react";
 import type { PackageDocumentationConfig } from "~/app/site-config";
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/cn";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import * as React from "react";
 
 import { Icons } from "./icons";
 import { Button } from "./ui/button";
@@ -45,7 +45,7 @@ export const MobileDropdown = ({ items }: { items: PackageDocumentationConfig[] 
                 href={item.path}
                 key={item.package}
                 className={buttonVariants({
-                  variant: currentPackage && item.package === currentPackage.package ? "default" : "outline-solid",
+                  variant: currentPackage && item.package === currentPackage.package ? "default" : "outline",
                 })}
               >
                 {item.title}
@@ -66,7 +66,7 @@ export const MobileDropdown = ({ items }: { items: PackageDocumentationConfig[] 
                           href={item.href}
                           className={cn(
                             "text-muted-foreground hover:text-primary flex py-1 text-base font-medium transition-colors",
-                            item.href === pathname && "text-foreground"
+                            item.href === pathname && "text-foreground",
                           )}
                           target={item.external ? "_blank" : ""}
                           rel={item.external ? "noreferrer" : ""}
