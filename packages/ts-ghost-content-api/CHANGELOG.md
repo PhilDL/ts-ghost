@@ -1,5 +1,20 @@
 # @ts-ghost/content-api
 
+## 4.2.0
+
+### Minor Changes
+
+- 9e6d46b: ## Minor changes:
+
+  - Ghost API v6 compatibility
+  - Upgrade dependencies
+  - Fix email validation containing `+` sign
+
+### Patch Changes
+
+- Updated dependencies [9e6d46b]
+  - @ts-ghost/core-api@6.2.0
+
 ## 4.1.0
 
 ### Minor Changes
