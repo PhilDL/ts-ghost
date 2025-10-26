@@ -40,7 +40,7 @@ export const membersExportAll = async (ghost: TSGhostAdminAPI, _siteName: string
     }
     try {
       await fs.promises.access(output);
-    } catch (error) {
+    } catch {
       s.start(`Directory ${output} does not exist, creating...`);
       await fs.promises.mkdir(output);
       s.stop(`📂 Directory ${output} created`);

@@ -33,8 +33,10 @@ export type FieldOrSubField<S> = S extends `${infer Field}.${string}` ? Field : 
 
 export type BrowseFilter<S, Shape> = S extends string
   ? S extends `${infer Field}:'${infer Value}'`
-    ? Value extends string
-      ? S
+    ? FieldOrSubField<Field> extends keyof Shape
+      ? Value extends string
+        ? S
+        : never
       : never
     : S extends `${infer Field}:${infer Rest}`
       ? FieldOrSubField<Field> extends keyof Shape

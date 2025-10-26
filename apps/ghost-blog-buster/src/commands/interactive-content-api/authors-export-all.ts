@@ -38,7 +38,7 @@ export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: strin
     }
     try {
       await fs.promises.access(output);
-    } catch (error) {
+    } catch {
       s.start(`Directory ${output} does not exist, creating...`);
       await fs.promises.mkdir(output);
       s.stop(`📂 Directory ${output} created`);

@@ -46,7 +46,7 @@
     "@types/node": "catalog:",
     "@types/validator": "^13.11.9",
     "@vitest/coverage-v8": "catalog:",
-    "eslint": "^8.57.0",
+    "eslint": "catalog:eslint",
     "jiti": "^2.0.0",
     "tsup": "catalog:",
     "typescript": "catalog:",
