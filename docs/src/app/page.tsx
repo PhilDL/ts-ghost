@@ -23,7 +23,7 @@ export default function IndexPage() {
           <Image src={heroLogo} width={500} alt="ts-ghost logo" />
         </div>
         <h1
-          className="hidden animate-fade-up bg-gradient-to-br from-foreground/80 to-muted-foreground bg-clip-text text-center font-cal text-5xl/[3rem] font-bold text-transparent opacity-0 drop-shadow-sm md:text-7xl/[5rem]"
+          className="hidden animate-fade-up bg-linear-to-br from-foreground/80 to-muted-foreground bg-clip-text text-center font-cal text-5xl/[3rem] font-bold text-transparent opacity-0 drop-shadow-xs md:text-7xl/[5rem]"
           style={{ animationDelay: "0.20s", animationFillMode: "forwards" }}
         >
           <Balancer>{siteConfig.name}</Balancer>

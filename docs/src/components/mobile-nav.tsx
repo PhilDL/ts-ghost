@@ -45,7 +45,7 @@ export const MobileDropdown = ({ items }: { items: PackageDocumentationConfig[] 
                 href={item.path}
                 key={item.package}
                 className={buttonVariants({
-                  variant: currentPackage && item.package === currentPackage.package ? "default" : "outline",
+                  variant: currentPackage && item.package === currentPackage.package ? "default" : "outline-solid",
                 })}
               >
                 {item.title}

@@ -29,7 +29,7 @@ export function DocsSidebarNavItems(props: { items: NavItem[]; pathname: string 
             key={index}
             href={item.href}
             className={cn(
-              "focus-visible:ring-ringfocus-visible:outline-none focus-visible:ring-ring ring-offset-background group flex h-9 w-full items-center rounded-md border border-transparent px-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+              "focus-visible:ring-ringfocus-visible:outline-none focus-visible:ring-ring ring-offset-background group flex h-9 w-full items-center rounded-md border border-transparent px-3 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2",
               item.disabled && "cursor-not-allowed opacity-60",
               {
                 "bg-accent border-border text-accent-foreground font-medium": props.pathname === item.href,
