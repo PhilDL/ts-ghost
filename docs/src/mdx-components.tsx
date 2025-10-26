@@ -15,7 +15,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     h3: (props) => <h3 className="font-cal mt-8 scroll-m-20 text-2xl font-bold" {...props} />,
     h4: (props) => <h4 className="font-cal -mb-4 mt-6 scroll-m-20 text-2xl font-bold" {...props} />,
-    p: (props) => <p className="leading-7 [&:not(:first-child)]:mt-6" {...props} />,
+    p: (props) => <p className="leading-7 not-first:mt-6" {...props} />,
     a: ({ children, href }) => {
       const isExternal = href?.startsWith("http");
       const Component = isExternal ? "a" : Link;
