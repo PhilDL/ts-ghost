@@ -10,8 +10,8 @@ export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: strin
     message: "Select the output type.",
     initialValue: "json",
     options: [
-      { name: "JSON", value: "json" },
-      { name: "stdout", value: "stdout", hint: "Prints the output to the console." },
+      { label: "JSON", value: "json" },
+      { label: "stdout", value: "stdout", hint: "Prints the output to the console." },
     ],
   });
   if (isCancel(outputType)) {
@@ -72,7 +72,7 @@ export const authorsExportAll = async (ghost: TSGhostContentAPI, siteName: strin
     });
     note(
       `${authors.data.length} authors converted to Json file and saved to ${output}/authors.json`,
-      "Success"
+      "Success",
     );
   }
   return;

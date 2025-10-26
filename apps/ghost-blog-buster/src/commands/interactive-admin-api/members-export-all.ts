@@ -12,8 +12,8 @@ export const membersExportAll = async (ghost: TSGhostAdminAPI, _siteName: string
     message: "Select the output type.",
     initialValue: "json",
     options: [
-      { name: "JSON", value: "json" },
-      { name: "stdout", value: "stdout", hint: "Prints the output to the console." },
+      { label: "JSON", value: "json" },
+      { label: "stdout", value: "stdout", hint: "Prints the output to the console." },
     ],
   });
   if (isCancel(outputType)) {
