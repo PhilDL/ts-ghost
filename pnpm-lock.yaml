@@ -250,6 +250,9 @@ importers:
       '@ts-ghost/content-api':
         specifier: workspace:*
         version: link:../../packages/ts-ghost-content-api
+      '@ts-ghost/core-api':
+        specifier: workspace:*
+        version: link:../../packages/ts-ghost-core-api
       '@types/node':
         specifier: 'catalog:'
         version: 22.18.10

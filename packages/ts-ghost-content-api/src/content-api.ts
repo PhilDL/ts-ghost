@@ -24,7 +24,7 @@ export enum BrowseEndpointType {
   settings = "settings",
 }
 
-export class TSGhostContentAPI<Version extends `v5.${string}` = any> {
+export class TSGhostContentAPI<Version extends `v5.${string}` | `v6.${string}` = any> {
   private HTTPClientFactoryFactory: HTTPClientFactory;
 
   constructor(
