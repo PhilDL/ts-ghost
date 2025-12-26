@@ -19,11 +19,11 @@ catalogs:
     eslint: 9.39.2
     "@eslint/eslintrc": 3.3.3
     "@eslint/js": 9.39.2
-    typescript-eslint: 8.50.0
+    typescript-eslint: 8.50.1
     eslint-config-prettier: 10.1.8
-    eslint-config-turbo: 2.6.3
+    eslint-config-turbo: 2.7.1
     eslint-plugin-prettier: 5.5.4
-    eslint-config-next: 16.0.10
+    eslint-config-next: 16.1.1
 
 onlyBuiltDependencies:
   - esbuild
