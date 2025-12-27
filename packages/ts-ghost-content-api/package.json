@@ -52,11 +52,11 @@
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:",
     "vitest-fetch-mock": "catalog:",
-    "zod": "^3.22.2"
+    "zod": "^4.0.0"
   },
   "dependencies": {
     "@ts-ghost/core-api": "^6.2.0",
-    "zod": "3.23.8"
+    "zod": "4.2.1"
   },
   "publishConfig": {
     "access": "public"
