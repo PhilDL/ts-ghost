@@ -130,8 +130,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       node-html-markdown:
-        specifier: ^1.3.0
-        version: 1.3.0
+        specifier: ^2.0.0
+        version: 2.0.0
       picocolors:
         specifier: ^1.0.0
         version: 1.0.0
@@ -4099,12 +4099,12 @@ packages:
       encoding:
         optional: true
 
-  node-html-markdown@1.3.0:
-    resolution: {integrity: sha512-OeFi3QwC/cPjvVKZ114tzzu+YoR+v9UXW5RwSXGUqGb0qCl0DvP406tzdL7SFn8pZrMyzXoisfG2zcuF9+zw4g==}
-    engines: {node: '>=10.0.0'}
+  node-html-markdown@2.0.0:
+    resolution: {integrity: sha512-DqUC3GGP7pwSYxS93SwHoP+qCw78xcMP6C6H2DuC8rPD2AweJRjBzQb5SdXpKtDlqAQ7hVotJcfhgU7hU5Gthw==}
+    engines: {node: '>=20.0.0'}
 
-  node-html-parser@6.1.5:
-    resolution: {integrity: sha512-fAaM511feX++/Chnhe475a0NHD8M7AxDInsqQpz6x63GRF7xYNdS8Vo5dKsIVPgsOvG7eioRRTZQnWBrhDHBSg==}
+  node-html-parser@6.1.13:
+    resolution: {integrity: sha512-qIsTMOY4C/dAa5Q5vsobRpOOvPfC4pB61UVW2uSwZNUp0QU/jCekTal1vMmbO0DgdHeLUJpv/ARmDqErVxA3Sg==}
 
   node-plop@0.26.3:
     resolution: {integrity: sha512-Cov028YhBZ5aB7MdMWJEmwyBig43aGL5WT4vdoB28Oitau1zZAcHUn8Sgfk9HM33TqhtLJ9PlM/O0Mv+QpV/4Q==}
@@ -10043,11 +10043,11 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  node-html-markdown@1.3.0:
+  node-html-markdown@2.0.0:
     dependencies:
-      node-html-parser: 6.1.5
+      node-html-parser: 6.1.13
 
-  node-html-parser@6.1.5:
+  node-html-parser@6.1.13:
     dependencies:
       css-select: 5.1.0
       he: 1.2.0
