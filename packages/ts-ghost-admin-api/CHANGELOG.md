@@ -1,11 +1,17 @@
 # @ts-ghost/admin-api
 
+## 5.0.0
+
+### Major Changes
+
+- ea4745c: ## Breaking Changes
+  - `@ts-ghost/admin-api` when now require the `newsletter` field to be set when scheduling email_only posts
+
 ## 4.3.0
 
 ### Minor Changes
 
 - 9e6d46b: ## Minor changes:
-
   - Ghost API v6 compatibility
   - Upgrade dependencies
   - Fix email validation containing `+` sign
@@ -26,14 +32,12 @@
 ### Minor Changes
 
 - 0586744: ## Global
-
   - Upgrade Zod version and fix types, no breaking changes were introduced.
 
   ## `@ts-ghost/content-api`
 
   Change type of `url` on `Author` for the content API to align with the `post.authors` and `page.authors` type.
   An author can have an undefined or null `url` if the author is not set as visible.
-
   - New type is now `string | undefined | null` instead of `string`.
   - Updated the `Author` type in the `content-api` package to reflect this change.
 
@@ -70,7 +74,6 @@
 - 0631a22: Posts/Pages upgrade: Lexical format as default, handling options (newsletter, source:html, etc) for create/edit mutations.
 
   ### `lexical` format availability on posts/pages
-
   - `lexical` format is now available when using the transform `formats` method
 
   ```ts
@@ -147,11 +150,9 @@
 ### Patch Changes
 
 - 2d03006: ## All:
-
   - upgrade jose lib
 
   ## @ts-ghost/admin-api:
-
   - fix `members` admin-api schema. The `newsletter` array returns a less complete than before data type. It is now reflected in our schema.
 
 - Updated dependencies [2d03006]
@@ -241,7 +242,6 @@
   It is now the consummer duty to bring their own implementation of fetch.
 
   Requirements have been updated:
-
   - Node.js 16+
     - We rely on global `fetch` being available, so you can bring your own
       polyfill and if you run Node 16, you'll need to run with the
@@ -335,7 +335,6 @@
 - b7d6fb5: ## Breaking changes
 
   ### `@ts-ghost/content-api` and `@ts-ghost/admin-api`
-
   - There was an underlying change in the `@ts-ghost/core-api` modifying the discriminator of all endpoints **result**.
     Instead of being on the key `status` with values of `"success"` or `"error"`, it is now on the key `success` with values of `true` or `false`.
 
@@ -408,7 +407,6 @@
   ## New features
 
   ### `@ts-ghost/admin-api` New endpoints actions available:
-
   - [x] `members` now have`delete` method. Even if not defined in the Ghost documentation it is indeed avaiable
   - [x] `posts` now have `add`, `edit`, and `delete` methods.
   - [x] `pages` now have `add`, `edit`, and `delete` methods.
@@ -433,7 +431,6 @@
   ## `@ts-ghost/admin-api`
 
   ### New feature
-
   - The `members` resource now have a `add` and `edit` method that allow them to be created and updated.
 
   ```ts
@@ -475,7 +472,6 @@
 ### Patch Changes
 
 - 6a55476: ## Upgraded dependencies and add more tests
-
   - Reflect changes made to `ts-ghost/core-api`
   - Added more tests
 
@@ -488,7 +484,6 @@
 ### Patch Changes
 
 - 507b16a: ## Changes
-
   - Update the TS definition of `APIVersion` to accept only `v5.x` and `v6.x` for now.
   - Updated the corresponding zod schema to have regex validation.
   - Updated documentation to give info about the supported versions
@@ -589,7 +584,6 @@
   ```
 
   ## Other changes
-
   - Updated documentation
   - Code cleanup
 
@@ -604,7 +598,6 @@
 
 - 079b7e4: ## Improved admin-api
   Add missing resources:
-
   - tags
   - offers
   - users
@@ -634,7 +627,6 @@
 ### Minor Changes
 
 - 5b2326f: Admin API in GBB, upgrade to TypeScript 5.0, remove `as const` requirement
-
   - eslint conf is now at the root level
   - you can now use gbb export-admin members resource
   - upgrade to TS 5.0
@@ -652,14 +644,12 @@
 - 4e95c66: ## New package `@ts-ghost/admin-api`
 
   First implementation of the Ghost Admin API. Currently only supports the following endpoint:
-
   - `members`
   - `posts`
   - `pages`
   - `site`
 
   ## Refactoring of the Fetchers and QueryBuilders
-
   - Zod upgrade
   - New `formats()`, `fields()` and `include()` methods on the Fetchers to have better output type safety. These new methods are intended to replace the `output` options args of the QueryBuilder later. They provide a better typing of the output transforming the schema like removing the `optionnal` effect of a field if it was included in the `include` option of the QueryBuilder.
 

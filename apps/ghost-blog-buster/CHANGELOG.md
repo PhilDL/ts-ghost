@@ -1,11 +1,17 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.7.1
+
+### Patch Changes
+
+- Updated dependencies [ea4745c]
+  - @ts-ghost/admin-api@5.0.0
+
 ## 0.7.0
 
 ### Minor Changes
 
 - 9e6d46b: ## Minor changes:
-
   - Ghost API v6 compatibility
   - Upgrade dependencies
   - Fix email validation containing `+` sign
@@ -43,11 +49,9 @@
 ### Patch Changes
 
 - 2d03006: ## All:
-
   - upgrade jose lib
 
   ## @ts-ghost/admin-api:
-
   - fix `members` admin-api schema. The `newsletter` array returns a less complete than before data type. It is now reflected in our schema.
 
 - Updated dependencies [2d03006]
@@ -215,7 +219,6 @@
   ## `@ts-ghost/admin-api`
 
   ### New feature
-
   - The `members` resource now have a `add` and `edit` method that allow them to be created and updated.
 
   ```ts
@@ -256,7 +259,6 @@
 ### Patch Changes
 
 - 507b16a: ## Changes
-
   - Update the TS definition of `APIVersion` to accept only `v5.x` for now.
   - Updated the corresponding zod schema to have regex validation.
   - Updated documentation to give info about the supported versions
@@ -301,7 +303,6 @@
 
 - 079b7e4: ## Improved admin-api
   Add missing resources:
-
   - tags
   - offers
   - users
@@ -324,7 +325,6 @@
 ### Minor Changes
 
 - 5b2326f: Admin API in GBB, upgrade to TypeScript 5.0, remove `as const` requirement
-
   - eslint conf is now at the root level
   - you can now use gbb export-admin members resource
   - upgrade to TS 5.0
@@ -343,14 +343,12 @@
 - 4e95c66: ## New package `@ts-ghost/admin-api`
 
   First implementation of the Ghost Admin API. Currently only supports the following endpoint:
-
   - `members`
   - `posts`
   - `pages`
   - `site`
 
   ## Refactoring of the Fetchers and QueryBuilders
-
   - Zod upgrade
   - New `formats()`, `fields()` and `include()` methods on the Fetchers to have better output type safety. These new methods are intended to replace the `output` options args of the QueryBuilder later. They provide a better typing of the output transforming the schema like removing the `optionnal` effect of a field if it was included in the `include` option of the QueryBuilder.
 
