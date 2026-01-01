@@ -37,7 +37,7 @@ export const adminPostsSchema = basePostsSchema.merge(
 
 export type Post = z.infer<typeof adminPostsSchema>;
 
-export const adminPostsCreateSchema = z.object({
+const basePostsCreateSchema = z.object({
   title: z.string().min(1).max(2000),
   slug: z.string().max(191).optional(),
   mobiledoc: z.string().max(1000000000).optional(),
@@ -138,14 +138,47 @@ export const adminPostsCreateSchema = z.object({
       },
     )
     .optional(),
+  newsletter: z
+    .union([
+      z.object({
+        id: z.string({ description: "The ID of the newsletter" }),
+      }),
+      z.object({
+        slug: z.string({ description: "The slug of the newsletter" }),
+      }),
+    ])
+    .optional(),
 });
+
+const emailOnlyNewsletterRefinement = (data: any) => {
+  // If email_only is true and status is scheduled, newsletter must be provided
+  if (data.email_only === true && data.status === "scheduled") {
+    return data.newsletter !== undefined;
+  }
+  return true;
+};
+
+const emailOnlyNewsletterRefinementOptions = {
+  message: "newsletter is required when scheduling an email_only post",
+  path: ["newsletter"],
+};
+
+export const adminPostsCreateSchema = basePostsCreateSchema.refine(
+  emailOnlyNewsletterRefinement,
+  emailOnlyNewsletterRefinementOptions,
+);
 
 export type CreatePost = z.infer<typeof adminPostsCreateSchema>;
 
-export const adminPostsUpdateSchema = adminPostsCreateSchema.partial({ title: true }).merge(
-  z.object({
-    updated_at: z.date().transform((val) => val.toISOString()),
-  }),
-);
+export const adminPostsUpdateSchema = basePostsCreateSchema.partial({ title: true })
+  .merge(
+    z.object({
+      updated_at: z.date().transform((val) => val.toISOString()),
+    }),
+  )
+  .refine(
+    emailOnlyNewsletterRefinement,
+    emailOnlyNewsletterRefinementOptions,
+  );
 
 export type UpdatePost = z.infer<typeof adminPostsUpdateSchema>;
