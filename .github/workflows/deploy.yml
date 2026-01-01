@@ -110,6 +110,7 @@ jobs:
       VITE_GHOST_URL: ${{ secrets.VITE_GHOST_URL }}
       VITE_GHOST_CONTENT_API_KEY: ${{ secrets.VITE_GHOST_CONTENT_API_KEY }}
       VITE_GHOST_ADMIN_API_KEY: ${{ secrets.VITE_GHOST_ADMIN_API_KEY }}
+      VITE_GHOST_INTEGRATION_ID: ${{ secrets.VITE_GHOST_INTEGRATION_ID }}
       VITE_GHOST_VERSION: ${{ secrets.VITE_GHOST_VERSION }}
     steps:
       - name: 🛑 Cancel Previous Runs
