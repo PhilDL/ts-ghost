@@ -1,5 +1,7 @@
 ---
-"@ts-ghost/admin-api": minor
+"@ts-ghost/admin-api": major
 ---
 
-require newsletter when scheduling email_only posts
+## Breaking Changes
+
+- `@ts-ghost/admin-api` when now require the `newsletter` field to be set when scheduling email_only posts
