@@ -123,7 +123,7 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
   }: {
     resource: APIResource;
     searchParams?: URLSearchParams;
-    options?: RequestInit;
+    options?: RequestInit & { debug?: boolean };
     pathnameIdentity?: string;
   }) {
     if (this._baseURL === undefined) throw new Error("URL is undefined");
@@ -142,6 +142,9 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
     }
     let result = undefined;
     const headers = await this.genHeaders();
+    if (options?.debug) {
+      console.log("url", url.toString(), "headers", headers, "options", options);
+    }
     try {
       result = await (
         await fetch(url.toString(), {

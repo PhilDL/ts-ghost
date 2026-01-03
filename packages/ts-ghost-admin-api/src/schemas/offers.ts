@@ -9,12 +9,13 @@ const baseOffersCreateSchema = z.object({
   display_title: z.string().optional(),
   display_description: z.string().optional(),
   cadence: z.union([z.literal("year"), z.literal("month")]),
-  amount: z.number({
+  amount: z.number().meta({
     description: "Amount of the percent or fixed amount in the smallest unit of the currency",
   }),
   duration: z.union([z.literal("once"), z.literal("forever"), z.literal("repeating")]),
   duration_in_months: z
-    .number({
+    .number()
+    .meta({
       description: "Number of months offer should be repeated when duration is repeating",
     })
     .nullish(),

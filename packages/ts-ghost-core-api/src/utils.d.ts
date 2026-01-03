@@ -11,3 +11,7 @@ export declare type InferFetcherDataShape<T extends { fetch: () => Promise<any> 
 >;
 
 export type IsAny<T> = 0 extends 1 & T ? true : false;
+
+export type NoUnrecognizedKeys<Obj extends object, Shape extends object> = {
+  [k in keyof Obj]: k extends keyof Shape ? Obj[k] : never;
+};

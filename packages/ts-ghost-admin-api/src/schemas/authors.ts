@@ -23,10 +23,10 @@ export const adminAuthorsSchema = baseAuthorsSchema.merge(
           description: z.string(),
           created_at: z.string().nullish(),
           updated_at: z.string().nullish(),
-        }),
+        })
       )
       .optional(),
-  }),
+  })
 );
 
 export type Author = z.infer<typeof adminAuthorsSchema>;
