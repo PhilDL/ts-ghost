@@ -1,5 +1,13 @@
 # @ts-ghost/admin-api
 
+## 5.0.1
+
+### Patch Changes
+
+- bdace61: Upgrade zod dependency
+- Updated dependencies [bdace61]
+  - @ts-ghost/core-api@6.2.1
+
 ## 5.0.0
 
 ### Major Changes

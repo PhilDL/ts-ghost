@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 6.2.1
+
+### Patch Changes
+
+- bdace61: Upgrade zod dependency
+
 ## 6.2.0
 
 ### Minor Changes
@@ -483,7 +489,10 @@
   });
 
   // the "identity" schema is used to validate the inputs of the `read`method of the QueryBuilder
-  const identitySchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
+  const identitySchema = z.union([
+    z.object({ slug: z.string() }),
+    z.object({ id: z.string() }),
+  ]);
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),

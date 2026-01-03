@@ -1,5 +1,14 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.7.2
+
+### Patch Changes
+
+- bdace61: Upgrade zod dependency
+- Updated dependencies [bdace61]
+  - @ts-ghost/content-api@4.2.1
+  - @ts-ghost/admin-api@5.0.1
+
 ## 0.7.1
 
 ### Patch Changes
