@@ -1,6 +1,6 @@
 import createFetchMock from "vitest-fetch-mock";
 import { afterEach, assert, describe, expect, test, vi } from "vitest";
-import { z } from "zod/v3";
+import { z } from "zod";
 
 import { HTTPClient, HTTPClientOptions } from "../helpers/http-client";
 import { BasicFetcher } from "./basic-fetcher";

@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 export const adminTagsCreateSchema = z.object({
   name: z.string().min(1).max(191),

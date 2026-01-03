@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 import { baseNewsletterSchema } from "./newsletter";
 import { baseSubscriptionsSchema } from "./subscriptions";
