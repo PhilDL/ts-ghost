@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 export const settingsSchema = z.object({
   title: z.string(),
@@ -17,13 +17,13 @@ export const settingsSchema = z.object({
     z.object({
       label: z.string(),
       url: z.string(),
-    })
+    }),
   ),
   secondary_navigation: z.array(
     z.object({
       label: z.string(),
       url: z.string(),
-    })
+    }),
   ),
   meta_title: z.string().nullable(),
   meta_description: z.string().nullable(),

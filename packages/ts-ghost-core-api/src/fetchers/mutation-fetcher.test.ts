@@ -1,6 +1,6 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, expect, test } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 import { HTTPClient, type HTTPClientOptions } from "../helpers/http-client";
 import { MutationFetcher } from "./mutation-fetcher";

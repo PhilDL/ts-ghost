@@ -1,6 +1,6 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, expect, test } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 import { APIComposer } from "./api-composer";
 import { BrowseFetcher, ReadFetcher } from "./fetchers";

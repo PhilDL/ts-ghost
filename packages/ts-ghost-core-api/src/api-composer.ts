@@ -1,4 +1,4 @@
-import { z, ZodRawShape, ZodTypeAny } from "zod";
+import { z, ZodRawShape, ZodTypeAny } from "zod/v3";
 
 import { DeleteFetcher } from "./fetchers";
 import { BrowseFetcher } from "./fetchers/browse-fetcher";

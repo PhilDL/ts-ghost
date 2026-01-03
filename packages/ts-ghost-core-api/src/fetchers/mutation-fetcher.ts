@@ -1,4 +1,4 @@
-import { z, ZodRawShape, ZodTypeAny } from "zod";
+import { z, ZodRawShape, ZodTypeAny } from "zod/v3";
 
 import { HTTPClient } from "../helpers/http-client";
 import type { APIResource } from "../schemas/shared";
@@ -7,7 +7,7 @@ export class MutationFetcher<
   const Resource extends APIResource = any,
   OutputShape extends ZodRawShape = any,
   ParamsShape extends ZodTypeAny = any,
-  const HTTPVerb extends "POST" | "PUT" = "POST"
+  const HTTPVerb extends "POST" | "PUT" = "POST",
 > {
   protected _urlParams: Record<string, string> = {};
   protected _urlSearchParams: URLSearchParams | undefined = undefined;
@@ -24,7 +24,7 @@ export class MutationFetcher<
       method: HTTPVerb;
       body: Record<string, unknown>;
     },
-    protected httpClient: HTTPClient
+    protected httpClient: HTTPClient,
   ) {
     this._buildUrlParams();
   }
@@ -68,7 +68,7 @@ export class MutationFetcher<
             type: z.string(),
             message: z.string(),
             context: z.string().nullish(),
-          })
+          }),
         ),
       }),
     ]);

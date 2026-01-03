@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 export const baseOffersSchema = z.object({
   id: z.string(),
@@ -39,6 +39,6 @@ export const baseOffersSchema = z.object({
       id: z.string(),
       name: z.string().nullish(),
     },
-    { description: "Tier on which offer is applied" }
+    { description: "Tier on which offer is applied" },
   ),
 });

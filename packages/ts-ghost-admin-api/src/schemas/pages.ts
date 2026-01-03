@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 import { basePagesSchema } from "@ts-ghost/core-api";
 
 import { adminAuthorsSchema } from "./authors";
@@ -30,7 +30,7 @@ export const adminPagesSchema = basePagesSchema.merge(
       .optional(),
     html: z.string().catch("").optional(),
     plaintext: z.string().catch("").optional(),
-  })
+  }),
 );
 
 export type Page = z.infer<typeof adminPagesSchema>;
@@ -93,7 +93,7 @@ export const adminPagesCreateSchema = z.object({
       ]),
       {
         description: `The tags associated with the post array of either slug, id or name`,
-      }
+      },
     )
     .optional(),
   tiers: z
@@ -111,7 +111,7 @@ export const adminPagesCreateSchema = z.object({
       ]),
       {
         description: `The tiers associated with the post array of either slug, id or name`,
-      }
+      },
     )
     .optional(),
   authors: z
@@ -129,7 +129,7 @@ export const adminPagesCreateSchema = z.object({
       ]),
       {
         description: `Specifing author via id, name or slug.`,
-      }
+      },
     )
     .optional(),
 });
@@ -139,7 +139,7 @@ export type CreatePage = z.infer<typeof adminPagesCreateSchema>;
 export const adminPagesUpdateSchema = adminPagesCreateSchema.partial({ title: true }).merge(
   z.object({
     updated_at: z.date().transform((val) => val.toISOString()),
-  })
+  }),
 );
 
 export type UpdatePage = z.infer<typeof adminPagesUpdateSchema>;

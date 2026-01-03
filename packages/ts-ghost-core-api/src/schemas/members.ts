@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 import { baseNewsletterSchema } from "./newsletter";
 import { baseSubscriptionsSchema } from "./subscriptions";
@@ -23,7 +23,7 @@ export const baseMembersSchema = z.object({
         .string({ description: "(nullable) The date and time the label was last updated" })
         .nullish(),
     }),
-    { description: "The labels associated with the member" }
+    { description: "The labels associated with the member" },
   ),
   subscriptions: z.array(baseSubscriptionsSchema, {
     description: "The subscriptions associated with the member",

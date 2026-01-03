@@ -55,7 +55,7 @@ All these methods like `read` and `browse` gives you back the appropriate `Fetch
 ### Instantiation
 
 ```ts
-import { z } from "zod";
+import { z } from "zod/v3";
 import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 
 const api: ContentAPICredentials = {
@@ -115,7 +115,7 @@ After instantiation you can use the `APIComposer` to build your queries with 2 a
 The `browse` and `read` methods accept a config object with 2 properties: `input` and an `output`. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
 
 ```ts
-import { z } from "zod";
+import { z } from "zod/v3";
 import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 
 const api: ContentAPICredentials = {
