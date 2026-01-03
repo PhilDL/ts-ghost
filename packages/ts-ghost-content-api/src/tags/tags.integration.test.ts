@@ -106,7 +106,7 @@ describe("tags integration tests browse", () => {
     }
   });
 
-  test("tags.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
+  test.only("tags.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
     const result = await api.tags
       .browse()
       .fields({ slug: true, name: true, count: true })

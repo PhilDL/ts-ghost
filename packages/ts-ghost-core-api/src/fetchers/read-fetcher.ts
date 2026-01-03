@@ -75,21 +75,17 @@ export class ReadFetcher<
       ...this._params,
       include: Object.keys(this.config.include.parse(include)),
     };
+    // remove dot-notation from the include object key
+    const requiredIncludeKeys = Object.fromEntries(
+      Object.keys(include)
+        .filter((key) => !key.includes("."))
+        .map((key) => [key, include[key]]),
+    );
     return new ReadFetcher(
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output
-          .extend(
-            Object.fromEntries(
-              this.config.include
-                .keyof()
-                .options.map((key) => [key, this.config.output.shape[key] ?? z.any()]),
-            ) as {
-              [key in keyof Includes]: key extends keyof OutputShape ? OutputShape[key] : unknown;
-            },
-          )
-          .required(include as Exactly<Includes, Includes>),
+        output: this.config.output.required(requiredIncludeKeys as Exactly<Includes, Includes>),
         include: this.config.include,
       },
       params,
