@@ -1,4 +1,4 @@
-import { z, ZodRawShape } from "zod/v4";
+import { z, ZodRawShape } from "zod";
 
 import type { HTTPClient } from "../helpers/http-client";
 import { type APIResource, type GhostIdentityInput } from "../schemas/shared";
