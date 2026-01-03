@@ -76,21 +76,18 @@ export class BrowseFetcher<
       ...this._params,
       include: Object.keys(this.config.include.parse(include)),
     };
+    // remove dot-notation from the include object key
+    const requiredIncludeKeys = Object.fromEntries(
+      Object.keys(include)
+        .filter((key) => !key.includes("."))
+        .map((key) => [key, include[key]]),
+    );
+
     return new BrowseFetcher(
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output
-          .extend(
-            Object.fromEntries(
-              this.config.include
-                .keyof()
-                .options.map((key) => [key, this.config.output.shape[key] ?? z.any()]),
-            ) as {
-              [key in keyof Includes]: key extends keyof OutputShape ? OutputShape[key] : unknown;
-            },
-          )
-          .required(include as Exactly<Includes, Includes>),
+        output: this.config.output.required(requiredIncludeKeys as Exactly<Includes, Includes>),
         include: this.config.include,
       },
       params,
@@ -151,7 +148,7 @@ export class BrowseFetcher<
     };
 
     if (inputKeys.length !== outputKeys.length && outputKeys.length > 0) {
-      this._urlParams.fields = outputKeys.join(",");
+      this._urlParams.fields = outputKeys.filter((key) => key !== "count").join(",");
     }
     if (this._params.include && this._params.include.length > 0) {
       this._urlParams.include = this._params.include.join(",");
@@ -200,13 +197,19 @@ export class BrowseFetcher<
     ]);
   }
 
-  public async fetch(options?: RequestInit) {
+  public async fetch(options?: RequestInit & { debug?: boolean }) {
     const resultSchema = this._getResultSchema();
+    if (options?.debug) {
+      console.log("_urlSearchParams", this._urlSearchParams);
+    }
     const result = await this.httpClient.fetch({
       resource: this.resource,
       searchParams: this._urlSearchParams,
       options,
     });
+    if (options?.debug) {
+      console.log("result", result);
+    }
     let data: any = {};
     if (result.errors) {
       data.success = false;
