@@ -247,7 +247,7 @@ describe("BrowseFetcher", () => {
     );
     const result = await browseFetcher.fetch();
     expect(fetchMocker).toHaveBeenCalledWith(
-      "https://ghost.org/ghost/api/content/posts/?order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count&key=1234",
+      "https://ghost.org/ghost/api/content/posts/?order=title+DESC&limit=10&fields=title%2Cslug&include=count&key=1234",
       {
         headers: {
           "Content-Type": "application/json",
@@ -436,7 +436,7 @@ describe("BrowseFetcher", () => {
     fetchMocker.doMockOnce(postsStub);
     await browseFetcher.fetch();
     expect(fetchMocker).toHaveBeenCalledWith(
-      "https://ghost.org/ghost/api/admin/posts/?order=title+DESC&limit=10&fields=title%2Cslug%2Ccount&include=count",
+      "https://ghost.org/ghost/api/admin/posts/?order=title+DESC&limit=10&fields=title%2Cslug&include=count",
       {
         headers: {
           "Content-Type": "application/json",
@@ -765,7 +765,7 @@ describe("BrowseFetcher output tests suite", () => {
     fetchMocker.doMockOnce(fixture);
     await res.fetch();
     expect(fetchMocker).toHaveBeenCalledWith(
-      "https://ghost.org/ghost/api/content/posts/?fields=html%2Cpublished%2Ccount&include=count%2Cnested.key&formats=html&key=1234",
+      "https://ghost.org/ghost/api/content/posts/?fields=html%2Cpublished&include=count%2Cnested.key&formats=html&key=1234",
       {
         headers: {
           "Content-Type": "application/json",
@@ -800,7 +800,7 @@ describe("BrowseFetcher output tests suite", () => {
     // fetchMocker.doMockOnce(fixture);
     // await res.fetch();
     // expect(fetchMocker).toHaveBeenCalledWith(
-    //   "https://ghost.org/ghost/api/content/posts/?fields=html%2Cpublished%2Ccount&include=count&formats=html&key=1234",
+    //   "https://ghost.org/ghost/api/content/posts/?fields=html%2Cpublished&include=count&formats=html&key=1234",
     //   {
     //     headers: {
     //       "Content-Type": "application/json",
