@@ -10,10 +10,10 @@ export const ghostIdentitySchema = z.object({
 export const ghostIdentityInputSchema = z.object({
   slug: z.string().optional(),
   id: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
 });
 
-export type GhostIdentityInput = z.infer<typeof ghostIdentityInputSchema>;
+export type GhostIdentityInput = z.output<typeof ghostIdentityInputSchema>;
 
 export type GhostIdentity = z.infer<typeof ghostIdentitySchema>;
 

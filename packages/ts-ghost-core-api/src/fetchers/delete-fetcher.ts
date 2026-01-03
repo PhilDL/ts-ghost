@@ -9,7 +9,7 @@ export class DeleteFetcher<const Resource extends APIResource = any> {
   constructor(
     protected resource: Resource,
     private _params: { id: string },
-    protected httpClient: HTTPClient,
+    protected httpClient: HTTPClient
   ) {
     this._buildPathnameIdentity();
   }
@@ -41,7 +41,7 @@ export class DeleteFetcher<const Resource extends APIResource = any> {
             type: z.string(),
             message: z.string(),
             context: z.string().nullish(),
-          }),
+          })
         ),
       }),
     ]);
