@@ -27,7 +27,8 @@
     "start": "jiti ./src/cli.ts",
     "dev": "tsup --watch",
     "build": "tsup ./src/cli.ts --format esm --dts",
-    "clean": "rimraf .turbo node_modules dist",
+    "clean": "rimraf .turbo dist",
+    "nuke": "rimraf .turbo node_modules dist",
     "test": "vitest run",
     "test:watch": "vitest",
     "test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
@@ -50,7 +51,8 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "rimraf": "catalog:"
   },
   "dependencies": {
     "@clack/core": "^0.5.0",

@@ -25,12 +25,13 @@
   ],
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup --treeshake",
-    "clean": "rimraf .turbo node_modules dist",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest --coverage",
-    "test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
+    "build": "tsup",
+    "clean": "rimraf .turbo dist",
+    "nuke": "rimraf .turbo node_modules dist",
+    "test": "vitest --typecheck run",
+    "test:watch": "vitest --typecheck",
+    "test:coverage": "vitest --typecheck --coverage",
+    "test-ci": "vitest --typecheck run --coverage.enabled --coverage.reporter='text-summary'",
     "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit"
   },
@@ -44,7 +45,8 @@
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:",
-    "vitest-fetch-mock": "catalog:"
+    "vitest-fetch-mock": "catalog:",
+    "rimraf": "catalog:"
   },
   "dependencies": {
     "jose": "^6.0.0",
