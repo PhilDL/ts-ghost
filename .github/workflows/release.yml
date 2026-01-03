@@ -25,36 +25,23 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: ⎔ Setup Node.js 20
+      - name: ⎔ Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: "pnpm"
 
       - name: 📥 Install Dependencies
-        run: pnpm i --no-frozen-lockfile
+        run: pnpm install
 
       - name: 🦋 Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1.5.3
         with:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          commit: "chore: update versions"
+          title: "chore: update versions"
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # Changeset has some issues with pnpm so we sync it up manually
-      - name: Sync lockfile if necessary
-        if: steps.changesets.outputs.hasChangesets == 'true'
-        run: |
-          git checkout changeset-release/main
-          pnpm install --no-frozen-lockfile
-          git add .
-          git commit -m "chore(release): 📦 sync lockfile"
-          git push origin changeset-release/main
-
-      # - name: Send a Slack notification if a publish happens
-      #   if: steps.changesets.outputs.published == 'true'
-      #   # You can do something when a publish happens.
-      #   run: my-slack-bot send-notification --message "A new version of ${GITHUB_REPOSITORY} was published!"
