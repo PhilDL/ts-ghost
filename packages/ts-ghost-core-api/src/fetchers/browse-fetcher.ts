@@ -80,7 +80,17 @@ export class BrowseFetcher<
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(include as Exactly<Includes, Includes>),
+        output: this.config.output
+          .extend(
+            Object.fromEntries(
+              this.config.include
+                .keyof()
+                .options.map((key) => [key, this.config.output.shape[key] ?? z.any()]),
+            ) as {
+              [key in keyof Includes]: key extends keyof OutputShape ? OutputShape[key] : unknown;
+            },
+          )
+          .required(include as Exactly<Includes, Includes>),
         include: this.config.include,
       },
       params,
