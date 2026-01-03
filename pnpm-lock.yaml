@@ -12,6 +12,9 @@ catalogs:
     '@vitest/coverage-v8':
       specifier: 4.0.16
       version: 4.0.16
+    rimraf:
+      specifier: 6.1.2
+      version: 6.1.2
     tsup:
       specifier: 8.5.1
       version: 8.5.1
@@ -118,11 +121,11 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0
       '@ts-ghost/admin-api':
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: workspace:*
+        version: link:../../packages/ts-ghost-admin-api
       '@ts-ghost/content-api':
-        specifier: ^4.2.0
-        version: 4.2.0
+        specifier: workspace:*
+        version: link:../../packages/ts-ghost-content-api
       configstore:
         specifier: ^7.0.0
         version: 7.0.0
@@ -163,6 +166,9 @@ importers:
       jiti:
         specifier: ^2.0.0
         version: 2.4.0
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.2
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@22.18.12)(typescript@5.9.3)
@@ -319,8 +325,8 @@ importers:
   packages/ts-ghost-admin-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^6.2.0
-        version: 6.2.0
+        specifier: workspace:*
+        version: link:../ts-ghost-core-api
       validator:
         specifier: ^13.11.0
         version: 13.11.0
@@ -349,6 +355,9 @@ importers:
       jiti:
         specifier: ^2.0.0
         version: 2.4.0
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.2
       tsup:
         specifier: 'catalog:'
         version: 8.5.1(jiti@2.4.0)(postcss@8.5.6)(typescript@5.9.3)
@@ -368,8 +377,8 @@ importers:
   packages/ts-ghost-content-api:
     dependencies:
       '@ts-ghost/core-api':
-        specifier: ^6.2.0
-        version: 6.2.0
+        specifier: workspace:*
+        version: link:../ts-ghost-core-api
       zod:
         specifier: 'catalog:'
         version: 4.3.4
@@ -389,6 +398,9 @@ importers:
       jiti:
         specifier: ^2.0.0
         version: 2.4.0
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.2
       tsup:
         specifier: 'catalog:'
         version: 8.5.1(jiti@2.4.0)(postcss@8.5.6)(typescript@5.9.3)
@@ -429,6 +441,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 9.39.2(jiti@2.6.1)
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.2
       tsup:
         specifier: 'catalog:'
         version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)
@@ -1026,6 +1041,14 @@ packages:
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [win32]
+
+  '@isaacs/balanced-match@4.0.1':
+    resolution: {integrity: sha512-yzMTt9lEb8Gv7zRioUilSglI0c0smZ9k5D65677DLWLtWJaXIS3CqcGyUFByYKlnUj6TkjLVs54fBl6+TiGQDQ==}
+    engines: {node: 20 || >=22}
+
+  '@isaacs/brace-expansion@5.0.0':
+    resolution: {integrity: sha512-ZT55BDLV0yv0RBm2czMiZ+SqCGO7AvmOM3G/w2xhVPH+te0aKgFjmBvGlL1dH+ql2tgGO3MVrbb3jCKyvpgnxA==}
+    engines: {node: 20 || >=22}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -1649,15 +1672,6 @@ packages:
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
-
-  '@ts-ghost/admin-api@5.0.0':
-    resolution: {integrity: sha512-IhJxRuk6o/wMR+Uex6LpHuatvLZMnJPz2iyG6xEHZpWAJ1WP8A9m35wdPvIKVNKg3DpnhznIQfXe/h82M5NzEw==}
-
-  '@ts-ghost/content-api@4.2.0':
-    resolution: {integrity: sha512-aEOK7FJYw7myFsywRF72Q3pgR+p2ADqSvhwNjqCX+fwIGoVD7fWy9KZq95qwTSAm7swEObcYDfhxI6Nc06kdMA==}
-
-  '@ts-ghost/core-api@6.2.0':
-    resolution: {integrity: sha512-vpswD2SZXK/8goXyMkfu5fyspFXhtOFGJchqPpoXIJqrAjVLLXePehuN3RK8L4OgszRgKl4trYeD3U1YRuRUpQ==}
 
   '@tsconfig/node10@1.0.9':
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -3031,6 +3045,10 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
 
+  glob@13.0.0:
+    resolution: {integrity: sha512-tvZgpqk6fz4BaNZ66ZsRaZnbHvP/jG3uKJvAZOwEVUL4RTA5nJeeLYfyN9/VA8NX/V3IBG+hkeuGpKjvELkVhA==}
+    engines: {node: 20 || >=22}
+
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
 
@@ -3446,9 +3464,6 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
-  jose@5.2.4:
-    resolution: {integrity: sha512-6ScbIk2WWCeXkmzF6bRPmEuaqy1m8SbsRFMa/FLrSCkGIhj8OLVG/IH+XHVmNMx/KUo8cVWEE6oKR4dJ+S0Rkg==}
-
   jose@6.1.3:
     resolution: {integrity: sha512-0TpaTfihd4QMNwrz/ob2Bp7X04yuxJkjRGi4aKmOqwhov54i6u79oCv7T+C7lo70MKH6BesI3vscD1yb/yzKXQ==}
 
@@ -3668,6 +3683,10 @@ packages:
   lru-cache@10.2.0:
     resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
     engines: {node: 14 || >=16.14}
+
+  lru-cache@11.2.4:
+    resolution: {integrity: sha512-B5Y16Jr9LB9dHVkh6ZevG+vAbOsNOYCX+sXvFWFu7B3Iz5mijW3zdbMyhsh8ANd2mSWBYdJgnqi+mL7/LrOPYg==}
+    engines: {node: 20 || >=22}
 
   lru-cache@4.1.5:
     resolution: {integrity: sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==}
@@ -3913,6 +3932,10 @@ packages:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
 
+  minimatch@10.1.1:
+    resolution: {integrity: sha512-enIvLvRAFZYXJzkCYG5RKmPfrFArdLv+R+lbQ53BmIMLIry74bjKzX6iHAm8WYamJkhSSEabrWN5D97XnKObjQ==}
+    engines: {node: 20 || >=22}
+
   minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
 
@@ -3933,6 +3956,10 @@ packages:
 
   minipass@7.0.4:
     resolution: {integrity: sha512-jYofLM5Dam9279rdkWzqHozUo4ybjdZmCsDHePy5V/PbBcVMiSZR97gmAy45aqi8CK1lG2ECd356FU86avfwUQ==}
+    engines: {node: '>=16 || 14 >=14.17'}
+
+  minipass@7.1.2:
+    resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
 
   mixme@0.5.10:
@@ -4149,6 +4176,9 @@ packages:
     resolution: {integrity: sha512-5NPgf87AT2STgwa2ntRMr45jTKrYBGkVU36yT0ig/n/GMAa3oPqhZfIQ2kMEimReg0+t9kZViDVZ83qfVUlckg==}
     engines: {node: '>= 14'}
 
+  package-json-from-dist@1.0.1:
+    resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
+
   param-case@2.1.1:
     resolution: {integrity: sha512-eQE845L6ot89sk2N8liD8HAuH4ca6Vvr7VWAWwt7+kvvG5aBcPmmphQ68JsEG2qa9n1TykS2DLeMt363AAH8/w==}
 
@@ -4193,6 +4223,10 @@ packages:
   path-scurry@1.10.2:
     resolution: {integrity: sha512-7xTavNy5RQXnsjANvVvMkEjvloOinkAjv/Z6Ildz9v2RinZ4SBKTWFOVRbaF8p0vpHnyjV/UwNDdKuUv6M5qcA==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  path-scurry@2.0.1:
+    resolution: {integrity: sha512-oWyT4gICAu+kaA7QWk/jvCHWarMKNs6pXOGWKDTr7cw4IGcUbW+PeTfbaQiLGheFRpjo6O9J0PmyMfQPjH71oA==}
+    engines: {node: 20 || >=22}
 
   path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
@@ -4545,6 +4579,11 @@ packages:
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    hasBin: true
+
+  rimraf@6.1.2:
+    resolution: {integrity: sha512-cFCkPslJv7BAXJsYlK1dZsbP8/ZNLkCAQ0bi1hf5EKX2QHegmDFEFA6QhuYJlk7UDdc+02JjO80YSOrWPpw06g==}
+    engines: {node: 20 || >=22}
     hasBin: true
 
   rollup@4.52.5:
@@ -5499,9 +5538,6 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
-
   zod@4.2.1:
     resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
 
@@ -6139,6 +6175,12 @@ snapshots:
   '@img/sharp-win32-x64@0.34.4':
     optional: true
 
+  '@isaacs/balanced-match@4.0.1': {}
+
+  '@isaacs/brace-expansion@5.0.0':
+    dependencies:
+      '@isaacs/balanced-match': 4.0.1
+
   '@isaacs/cliui@8.0.2':
     dependencies:
       string-width: 5.1.2
@@ -6692,22 +6734,6 @@ snapshots:
       tailwindcss: 4.1.16
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
-
-  '@ts-ghost/admin-api@5.0.0':
-    dependencies:
-      '@ts-ghost/core-api': 6.2.0
-      validator: 13.11.0
-      zod: 3.23.8
-
-  '@ts-ghost/content-api@4.2.0':
-    dependencies:
-      '@ts-ghost/core-api': 6.2.0
-      zod: 3.23.8
-
-  '@ts-ghost/core-api@6.2.0':
-    dependencies:
-      jose: 5.2.4
-      zod: 3.23.8
 
   '@tsconfig/node10@1.0.9': {}
 
@@ -8586,6 +8612,12 @@ snapshots:
       minipass: 7.0.4
       path-scurry: 1.10.2
 
+  glob@13.0.0:
+    dependencies:
+      minimatch: 10.1.1
+      minipass: 7.1.2
+      path-scurry: 2.0.1
+
   glob@7.2.3:
     dependencies:
       fs.realpath: 1.0.0
@@ -9083,8 +9115,6 @@ snapshots:
 
   jiti@2.6.1: {}
 
-  jose@5.2.4: {}
-
   jose@6.1.3: {}
 
   joycon@3.1.1: {}
@@ -9263,6 +9293,8 @@ snapshots:
   lower-case@1.1.4: {}
 
   lru-cache@10.2.0: {}
+
+  lru-cache@11.2.4: {}
 
   lru-cache@4.1.5:
     dependencies:
@@ -9802,6 +9834,10 @@ snapshots:
 
   min-indent@1.0.1: {}
 
+  minimatch@10.1.1:
+    dependencies:
+      '@isaacs/brace-expansion': 5.0.0
+
   minimatch@3.1.2:
     dependencies:
       brace-expansion: 1.1.11
@@ -9823,6 +9859,8 @@ snapshots:
   minimist@1.2.8: {}
 
   minipass@7.0.4: {}
+
+  minipass@7.1.2: {}
 
   mixme@0.5.10: {}
 
@@ -10082,6 +10120,8 @@ snapshots:
       degenerator: 5.0.1
       netmask: 2.0.2
 
+  package-json-from-dist@1.0.1: {}
+
   param-case@2.1.1:
     dependencies:
       no-case: 2.3.2
@@ -10135,6 +10175,11 @@ snapshots:
     dependencies:
       lru-cache: 10.2.0
       minipass: 7.0.4
+
+  path-scurry@2.0.1:
+    dependencies:
+      lru-cache: 11.2.4
+      minipass: 7.1.2
 
   path-type@4.0.0: {}
 
@@ -10477,6 +10522,11 @@ snapshots:
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.3
+
+  rimraf@6.1.2:
+    dependencies:
+      glob: 13.0.0
+      package-json-from-dist: 1.0.1
 
   rollup@4.52.5:
     dependencies:
@@ -11666,8 +11716,6 @@ snapshots:
   zod-validation-error@4.0.2(zod@4.2.1):
     dependencies:
       zod: 4.2.1
-
-  zod@3.23.8: {}
 
   zod@4.2.1: {}
 

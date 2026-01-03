@@ -28,7 +28,8 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "clean": "rimraf .turbo node_modules dist",
+    "clean": "rimraf .turbo dist",
+    "nuke": "rimraf .turbo node_modules dist",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -52,10 +53,11 @@
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:",
     "vitest-fetch-mock": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "rimraf": "catalog:"
   },
   "dependencies": {
-    "@ts-ghost/core-api": "^6.2.0",
+    "@ts-ghost/core-api": "workspace:*",
     "zod": "catalog:"
   },
   "publishConfig": {

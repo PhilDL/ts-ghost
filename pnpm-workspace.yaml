@@ -14,6 +14,7 @@ catalog:
   vitest: 4.0.16
   vitest-fetch-mock: 0.4.5
   zod: 4.3.4
+  rimraf: 6.1.2
 
 catalogs:
   eslint:
