@@ -1,4 +1,7 @@
 import { z, ZodRawShape, ZodTypeAny } from "zod/v3";
+import { z, ZodRawShape, ZodTypeAny } from "zod";
+import { z } from "zod";
+import * as z4 from "zod/v4/core";
 
 import { HTTPClient } from "../helpers/http-client";
 import type { APIResource } from "../schemas/shared";
@@ -8,6 +11,12 @@ export class MutationFetcher<
   OutputShape extends ZodRawShape = any,
   ParamsShape extends ZodTypeAny = any,
   const HTTPVerb extends "POST" | "PUT" = "POST",
+  OutputShape extends ZodRawShape = any,
+  ParamsShape extends ZodTypeAny = any,
+  const HTTPVerb extends "POST" | "PUT" = "POST"
+  OutputShape extends z4.$ZodType = any,
+  ParamsShape extends z4.$ZodType = any,
+  const HTTPVerb extends "POST" | "PUT" = "POST",
 > {
   protected _urlParams: Record<string, string> = {};
   protected _urlSearchParams: URLSearchParams | undefined = undefined;
@@ -16,10 +25,10 @@ export class MutationFetcher<
   constructor(
     protected resource: Resource,
     protected config: {
-      output: z.ZodObject<OutputShape>;
+      output: OutputShape;
       paramsShape?: ParamsShape;
     },
-    private _params: ({ id?: string } & ParamsShape["_output"]) | undefined,
+    private _params: ({ id?: string } & z4.output<ParamsShape>) | undefined,
     protected _options: {
       method: HTTPVerb;
       body: Record<string, unknown>;

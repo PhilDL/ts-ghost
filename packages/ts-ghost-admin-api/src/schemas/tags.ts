@@ -4,7 +4,7 @@ export const adminTagsCreateSchema = z.object({
   name: z.string().min(1).max(191),
   slug: z.string().max(191).optional(),
   description: z.string().max(500).optional(),
-  feature_image: z.string().url().optional(),
+  feature_image: z.url().optional(),
   visibility: z.union([z.literal("public"), z.literal("internal")]).optional(),
   meta_title: z.string().max(300).optional(),
   meta_description: z.string().max(500).optional(),
