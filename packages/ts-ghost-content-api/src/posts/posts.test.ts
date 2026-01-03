@@ -20,11 +20,13 @@ describe("posts api .browse() Args Type-safety", () => {
       foo: true,
     } satisfies { [k in keyof Post]?: true | undefined };
 
-    let test = api.posts
-      .browse()
-      // @ts-expect-error - shouldnt accept invalid params
-      .fields(outputFields);
-    expect(test.getOutputFields()).toEqual(["slug", "title"]);
+    expect(() =>
+      api.posts
+        .browse()
+        // @ts-expect-error - shouldnt accept invalid params
+        .fields(outputFields),
+    ).toThrow();
+    // expect(test.getOutputFields()).toEqual(["slug", "title"]);
 
     const fields = ["slug", "title", "foo"] as const;
     const unknownOriginFields = fields.reduce(
@@ -34,8 +36,8 @@ describe("posts api .browse() Args Type-safety", () => {
       },
       {} as { [k in keyof Post]?: true | undefined },
     );
-    const result = api.posts.browse().fields(unknownOriginFields);
-    expect(result.getOutputFields()).toEqual(["slug", "title"]);
+    expect(() => api.posts.browse().fields(unknownOriginFields)).toThrow();
+    // expect(result.getOutputFields()).toEqual(["slug", "title"]);
   });
   test(".browse() params, output fields declare const", () => {
     const outputFields = {

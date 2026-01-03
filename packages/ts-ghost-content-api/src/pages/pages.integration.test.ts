@@ -173,8 +173,8 @@ describe("pages integration tests browse", () => {
       expect(page.primary_author?.slug).toBe("phildl");
       // @ts-expect-error
       expect(page.id).toBeUndefined();
-      // @ts-expect-error
       expect(page.authors).toBeUndefined();
+      //          ^? this is "unknown" because not in the fields object
     }
   });
 });
