@@ -88,63 +88,63 @@ const basePostsCreateSchema = z.object({
     .array(
       z.union([
         z.object({
-          id: z.string({ description: "The ID of the tags" }),
+          id: z.string().meta({ description: "The ID of the tags" }),
         }),
         z.object({
-          name: z.string({ description: "The name of the tags" }),
+          name: z.string().meta({ description: "The name of the tags" }),
         }),
         z.object({
-          slug: z.string({ description: "The slug of the tags" }),
+          slug: z.string().meta({ description: "The slug of the tags" }),
         }),
       ]),
-      {
-        description: `The tags associated with the post array of either slug, id or name`,
-      },
     )
+    .meta({
+      description: `The tags associated with the post array of either slug, id or name`,
+    })
     .optional(),
   tiers: z
     .array(
       z.union([
         z.object({
-          id: z.string({ description: "The ID of the tiers" }),
+          id: z.string().meta({ description: "The ID of the tiers" }),
         }),
         z.object({
-          name: z.string({ description: "The name of the tiers" }),
+          name: z.string().meta({ description: "The name of the tiers" }),
         }),
         z.object({
-          slug: z.string({ description: "The slug of the tiers" }),
+          slug: z.string().meta({ description: "The slug of the tiers" }),
         }),
       ]),
-      {
-        description: `The tiers associated with the post array of either slug, id or name`,
-      },
     )
+    .meta({
+      description: `The tiers associated with the post array of either slug, id or name`,
+    })
     .optional(),
   authors: z
     .array(
       z.union([
         z.object({
-          id: z.string({ description: "The ID of the author" }),
+          id: z.string().meta({ description: "The ID of the author" }),
         }),
         z.object({
-          name: z.string({ description: "The name of the author" }),
+          name: z.string().meta({ description: "The name of the author" }),
         }),
         z.object({
-          email: z.string({ description: "The email of the author" }),
+          email: z.string().meta({ description: "The email of the author" }),
         }),
       ]),
-      {
-        description: `Specifing author via id, name or slug.`,
-      },
     )
+    .meta({
+      description: `Specifing author via id, name or slug.`,
+    })
     .optional(),
   newsletter: z
     .union([
       z.object({
-        id: z.string({ description: "The ID of the newsletter" }),
+        id: z.string().meta({ description: "The ID of the newsletter" }),
       }),
       z.object({
-        slug: z.string({ description: "The slug of the newsletter" }),
+        slug: z.string().meta({ description: "The slug of the newsletter" }),
       }),
     ])
     .optional(),
@@ -170,15 +170,13 @@ export const adminPostsCreateSchema = basePostsCreateSchema.refine(
 
 export type CreatePost = z.infer<typeof adminPostsCreateSchema>;
 
-export const adminPostsUpdateSchema = basePostsCreateSchema.partial({ title: true })
+export const adminPostsUpdateSchema = basePostsCreateSchema
+  .partial({ title: true })
   .merge(
     z.object({
       updated_at: z.date().transform((val) => val.toISOString()),
     }),
   )
-  .refine(
-    emailOnlyNewsletterRefinement,
-    emailOnlyNewsletterRefinementOptions,
-  );
+  .refine(emailOnlyNewsletterRefinement, emailOnlyNewsletterRefinementOptions);
 
 export type UpdatePost = z.infer<typeof adminPostsUpdateSchema>;

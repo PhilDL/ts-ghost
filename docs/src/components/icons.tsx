@@ -6,6 +6,7 @@ import {
   Twitter,
   type IconNode as LucideIcon,
 } from "lucide-react";
+import { SVGProps } from "react";
 
 export type Icon = LucideIcon;
 
@@ -13,7 +14,7 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   twitter: Twitter,
-  logo: (props: LucideProps) => (
+  logo: (props: SVGProps<SVGSVGElement>) => (
     <svg width="234" height="234" viewBox="0 0 234 234" {...props}>
       <g clipPath="url(#clip0_103_24)">
         <g clipPath="url(#clip1_103_24)">
@@ -41,7 +42,7 @@ export const Icons = {
       </defs>
     </svg>
   ),
-  gitHub: (props: LucideProps) => (
+  gitHub: (props: SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
       <path
         fill="currentColor"
@@ -49,7 +50,7 @@ export const Icons = {
       ></path>
     </svg>
   ),
-  javascript: (props: LucideProps) => (
+  javascript: (props: SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         fill="currentColor"
@@ -57,7 +58,7 @@ export const Icons = {
       />
     </svg>
   ),
-  typescript: (props: LucideProps) => (
+  typescript: (props: SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         fill="currentColor"
@@ -65,7 +66,7 @@ export const Icons = {
       />
     </svg>
   ),
-  prisma: (props: LucideProps) => (
+  prisma: (props: SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         fill="currentColor"
@@ -74,7 +75,7 @@ export const Icons = {
     </svg>
   ),
   bash: TerminalSquare,
-  menu: (props: LucideProps) => (
+  menu: (props: SVGProps<SVGSVGElement>) => (
     <svg fill="none" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <g>
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16" />

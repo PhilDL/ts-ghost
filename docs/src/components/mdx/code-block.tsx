@@ -37,7 +37,7 @@ export function Codeblock(props: CodeblockProps) {
         <Icon
           data-language-icon
           data-theme={theme}
-          className="text-foreground absolute left-4 top-4 z-20 h-5 w-5"
+          className="text-foreground absolute top-4 left-4 z-20 h-5 w-5"
         />
       )}
       <button
@@ -49,7 +49,7 @@ export function Codeblock(props: CodeblockProps) {
           void window.navigator.clipboard.writeText(ref.current.innerText);
           setTimeout(() => setCopied(false), 1500);
         }}
-        className="text-muted-foreground hover:bg-muted absolute right-2 top-[10px] z-20 h-8 w-8 cursor-pointer rounded"
+        className="text-muted-foreground hover:bg-muted absolute top-[10px] right-2 z-20 h-8 w-8 cursor-pointer rounded"
       >
         <div className="relative h-full w-full p-1">
           <Copy className={cn("absolute h-6 w-6 p-0 transition-all", copied && "scale-0")} />
@@ -57,6 +57,7 @@ export function Codeblock(props: CodeblockProps) {
         </div>
       </button>
       <pre
+        // @ts-expect-error - ref is not typed correctly
         ref={ref}
         {...rest}
         className={cn(

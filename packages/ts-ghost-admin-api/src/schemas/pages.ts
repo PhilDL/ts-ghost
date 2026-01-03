@@ -30,7 +30,7 @@ export const adminPagesSchema = basePagesSchema.merge(
       .optional(),
     html: z.string().catch("").optional(),
     plaintext: z.string().catch("").optional(),
-  })
+  }),
 );
 
 export type Page = z.infer<typeof adminPagesSchema>;
@@ -82,55 +82,55 @@ export const adminPagesCreateSchema = z.object({
     .array(
       z.union([
         z.object({
-          id: z.string({ description: "The ID of the tags" }),
+          id: z.string().meta({ description: "The ID of the tags" }),
         }),
         z.object({
-          name: z.string({ description: "The name of the tags" }),
+          name: z.string().meta({ description: "The name of the tags" }),
         }),
         z.object({
-          slug: z.string({ description: "The slug of the tags" }),
+          slug: z.string().meta({ description: "The slug of the tags" }),
         }),
       ]),
-      {
-        description: `The tags associated with the post array of either slug, id or name`,
-      }
     )
+    .meta({
+      description: `The tags associated with the post array of either slug, id or name`,
+    })
     .optional(),
   tiers: z
     .array(
       z.union([
         z.object({
-          id: z.string({ description: "The ID of the tiers" }),
+          id: z.string().meta({ description: "The ID of the tiers" }),
         }),
         z.object({
-          name: z.string({ description: "The name of the tiers" }),
+          name: z.string().meta({ description: "The name of the tiers" }),
         }),
         z.object({
-          slug: z.string({ description: "The slug of the tiers" }),
+          slug: z.string().meta({ description: "The slug of the tiers" }),
         }),
       ]),
-      {
-        description: `The tiers associated with the post array of either slug, id or name`,
-      }
     )
+    .meta({
+      description: `The tiers associated with the post array of either slug, id or name`,
+    })
     .optional(),
   authors: z
     .array(
       z.union([
         z.object({
-          id: z.string({ description: "The ID of the author" }),
+          id: z.string().meta({ description: "The ID of the author" }),
         }),
         z.object({
-          name: z.string({ description: "The name of the author" }),
+          name: z.string().meta({ description: "The name of the author" }),
         }),
         z.object({
-          email: z.string({ description: "The email of the author" }),
+          email: z.string().meta({ description: "The email of the author" }),
         }),
       ]),
-      {
-        description: `Specifing author via id, name or slug.`,
-      }
     )
+    .meta({
+      description: `Specifing author via id, name or slug.`,
+    })
     .optional(),
 });
 
@@ -139,7 +139,7 @@ export type CreatePage = z.infer<typeof adminPagesCreateSchema>;
 export const adminPagesUpdateSchema = adminPagesCreateSchema.partial({ title: true }).merge(
   z.object({
     updated_at: z.date().transform((val) => val.toISOString()),
-  })
+  }),
 );
 
 export type UpdatePage = z.infer<typeof adminPagesUpdateSchema>;

@@ -2,7 +2,7 @@ import { z, ZodRawShape } from "zod";
 
 import type { HTTPClient } from "../helpers/http-client";
 import { type APIResource, type GhostIdentityInput } from "../schemas/shared";
-import type { Exactly, Mask } from "../utils";
+import type { Exactly, Mask, NoUnrecognizedKeys } from "../utils";
 import { contentFormats, type ContentFormats } from "./formats";
 
 export class ReadFetcher<
@@ -44,7 +44,7 @@ export class ReadFetcher<
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
   public formats<Formats extends Mask<Pick<OutputShape, ContentFormats>>>(
-    formats: z.noUnrecognized<Formats, OutputShape>,
+    formats: NoUnrecognizedKeys<Formats, OutputShape>,
   ) {
     const params = {
       ...this._params,
@@ -70,7 +70,7 @@ export class ReadFetcher<
    * @param include Include specific keys from the include shape
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public include<Includes extends Mask<IncludeShape>>(include: z.noUnrecognized<Includes, IncludeShape>) {
+  public include<Includes extends Mask<IncludeShape>>(include: NoUnrecognizedKeys<Includes, IncludeShape>) {
     const params = {
       ...this._params,
       include: Object.keys(this.config.include.parse(include)),
@@ -94,7 +94,7 @@ export class ReadFetcher<
    * @param fields Any keys from the resource Schema
    * @returns A new Fetcher with the fixed output shape having only the selected Fields
    */
-  public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
+  public fields<Fields extends Mask<OutputShape>>(fields: NoUnrecognizedKeys<Fields, OutputShape>) {
     const newOutput = this.config.output.pick(fields as Exactly<Fields, Fields>);
     return new ReadFetcher(
       this.resource,
