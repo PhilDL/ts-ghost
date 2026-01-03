@@ -21,7 +21,13 @@
       }
     ],
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+      "@ts-ghost/content-api/*": ["../../packages/ts-ghost-content-api/src/*"],
+      "@ts-ghost/content-api": ["../../packages/ts-ghost-content-api/src/index"],
+      "@ts-ghost/admin-api/*": ["../../packages/ts-ghost-admin-api/src/*"],
+      "@ts-ghost/admin-api": ["../../packages/ts-ghost-admin-api/src/index"],
+      "@ts-ghost/core-api/*": ["../../packages/ts-ghost-core-api/src/*"],
+      "@ts-ghost/core-api": ["../../packages/ts-ghost-core-api/src/index"]
     }
   },
   "include": [
