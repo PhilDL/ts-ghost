@@ -1,4 +1,4 @@
-import { z, ZodRawShape } from "zod";
+import { z, ZodRawShape } from "zod/v4";
 
 import type { HTTPClient } from "../helpers/http-client";
 import { type APIResource, type GhostIdentityInput } from "../schemas/shared";
@@ -46,6 +46,7 @@ export class ReadFetcher<
   public formats<Formats extends Mask<Pick<OutputShape, ContentFormats>>>(
     formats: NoUnrecognizedKeys<Formats, OutputShape>,
   ) {
+    const newOutput = this.config.output.required(formats as Exactly<Formats, Formats>);
     const params = {
       ...this._params,
       formats: Object.keys(formats).filter((key) => contentFormats.includes(key)),
@@ -54,7 +55,7 @@ export class ReadFetcher<
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(formats as Exactly<Formats, Formats>),
+        output: newOutput,
         include: this.config.include,
       },
       params,

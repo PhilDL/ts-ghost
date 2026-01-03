@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "checkJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -21,14 +21,22 @@
       }
     ],
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+      "@ts-ghost/content-api/*": ["../../packages/ts-ghost-content-api/src/*"],
+      "@ts-ghost/content-api": ["../../packages/ts-ghost-content-api/src/index"],
+      "@ts-ghost/admin-api/*": ["../../packages/ts-ghost-admin-api/src/*"],
+      "@ts-ghost/admin-api": ["../../packages/ts-ghost-admin-api/src/index"],
+      "@ts-ghost/core-api/*": ["../../packages/ts-ghost-core-api/src/*"],
+      "@ts-ghost/core-api": ["../../packages/ts-ghost-core-api/src/index"]
     }
   },
   "include": [
-    ".next/types/**/*.ts",
     "next-env.d.ts",
-    "next.config.mjs",
-    "app",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
   ],
   "exclude": ["node_modules"]
 }
