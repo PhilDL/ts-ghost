@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 import { baseOffersSchema } from "./offers";
 import { baseTiersSchema } from "./tiers";
@@ -11,7 +11,7 @@ export const baseSubscriptionsSchema = z.object({
       name: z.string().nullable(),
       email: z.string(),
     },
-    { description: "Stripe customer attached to the subscription" }
+    { description: "Stripe customer attached to the subscription" },
   ),
   status: z.string({ description: "Subscription status" }),
   start_date: z.string({ description: "Subscription start date" }),

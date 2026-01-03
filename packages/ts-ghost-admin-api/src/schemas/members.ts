@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 import { baseMembersSchema } from "@ts-ghost/core-api";
 
 export const adminMembersCreateSchema = z.object({

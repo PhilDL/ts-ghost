@@ -1,4 +1,4 @@
-import { z, ZodTypeAny } from "zod";
+import { z, ZodTypeAny } from "zod/v3";
 
 import type { HTTPClient } from "../helpers/http-client";
 import type { APIResource } from "../schemas/shared";

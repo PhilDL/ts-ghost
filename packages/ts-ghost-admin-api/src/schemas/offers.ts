@@ -1,5 +1,5 @@
 import isSlug from "validator/lib/isSlug";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 const baseOffersCreateSchema = z.object({
   name: z.string(),

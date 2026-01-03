@@ -5,7 +5,6 @@
 ### Minor Changes
 
 - 9e6d46b: ## Minor changes:
-
   - Ghost API v6 compatibility
   - Upgrade dependencies
   - Fix email validation containing `+` sign
@@ -15,14 +14,12 @@
 ### Minor Changes
 
 - 0586744: ## Global
-
   - Upgrade Zod version and fix types, no breaking changes were introduced.
 
   ## `@ts-ghost/content-api`
 
   Change type of `url` on `Author` for the content API to align with the `post.authors` and `page.authors` type.
   An author can have an undefined or null `url` if the author is not set as visible.
-
   - New type is now `string | undefined | null` instead of `string`.
   - Updated the `Author` type in the `content-api` package to reflect this change.
 
@@ -73,7 +70,6 @@
 ### Patch Changes
 
 - ae993f6: fix bug of parsing response when publishing a post with a newsletter. The email object was not correct, schema was out of date with the new lexical norm:
-
   - `plaintext`, `html` are now nullable
   - `source` is a new string containing the lexical tree
 
@@ -117,11 +113,9 @@
 ### Patch Changes
 
 - 2d03006: ## All:
-
   - upgrade jose lib
 
   ## @ts-ghost/admin-api:
-
   - fix `members` admin-api schema. The `newsletter` array returns a less complete than before data type. It is now reflected in our schema.
 
 ## 5.0.10
@@ -196,7 +190,6 @@
   It is now the consummer duty to bring their own implementation of fetch.
 
   Requirements have been updated:
-
   - Node.js 16+
     - We rely on global `fetch` being available, so you can bring your own
       polyfill and if you run Node 16, you'll need to run with the
@@ -254,7 +247,6 @@
 ### Major Changes
 
 - b7d6fb5: ## Breaking changes
-
   - We modified the discriminator of all endpoints **result** discriminated union.
     Instead of being on the key `status` with values of `"success"` or `"error"`, it is now on the key `success` with values of `true` or `false`.
 
@@ -329,7 +321,6 @@
 ### Major Changes
 
 - 82fb15f: # New features
-
   - `APIComposition` object has been added to compose API methods.
   - This new class has the old methods `browse` and `read` but also mutation methods:
     - `add`, `edit` and `delete`.
@@ -471,12 +462,11 @@
 ### Major Changes
 
 - 6a55476: ## Breaking changes
-
   - identity id | slug | email is now passed as config schema to the QueryBuilder
   - `output` option was removed because it is no longer necessary at the QueryBuilder level (kept on Fetchers)
 
   ```ts
-  import { z } from "zod";
+  import { z } from "zod/v3";
   import { QueryBuilder, type ContentAPICredentials } from "@ts-ghost/core-api";
 
   const api: ContentAPICredentials = {
@@ -493,10 +483,7 @@
   });
 
   // the "identity" schema is used to validate the inputs of the `read`method of the QueryBuilder
-  const identitySchema = z.union([
-    z.object({ slug: z.string() }),
-    z.object({ id: z.string() }),
-  ]);
+  const identitySchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),
@@ -513,13 +500,12 @@
   ```
 
   ## Refactoring
-
   - It is now easier to extends `QueryBuilder` and `Fetcher` classes as `any` is passed as generics defaults.
 
   Example:
 
   ```ts
-  import { z } from "zod";
+  import { z } from "zod/v3";
   import { adminMembersSchema, QueryBuilder } from "@ts-ghost/core-api";
 
   const membersIncludeSchema = z.object({});
@@ -536,13 +522,11 @@
   ```
 
   ## Add tests
-
   - added more tests for better coverage
 
 ### Patch Changes
 
 - 6a55476: ## Upgraded dependencies and add more tests
-
   - Reflect changes made to `ts-ghost/core-api`
   - Added more tests
 
@@ -551,7 +535,6 @@
 ### Patch Changes
 
 - 507b16a: ## Changes
-
   - Update the TS definition of `APIVersion` to accept only `v5.x` for now.
   - Updated the corresponding zod schema to have regex validation.
   - Updated documentation to give info about the supported versions
@@ -601,7 +584,6 @@
   ```
 
   ## Improved accuracy of Post schema
-
   - `published_at` is now nullable instead of nullish
   - `excerpt` is now nullable instead of nullish
 
@@ -719,7 +701,6 @@
   ```
 
   ## Other changes
-
   - Updated documentation
   - Code cleanup
 
@@ -729,7 +710,6 @@
 
 - 079b7e4: ## Improved admin-api
   Add missing resources:
-
   - tags
   - offers
   - users
@@ -754,7 +734,6 @@
 ### Minor Changes
 
 - 5b2326f: Admin API in GBB, upgrade to TypeScript 5.0, remove `as const` requirement
-
   - eslint conf is now at the root level
   - you can now use gbb export-admin members resource
   - upgrade to TS 5.0
@@ -767,14 +746,12 @@
 - 4e95c66: ## New package `@ts-ghost/admin-api`
 
   First implementation of the Ghost Admin API. Currently only supports the following endpoint:
-
   - `members`
   - `posts`
   - `pages`
   - `site`
 
   ## Refactoring of the Fetchers and QueryBuilders
-
   - Zod upgrade
   - New `formats()`, `fields()` and `include()` methods on the Fetchers to have better output type safety. These new methods are intended to replace the `output` options args of the QueryBuilder later. They provide a better typing of the output transforming the schema like removing the `optionnal` effect of a field if it was included in the `include` option of the QueryBuilder.
 

@@ -27,7 +27,8 @@
     "start": "jiti ./src/cli.ts",
     "dev": "tsup --watch",
     "build": "tsup ./src/cli.ts --format esm --dts",
-    "clean": "rimraf .turbo node_modules dist",
+    "clean": "rimraf .turbo dist",
+    "nuke": "rimraf .turbo node_modules dist",
     "test": "vitest run",
     "test:watch": "vitest",
     "test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
@@ -50,19 +51,20 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "rimraf": "catalog:"
   },
   "dependencies": {
     "@clack/core": "^0.5.0",
     "@clack/prompts": "^0.11.0",
-    "@ts-ghost/admin-api": "^5.0.0",
-    "@ts-ghost/content-api": "^4.2.0",
+    "@ts-ghost/admin-api": "workspace:*",
+    "@ts-ghost/content-api": "workspace:*",
     "configstore": "^7.0.0",
     "js-yaml": "^4.1.0",
     "node-html-markdown": "^1.3.0",
     "picocolors": "^1.0.0",
     "yargs": "^17.7.2",
-    "zod": "3.23.8"
+    "zod": "catalog:"
   },
   "publishConfig": {
     "access": "public"

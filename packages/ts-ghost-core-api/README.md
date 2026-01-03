@@ -29,10 +29,10 @@ pnpm i @ts-ghost/core-api
 
 ### Requirements
 
-This client is only compatible with Ghost versions 5.x for now.
+This client is only compatible with Ghost versions 5.x and 6x.
 
-- Ghost 5^
-
+- Ghost 5.^ (Any Ghost version after 5.0)
+- Ghost 6.^ (Any Ghost version after 6.0)
 - Node.js 16+
   - We rely on global `fetch` being available, so you can bring your own
     polyfill and if you run Node 16, you'll need to run with the
@@ -55,7 +55,7 @@ All these methods like `read` and `browse` gives you back the appropriate `Fetch
 ### Instantiation
 
 ```ts
-import { z } from "zod";
+import { z } from "zod/v3";
 import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 
 const api: ContentAPICredentials = {
@@ -115,7 +115,7 @@ After instantiation you can use the `APIComposer` to build your queries with 2 a
 The `browse` and `read` methods accept a config object with 2 properties: `input` and an `output`. These params mimic the way Ghost API Content is built but with the power of Zod and TypeScript they are type-safe here.
 
 ```ts
-import { z } from "zod";
+import { z } from "zod/v3";
 import { APIComposer, type ContentAPICredentials } from "@ts-ghost/core-api";
 
 const api: ContentAPICredentials = {

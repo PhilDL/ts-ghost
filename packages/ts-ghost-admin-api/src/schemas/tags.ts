@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 export const adminTagsCreateSchema = z.object({
   name: z.string().min(1).max(191),
@@ -23,5 +23,5 @@ export const adminTagsCreateSchema = z.object({
 export const adminTagsUpdateSchema = adminTagsCreateSchema.merge(
   z.object({
     name: z.string().min(1).max(191).optional(),
-  })
+  }),
 );

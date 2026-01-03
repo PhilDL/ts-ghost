@@ -53,12 +53,12 @@
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:",
-    "zod": "^3.22.2"
+    "zod": "catalog:"
   },
   "dependencies": {
-    "@ts-ghost/core-api": "^6.2.0",
+    "@ts-ghost/core-api": "workspace:*",
     "validator": "^13.11.0",
-    "zod": "3.23.8"
+    "zod": "catalog:"
   },
   "publishConfig": {
     "access": "public"

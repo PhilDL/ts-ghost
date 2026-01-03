@@ -1,8 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": [
-    ".env"
-  ],
+  "globalDependencies": [".env"],
   "globalEnv": [
     "NODE_ENV",
     "GHOST_URL",
@@ -17,24 +15,15 @@
   ],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".cache",
-        ".next/**",
-        "public/build/**",
-        "build/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".cache", ".next/**", "public/build/**", "build/**"]
+    },
+    "clean": {
+      "outputs": ["dist/**", ".cache", ".next/**", "public/build/**", "build/**"]
     },
     "start": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "public/build/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["public/build/**"]
     },
     "dev": {
       "cache": false,
@@ -56,14 +45,10 @@
       "outputs": []
     },
     "test:coverage": {
-      "outputs": [
-        "coverage"
-      ]
+      "outputs": ["coverage"]
     },
     "test-ci": {
-      "outputs": [
-        "coverage"
-      ]
+      "outputs": ["coverage"]
     },
     "typecheck": {
       "outputs": []

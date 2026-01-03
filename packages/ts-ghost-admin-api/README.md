@@ -32,10 +32,10 @@ It is made to interract with the Ghost Admin API with authentication by key. Fil
 
 ## Requirements
 
-This client is only compatible with Ghost versions 5.x for now.
+This client is only compatible with Ghost versions 5.x and 6x.
 
 - Ghost 5.^ (Any Ghost version after 5.0)
-
+- Ghost 6.^ (Any Ghost version after 6.0)
 - Node.js 16+
   - We rely on global `fetch` being available, so you can bring your own
     polyfill and if you run Node 16, you'll need to run with the

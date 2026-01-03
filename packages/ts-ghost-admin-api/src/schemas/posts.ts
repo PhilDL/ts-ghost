@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 import { baseEmailSchema, baseNewsletterSchema, basePostsSchema } from "@ts-ghost/core-api";
 
 import { adminAuthorsSchema } from "./authors";
@@ -170,15 +170,13 @@ export const adminPostsCreateSchema = basePostsCreateSchema.refine(
 
 export type CreatePost = z.infer<typeof adminPostsCreateSchema>;
 
-export const adminPostsUpdateSchema = basePostsCreateSchema.partial({ title: true })
+export const adminPostsUpdateSchema = basePostsCreateSchema
+  .partial({ title: true })
   .merge(
     z.object({
       updated_at: z.date().transform((val) => val.toISOString()),
     }),
   )
-  .refine(
-    emailOnlyNewsletterRefinement,
-    emailOnlyNewsletterRefinementOptions,
-  );
+  .refine(emailOnlyNewsletterRefinement, emailOnlyNewsletterRefinementOptions);
 
 export type UpdatePost = z.infer<typeof adminPostsUpdateSchema>;
