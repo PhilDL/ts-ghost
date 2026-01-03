@@ -1,14 +1,19 @@
+import { ghostAdminAPI } from "~/ghost";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ghostAdminAPI } from "~/ghost";
 
 async function getBlogPost(slug: string) {
-  const response = await ghostAdminAPI.posts.read({ slug }).formats({ html: true }).fetch();
+  const response = await ghostAdminAPI.posts
+    .read({ slug })
+    .formats({ html: true })
+    .fields({ title: true, html: true })
+    .fetch();
   if (!response.success) {
     console.log(response.errors.join(", "));
     return null;
   }
-  return response.data;
+  const post = response.data;
+  return post;
 }
 
 interface PostProps {
@@ -16,7 +21,6 @@ interface PostProps {
 }
 
 export default async function PostPage({ params }: PostProps) {
-  console.log(params);
   const post = await getBlogPost(params.slug);
 
   if (!post) {

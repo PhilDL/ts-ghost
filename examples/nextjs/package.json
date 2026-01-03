@@ -13,21 +13,21 @@
     "@ts-ghost/content-api": "workspace:*",
     "@ts-ghost/core-api": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
-    "next": "16.0.0",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "next": "16.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "typescript": "catalog:"
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "19.2.2",
-      "@types/react-dom": "19.2.2"
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3"
     }
   },
   "devDependencies": {
     "eslint": "catalog:eslint",
-    "eslint-config-next": "catalog:eslint"
+    "eslint-config-next": "16.1.1"
   }
 }
