@@ -57,7 +57,6 @@ export function Codeblock(props: CodeblockProps) {
         </div>
       </button>
       <pre
-        // @ts-expect-error - ref is not typed correctly
         ref={ref}
         {...rest}
         className={cn(
