@@ -105,7 +105,7 @@ export class APIComposer<
         paramsShape: this.config.createOptionsSchema,
       },
       parsedOptions as ({ id?: string } & z4.output<CreateOptions>) | undefined,
-      { method: "POST", body: parsedData as any },
+      { method: "POST", body: parsedData as Record<string, unknown> },
       this.httpClientFactory.create(),
     );
     return fetcher.submit();
