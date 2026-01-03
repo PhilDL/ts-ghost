@@ -1,4 +1,4 @@
-import { z, ZodRawShape } from "zod/v3";
+import { z, ZodRawShape } from "zod";
 
 import { BrowseParamsSchema } from "../helpers/browse-params";
 import type { HTTPClient } from "../helpers/http-client";

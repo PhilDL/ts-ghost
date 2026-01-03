@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import { baseAuthorsSchema } from "@ts-ghost/core-api";
 
 export const adminUsersSchema = baseAuthorsSchema.merge(

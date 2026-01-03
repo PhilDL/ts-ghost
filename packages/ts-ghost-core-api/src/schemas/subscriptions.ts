@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 import { baseOffersSchema } from "./offers";
 import { baseTiersSchema } from "./tiers";

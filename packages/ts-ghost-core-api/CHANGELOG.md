@@ -472,7 +472,7 @@
   - `output` option was removed because it is no longer necessary at the QueryBuilder level (kept on Fetchers)
 
   ```ts
-  import { z } from "zod/v3";
+  import { z } from "zod";
   import { QueryBuilder, type ContentAPICredentials } from "@ts-ghost/core-api";
 
   const api: ContentAPICredentials = {
@@ -489,10 +489,7 @@
   });
 
   // the "identity" schema is used to validate the inputs of the `read`method of the QueryBuilder
-  const identitySchema = z.union([
-    z.object({ slug: z.string() }),
-    z.object({ id: z.string() }),
-  ]);
+  const identitySchema = z.union([z.object({ slug: z.string() }), z.object({ id: z.string() })]);
 
   const simplifiedIncludeSchema = z.object({
     count: z.literal(true).optional(),
@@ -514,7 +511,7 @@
   Example:
 
   ```ts
-  import { z } from "zod/v3";
+  import { z } from "zod";
   import { adminMembersSchema, QueryBuilder } from "@ts-ghost/core-api";
 
   const membersIncludeSchema = z.object({});
