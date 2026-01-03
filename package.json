@@ -21,6 +21,7 @@
     "docs:dev": "pnpm --filter=@ts-ghost/docs dev",
     "remix:dev": "pnpm --filter=@examples/remix dev",
     "build": "turbo run build",
+    "clean": "turbo run clean",
     "test": "turbo run test",
     "test:integration": "turbo run test:integration",
     "test:integration:watch": "turbo run test:integration:watch",
