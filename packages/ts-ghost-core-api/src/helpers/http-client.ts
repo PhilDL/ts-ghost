@@ -1,6 +1,7 @@
 import { SignJWT } from "jose";
 
 import type { APICredentials, APIResource } from "../schemas";
+import { DebugOption, resolveDebugLogger } from "./debug";
 
 export type HTTPClientOptions = {
   key: string;
@@ -22,7 +23,7 @@ export interface IHTTPClient {
   }: {
     resource: APIResource;
     searchParams?: URLSearchParams;
-    options?: RequestInit;
+    options?: RequestInit & DebugOption;
     pathnameIdentity?: string;
   }): Promise<any>;
   fetchRawResponse({
@@ -33,7 +34,7 @@ export interface IHTTPClient {
   }: {
     resource: APIResource;
     searchParams?: URLSearchParams;
-    options?: RequestInit;
+    options?: RequestInit & DebugOption;
     pathnameIdentity?: string;
   }): Promise<Response>;
 }
@@ -107,9 +108,10 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
   }: {
     resource: APIResource;
     searchParams?: URLSearchParams;
-    options?: RequestInit & { debug?: boolean };
+    options?: RequestInit & DebugOption;
     pathnameIdentity?: string;
   }) {
+    const debug = resolveDebugLogger(options);
     if (this._baseURL === undefined) throw new Error("URL is undefined");
     let path = `${resource}/`;
     if (pathnameIdentity !== undefined) {
@@ -126,9 +128,7 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
     }
     let result = undefined;
     const headers = await this.genHeaders();
-    if (options?.debug) {
-      console.log("url", url.toString(), "headers", headers, "options", options);
-    }
+    debug("url", url.toString(), "headers", headers, "options", options);
     try {
       result = await (
         await fetch(url.toString(), {
@@ -137,6 +137,7 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
         })
       ).json();
     } catch (e) {
+      debug("error", e);
       return {
         status: "error",
         errors: [
