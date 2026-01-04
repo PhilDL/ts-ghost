@@ -8,7 +8,7 @@ export type HTTPClientOptions = {
   version: APICredentials["version"];
   url: APICredentials["url"];
   endpoint: "content" | "admin";
-};
+} & DebugOption;
 
 export interface IHTTPClient {
   get baseURL(): URL | undefined;
@@ -111,7 +111,7 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
     options?: RequestInit & DebugOption;
     pathnameIdentity?: string;
   }) {
-    const debug = resolveDebugLogger(options);
+    const debug = resolveDebugLogger({ ...this.config, ...options });
     if (this._baseURL === undefined) throw new Error("URL is undefined");
     let path = `${resource}/`;
     if (pathnameIdentity !== undefined) {
@@ -136,6 +136,7 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
           headers,
         })
       ).json();
+      debug("result", result, "status", result.status);
     } catch (e) {
       debug("error", e);
       return {
