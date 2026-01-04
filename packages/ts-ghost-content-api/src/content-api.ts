@@ -5,6 +5,7 @@ import {
   HTTPClientFactory,
   slugOrIdSchema,
 } from "@ts-ghost/core-api";
+import { DebugOption } from "@ts-ghost/core-api/helpers/debug";
 
 import { authorsIncludeSchema, authorsSchema } from "./authors/schemas";
 import { pagesIncludeSchema, pagesSchema } from "./pages/schemas";
@@ -31,6 +32,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` | `v6.${string}` =
     protected readonly url: string,
     protected readonly key: string,
     protected readonly version: Version,
+    protected readonly options?: DebugOption,
   ) {
     const apiCredentials = contentAPICredentialsSchema.parse({
       key,
@@ -38,6 +40,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` | `v6.${string}` =
       url,
     });
     this.HTTPClientFactoryFactory = new HTTPClientFactory({
+      ...options,
       ...apiCredentials,
       endpoint: "content",
     });
