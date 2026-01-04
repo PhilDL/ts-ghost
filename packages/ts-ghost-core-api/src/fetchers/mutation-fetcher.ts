@@ -1,12 +1,14 @@
-import { z, ZodRawShape, ZodTypeAny } from "zod/v3";
+import { z } from "zod";
+import * as z4 from "zod/v4/core";
 
+import { DebugOption } from "../helpers/debug";
 import { HTTPClient } from "../helpers/http-client";
 import type { APIResource } from "../schemas/shared";
 
 export class MutationFetcher<
   const Resource extends APIResource = any,
-  OutputShape extends ZodRawShape = any,
-  ParamsShape extends ZodTypeAny = any,
+  OutputShape extends z4.$ZodType = any,
+  ParamsShape extends z4.$ZodType = any,
   const HTTPVerb extends "POST" | "PUT" = "POST",
 > {
   protected _urlParams: Record<string, string> = {};
@@ -16,10 +18,10 @@ export class MutationFetcher<
   constructor(
     protected resource: Resource,
     protected config: {
-      output: z.ZodObject<OutputShape>;
+      output: OutputShape;
       paramsShape?: ParamsShape;
     },
-    private _params: ({ id?: string } & ParamsShape["_output"]) | undefined,
+    private _params: ({ id?: string } & z4.output<ParamsShape>) | undefined,
     protected _options: {
       method: HTTPVerb;
       body: Record<string, unknown>;
@@ -55,7 +57,7 @@ export class MutationFetcher<
     }
   }
 
-  public async submit() {
+  public async submit(options?: RequestInit & DebugOption) {
     const schema = z.discriminatedUnion("success", [
       z.object({
         success: z.literal(true),
@@ -84,10 +86,7 @@ export class MutationFetcher<
       resource: this.resource,
       searchParams: this._urlSearchParams,
       pathnameIdentity: this._pathnameIdentity,
-      options: {
-        method: this._options.method,
-        body: JSON.stringify(createData),
-      },
+      options: { ...options, method: this._options.method, body: JSON.stringify(createData) },
     });
     let result: any = {};
     if (response.errors) {

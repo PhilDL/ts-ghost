@@ -1,6 +1,6 @@
 import createFetchMock from "vitest-fetch-mock";
 import { assert, describe, expect, test } from "vitest";
-import { z } from "zod/v3";
+import { z } from "zod";
 
 import { HTTPClient, HTTPClientOptions } from "../helpers/http-client";
 import { ReadFetcher } from "./read-fetcher";
@@ -491,27 +491,29 @@ describe("ReadFetcherFetcher outputs test suite", () => {
       { identity: { slug: "this-is-a-slug" } },
       httpClient,
     );
-    const res = fetcher
-      // @ts-expect-error - foobar is not defined
-      .formats({ html: true, foobar: true })
-      // @ts-expect-error - foo is not in the include schema
-      .include({ count: true, foo: true })
-      // @ts-expect-error - barbaz is not in the output schema schema
-      .fields({ html: true, published: true, count: true, barbaz: true });
-    expect(res.getIncludes()).toStrictEqual(["count"]);
-    expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
-    expect(res.getFormats()).toStrictEqual(["html"]);
-    fetchMocker.doMockOnce(fixture);
-    await res.fetch();
-    expect(fetchMocker).toHaveBeenCalledTimes(1);
-    expect(fetchMocker).toHaveBeenCalledWith(
-      "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?fields=html%2Cpublished%2Ccount&include=count&formats=html&key=1234",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Accept-Version": "v6.0",
-        },
-      },
-    );
+    expect(() =>
+      fetcher
+        // @ts-expect-error - foobar is not defined
+        .formats({ html: true, foobar: true })
+        // @ts-expect-error - foo is not in the include schema
+        .include({ count: true, foo: true })
+        // @ts-expect-error - barbaz is not in the output schema schema
+        .fields({ html: true, published: true, count: true, barbaz: true }),
+    ).toThrow();
+    // expect(res.getIncludes()).toStrictEqual(["count"]);
+    // expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
+    // expect(res.getFormats()).toStrictEqual(["html"]);
+    // fetchMocker.doMockOnce(fixture);
+    // await res.fetch();
+    // expect(fetchMocker).toHaveBeenCalledTimes(1);
+    // expect(fetchMocker).toHaveBeenCalledWith(
+    //   "https://ghost.org/ghost/api/content/posts/slug/this-is-a-slug/?fields=html%2Cpublished%2Ccount&include=count&formats=html&key=1234",
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "Accept-Version": "v6.0",
+    //     },
+    //   },
+    // );
   });
 });

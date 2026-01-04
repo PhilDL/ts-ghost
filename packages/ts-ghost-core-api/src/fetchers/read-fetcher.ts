@@ -1,8 +1,9 @@
-import { z, ZodRawShape } from "zod/v3";
+import { z, ZodRawShape } from "zod";
 
+import { DebugOption } from "../helpers/debug";
 import type { HTTPClient } from "../helpers/http-client";
 import { type APIResource, type GhostIdentityInput } from "../schemas/shared";
-import type { Exactly, Mask } from "../utils";
+import type { Exactly, Mask, NoUnrecognizedKeys } from "../utils";
 import { contentFormats, type ContentFormats } from "./formats";
 
 export class ReadFetcher<
@@ -44,8 +45,9 @@ export class ReadFetcher<
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
   public formats<Formats extends Mask<Pick<OutputShape, ContentFormats>>>(
-    formats: z.noUnrecognized<Formats, OutputShape>,
+    formats: NoUnrecognizedKeys<Formats, OutputShape>,
   ) {
+    const newOutput = this.config.output.required(formats as Exactly<Formats, Formats>);
     const params = {
       ...this._params,
       formats: Object.keys(formats).filter((key) => contentFormats.includes(key)),
@@ -54,7 +56,7 @@ export class ReadFetcher<
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(formats as Exactly<Formats, Formats>),
+        output: newOutput,
         include: this.config.include,
       },
       params,
@@ -70,16 +72,22 @@ export class ReadFetcher<
    * @param include Include specific keys from the include shape
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public include<Includes extends Mask<IncludeShape>>(include: z.noUnrecognized<Includes, IncludeShape>) {
+  public include<Includes extends Mask<IncludeShape>>(include: NoUnrecognizedKeys<Includes, IncludeShape>) {
     const params = {
       ...this._params,
       include: Object.keys(this.config.include.parse(include)),
     };
+    // remove dot-notation from the include object key
+    const requiredIncludeKeys = Object.fromEntries(
+      Object.keys(include)
+        .filter((key) => !key.includes("."))
+        .map((key) => [key, include[key]]),
+    );
     return new ReadFetcher(
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(include as Exactly<Includes, Includes>),
+        output: this.config.output.required(requiredIncludeKeys as Exactly<Includes, Includes>),
         include: this.config.include,
       },
       params,
@@ -94,7 +102,7 @@ export class ReadFetcher<
    * @param fields Any keys from the resource Schema
    * @returns A new Fetcher with the fixed output shape having only the selected Fields
    */
-  public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
+  public fields<Fields extends Mask<OutputShape>>(fields: NoUnrecognizedKeys<Fields, OutputShape>) {
     const newOutput = this.config.output.pick(fields as Exactly<Fields, Fields>);
     return new ReadFetcher(
       this.resource,
@@ -157,7 +165,7 @@ export class ReadFetcher<
     }
   }
 
-  public async fetch(options?: RequestInit) {
+  public async fetch(options?: RequestInit & DebugOption) {
     const res = z.discriminatedUnion("success", [
       z.object({
         success: z.literal(true),

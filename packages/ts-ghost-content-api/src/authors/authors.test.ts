@@ -62,7 +62,7 @@ describe("authors api .browse() Args Type-safety", () => {
   });
 
   test(".browse 'fields' argument should ony accept valid fields", () => {
-    expect(
+    expect(() =>
       api.authors
         .browse()
         .fields({
@@ -70,7 +70,7 @@ describe("authors api .browse() Args Type-safety", () => {
           foo: true,
         })
         .getOutputFields(),
-    ).toEqual([]);
+    ).toThrow();
 
     expect(api.authors.browse().fields({ location: true }).getOutputFields()).toEqual(["location"]);
     expect(api.authors.browse().fields({ name: true, website: true }).getOutputFields()).toEqual([

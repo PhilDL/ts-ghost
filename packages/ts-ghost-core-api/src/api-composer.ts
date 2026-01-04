@@ -1,4 +1,5 @@
-import { z, ZodRawShape, ZodTypeAny } from "zod/v3";
+import { z, ZodObject as ZodObjectV4, ZodRawShape } from "zod";
+import * as z4 from "zod/v4/core";
 
 import { DeleteFetcher } from "./fetchers";
 import { BrowseFetcher } from "./fetchers/browse-fetcher";
@@ -9,8 +10,8 @@ import type { HTTPClientFactory } from "./helpers/http-client";
 import type { APIResource } from "./schemas";
 import type { IsAny } from "./utils";
 
-function isZodObject(schema: z.ZodObject<any> | z.ZodTypeAny): schema is z.ZodObject<any> {
-  return (schema as z.ZodObject<any>).partial !== undefined;
+function isZodObject(schema: z4.$ZodType): schema is ZodObjectV4<any> {
+  return (schema as ZodObjectV4<any>).partial !== undefined;
 }
 
 /**
@@ -19,12 +20,12 @@ function isZodObject(schema: z.ZodObject<any> | z.ZodTypeAny): schema is z.ZodOb
 export class APIComposer<
   const Resource extends APIResource = any,
   Shape extends ZodRawShape = any,
-  IdentityShape extends z.ZodTypeAny = any,
+  IdentityShape extends z4.$ZodType<{ slug?: string; id?: string; email?: string }> = any,
   IncludeShape extends ZodRawShape = any,
-  CreateShape extends ZodTypeAny = any,
-  CreateOptions extends ZodTypeAny = any,
-  UpdateShape extends ZodTypeAny = any,
-  UpdateOptions extends ZodTypeAny = any,
+  CreateSchema extends z4.$ZodType = any,
+  CreateOptions extends z4.$ZodType = any,
+  UpdateSchema extends z4.$ZodObject = any,
+  UpdateOptions extends z4.$ZodObject = any,
 > {
   constructor(
     protected resource: Resource,
@@ -32,9 +33,9 @@ export class APIComposer<
       schema: z.ZodObject<Shape>;
       identitySchema: IdentityShape;
       include: z.ZodObject<IncludeShape>;
-      createSchema?: CreateShape;
+      createSchema?: CreateSchema;
       createOptionsSchema?: CreateOptions;
-      updateSchema?: UpdateShape;
+      updateSchema?: UpdateSchema;
       updateOptionsSchema?: UpdateOptions;
     },
     protected httpClientFactory: HTTPClientFactory,
@@ -73,7 +74,7 @@ export class APIComposer<
    * Read function that accepts Identify fields like id, slug or email. Will return an instance
    * of ReadFetcher class.
    */
-  public read(options: z.infer<IdentityShape>) {
+  public read(options: z4.infer<IdentityShape>) {
     return new ReadFetcher(
       this.resource,
       {
@@ -82,20 +83,20 @@ export class APIComposer<
         include: this.config.include,
       },
       {
-        identity: this.config.identitySchema.parse(options),
+        identity: z.parse(this.config.identitySchema, options),
       },
       this.httpClientFactory.create(),
     );
   }
 
-  public async add(data: z.input<CreateShape>, options?: z.infer<CreateOptions>) {
+  public async add(data: z4.input<CreateSchema>, options?: z4.infer<CreateOptions>) {
     if (!this.config.createSchema) {
       throw new Error("No createSchema defined");
     }
-    const parsedData = this.config.createSchema.parse(data);
+    const parsedData = z.parse(this.config.createSchema, data);
     const parsedOptions =
       this.config.createOptionsSchema && options
-        ? this.config.createOptionsSchema.parse(options)
+        ? z.parse(this.config.createOptionsSchema, options)
         : undefined;
     const fetcher = new MutationFetcher(
       this.resource,
@@ -103,8 +104,8 @@ export class APIComposer<
         output: this.config.schema,
         paramsShape: this.config.createOptionsSchema,
       },
-      parsedOptions,
-      { method: "POST", body: parsedData },
+      parsedOptions as ({ id?: string } & z4.output<CreateOptions>) | undefined,
+      { method: "POST", body: parsedData as Record<string, unknown> },
       this.httpClientFactory.create(),
     );
     return fetcher.submit();
@@ -112,20 +113,20 @@ export class APIComposer<
 
   public async edit(
     id: string,
-    data: IsAny<UpdateShape> extends true ? Partial<z.input<CreateShape>> : z.input<UpdateShape>,
-    options?: z.infer<UpdateOptions>,
+    data: IsAny<UpdateSchema> extends true ? Partial<z4.input<CreateSchema>> : z4.input<UpdateSchema>,
+    options?: z4.infer<UpdateOptions>,
   ) {
-    let updateSchema: z.ZodTypeAny | z.ZodObject<any> | undefined = this.config.updateSchema;
+    let updateSchema: z4.$ZodObject | undefined = this.config.updateSchema;
     if (!this.config.updateSchema && this.config.createSchema && isZodObject(this.config.createSchema)) {
       updateSchema = this.config.createSchema.partial();
     }
     if (!updateSchema) {
       throw new Error("No updateSchema defined");
     }
-    const cleanId = z.string().nonempty().parse(id);
-    const parsedData = updateSchema.parse(data);
+    const cleanId = z.string().min(1).parse(id);
+    const parsedData = z.parse(updateSchema, data);
     const parsedOptions =
-      this.config.updateOptionsSchema && options ? this.config.updateOptionsSchema.parse(options) : {};
+      this.config.updateOptionsSchema && options ? z.parse(this.config.updateOptionsSchema, options) : {};
 
     if (Object.keys(parsedData).length === 0) {
       throw new Error("No data to edit");
@@ -136,7 +137,7 @@ export class APIComposer<
         output: this.config.schema,
         paramsShape: this.config.updateOptionsSchema,
       },
-      { id: cleanId, ...parsedOptions },
+      { id: cleanId, ...parsedOptions } as ({ id?: string } & z4.output<UpdateOptions>) | undefined,
       { method: "PUT", body: parsedData },
       this.httpClientFactory.create(),
     );
@@ -144,7 +145,7 @@ export class APIComposer<
   }
 
   public async delete(id: string) {
-    const cleanId = z.string().nonempty().parse(id);
+    const cleanId = z.string().min(1).parse(id);
     const fetcher = new DeleteFetcher(this.resource, { id: cleanId }, this.httpClientFactory.create());
     return fetcher.submit();
   }

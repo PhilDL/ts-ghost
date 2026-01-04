@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { z } from "zod/v3";
+import { z } from "zod";
 
 import { parseBrowseParams } from "./browse-params";
 

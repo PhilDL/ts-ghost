@@ -1,5 +1,6 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
+import { DebugOption } from "../helpers/debug";
 import type { HTTPClient } from "../helpers/http-client";
 import type { APIResource } from "../schemas/shared";
 
@@ -29,7 +30,7 @@ export class DeleteFetcher<const Resource extends APIResource = any> {
     this._pathnameIdentity = this._params.id;
   }
 
-  public async submit() {
+  public async submit(options?: RequestInit & DebugOption) {
     const schema = z.discriminatedUnion("success", [
       z.object({
         success: z.literal(true),
@@ -51,6 +52,7 @@ export class DeleteFetcher<const Resource extends APIResource = any> {
         resource: this.resource,
         pathnameIdentity: this._pathnameIdentity,
         options: {
+          ...options,
           method: "DELETE",
         },
       });

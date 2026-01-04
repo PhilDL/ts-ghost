@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import { ghostIdentitySchema, ghostMetadataSchema, ghostMetaSchema } from "@ts-ghost/core-api";
 
 export const authorsSchema = z.object({
