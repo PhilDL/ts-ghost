@@ -123,7 +123,7 @@ export class APIComposer<
     if (!updateSchema) {
       throw new Error("No updateSchema defined");
     }
-    const cleanId = z.string().nonempty().parse(id);
+    const cleanId = z.string().min(1).parse(id);
     const parsedData = z.parse(updateSchema, data);
     const parsedOptions =
       this.config.updateOptionsSchema && options ? z.parse(this.config.updateOptionsSchema, options) : {};
