@@ -129,7 +129,7 @@ export const adminPagesCreateSchema = z.object({
       ]),
     )
     .meta({
-      description: `Specifing author via id, name or slug.`,
+      description: `Specifying author via id, name or slug.`,
     })
     .optional(),
 });

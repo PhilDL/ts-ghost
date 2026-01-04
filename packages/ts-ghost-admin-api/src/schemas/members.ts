@@ -54,7 +54,7 @@ export const adminMembersCreateSchema = z.object({
       ]),
     )
     .meta({
-      description: `Specifing newsletter to subscribe to via id or name, incompatible with the \`subscribed\` property`,
+      description: `Specifying newsletter to subscribe to via id or name, incompatible with the \`subscribed\` property`,
     })
     .optional(),
   subscribed: z
