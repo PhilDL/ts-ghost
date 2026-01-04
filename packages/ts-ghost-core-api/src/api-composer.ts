@@ -83,7 +83,7 @@ export class APIComposer<
         include: this.config.include,
       },
       {
-        identity: z4.parse(this.config.identitySchema, options),
+        identity: z.parse(this.config.identitySchema, options),
       },
       this.httpClientFactory.create(),
     );
@@ -96,7 +96,7 @@ export class APIComposer<
     const parsedData = z.parse(this.config.createSchema, data);
     const parsedOptions =
       this.config.createOptionsSchema && options
-        ? z4.parse(this.config.createOptionsSchema, options)
+        ? z.parse(this.config.createOptionsSchema, options)
         : undefined;
     const fetcher = new MutationFetcher(
       this.resource,
