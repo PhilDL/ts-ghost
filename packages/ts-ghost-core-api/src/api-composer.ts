@@ -145,7 +145,7 @@ export class APIComposer<
   }
 
   public async delete(id: string) {
-    const cleanId = z.string().nonempty().parse(id);
+    const cleanId = z.string().min(1).parse(id);
     const fetcher = new DeleteFetcher(this.resource, { id: cleanId }, this.httpClientFactory.create());
     return fetcher.submit();
   }
