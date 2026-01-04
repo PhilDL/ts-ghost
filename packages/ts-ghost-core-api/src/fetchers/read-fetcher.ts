@@ -1,5 +1,6 @@
 import { z, ZodRawShape } from "zod";
 
+import { DebugOption } from "../helpers/debug";
 import type { HTTPClient } from "../helpers/http-client";
 import { type APIResource, type GhostIdentityInput } from "../schemas/shared";
 import type { Exactly, Mask, NoUnrecognizedKeys } from "../utils";
@@ -164,7 +165,7 @@ export class ReadFetcher<
     }
   }
 
-  public async fetch(options?: RequestInit) {
+  public async fetch(options?: RequestInit & DebugOption) {
     const res = z.discriminatedUnion("success", [
       z.object({
         success: z.literal(true),

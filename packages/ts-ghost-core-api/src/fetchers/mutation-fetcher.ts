@@ -1,6 +1,7 @@
 import { z } from "zod";
 import * as z4 from "zod/v4/core";
 
+import { DebugOption } from "../helpers/debug";
 import { HTTPClient } from "../helpers/http-client";
 import type { APIResource } from "../schemas/shared";
 
@@ -56,7 +57,7 @@ export class MutationFetcher<
     }
   }
 
-  public async submit() {
+  public async submit(options?: RequestInit & DebugOption) {
     const schema = z.discriminatedUnion("success", [
       z.object({
         success: z.literal(true),
@@ -86,10 +87,7 @@ export class MutationFetcher<
       resource: this.resource,
       searchParams: this._urlSearchParams,
       pathnameIdentity: this._pathnameIdentity,
-      options: {
-        method: this._options.method,
-        body: JSON.stringify(createData),
-      },
+      options: { ...options, method: this._options.method, body: JSON.stringify(createData) },
     })) as { data: any; status: number };
     let result: any = {};
     if (response.errors) {

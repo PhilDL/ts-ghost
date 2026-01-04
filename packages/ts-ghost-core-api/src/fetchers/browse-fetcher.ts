@@ -1,6 +1,7 @@
 import { z, ZodRawShape } from "zod";
 
 import { BrowseParamsSchema } from "../helpers/browse-params";
+import { DebugOption } from "../helpers/debug";
 import type { HTTPClient } from "../helpers/http-client";
 import { ghostMetaSchema, type APIResource } from "../schemas/shared";
 import type { Exactly, Mask, NoUnrecognizedKeys } from "../utils";
@@ -198,7 +199,7 @@ export class BrowseFetcher<
     ]);
   }
 
-  public async fetch(options?: RequestInit & { debug?: boolean }) {
+  public async fetch(options?: RequestInit & DebugOption) {
     const resultSchema = this._getResultSchema();
     const { data: result, status } = (await this.httpClient.fetchWithStatus({
       resource: this.resource,
@@ -229,7 +230,7 @@ export class BrowseFetcher<
     return resultSchema.parse(data);
   }
 
-  public async paginate(options?: RequestInit) {
+  public async paginate(options?: RequestInit & DebugOption) {
     if (!this._params.browseParams?.page) {
       this._params.browseParams = {
         ...this._params.browseParams,
