@@ -31,7 +31,7 @@
     "typecheck": "turbo run typecheck",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm publish -r",
+    "release": "pnpm turbo run build &&pnpm publish -r",
     "validate": "turbo run lint typecheck test",
     "format:write": "prettier --write \"**/*.{ts,tsx,md}\"",
     "format": "prettier --check \"**/*.{ts,tsx,md}\"",
