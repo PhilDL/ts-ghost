@@ -1,5 +1,11 @@
 # @ts-ghost/core-api
 
+## 6.2.2
+
+### Patch Changes
+
+- 8f4f749: Fix latest empty release
+
 ## 6.2.1
 
 ### Patch Changes

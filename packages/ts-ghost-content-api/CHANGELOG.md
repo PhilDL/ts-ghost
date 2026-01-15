@@ -1,5 +1,13 @@
 # @ts-ghost/content-api
 
+## 4.2.2
+
+### Patch Changes
+
+- 8f4f749: Fix latest empty release
+- Updated dependencies [8f4f749]
+  - @ts-ghost/core-api@6.2.2
+
 ## 4.2.1
 
 ### Patch Changes

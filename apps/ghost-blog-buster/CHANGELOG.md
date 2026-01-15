@@ -1,5 +1,14 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.7.3
+
+### Patch Changes
+
+- 8f4f749: Fix latest empty release
+- Updated dependencies [8f4f749]
+  - @ts-ghost/admin-api@5.0.2
+  - @ts-ghost/content-api@4.2.2
+
 ## 0.7.2
 
 ### Patch Changes
