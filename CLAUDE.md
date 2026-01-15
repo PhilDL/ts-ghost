@@ -6,6 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ts-ghost is a monorepo containing TypeScript libraries and tools for interacting with the Ghost blogging platform API. It provides strongly-typed Content and Admin API clients with Zod schema validation.
 
+All these packages are published to npm and can be used in other projects.
+
+The main consumer-facing packages (npm packages) are:
+
+- @ts-ghost/content-api
+- @ts-ghost/admin-api
+- @ts-ghost/ghost-blog-buster
+
+Very important to say that these packages are used in production by consumers, so we need to be very careful with breaking changes.
+
+These other packages are used internally and can handle breaking changes moderatly:
+
+- @ts-ghost/core-api
+
 ## Build & Development Commands
 
 ```bash
@@ -73,6 +87,7 @@ The `@ts-ghost/core-api` package provides the foundation:
 ### Type-Safe Query Building
 
 Fetchers use a builder pattern with method chaining:
+
 - `.fields({ title: true, slug: true })` - Select specific fields (modifies output type)
 - `.include({ authors: true, tags: true })` - Include related resources (modifies output type)
 - `.formats({ html: true })` - Select content formats for posts/pages
@@ -93,6 +108,7 @@ Results are discriminated unions with `{ success: true, data: T }` or `{ success
 ## Environment Variables
 
 For integration testing and playground scripts, create `.env`:
+
 ```
 GHOST_URL=https://your-ghost-instance.com
 GHOST_CONTENT_API_KEY=your-content-api-key
@@ -103,6 +119,7 @@ GHOST_VERSION=v5.x
 ## Versioning
 
 Uses Changesets for version management:
+
 ```bash
 pnpm changeset        # Create a new changeset
 pnpm version-packages # Apply changesets and bump versions
@@ -118,6 +135,7 @@ pnpm version-packages # Apply changesets and bump versions
 
 ## Testing Notes
 
+- Tests are extremly important, especially on new features.
 - Unit tests run against mocked fetch responses
 - Integration tests require a real Ghost instance with specific test data (CI uses `astro-starter.digitalpress.blog`)
 - Tests include type checking via `vitest --typecheck`

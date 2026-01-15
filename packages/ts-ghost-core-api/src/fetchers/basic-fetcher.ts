@@ -30,13 +30,18 @@ export class BasicFetcher<const Resource extends APIResource = any, OutputShape 
             message: z.string(),
           }),
         ),
+        status: z.number(),
       }),
     ]);
-    const result = await this.httpClient.fetch({ options, resource: this.resource });
+    const { data: result, status } = (await this.httpClient.fetchWithStatus({
+      options,
+      resource: this.resource,
+    })) as { data: any; status: number };
     let data: any = {};
     if (result.errors) {
       data.success = false;
       data.errors = result.errors;
+      data.status = status;
     } else {
       data = {
         success: true,

@@ -292,3 +292,122 @@ describe("HTTPClient test fetch", () => {
     });
   });
 });
+
+describe("HTTPClient fetchWithStatus", () => {
+  beforeEach(() => {
+    fetchMocker.enableMocks();
+  });
+  afterEach(() => {
+    fetchMocker.resetMocks();
+    vi.restoreAllMocks();
+  });
+
+  test("fetchWithStatus returns data and status on success", async () => {
+    const httpClient = new HTTPClient({
+      key: "abcd",
+      version: "v5.22",
+      endpoint: "content",
+      url: "https://ghost.org",
+    });
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        posts: [{ title: "Test Post" }],
+      }),
+      { status: 200 },
+    );
+
+    const result = await httpClient.fetchWithStatus({ resource: "posts" });
+    expect(result.status).toBe(200);
+    expect(result.data).toEqual({
+      posts: [{ title: "Test Post" }],
+    });
+  });
+
+  test("fetchWithStatus returns status 404 on not found", async () => {
+    const httpClient = new HTTPClient({
+      key: "abcd",
+      version: "v5.22",
+      endpoint: "content",
+      url: "https://ghost.org",
+    });
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "NotFoundError", message: "Resource not found" }],
+      }),
+      { status: 404 },
+    );
+
+    const result = await httpClient.fetchWithStatus({ resource: "posts", pathnameIdentity: "nonexistent" });
+    expect(result.status).toBe(404);
+    expect(result.data).toEqual({
+      errors: [{ type: "NotFoundError", message: "Resource not found" }],
+    });
+  });
+
+  test("fetchWithStatus returns status 401 on unauthorized", async () => {
+    const httpClient = new HTTPClient({
+      key: "invalid-key",
+      version: "v5.22",
+      endpoint: "content",
+      url: "https://ghost.org",
+    });
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "UnauthorizedError", message: "Invalid API key" }],
+      }),
+      { status: 401 },
+    );
+
+    const result = await httpClient.fetchWithStatus({ resource: "posts" });
+    expect(result.status).toBe(401);
+    expect((result.data as any).errors[0].type).toBe("UnauthorizedError");
+  });
+
+  test("fetchWithStatus returns status 500 on server error", async () => {
+    const httpClient = new HTTPClient({
+      key: "abcd",
+      version: "v5.22",
+      endpoint: "content",
+      url: "https://ghost.org",
+    });
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "InternalServerError", message: "Server error" }],
+      }),
+      { status: 500 },
+    );
+
+    const result = await httpClient.fetchWithStatus({ resource: "posts" });
+    expect(result.status).toBe(500);
+    expect((result.data as any).errors[0].type).toBe("InternalServerError");
+  });
+
+  test("fetchWithStatus returns status 0 on network error", async () => {
+    const httpClient = new HTTPClient({
+      key: "abcd",
+      version: "v5.22",
+      endpoint: "content",
+      url: "https://ghost.org",
+    });
+    fetchMocker.mockRejectOnce(new Error("Network error"));
+
+    const result = await httpClient.fetchWithStatus({ resource: "posts" });
+    expect(result.status).toBe(0);
+    expect((result.data as any).errors[0].type).toBe("FetchError");
+    expect((result.data as any).errors[0].message).toContain("Network error");
+  });
+
+  test("fetchWithStatus returns status on JSON parse error", async () => {
+    const httpClient = new HTTPClient({
+      key: "abcd",
+      version: "v5.22",
+      endpoint: "content",
+      url: "https://ghost.org",
+    });
+    fetchMocker.doMockOnce("invalid json", { status: 200 });
+
+    const result = await httpClient.fetchWithStatus({ resource: "posts" });
+    expect(result.status).toBe(200);
+    expect((result.data as any).errors[0].type).toBe("FetchError");
+  });
+});

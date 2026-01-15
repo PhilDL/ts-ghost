@@ -539,6 +539,24 @@ describe("posts integration tests browse", () => {
     expect(b.success).toBeTruthy();
   });
 
+  test("posts.read() with non-existent id returns 404 status", async () => {
+    const result = await api.posts.read({ id: "nonexistent-id-12345" }).fetch();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(404);
+      expect(result.errors[0].type).toBe("NotFoundError");
+    }
+  });
+
+  test("posts.read() with non-existent slug returns 404 status", async () => {
+    const result = await api.posts.read({ slug: "this-slug-does-not-exist-12345" }).fetch();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(404);
+      expect(result.errors[0].type).toBe("NotFoundError");
+    }
+  });
+
   test("posts api with bad key", async () => {
     const api = new TSGhostAdminAPI(
       process.env.VITE_GHOST_URL!,
@@ -554,6 +572,7 @@ describe("posts integration tests browse", () => {
       .fetch();
     assert(!result.success);
     expect(result.errors[0].message).toBe("Unknown Admin API Key");
+    expect(result.status).toBe(401);
     const resultR = await api.posts
       .read({
         slug: "coming-soon",
@@ -562,6 +581,7 @@ describe("posts integration tests browse", () => {
       .fetch();
     assert(!resultR.success);
     expect(resultR.errors[0].message).toBe("Unknown Admin API Key");
+    expect(resultR.status).toBe(401);
   });
 
   test("posts api with wrong url", async () => {

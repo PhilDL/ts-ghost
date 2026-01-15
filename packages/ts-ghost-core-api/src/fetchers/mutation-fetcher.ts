@@ -70,6 +70,7 @@ export class MutationFetcher<
             context: z.string().nullish(),
           }),
         ),
+        status: z.number(),
       }),
     ]);
     // Ghost API is expecting a JSON object with a key that matches the resource name
@@ -80,7 +81,7 @@ export class MutationFetcher<
     const createData = {
       [this.resource]: [this._options.body],
     };
-    const response = await this.httpClient.fetch({
+    const { data: response, status } = (await this.httpClient.fetchWithStatus({
       resource: this.resource,
       searchParams: this._urlSearchParams,
       pathnameIdentity: this._pathnameIdentity,
@@ -88,11 +89,12 @@ export class MutationFetcher<
         method: this._options.method,
         body: JSON.stringify(createData),
       },
-    });
+    })) as { data: any; status: number };
     let result: any = {};
     if (response.errors) {
       result.success = false;
       result.errors = response.errors;
+      result.status = status;
     } else {
       result = {
         success: true,
