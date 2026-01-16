@@ -185,5 +185,17 @@ describe("authors integration tests read", () => {
     expect(result.errors).toBeDefined();
     expect(result.errors).toHaveLength(1);
     expect(result.errors[0].message).toContain("author");
+    // read with non-existent `id` returns 422 status code
+    expect(result.status).toBe(422);
+  });
+
+  test("authors.read() with non-existent slug returns 404 status", async () => {
+    const result = await api.authors.read({ slug: "this-author-does-not-exist-12345" }).fetch();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      // and, read with non-existent slug returns 404 status code
+      expect(result.status).toBe(404);
+      expect(result.errors[0].type).toBe("NotFoundError");
+    }
   });
 });

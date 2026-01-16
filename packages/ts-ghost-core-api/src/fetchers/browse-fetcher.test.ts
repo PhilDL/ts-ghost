@@ -594,6 +594,85 @@ describe("BrowseFetcher", () => {
           message: "Fake Fetch Error",
         },
       ]);
+      expect(result.status).toBe(0);
+    }
+  });
+
+  test("fetch error returns status code 404", async () => {
+    const browseFetcher = new BrowseFetcher(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      httpClient,
+    );
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "NotFoundError", message: "Resource not found" }],
+      }),
+      { status: 404 },
+    );
+
+    const result = await browseFetcher.fetch();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(404);
+      expect(result.errors[0].type).toBe("NotFoundError");
+    }
+  });
+
+  test("fetch error returns status code 401", async () => {
+    const browseFetcher = new BrowseFetcher(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      httpClient,
+    );
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "UnauthorizedError", message: "Invalid API key" }],
+      }),
+      { status: 401 },
+    );
+
+    const result = await browseFetcher.fetch();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(401);
+      expect(result.errors[0].type).toBe("UnauthorizedError");
+    }
+  });
+
+  test("fetch error returns status code 500", async () => {
+    const browseFetcher = new BrowseFetcher(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      httpClient,
+    );
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "InternalServerError", message: "Server error" }],
+      }),
+      { status: 500 },
+    );
+
+    const result = await browseFetcher.fetch();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(500);
+      expect(result.errors[0].type).toBe("InternalServerError");
     }
   });
 
@@ -624,6 +703,33 @@ describe("BrowseFetcher", () => {
           message: "Fake Fetch Error",
         },
       ]);
+      expect(result.current.status).toBe(0);
+    }
+  });
+
+  test("paginate error returns status code 404", async () => {
+    const browseFetcher = new BrowseFetcher(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {},
+      httpClient,
+    );
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "NotFoundError", message: "Resource not found" }],
+      }),
+      { status: 404 },
+    );
+
+    const result = await browseFetcher.paginate();
+    expect(result.current.success).toBe(false);
+    if (!result.current.success) {
+      expect(result.current.status).toBe(404);
+      expect(result.current.errors[0].type).toBe("NotFoundError");
     }
   });
 

@@ -186,21 +186,23 @@ export class BrowseFetcher<
             message: z.string(),
           }),
         ),
+        status: z.number(),
       }),
     ]);
   }
 
   public async fetch(options?: RequestInit) {
     const resultSchema = this._getResultSchema();
-    const result = await this.httpClient.fetch({
+    const { data: result, status } = (await this.httpClient.fetchWithStatus({
       resource: this.resource,
       searchParams: this._urlSearchParams,
       options,
-    });
+    })) as { data: any; status: number };
     let data: any = {};
     if (result.errors) {
       data.success = false;
       data.errors = result.errors;
+      data.status = status;
     } else {
       data = {
         success: true,
@@ -230,15 +232,16 @@ export class BrowseFetcher<
     }
 
     const resultSchema = this._getResultSchema();
-    const result = await this.httpClient.fetch({
+    const { data: result, status } = (await this.httpClient.fetchWithStatus({
       resource: this.resource,
       searchParams: this._urlSearchParams,
       options,
-    });
+    })) as { data: any; status: number };
     let data: any = {};
     if (result.errors) {
       data.success = false;
       data.errors = result.errors;
+      data.status = status;
     } else {
       data = {
         success: true,

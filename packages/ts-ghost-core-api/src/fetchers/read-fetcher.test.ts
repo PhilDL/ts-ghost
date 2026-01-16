@@ -300,6 +300,7 @@ describe("ReadFetcher", () => {
       JSON.stringify({
         errors: [{ message: "Validation error, cannot read author.", type: "ValidationError" }],
       }),
+      { status: 422 },
     );
 
     const result = await readFetcher.fetch();
@@ -316,6 +317,7 @@ describe("ReadFetcher", () => {
     expect(result.errors).toStrictEqual([
       { message: "Validation error, cannot read author.", type: "ValidationError" },
     ]);
+    expect(result.status).toBe(422);
   });
 
   test("_fetch failed, errors were caught in the fetch", async () => {
@@ -343,6 +345,63 @@ describe("ReadFetcher", () => {
           message: "Fake Fetch Error",
         },
       ]);
+      expect(result.status).toBe(0);
+    }
+  });
+
+  test("fetch error returns status code 404", async () => {
+    const readFetcher = new ReadFetcher(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        identity: { id: "nonexistent-id" },
+      },
+      httpClient,
+    );
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "NotFoundError", message: "Resource not found" }],
+      }),
+      { status: 404 },
+    );
+
+    const result = await readFetcher.fetch();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(404);
+      expect(result.errors[0].type).toBe("NotFoundError");
+    }
+  });
+
+  test("fetch error returns status code 401", async () => {
+    const readFetcher = new ReadFetcher(
+      "posts",
+      {
+        schema: simplifiedSchema,
+        output: simplifiedSchema,
+        include: simplifiedIncludeSchema,
+      },
+      {
+        identity: { slug: "this-is-a-slug" },
+      },
+      httpClient,
+    );
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "UnauthorizedError", message: "Invalid API key" }],
+      }),
+      { status: 401 },
+    );
+
+    const result = await readFetcher.fetch();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(401);
+      expect(result.errors[0].type).toBe("UnauthorizedError");
     }
   });
 

@@ -2,6 +2,11 @@ import { SignJWT } from "jose";
 
 import type { APICredentials, APIResource } from "../schemas";
 
+export type FetchWithStatusResult<T = unknown> = {
+  data: T;
+  status: number;
+};
+
 export type HTTPClientOptions = {
   key: string;
   version: APICredentials["version"];
@@ -36,6 +41,17 @@ export interface IHTTPClient {
     options?: RequestInit;
     pathnameIdentity?: string;
   }): Promise<Response>;
+  fetchWithStatus({
+    resource,
+    searchParams,
+    options,
+    pathnameIdentity,
+  }: {
+    resource: APIResource;
+    searchParams?: URLSearchParams;
+    options?: RequestInit;
+    pathnameIdentity?: string;
+  }): Promise<FetchWithStatusResult>;
 }
 
 export interface IHTTPClientFactory {
@@ -145,6 +161,69 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
       };
     }
     return result;
+  }
+
+  public async fetchWithStatus({
+    resource,
+    searchParams,
+    options,
+    pathnameIdentity,
+  }: {
+    resource: APIResource;
+    searchParams?: URLSearchParams;
+    options?: RequestInit;
+    pathnameIdentity?: string;
+  }): Promise<FetchWithStatusResult> {
+    if (this._baseURL === undefined) throw new Error("URL is undefined");
+    let path = `${resource}/`;
+    if (pathnameIdentity !== undefined) {
+      path += `${pathnameIdentity}/`;
+    }
+    const url = new URL(path, this._baseURL);
+    if (searchParams !== undefined) {
+      for (const [key, value] of searchParams.entries()) {
+        url.searchParams.append(key, value);
+      }
+    }
+    if (this.config.endpoint === "content") {
+      url.searchParams.append("key", this.config.key);
+    }
+    const headers = await this.genHeaders();
+    try {
+      const response = await fetch(url.toString(), {
+        ...options,
+        headers,
+      });
+      const status = response.status;
+      try {
+        const data = await response.json();
+        return { data, status };
+      } catch (e) {
+        return {
+          data: {
+            errors: [
+              {
+                type: "FetchError",
+                message: (e as Error).toString(),
+              },
+            ],
+          },
+          status,
+        };
+      }
+    } catch (e) {
+      return {
+        data: {
+          errors: [
+            {
+              type: "FetchError",
+              message: (e as Error).toString(),
+            },
+          ],
+        },
+        status: 0,
+      };
+    }
   }
 
   public async fetchRawResponse({

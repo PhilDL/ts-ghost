@@ -43,6 +43,7 @@ export class DeleteFetcher<const Resource extends APIResource = any> {
             context: z.string().nullish(),
           }),
         ),
+        status: z.number(),
       }),
     ]);
     let result: any = {};
@@ -63,6 +64,7 @@ export class DeleteFetcher<const Resource extends APIResource = any> {
         if (res.errors) {
           result.success = false;
           result.errors = res.errors;
+          result.status = response.status;
         }
       }
     } catch (e) {
@@ -74,6 +76,7 @@ export class DeleteFetcher<const Resource extends APIResource = any> {
             message: (e as Error).toString(),
           },
         ],
+        status: 0,
       };
     }
     return schema.parse(result);

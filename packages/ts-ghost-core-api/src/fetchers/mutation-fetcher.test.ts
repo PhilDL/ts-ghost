@@ -84,4 +84,93 @@ describe("MutationFetcher", () => {
       method: "POST",
     });
   });
+
+  test("submit error returns status code 400", async () => {
+    const body = { foo: "bar" };
+    const mutation = new MutationFetcher(
+      "posts",
+      {
+        output: simplifiedSchema,
+        paramsShape: z.object({}),
+      },
+      {},
+      {
+        method: "POST",
+        body,
+      },
+      httpClient,
+    );
+
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "ValidationError", message: "Invalid data", context: "foo is required" }],
+      }),
+      { status: 400 },
+    );
+
+    const result = await mutation.submit();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(400);
+      expect(result.errors[0].type).toBe("ValidationError");
+      expect(result.errors[0].context).toBe("foo is required");
+    }
+  });
+
+  test("submit error returns status code 404", async () => {
+    const body = { foo: "bar" };
+    const mutation = new MutationFetcher(
+      "posts",
+      {
+        output: simplifiedSchema,
+        paramsShape: z.object({}),
+      },
+      { id: "nonexistent-id" },
+      {
+        method: "PUT",
+        body,
+      },
+      httpClient,
+    );
+
+    fetchMocker.doMockOnce(
+      JSON.stringify({
+        errors: [{ type: "NotFoundError", message: "Resource not found" }],
+      }),
+      { status: 404 },
+    );
+
+    const result = await mutation.submit();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(404);
+      expect(result.errors[0].type).toBe("NotFoundError");
+    }
+  });
+
+  test("submit error returns status code 0 on network error", async () => {
+    const body = { foo: "bar" };
+    const mutation = new MutationFetcher(
+      "posts",
+      {
+        output: simplifiedSchema,
+        paramsShape: z.object({}),
+      },
+      {},
+      {
+        method: "POST",
+        body,
+      },
+      httpClient,
+    );
+
+    fetchMocker.mockRejectOnce(new Error("Network error"));
+
+    const result = await mutation.submit();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.status).toBe(0);
+      expect(result.errors[0].type).toBe("FetchError");
+    }
+  });
 });

@@ -171,18 +171,20 @@ export class ReadFetcher<
             message: z.string(),
           }),
         ),
+        status: z.number(),
       }),
     ]);
-    const result = await this.httpClient.fetch({
+    const { data: result, status } = (await this.httpClient.fetchWithStatus({
       resource: this.resource,
       pathnameIdentity: this._pathnameIdentity,
       searchParams: this._urlSearchParams,
       options,
-    });
+    })) as { data: any; status: number };
     let data: any = {};
     if (result.errors) {
       data.success = false;
       data.errors = result.errors;
+      data.status = status;
     } else {
       data = {
         success: true,
