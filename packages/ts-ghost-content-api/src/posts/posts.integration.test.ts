@@ -182,7 +182,7 @@ describe("posts integration tests read", () => {
     api = new TSGhostContentAPI(url, key, "v6.0");
   });
 
-  test("posts.read() with non-existent id returns 404 status", async () => {
+  test("posts.read() with non-existent id returns 422 status", async () => {
     const result = await api.posts.read({ id: "nonexistent-id-12345" }).fetch();
     expect(result.success).toBe(false);
     if (!result.success) {
