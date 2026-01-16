@@ -6,7 +6,7 @@ import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
 export const promptCredentialsLoop = async (config: Configstore) => {
   let validSettings = false;
-  let lastUrlInput = config.get("ghostUrl");
+  let lastUrlInput = config.get<string>("ghostUrl");
   const s = spinner();
 
   while (!validSettings) {

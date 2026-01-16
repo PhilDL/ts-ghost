@@ -3,15 +3,18 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
 import { getConfig } from "../config";
+import { nonEmptyString } from "./non-empty-string";
 
 export async function requireGhostContentAPI(argv: { host?: string; key?: string }) {
   let api: TSGhostContentAPI | undefined;
   const config = getConfig();
+  const ghostUrl = config.get("ghostUrl");
+  const ghostContentApiKey = config.get("ghostContentApiKey");
 
   if (argv.host && argv.key) {
     api = new TSGhostContentAPI(argv.host, argv.key, "v6.0");
-  } else if (config.get("ghostUrl") && config.get("ghostContentApiKey")) {
-    api = new TSGhostContentAPI(config.get("ghostUrl"), config.get("ghostContentApiKey"), "v6.0");
+  } else if (nonEmptyString(ghostUrl) && nonEmptyString(ghostContentApiKey)) {
+    api = new TSGhostContentAPI(ghostUrl, ghostContentApiKey, "v6.0");
   }
   if (!api) {
     console.error(
@@ -38,11 +41,13 @@ export async function requireGhostContentAPI(argv: { host?: string; key?: string
 export async function requireGhostAdminAPI(argv: { host?: string; key?: string }) {
   let api: TSGhostAdminAPI | undefined;
   const config = getConfig();
+  const ghostUrl = config.get("ghostUrl");
+  const ghostAdminApiKey = config.get("ghostAdminApiKey");
 
   if (argv.host && argv.key) {
     api = new TSGhostAdminAPI(argv.host, argv.key, "v6.0");
-  } else if (config.get("ghostUrl") && config.get("ghostAdminApiKey")) {
-    api = new TSGhostAdminAPI(config.get("ghostUrl"), config.get("ghostAdminApiKey"), "v6.0");
+  } else if (nonEmptyString(ghostUrl) && nonEmptyString(ghostAdminApiKey)) {
+    api = new TSGhostAdminAPI(ghostUrl, ghostAdminApiKey, "v6.0");
   }
   if (!api) {
     console.error(
