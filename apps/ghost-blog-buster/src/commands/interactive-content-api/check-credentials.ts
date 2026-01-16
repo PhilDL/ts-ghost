@@ -2,14 +2,16 @@ import { log, note, spinner } from "@clack/prompts";
 import Configstore from "configstore";
 import { TSGhostContentAPI } from "@ts-ghost/content-api";
 
+import { nonEmptyString } from "../../utils/non-empty-string";
+
 export const checkCredentials = async (config: Configstore) => {
   let validSettings = false;
+  const ghostUrl = config.get("ghostUrl");
+  const ghostContentApiKey = config.get("ghostContentApiKey");
   const s = spinner();
-  if (!config.get("ghostUrl") || !config.get("ghostContentApiKey")) {
-    note(`Let's set your ghost URL and API key`, "Welcome");
-  } else {
+  if (nonEmptyString(ghostUrl) && nonEmptyString(ghostContentApiKey)) {
     try {
-      const ghost = new TSGhostContentAPI(config.get("ghostUrl"), config.get("ghostContentApiKey"), "v6.0");
+      const ghost = new TSGhostContentAPI(ghostUrl, ghostContentApiKey, "v6.0");
       s.start("Connecting to your blog...");
       const res = await ghost.settings.fetch();
       if (!res.success) {
@@ -23,6 +25,8 @@ export const checkCredentials = async (config: Configstore) => {
     } catch (error: unknown) {
       note(`There was an error trying to connect with these credentials: \n${error}`, "Error");
     }
+  } else {
+    note(`Let's set your ghost URL and API key`, "Welcome");
   }
   return validSettings;
 };

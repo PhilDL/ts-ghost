@@ -46,15 +46,15 @@
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:eslint",
-    "jiti": "^2.0.0",
+    "jiti": "^2.6.1",
+    "rimraf": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:",
     "vitest-fetch-mock": "catalog:",
-    "zod": "catalog:",
-    "rimraf": "catalog:"
+    "zod": "catalog:"
   },
   "dependencies": {
     "@ts-ghost/core-api": "workspace:*",

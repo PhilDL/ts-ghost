@@ -144,7 +144,7 @@ describe("members integration tests browse", () => {
   test.skip("members mutations add, edit, delete", async () => {
     expect(api.members).toBeDefined();
     const email = faker.internet.email();
-    const name = faker.name.fullName();
+    const name = faker.person.fullName();
 
     const addOperation = await api.members.add({ email, name });
     assert(addOperation.success);

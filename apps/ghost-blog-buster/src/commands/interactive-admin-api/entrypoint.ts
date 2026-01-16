@@ -3,6 +3,7 @@ import { cancel, confirm, note, outro, select } from "@clack/prompts";
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 import { getConfig } from "../../config";
+import { nonEmptyString } from "../../utils/non-empty-string";
 import { checkCredentials, postsExportAll, postsExportSelection, promptCredentialsLoop } from "./";
 import { membersExportAll } from "./members-export-all";
 
@@ -13,9 +14,14 @@ export const entrypoint = async function () {
   if (!validSettings) {
     await promptCredentialsLoop(config);
   }
-
-  const ghost = new TSGhostAdminAPI(config.get("ghostUrl"), config.get("ghostAdminApiKey"), "v6.0");
+  const ghostUrl = config.get("ghostUrl");
+  const ghostAdminApiKey = config.get("ghostAdminApiKey");
   const siteName = config.get("siteName");
+  if (!nonEmptyString(ghostUrl) || !nonEmptyString(ghostAdminApiKey) || !nonEmptyString(siteName)) {
+    throw new Error("No valid settings found");
+  }
+
+  const ghost = new TSGhostAdminAPI(ghostUrl, ghostAdminApiKey, "v6.0");
 
   const quit = false;
   while (!quit) {
