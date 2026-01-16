@@ -539,16 +539,16 @@ describe("posts integration tests browse", () => {
     expect(b.success).toBeTruthy();
   });
 
-  test("posts.read() with non-existent id returns 422 status", async () => {
+  test("posts.read() with non-existent id returns 422 status ValidationError", async () => {
     const result = await api.posts.read({ id: "nonexistent-id-12345" }).fetch();
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(result.status).toBe(422);
-      expect(result.errors[0].type).toBe("NotFoundError");
+      expect(result.errors[0].type).toBe("ValidationError");
     }
   });
 
-  test("posts.read() with non-existent slug returns 404 status", async () => {
+  test("posts.read() with non-existent slug returns 404 status NotFoundError", async () => {
     const result = await api.posts.read({ slug: "this-slug-does-not-exist-12345" }).fetch();
     expect(result.success).toBe(false);
     if (!result.success) {
