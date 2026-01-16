@@ -26,7 +26,7 @@ const post = result.data;
 
 const postEditResult = await api.posts.edit(post.id, {
   custom_excerpt: "Modified excerpt from ghost",
-  updated_at: new Date(post.updated_at || ""),
+  updated_at: new Date(post.updated_at!),
 });
 ```
 
