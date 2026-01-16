@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/PhilDL/ts-ghost/tree/main/apps/ghost-blog-buster"
   },
-  "version": "0.7.3",
+  "version": "0.7.4",
   "main": "./dist/cli.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

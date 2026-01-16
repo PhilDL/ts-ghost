@@ -1,5 +1,34 @@
 # @ts-ghost/admin-api
 
+## 5.1.0
+
+### Minor Changes
+
+- cf92a6d: ### New Feature: HTTP Status Codes in Error Responses
+
+  Error responses now include the HTTP status code, enabling smarter error handling and retry logic.
+
+  ```typescript
+  const result = await api.posts
+    .read({ slug: "this-slug-does-not-exist" })
+    .fetch();
+  if (!result.success) {
+    console.log(result.status); // 404
+    console.log(result.errors); // [{ type: "NotFoundError", message: "..." }]
+  }
+  ```
+
+  #### Gotchas
+  - Read with non-existent `id` returns 422 status code
+  - Read with non-existent `slug` returns 404 status code
+
+  This is a backwards-compatible change. Existing code continues to work without modification.
+
+### Patch Changes
+
+- Updated dependencies [cf92a6d]
+  - @ts-ghost/core-api@6.3.0
+
 ## 5.0.2
 
 ### Patch Changes
