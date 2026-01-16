@@ -1,5 +1,11 @@
 # @ts-ghost/ghost-blog-buster
 
+## 0.8.0
+
+### Minor Changes
+
+- d8582a5: Upgrade configstore package and other dev dependencies
+
 ## 0.7.4
 
 ### Patch Changes
@@ -248,10 +254,7 @@
   - The `members` resource now have a `add` and `edit` method that allow them to be created and updated.
 
   ```ts
-  const createNewMember = await api.members.add(
-    { email: "abcdefgh@msn.com" },
-    { send_email: true },
-  );
+  const createNewMember = await api.members.add({ email: "abcdefgh@msn.com" }, { send_email: true });
   assert(createNewMember.success);
   const newMember = createNewMember.data;
   // id => 6438cc365a8fdb00013a8783
