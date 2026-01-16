@@ -186,8 +186,9 @@ describe("posts integration tests read", () => {
     const result = await api.posts.read({ id: "nonexistent-id-12345" }).fetch();
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.status).toBe(404);
-      expect(result.errors[0].type).toBe("NotFoundError");
+      // read with non-existent id returns 422 status code on Ghost side
+      expect(result.status).toBe(422);
+      expect(result.errors[0].type).toBe("ValidationError");
     }
   });
 
