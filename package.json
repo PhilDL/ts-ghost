@@ -43,20 +43,20 @@
     "@eslint/eslintrc": "catalog:eslint",
     "@eslint/js": "catalog:eslint",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
-    "@turbo/gen": "2.7.2",
+    "@turbo/gen": "2.7.4",
     "eslint": "catalog:eslint",
     "eslint-config-prettier": "catalog:eslint",
     "eslint-config-turbo": "catalog:eslint",
     "eslint-plugin-prettier": "catalog:eslint",
     "globals": "^17.0.0",
-    "prettier": "3.7.4",
+    "prettier": "3.8.0",
     "prettier-plugin-tailwindcss": "0.7.2",
-    "turbo": "2.7.2",
+    "turbo": "2.7.4",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:eslint"
   },
   "engines": {
     "node": "22"
   },
-  "packageManager": "pnpm@10.26.2"
+  "packageManager": "pnpm@10.28.0"
 }
