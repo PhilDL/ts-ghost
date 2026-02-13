@@ -6,7 +6,7 @@ packages:
 
 catalog:
   tsup: 8.5.1
-  "@types/node": 22.18.12
+  "@types/node": 24.10.13
   "@vitest/coverage-v8": 4.0.17
   typescript: 5.9.3
   vite: 7.3.1
