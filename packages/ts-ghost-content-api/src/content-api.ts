@@ -2,10 +2,10 @@ import {
   APIComposer,
   BasicFetcher,
   contentAPICredentialsSchema,
+  type DebugOption,
   HTTPClientFactory,
   slugOrIdSchema,
 } from "@ts-ghost/core-api";
-import { DebugOption } from "@ts-ghost/core-api/helpers/debug";
 
 import { authorsIncludeSchema, authorsSchema } from "./authors/schemas";
 import { pagesIncludeSchema, pagesSchema } from "./pages/schemas";
