@@ -891,28 +891,26 @@ describe("BrowseFetcher output tests suite", () => {
       {},
       httpClient,
     );
-    expect(() =>
-      fetcher
-        // @ts-expect-error - foobar is not defined
-        .formats({ html: true, foobar: true })
-        // @ts-expect-error - foo is not in the include schema
-        .include({ count: true, foo: true })
-        // @ts-expect-error - barbaz is not in the output schema schema
-        .fields({ html: true, published: true, count: true, barbaz: true }),
-    ).toThrow();
-    // expect(res.getIncludes()).toStrictEqual(["count"]);
-    // expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
-    // expect(res.getFormats()).toStrictEqual(["html"]);
-    // fetchMocker.doMockOnce(fixture);
-    // await res.fetch();
-    // expect(fetchMocker).toHaveBeenCalledWith(
-    //   "https://ghost.org/ghost/api/content/posts/?fields=html%2Cpublished&include=count&formats=html&key=1234",
-    //   {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "Accept-Version": "v6.0",
-    //     },
-    //   },
-    // );
+    const res = fetcher
+      // @ts-expect-error - foobar is not defined
+      .formats({ html: true, foobar: true })
+      // @ts-expect-error - foo is not in the include schema
+      .include({ count: true, foo: true })
+      // @ts-expect-error - barbaz is not in the output schema schema
+      .fields({ html: true, published: true, count: true, barbaz: true });
+    expect(res.getIncludes()).toStrictEqual(["count"]);
+    expect(res.getOutputFields()).toStrictEqual(["html", "published", "count"]);
+    expect(res.getFormats()).toStrictEqual(["html"]);
+    fetchMocker.doMockOnce(fixture);
+    await res.fetch();
+    expect(fetchMocker).toHaveBeenCalledWith(
+      "https://ghost.org/ghost/api/content/posts/?fields=html%2Cpublished&include=count&formats=html&key=1234",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Version": "v6.0",
+        },
+      },
+    );
   });
 });

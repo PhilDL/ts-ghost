@@ -2,6 +2,7 @@ import { z, ZodRawShape } from "zod";
 
 import { BrowseParamsSchema } from "../helpers/browse-params";
 import { DebugOption } from "../helpers/debug";
+import { sanitizeFormatMask, sanitizeMask } from "../helpers/masks";
 import type { HTTPClient } from "../helpers/http-client";
 import { ghostMetaSchema, type APIResource } from "../schemas/shared";
 import type { Exactly, Mask, NoUnrecognizedKeys } from "../utils";
@@ -48,15 +49,16 @@ export class BrowseFetcher<
   public formats<Formats extends Mask<Pick<OutputShape, ContentFormats>>>(
     formats: NoUnrecognizedKeys<Formats, OutputShape>,
   ) {
+    const requiredFormats = sanitizeFormatMask(this.config.output, formats);
     const params = {
       ...this._params,
-      formats: Object.keys(formats).filter((key) => contentFormats.includes(key)),
+      formats: Object.keys(requiredFormats).filter((key) => contentFormats.includes(key)),
     };
     return new BrowseFetcher(
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(formats as Exactly<Formats, Formats>),
+        output: this.config.output.required(requiredFormats as Exactly<Formats, Formats>),
         include: this.config.include,
       },
       params,
@@ -73,16 +75,12 @@ export class BrowseFetcher<
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
   public include<Includes extends Mask<IncludeShape>>(include: NoUnrecognizedKeys<Includes, IncludeShape>) {
+    const parsedInclude = this.config.include.parse(include);
     const params = {
       ...this._params,
-      include: Object.keys(this.config.include.parse(include)),
+      include: Object.keys(parsedInclude),
     };
-    // remove dot-notation from the include object key
-    const requiredIncludeKeys = Object.fromEntries(
-      Object.keys(include)
-        .filter((key) => !key.includes("."))
-        .map((key) => [key, include[key]]),
-    );
+    const requiredIncludeKeys = sanitizeMask(this.config.output, parsedInclude, { excludeDotNotation: true });
 
     return new BrowseFetcher(
       this.resource,
@@ -104,7 +102,8 @@ export class BrowseFetcher<
    * @returns A new Fetcher with the fixed output shape having only the selected Fields
    */
   public fields<Fields extends Mask<OutputShape>>(fields: NoUnrecognizedKeys<Fields, OutputShape>) {
-    const newOutput = this.config.output.pick(fields as Exactly<Fields, Fields>);
+    const pickedFields = sanitizeMask(this.config.output, fields);
+    const newOutput = this.config.output.pick(pickedFields as Exactly<Fields, Fields>);
     return new BrowseFetcher(
       this.resource,
       {
