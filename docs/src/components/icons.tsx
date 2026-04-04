@@ -3,7 +3,6 @@ import {
   Moon,
   SunMedium,
   TerminalSquare,
-  Twitter,
   type IconNode as LucideIcon,
 } from "lucide-react";
 
@@ -12,7 +11,14 @@ export type Icon = LucideIcon;
 export const Icons = {
   sun: SunMedium,
   moon: Moon,
-  twitter: Twitter,
+  twitter: (props: LucideProps) => (
+    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        fill="currentColor"
+        d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.636 7.584H.478l8.6-9.83L0 1.154h7.594l5.243 6.932zm-1.29 19.493h2.04L6.486 3.238H4.298z"
+      />
+    </svg>
+  ),
   logo: (props: LucideProps) => (
     <svg width="234" height="234" viewBox="0 0 234 234" {...props}>
       <g clipPath="url(#clip0_103_24)">
