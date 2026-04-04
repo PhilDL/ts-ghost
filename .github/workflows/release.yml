@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ".changeset/**"
+      - "packages/ts-ghost-core-api/**"
+      - "packages/ts-ghost-content-api/**"
+      - "packages/ts-ghost-admin-api/**"
+      - "apps/ghost-blog-buster/**"
+      - ".github/workflows/release.yml"
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
