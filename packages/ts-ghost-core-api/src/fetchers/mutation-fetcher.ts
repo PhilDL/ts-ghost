@@ -5,6 +5,10 @@ import { DebugOption } from "../helpers/debug";
 import { HTTPClient } from "../helpers/http-client";
 import type { APIResource } from "../schemas/shared";
 
+type ExplicitObjectKeys<T> = {
+  [K in keyof T as string extends K ? never : number extends K ? never : symbol extends K ? never : K]: T[K];
+};
+
 export class MutationFetcher<
   const Resource extends APIResource = any,
   OutputShape extends z4.$ZodType = any,
@@ -21,7 +25,7 @@ export class MutationFetcher<
       output: OutputShape;
       paramsShape?: ParamsShape;
     },
-    private _params: ({ id?: string } & z4.output<ParamsShape>) | undefined,
+    private _params: ({ id?: string } & ExplicitObjectKeys<z4.output<ParamsShape>>) | undefined,
     protected _options: {
       method: HTTPVerb;
       body: Record<string, unknown>;
