@@ -1,9 +1,11 @@
-import { z, ZodRawShape } from "zod/v3";
+import { z, ZodRawShape } from "zod";
 
 import { BrowseParamsSchema } from "../helpers/browse-params";
+import { DebugOption } from "../helpers/debug";
+import { sanitizeFormatMask, sanitizeMask } from "../helpers/masks";
 import type { HTTPClient } from "../helpers/http-client";
 import { ghostMetaSchema, type APIResource } from "../schemas/shared";
-import type { Exactly, Mask } from "../utils";
+import type { Exactly, Mask, NoUnrecognizedKeys } from "../utils";
 import { contentFormats, type ContentFormats } from "./formats";
 
 export class BrowseFetcher<
@@ -30,7 +32,7 @@ export class BrowseFetcher<
       include?: (keyof IncludeShape)[];
       fields?: Fields;
       formats?: string[];
-    } = { browseParams: {} as Params, include: [], fields: {} as z.noUnrecognized<Fields, OutputShape> },
+    } = { browseParams: {} as Params, include: [], fields: {} as NoUnrecognizedKeys<Fields, OutputShape> },
     protected httpClient: HTTPClient,
   ) {
     this._buildUrlParams();
@@ -45,17 +47,18 @@ export class BrowseFetcher<
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
   public formats<Formats extends Mask<Pick<OutputShape, ContentFormats>>>(
-    formats: z.noUnrecognized<Formats, OutputShape>,
+    formats: NoUnrecognizedKeys<Formats, OutputShape>,
   ) {
+    const requiredFormats = sanitizeFormatMask(this.config.output, formats);
     const params = {
       ...this._params,
-      formats: Object.keys(formats).filter((key) => contentFormats.includes(key)),
+      formats: Object.keys(requiredFormats).filter((key) => contentFormats.includes(key)),
     };
     return new BrowseFetcher(
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(formats as Exactly<Formats, Formats>),
+        output: this.config.output.required(requiredFormats as Exactly<Formats, Formats>),
         include: this.config.include,
       },
       params,
@@ -71,16 +74,19 @@ export class BrowseFetcher<
    * @param include Include specific keys from the include shape
    * @returns A new Fetcher with the fixed output shape and the formats specified
    */
-  public include<Includes extends Mask<IncludeShape>>(include: z.noUnrecognized<Includes, IncludeShape>) {
+  public include<Includes extends Mask<IncludeShape>>(include: NoUnrecognizedKeys<Includes, IncludeShape>) {
+    const parsedInclude = this.config.include.parse(include);
     const params = {
       ...this._params,
-      include: Object.keys(this.config.include.parse(include)),
+      include: Object.keys(parsedInclude),
     };
+    const requiredIncludeKeys = sanitizeMask(this.config.output, parsedInclude, { excludeDotNotation: true });
+
     return new BrowseFetcher(
       this.resource,
       {
         schema: this.config.schema,
-        output: this.config.output.required(include as Exactly<Includes, Includes>),
+        output: this.config.output.required(requiredIncludeKeys as Exactly<Includes, Includes>),
         include: this.config.include,
       },
       params,
@@ -95,8 +101,9 @@ export class BrowseFetcher<
    * @param fields Any keys from the resource Schema
    * @returns A new Fetcher with the fixed output shape having only the selected Fields
    */
-  public fields<Fields extends Mask<OutputShape>>(fields: z.noUnrecognized<Fields, OutputShape>) {
-    const newOutput = this.config.output.pick(fields as Exactly<Fields, Fields>);
+  public fields<Fields extends Mask<OutputShape>>(fields: NoUnrecognizedKeys<Fields, OutputShape>) {
+    const pickedFields = sanitizeMask(this.config.output, fields);
+    const newOutput = this.config.output.pick(pickedFields as Exactly<Fields, Fields>);
     return new BrowseFetcher(
       this.resource,
       {
@@ -141,7 +148,7 @@ export class BrowseFetcher<
     };
 
     if (inputKeys.length !== outputKeys.length && outputKeys.length > 0) {
-      this._urlParams.fields = outputKeys.join(",");
+      this._urlParams.fields = outputKeys.filter((key) => key !== "count").join(",");
     }
     if (this._params.include && this._params.include.length > 0) {
       this._urlParams.include = this._params.include.join(",");
@@ -191,7 +198,7 @@ export class BrowseFetcher<
     ]);
   }
 
-  public async fetch(options?: RequestInit) {
+  public async fetch(options?: RequestInit & DebugOption) {
     const resultSchema = this._getResultSchema();
     const { data: result, status } = (await this.httpClient.fetchWithStatus({
       resource: this.resource,
@@ -222,7 +229,7 @@ export class BrowseFetcher<
     return resultSchema.parse(data);
   }
 
-  public async paginate(options?: RequestInit) {
+  public async paginate(options?: RequestInit & DebugOption) {
     if (!this._params.browseParams?.page) {
       this._params.browseParams = {
         ...this._params.browseParams,

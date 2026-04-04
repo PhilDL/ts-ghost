@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import { ghostIdentitySchema, ghostVisibilitySchema } from "@ts-ghost/core-api";
 
 export const tiersSchema = z.object({

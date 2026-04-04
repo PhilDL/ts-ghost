@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 type Split<Str, Separator extends string> = Str extends `${infer Start}${Separator}${infer Rest}`
   ? [Start, ...Split<Rest, Separator>]

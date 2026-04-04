@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 export const baseEmailSchema = z.object({
   id: z.string(),

@@ -1,10 +1,10 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 export const adminNewsletterCreateSchema = z.object({
   name: z.string(),
   description: z.string().max(3000).optional(),
   sender_name: z.string(),
-  sender_email: z.string().email().nullish(),
+  sender_email: z.email().nullish(),
   sender_reply_to: z.string().optional(),
   status: z.union([z.literal("active"), z.literal("archived")]).optional(),
   subscribe_on_signup: z.boolean().optional(),

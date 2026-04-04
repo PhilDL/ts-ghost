@@ -152,7 +152,7 @@ describe("posts integration tests browse", () => {
   test("posts.browse() with mix of incude and fields... this is mostly broken on Ghost side", async () => {
     const result = await api.posts
       .browse()
-      .fields({ slug: true, title: true, primary_author: true })
+      .fields({ slug: true, title: true, primary_author: true, authors: true })
       .include({ authors: true })
       .fetch();
     expect(result).not.toBeUndefined();
@@ -170,7 +170,6 @@ describe("posts integration tests browse", () => {
       expect(post.primary_author?.slug).toBe("phildl");
       // @ts-expect-error
       expect(post.id).toBeUndefined();
-      // @ts-expect-error
       expect(post.authors).toBeUndefined();
     }
   });

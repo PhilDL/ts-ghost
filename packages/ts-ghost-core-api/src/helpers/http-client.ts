@@ -1,6 +1,7 @@
 import { SignJWT } from "jose";
 
 import type { APICredentials, APIResource } from "../schemas";
+import { DebugOption, resolveDebugLogger } from "./debug";
 
 export type FetchWithStatusResult<T = unknown> = {
   data: T;
@@ -12,7 +13,7 @@ export type HTTPClientOptions = {
   version: APICredentials["version"];
   url: APICredentials["url"];
   endpoint: "content" | "admin";
-};
+} & DebugOption;
 
 export interface IHTTPClient {
   get baseURL(): URL | undefined;
@@ -27,7 +28,7 @@ export interface IHTTPClient {
   }: {
     resource: APIResource;
     searchParams?: URLSearchParams;
-    options?: RequestInit;
+    options?: RequestInit & DebugOption;
     pathnameIdentity?: string;
   }): Promise<any>;
   fetchRawResponse({
@@ -38,7 +39,7 @@ export interface IHTTPClient {
   }: {
     resource: APIResource;
     searchParams?: URLSearchParams;
-    options?: RequestInit;
+    options?: RequestInit & DebugOption;
     pathnameIdentity?: string;
   }): Promise<Response>;
   fetchWithStatus({
@@ -123,9 +124,10 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
   }: {
     resource: APIResource;
     searchParams?: URLSearchParams;
-    options?: RequestInit;
+    options?: RequestInit & DebugOption;
     pathnameIdentity?: string;
   }) {
+    const debug = resolveDebugLogger({ ...this.config, ...options });
     if (this._baseURL === undefined) throw new Error("URL is undefined");
     let path = `${resource}/`;
     if (pathnameIdentity !== undefined) {
@@ -142,6 +144,7 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
     }
     let result = undefined;
     const headers = await this.genHeaders();
+    debug("url", url.toString(), "headers", headers, "options", options);
     try {
       result = await (
         await fetch(url.toString(), {
@@ -149,7 +152,9 @@ export class HTTPClient<const Options extends HTTPClientOptions = any> implement
           headers,
         })
       ).json();
+      debug("result", result, "status", result.status);
     } catch (e) {
+      debug("error", e);
       return {
         status: "error",
         errors: [

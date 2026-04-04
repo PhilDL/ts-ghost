@@ -1,5 +1,6 @@
-import { z, ZodTypeAny } from "zod/v3";
+import { z, ZodTypeAny } from "zod";
 
+import { DebugOption } from "../helpers/debug";
 import type { HTTPClient } from "../helpers/http-client";
 import type { APIResource } from "../schemas/shared";
 
@@ -16,7 +17,7 @@ export class BasicFetcher<const Resource extends APIResource = any, OutputShape 
     return this.resource;
   }
 
-  public async fetch(options?: RequestInit) {
+  public async fetch(options?: RequestInit & DebugOption) {
     const res = z.discriminatedUnion("success", [
       z.object({
         success: z.literal(true),

@@ -20,7 +20,7 @@ describe("posts api .browse() Args Type-safety", () => {
       foo: true,
     } satisfies { [k in keyof Post]?: true | undefined };
 
-    let test = api.posts
+    const test = api.posts
       .browse()
       // @ts-expect-error - shouldnt accept invalid params
       .fields(outputFields);

@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import {
   adminAPICredentialsSchema,
   APIComposer,
@@ -7,6 +7,7 @@ import {
   baseSiteSchema,
   baseTagsSchema,
   BasicFetcher,
+  DebugOption,
   emailOrIdSchema,
   HTTPClientFactory,
   slugOrIdSchema,
@@ -31,6 +32,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` | `v6.${string}` = a
     protected readonly url: string,
     protected readonly key: string,
     protected readonly version: Version,
+    protected readonly options?: DebugOption,
   ) {
     const apiCredentials = adminAPICredentialsSchema.parse({
       key,
@@ -38,6 +40,7 @@ export class TSGhostAdminAPI<Version extends `v5.${string}` | `v6.${string}` = a
       url,
     });
     this.httpClientFactory = new HTTPClientFactory({
+      ...options,
       ...apiCredentials,
       endpoint: "admin",
     });

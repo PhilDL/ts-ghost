@@ -2,6 +2,7 @@ import {
   APIComposer,
   BasicFetcher,
   contentAPICredentialsSchema,
+  type DebugOption,
   HTTPClientFactory,
   slugOrIdSchema,
 } from "@ts-ghost/core-api";
@@ -31,6 +32,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` | `v6.${string}` =
     protected readonly url: string,
     protected readonly key: string,
     protected readonly version: Version,
+    protected readonly options?: DebugOption,
   ) {
     const apiCredentials = contentAPICredentialsSchema.parse({
       key,
@@ -38,6 +40,7 @@ export class TSGhostContentAPI<Version extends `v5.${string}` | `v6.${string}` =
       url,
     });
     this.HTTPClientFactoryFactory = new HTTPClientFactory({
+      ...options,
       ...apiCredentials,
       endpoint: "content",
     });
