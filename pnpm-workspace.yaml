@@ -9,7 +9,7 @@ catalog:
   "@types/node": 22.18.12
   "@vitest/coverage-v8": 4.1.2
   typescript: 5.9.3
-  vite: 7.3.1
+  vite: 8.2.2
   vite-tsconfig-paths: 6.1.1
   vitest: 4.1.2
   vitest-fetch-mock: 0.4.5
