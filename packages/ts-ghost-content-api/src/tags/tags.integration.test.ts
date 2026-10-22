@@ -1,4 +1,4 @@
-import { assert, beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 
 import { TSGhostContentAPI } from "../content-api";
 
@@ -42,12 +42,10 @@ describe("tags integration tests browse", () => {
       expect(result.meta.pagination).toBeDefined();
       expect(result.meta.pagination.page).toBe(1);
       expect(result.meta.pagination.limit).toBe(15);
-      // The shared test Ghost instance holds more than one tag, and the number grows over time,
-      // so don't assert an exact count or position: look the known "News" tag up by slug.
-      expect(result.meta.pagination.pages).toBeGreaterThanOrEqual(1);
-      expect(result.data.length).toBeGreaterThan(1);
-      const tag = result.data.find((t) => t.slug === stub.slug);
-      assert(tag, `expected the "${stub.slug}" tag in the first page of tags.browse()`);
+      expect(result.meta.pagination.pages).toBe(1);
+      expect(result.data).toHaveLength(1);
+      const tag = result.data[0];
+      expect(tag).toBeDefined();
       expect(tag.id).toBe(stub.id);
       expect(tag.name).toBe(stub.name);
       expect(tag.slug).toBe(stub.slug);
