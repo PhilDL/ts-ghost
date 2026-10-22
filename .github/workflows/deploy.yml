@@ -28,7 +28,8 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.x
+          check-latest: true
           cache: "pnpm"
 
       - name: 📥 Download deps
@@ -59,7 +60,8 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.x
+          check-latest: true
           cache: "pnpm"
 
       - name: 📥 Download deps
@@ -72,8 +74,11 @@ jobs:
         run: pnpm run typecheck
 
   vitest:
-    name: ⚡ Vitest
+    name: ⚡ Vitest (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x, 26.x]
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -89,7 +94,8 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
+          check-latest: true
           cache: "pnpm"
 
       - name: 🏄 Copy example env vars to nextjs app
@@ -124,7 +130,8 @@ jobs:
       - name: ⎔ Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.x
+          check-latest: true
           cache: "pnpm"
 
       # - name: 🏄 Copy test env vars
