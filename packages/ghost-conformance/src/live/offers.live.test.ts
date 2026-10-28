@@ -106,15 +106,26 @@ describe("offers", () => {
   liveTest(
     "a trial offer must have a trial duration, and other offers cannot have one",
     async ({ api, responses }) => {
-      const base = { name: "n", code: "c", cadence: "year", amount: 14, tier: { id: seed.tierId } } as const;
+      const base = {
+        name: "n",
+        code: "trial-check",
+        cadence: "year",
+        amount: 14,
+        tier: { id: seed.tierId },
+      } as const;
+      const rejectsDuration = {
+        name: "ZodError",
+        issues: [expect.objectContaining({ path: ["duration"] })],
+      };
+      // A ZodError only: without a trial type in the client, this is refused on `type` first.
       await expect(
         // @ts-expect-error a trial offer's duration is "trial"
         api.offers.add({ ...base, type: "trial", duration: "once" }),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ name: "ZodError" });
       await expect(
         // @ts-expect-error only a trial offer has a trial duration
         api.offers.add({ ...base, type: "percent", duration: "trial" }),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject(rejectsDuration);
       expect(responses.all()).toEqual([]);
     },
   );
