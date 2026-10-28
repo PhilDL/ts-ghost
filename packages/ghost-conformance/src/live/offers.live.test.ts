@@ -119,24 +119,24 @@ describe("offers", () => {
     expect(responses.all()).toEqual([]);
   });
 
-  // Expected failure: the client's offers schema lacks redemption_type, created_at and last_redeemed.
-  test.fails(
-    "a trial offer reads back with its tier, redemption type, creation time and last redemption",
-    async () => {
-      const result = await adminApi().offers.read({ id: seed.trial.id }).fetch();
+  // Ghost also sends redemption_type, created_at and last_redeemed; the unknown-keys test owns them.
+  test("a trial offer reads back with its trial days and tier", async () => {
+    const result = await adminApi().offers.read({ id: seed.trial.id }).fetch();
 
-      assert(result.success);
-      expect(result.data).toMatchObject({
-        type: "trial",
-        duration: "trial",
-        amount: 14,
-        redemption_type: "signup",
-        tier: { id: seed.tierId, name: expect.any(String) },
-        created_at: expect.stringMatching(ISO_MS),
-        last_redeemed: null,
-      });
-    },
-  );
+    assert(result.success);
+    expect(result.data).toMatchObject({
+      type: "trial",
+      duration: "trial",
+      amount: 14,
+      tier: { id: seed.tierId, name: expect.any(String) },
+    });
+    const raw = responses.last("/offers/") as { offers: unknown[] };
+    expect(raw.offers[0]).toMatchObject({
+      redemption_type: "signup",
+      created_at: expect.stringMatching(ISO_MS),
+      last_redeemed: null,
+    });
+  });
 
   // Expected failure: the client offers slug reads, but Ghost has no /offers/slug/:slug/ route.
   test.fails("GET /offers/slug/:slug/ returns the offer", async () => {
