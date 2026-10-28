@@ -32,8 +32,7 @@ The live suite and the manifest need a running Docker with `docker compose`. Eac
 The live suite's global setup:
 
 1. runs Ghost's first-run setup to create the Owner, signs in, creates an integration and fetches the Owner's staff token, all through Ghost's public API;
-2. applies a small SQL seed for data the API can't create (sent and failed emails, email recipients and suppressions, Stripe customers and subscriptions);
-3. turns commenting on for the whole run.
+2. applies a small SQL seed for data the API can't create (sent and failed emails, email recipients and suppressions, Stripe customers and subscriptions).
 
 Every other record is seeded by the tests through the client itself. The suite follows three rules:
 
