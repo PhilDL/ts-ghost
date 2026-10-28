@@ -1,7 +1,7 @@
 # Official Ghost + MySQL 8, throwaway (tmpfs). GHOST_VERSION and GHOST_PORT come from src/ghost/instance.ts.
 services:
   mysql:
-    image: mysql:8.0
+    image: mysql:8.0.46
     environment:
       MYSQL_ROOT_PASSWORD: conformance
       MYSQL_DATABASE: ghost
