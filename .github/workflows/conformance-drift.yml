@@ -1,0 +1,86 @@
+# Weekly: bump the Ghost pin, regenerate the manifest, run the suites, open a PR (steps: src/drift/cli.ts).
+# Needs the admin setting "Allow GitHub Actions to create and approve pull requests".
+name: 🔁 Conformance drift (newest Ghost)
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      ghost-version:
+        description: "Ghost version to test, e.g. 6.73.0 (default: newest release with an official image)"
+        required: false
+        default: ""
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: conformance-drift
+  cancel-in-progress: false
+
+env:
+  DRIFT_BASE: ${{ github.ref_name }}
+
+jobs:
+  drift:
+    name: 👻 Drift against newest Ghost
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: packages/ghost-conformance
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4.2.0
+
+      - name: ⎔ Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          check-latest: true
+          cache: "pnpm"
+
+      - name: 📥 Download deps
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: 🔎 Resolve newest Ghost and bump the pin
+        id: plan
+        run: pnpm drift plan
+        env:
+          GHOST_TARGET: ${{ inputs.ghost-version }}
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 🗺️ Regenerate manifest
+        if: steps.plan.outputs.bump == 'true'
+        run: pnpm manifest
+
+      # This and the live suite may fail so the PR still shows the result; the verdict step fails the job.
+      - name: 🧭 Client → manifest check against the new manifest
+        if: steps.plan.outputs.bump == 'true'
+        continue-on-error: true
+        run: pnpm drift client
+
+      - name: 🧪 Live suite against the new Ghost
+        id: suite
+        if: steps.plan.outputs.bump == 'true'
+        continue-on-error: true
+        run: pnpm drift suite
+
+      - name: 📝 Render PR body
+        if: steps.plan.outputs.bump == 'true'
+        run: pnpm drift body
+
+      - name: 📬 Open drift PR
+        if: steps.plan.outputs.bump == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          pnpm drift open-pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: 🚦 Fail when the live suite failed
+        if: steps.plan.outputs.bump == 'true'
+        run: pnpm drift verdict
