@@ -81,20 +81,20 @@ describe("newsletters", () => {
   liveTest.fails(
     "newsletter responses send no key the client's schema lacks",
     async ({ api, responses }) => {
-      const id = seeded.full.id;
       const browsed = await api.newsletters.browse({ limit: "all" }).fetch();
       const browseRaw = responses.last("/newsletters/") as { newsletters: unknown };
-      const read = await api.newsletters.read({ id }).fetch();
-      const readRaw = responses.last(`/newsletters/${id}/`) as { newsletters: unknown[] };
-      const edited = await api.newsletters.edit(id, { description: "Edited for the key check" });
-      const editRaw = responses.last(`/newsletters/${id}/`) as { newsletters: unknown[] };
+      const read = await api.newsletters.read({ id: seeded.full.id }).fetch();
+      const readRaw = responses.last(`/newsletters/${seeded.full.id}/`) as { newsletters: unknown[] };
       const name = `Key check ${uniqueSuffix()}`;
       const added = await api.newsletters.add({ name, sender_name: "Key check" });
       const addRaw = responses.last("/newsletters/") as { newsletters: unknown[] };
+      assertOk(added);
+      // Edits the newsletter added here: the seed's values are asserted by other tests.
+      const edited = await api.newsletters.edit(added.data.id, { description: "Edited for the key check" });
+      const editRaw = responses.last(`/newsletters/${added.data.id}/`) as { newsletters: unknown[] };
       assertOk(browsed);
       assertOk(read);
       assertOk(edited);
-      assertOk(added);
 
       expect([
         ...unknownKeys(browseRaw.newsletters, browsed.data, { at: "browse.newsletters" }),
