@@ -7,7 +7,6 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
-    globals: true,
     include: ["src/**/*.test.ts"],
     exclude: ["src/**/*.live.test.ts"],
     setupFiles: ["./src/expected-failures.ts"],

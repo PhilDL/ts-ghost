@@ -6,7 +6,7 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "types": ["vitest/globals", "node"],
+    "types": ["node"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "paths": {
