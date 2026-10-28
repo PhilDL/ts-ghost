@@ -40,20 +40,31 @@ Every other record is seeded by the tests through the client itself. The suite f
 - every add and edit is read back and compared with what was sent;
 - every nullable field is seeded both null and set.
 
-CI runs the live suite on every PR to `main` ([`.github/workflows/conformance.yml`](../../.github/workflows/conformance.yml)).
+CI runs the live suite on every PR to `main` ([`.github/workflows/conformance.yml`](../../.github/workflows/conformance.yml)) and adds the client's route coverage to the job summary.
 
-## Drift PRs
+## Route coverage
 
-[`.github/workflows/conformance-drift.yml`](../../.github/workflows/conformance-drift.yml) runs every Monday and can be started by hand with a Ghost version. When a newer Ghost image exists, it:
+`pnpm coverage <report.json>` reads the client → manifest check's Vitest JSON report and counts the manifest routes the client calls, with labs-flagged routes left out. It gives two numbers: routes that accept an integration token (what the client can use today) and all routes, whatever their auth. It also tables each resource (the route's first path segment) and lists the integration-token routes the client doesn't call. The drift PR shows the same report for the pin and the new Ghost side by side.
+
+## Drift PR
+
+[`.github/workflows/conformance-drift.yml`](../../.github/workflows/conformance-drift.yml) runs every Monday and can be started by hand with a Ghost version, from the default branch only. There is one drift PR, from the branch `conformance/drift`. When a newer Ghost image exists, the workflow:
 
 1. bumps `ghost-version` and regenerates the manifest,
 2. runs the client → manifest check and the live suite against the new Ghost,
-3. opens (or updates) a PR from `conformance/ghost-<version>` with the manifest diff, the test results and links to the Ghost release notes since the old pin, next to the resources the client covers,
-4. fails the job if either suite failed, so a breaking release doesn't show up as a green PR.
+3. force-pushes `conformance/drift` and rewrites the PR's title and description: always from the default branch's pin to the newest Ghost, with the manifest diff, the test results, the route coverage at both versions, and links to the release notes of every version in between,
+4. fails the run if the manifest, the client check or the live suite failed, so a breaking release doesn't show up as green.
+
+Merging the PR bumps the pin. If nobody fixes it, it stays open and the next runs add the newer releases to it. To bump the pin without fixing everything, mark what fails (`test.fails`, `EXPECTED_FAILURES`, pending keys, each with a reason) on the drift branch and merge; the next run overwrites commits pushed there, so merge soon after. When the pin already is the newest Ghost, the run closes an open drift PR.
 
 The release notes matter because the suite can't see everything, such as new query options. If the new Ghost has a major the client doesn't support yet, the live suite doesn't run, and the PR and the job say so.
 
-The workflow needs **Settings → Actions → General → Workflow permissions → "Allow GitHub Actions to create and approve pull requests"**. Without it, the job fails with a message pointing to that setting. The steps live in [`src/drift/cli.ts`](./src/drift/cli.ts) and can be run locally with `pnpm drift <step>`.
+The workflow has two jobs. `drift` runs the dependencies and a fresh Ghost with a read-only token and hands its results to `pr` as an artifact; `pr` runs only `src/drift/cli.ts` with plain Node and is the only job that can push and edit PRs. The steps can be run locally with `pnpm drift <step>`.
+
+Setup:
+
+- **Settings → Actions → General → Workflow permissions → "Allow GitHub Actions to create and approve pull requests"**. Without it, the `pr` job fails with a message pointing to that setting.
+- PRs opened with the workflow's `GITHUB_TOKEN` start no other workflows, so the drift PR shows no Tests or Conformance checks until someone closes and reopens it. An optional `CONFORMANCE_PR_TOKEN` secret (a GitHub App installation token or a fine-grained token with contents and pull-requests write on this repository) is used instead when set, and CI then runs on its own.
 
 ## Expected failures
 
