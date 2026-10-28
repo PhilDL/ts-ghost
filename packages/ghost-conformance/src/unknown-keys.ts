@@ -22,13 +22,19 @@ export function recordResponses(): ResponseRecorder {
   const recorded: RecordedResponse[] = [];
   active = recorded;
   globalThis.fetch = async (input, init) => {
-    const response = await original(input, init);
+    const fetched = await original(input, init);
     const url = input instanceof Request ? input.url : input.toString();
     const method = init?.method ?? (input instanceof Request ? input.method : "GET");
-    const body = await response
-      .clone()
-      .json()
-      .catch(() => undefined);
+    // Read once and hand back a copy: under load, undici's clone() intermittently leaves the original unreadable.
+    const text = await fetched.text();
+    const empty = text === "" && [204, 205, 304].includes(fetched.status);
+    const response = new Response(empty ? null : text, fetched);
+    let body: unknown;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = undefined;
+    }
     recorded.push({ method, url, status: response.status, body });
     return response;
   };
