@@ -8,7 +8,7 @@ import { checkCall } from "./route-check.ts";
 const manifest = parseManifest(readFileSync(MANIFEST_FILE, "utf8"));
 const calls = await recordClientCalls();
 
-/** Client calls known to fail against the pinned Ghost, with why; fixed in #25. */
+/** Client calls known to fail against the pinned Ghost, with why. */
 const EXPECTED_FAILURES: Record<string, string> = {
   "newsletters.read({slug})": "Ghost has no read-newsletter-by-slug route",
   "offers.read({slug})": "Ghost has no read-offer-by-slug route",

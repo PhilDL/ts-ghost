@@ -138,7 +138,7 @@ describe("renderPrBody", () => {
       diff,
       suite,
       client,
-      runUrl: "https://github.com/the-leonat/ts-ghost/actions/runs/1",
+      runUrl: "https://github.com/owner/repo/actions/runs/1",
     });
 
   test("states the pin bump", () => {
@@ -166,7 +166,7 @@ describe("renderPrBody", () => {
   test("reports a passing suite with its counts and the run link", () => {
     const text = body();
     expect(text).toMatch(/✅.*1 passed, 0 expected failures, 0 failed/);
-    expect(text).toContain("https://github.com/the-leonat/ts-ghost/actions/runs/1");
+    expect(text).toContain("https://github.com/owner/repo/actions/runs/1");
   });
 
   test("reports passed, expected failures and failed tests separately", () => {
