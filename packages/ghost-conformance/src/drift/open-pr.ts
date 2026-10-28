@@ -15,21 +15,7 @@ export async function openDriftPr(
   await run("git", ["commit", "-m", pr.title]);
   await run("git", ["push", "--force", "origin", pr.branch]);
 
-  const open = JSON.parse(
-    await run("gh", [
-      "pr",
-      "list",
-      "--head",
-      pr.branch,
-      "--base",
-      pr.base,
-      "--state",
-      "open",
-      "--json",
-      "url",
-    ]),
-  ) as { url: string }[];
-  const existing = open[0]?.url;
+  const existing = await findOpenPr(pr, run);
   try {
     if (existing) {
       await run("gh", ["pr", "edit", existing, "--title", pr.title, "--body-file", pr.bodyFile]);
@@ -45,4 +31,20 @@ export async function openDriftPr(
       throw new Error(MISSING_PR_PERMISSION, { cause: error });
     throw error;
   }
+}
+
+/** Closes the open PR from `branch` into `base`, if any, and deletes the branch; returns its URL. */
+export async function closeDriftPr(
+  pr: { branch: string; base: string; comment: string },
+  run: Run,
+): Promise<string | undefined> {
+  const open = await findOpenPr(pr, run);
+  if (open) await run("gh", ["pr", "close", open, "--comment", pr.comment, "--delete-branch"]);
+  return open;
+}
+
+async function findOpenPr(pr: { branch: string; base: string }, run: Run): Promise<string | undefined> {
+  const args = ["pr", "list", "--head", pr.branch, "--base", pr.base, "--state", "open", "--json", "url"];
+  const open = JSON.parse(await run("gh", args)) as { url: string }[];
+  return open[0]?.url;
 }

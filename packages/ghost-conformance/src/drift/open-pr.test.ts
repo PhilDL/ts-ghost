@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { openDriftPr, type Run } from "./open-pr.ts";
+import { closeDriftPr, openDriftPr, type Run } from "./open-pr.ts";
 
 /** Records git/gh invocations; `answers` maps a command prefix to its stdout or a thrown stderr. */
 function stubRun(answers: Record<string, string | Error> = {}) {
@@ -16,7 +16,7 @@ function stubRun(answers: Record<string, string | Error> = {}) {
 }
 
 const pr = {
-  branch: "conformance/ghost-6.73.0",
+  branch: "conformance/drift",
   base: "main",
   title: "chore(conformance): bump Ghost pin 6.72.0 → 6.73.0",
   bodyFile: "/state/pr-body.md",
@@ -31,12 +31,12 @@ describe("openDriftPr", () => {
     });
     await expect(openDriftPr(pr, run)).resolves.toBe("https://github.com/o/r/pull/7");
     expect(calls).toEqual([
-      "git switch -C conformance/ghost-6.73.0",
+      "git switch -C conformance/drift",
       "git add packages/ghost-conformance/ghost-version packages/ghost-conformance/manifest.json",
       `git commit -m ${pr.title}`,
-      "git push --force origin conformance/ghost-6.73.0",
-      "gh pr list --head conformance/ghost-6.73.0 --base main --state open --json url",
-      `gh pr create --head conformance/ghost-6.73.0 --base main --title ${pr.title} --body-file /state/pr-body.md`,
+      "git push --force origin conformance/drift",
+      "gh pr list --head conformance/drift --base main --state open --json url",
+      `gh pr create --head conformance/drift --base main --title ${pr.title} --body-file /state/pr-body.md`,
     ]);
   });
 
@@ -61,5 +61,23 @@ describe("openDriftPr", () => {
   test("passes any other gh failure through unchanged", async () => {
     const { run } = stubRun({ "gh pr list": "[]", "gh pr create": new Error("network down") });
     await expect(openDriftPr(pr, run)).rejects.toThrow("network down");
+  });
+});
+
+describe("closeDriftPr", () => {
+  const close = { branch: "conformance/drift", base: "main", comment: "The pin is already 6.73.0." };
+
+  test("closes the open drift PR with a comment and deletes its branch", async () => {
+    const { run, calls } = stubRun({ "gh pr list": '[{"url":"https://github.com/o/r/pull/5"}]' });
+    await expect(closeDriftPr(close, run)).resolves.toBe("https://github.com/o/r/pull/5");
+    expect(calls.at(-1)).toBe(
+      "gh pr close https://github.com/o/r/pull/5 --comment The pin is already 6.73.0. --delete-branch",
+    );
+  });
+
+  test("does nothing when no drift PR is open", async () => {
+    const { run, calls } = stubRun({ "gh pr list": "[]" });
+    await expect(closeDriftPr(close, run)).resolves.toBeUndefined();
+    expect(calls).toEqual(["gh pr list --head conformance/drift --base main --state open --json url"]);
   });
 });

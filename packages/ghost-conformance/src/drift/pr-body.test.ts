@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import type { Manifest, ManifestRoute } from "../manifest/manifest.ts";
+import { measureCoverage } from "../route-coverage/coverage.ts";
 import {
   clientResources,
   diffManifests,
@@ -133,6 +134,13 @@ describe("renderPrTitle", () => {
     );
   });
 
+  test("flags a failed manifest generation", () => {
+    const passing = summariseSuite(report([{ fullName: "a", status: "passed" }]));
+    expect(renderPrTitle({ from: "6.72.0", to: "6.73.0" }, passing, passing, true)).toBe(
+      "chore(conformance): bump Ghost pin 6.72.0 → 6.73.0 (manifest generation failing)",
+    );
+  });
+
   test("flags a failing client → manifest check", () => {
     const passing = summariseSuite(report([{ fullName: "a", status: "passed" }]));
     const failing = summariseSuite(report([{ fullName: "a", status: "failed" }]));
@@ -150,7 +158,14 @@ describe("renderPrBody", () => {
       { fullName: "posts > edits persist", status: "failed" },
     ]),
   );
-  const body = (suite = passing, diff = diffManifests(before, after), client = passing) =>
+  const calls = [{ method: "GET", path: "/posts/" }];
+  const coverage = [measureCoverage(before, calls), measureCoverage(after, calls)];
+  const body = (
+    suite = passing,
+    diff = diffManifests(before, after),
+    client = passing,
+    manifestFailed = false,
+  ) =>
     renderPrBody({
       plan: { from: "6.72.0", to: "6.73.0" },
       releases,
@@ -158,6 +173,8 @@ describe("renderPrBody", () => {
       suite,
       client,
       resources: ["posts", "tags"],
+      coverage,
+      manifestFailed,
       runUrl: "https://github.com/owner/repo/actions/runs/1",
     });
 
@@ -226,6 +243,32 @@ describe("renderPrBody", () => {
     const text = body(passing, diffManifests(before, after), client);
     expect(text.split("\n")[0]).toMatch(/client → manifest check fails/i);
     expect(text).toContain("- posts.browse: GET /posts/");
+  });
+
+  test("puts a failed manifest generation up front instead of showing a diff", () => {
+    const text = body(passing, { added: [], removed: [], changed: [] }, passing, true);
+    expect(text.split("\n")[0]).toMatch(/manifest generation failed against Ghost 6\.73\.0/i);
+    expect(text).toMatch(/## Manifest diff\n\n❌ .*not regenerated/);
+    expect(text).not.toContain("No route changes");
+  });
+
+  test("shows the client's route coverage at the pin and at the newest Ghost", () => {
+    expect(body()).toMatch(
+      /## Client coverage[\s\S]*\| Routes \| Ghost 6\.72\.0 \| Ghost 6\.73\.0 \|[\s\S]*Integration-token routes \| 1 \/ 3 \(33%\) \| 1 \/ 1 \(100%\)/,
+    );
+  });
+
+  test("explains the rolling PR: merging bumps the pin, an unfixed one accumulates releases", () => {
+    const text = body();
+    expect(text).toContain("`conformance/drift`");
+    expect(text).toMatch(/Merging .*bumps the pin/);
+    expect(text).toMatch(/stays open/);
+    expect(text).toMatch(/`test\.fails`.*pending keys/);
+  });
+
+  test("says other workflows don't run on it and how to start them", () => {
+    expect(body()).toMatch(/close and reopen/i);
+    expect(body()).toContain("CONFORMANCE_PR_TOKEN");
   });
 
   test("a crashed suite is reported as failing, not as zero failures", () => {

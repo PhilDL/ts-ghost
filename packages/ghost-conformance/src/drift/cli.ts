@@ -6,11 +6,14 @@ import { promisify } from "node:util";
 
 import { GHOST_VERSION_FILE, ghostVersion, unsupportedGhost } from "../ghost/pin.ts";
 import { MANIFEST_FILE, parseManifest } from "../manifest/manifest.ts";
-import { openDriftPr } from "./open-pr.ts";
+import { clientCalls, measureCoverage } from "../route-coverage/coverage.ts";
+import { errorAnnotation, stepOutputs } from "./actions.ts";
+import { closeDriftPr, openDriftPr } from "./open-pr.ts";
 import { planDrift, resolveNewestGhost, type GhostRelease } from "./plan.ts";
 import {
   clientResources,
   diffManifests,
+  DRIFT_BRANCH,
   renderPrBody,
   renderPrTitle,
   suiteNotRun,
@@ -21,11 +24,14 @@ import {
 
 /**
  * Steps of the weekly drift job, run in order by .github/workflows/conformance-drift.yml:
- * plan → (pnpm manifest) → client → suite → body → open-pr → verdict. State passes between steps in DRIFT_STATE.
+ * plan → (pnpm manifest) → client → suite → body → verdict, then `pr` in a separate job with write access.
+ * State passes between steps (and jobs, as an artifact) in DRIFT_STATE.
  */
 const PACKAGE_DIR = fileURLToPath(new URL("../..", import.meta.url));
 const STATE = resolve(process.env.DRIFT_STATE ?? join(PACKAGE_DIR, ".drift"));
 const file = (name: string) => join(STATE, name);
+/** Set by the workflow from the manifest step's outcome; a failed generation leaves the old manifest. */
+const manifestFailed = () => process.env.MANIFEST_OUTCOME === "failure";
 type SavedPlan = { bump: boolean; from: string; to: string; releases: GhostRelease[] };
 
 const steps: Record<string, () => Promise<number>> = {
@@ -55,7 +61,7 @@ const steps: Record<string, () => Promise<number>> = {
   async suite() {
     const unsupported = unsupportedGhost(ghostVersion());
     if (!unsupported) return vitest("suite.json", ["-c", "./vitest.config.live.ts"]);
-    console.error(`::error::${unsupported} Not running the live suite.`);
+    report(`${unsupported} Not running the live suite.`);
     return 1;
   },
 
@@ -70,6 +76,8 @@ const steps: Record<string, () => Promise<number>> = {
     const suite = await liveSuite(plan);
     const clientReport = await readReport("client.json");
     const client = summariseSuite(clientReport);
+    const calls = clientCalls(clientReport);
+    const coverage = [before, ...(manifestFailed() ? [] : [after])].map((m) => measureCoverage(m, calls));
     const { GITHUB_SERVER_URL: server, GITHUB_REPOSITORY: repo, GITHUB_RUN_ID: runId } = process.env;
     const runUrl = server && repo && runId ? `${server}/${repo}/actions/runs/${runId}` : undefined;
     const body = renderPrBody({
@@ -79,41 +87,56 @@ const steps: Record<string, () => Promise<number>> = {
       suite,
       client,
       resources: clientResources(clientReport),
+      coverage,
+      manifestFailed: manifestFailed(),
       runUrl,
     });
-    await writeFile(file("pr-title.txt"), renderPrTitle(plan, suite, client));
+    await writeFile(file("pr-title.txt"), renderPrTitle(plan, suite, client, manifestFailed()));
     await writeFile(file("pr-body.md"), body);
     if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, body);
     console.log(`Wrote ${file("pr-body.md")}`);
     return 0;
   },
 
-  /** Commits the pin and manifest to a drift branch and opens or updates its PR. */
-  async "open-pr"() {
+  /** On a bump, commits the pin and manifest to the drift branch and opens or updates its PR; else closes it. */
+  async pr() {
     const plan = JSON.parse(await readFile(file("plan.json"), "utf8")) as SavedPlan;
-    const run = promisify(execFile);
+    const base = process.env.DRIFT_BASE || "main";
+    const exec = promisify(execFile);
+    const run = async (cmd: string, args: string[]) => (await exec(cmd, args, { cwd: PACKAGE_DIR })).stdout;
+    if (!plan.bump) {
+      const comment = `The pin on \`${base}\` is already Ghost ${plan.from}; the newest release with an official image is ${plan.to}.`;
+      const closed = await closeDriftPr({ branch: DRIFT_BRANCH, base, comment }, run);
+      console.log(closed ? `Closed the drift PR ${closed}` : "No drift PR open; nothing to do.");
+      return 0;
+    }
     const url = await openDriftPr(
       {
-        branch: `conformance/ghost-${plan.to}`,
-        base: process.env.DRIFT_BASE || "main",
+        branch: DRIFT_BRANCH,
+        base,
         title: (await readFile(file("pr-title.txt"), "utf8")).trim(),
         bodyFile: file("pr-body.md"),
         files: [GHOST_VERSION_FILE, MANIFEST_FILE],
       },
-      async (cmd, args) => (await run(cmd, args, { cwd: PACKAGE_DIR })).stdout,
+      run,
     );
     console.log(`Drift PR: ${url}`);
     return 0;
   },
 
-  /** Fails the job when the live suite or client check failed or never reported, after the PR shows it. */
+  /** Fails the job when the manifest, live suite or client check failed or never reported. */
   async verdict() {
     const plan = JSON.parse(await readFile(file("plan.json"), "utf8")) as SavedPlan;
-    const errors = verdictErrors({
-      "live suite": await liveSuite(plan),
-      "client check": summariseSuite(await readReport("client.json")),
-    });
-    for (const error of errors) console.error(`::error::${error}`);
+    const errors = [
+      ...(manifestFailed()
+        ? [`Manifest generation failed against Ghost ${plan.to}; see its step's log.`]
+        : []),
+      ...verdictErrors({
+        "live suite": await liveSuite(plan),
+        "client check": summariseSuite(await readReport("client.json")),
+      }),
+    ];
+    errors.forEach(report);
     return errors.length ? 1 : 0;
   },
 };
@@ -147,9 +170,13 @@ async function readReport(name: string): Promise<VitestJsonReport | undefined> {
 
 /** Appends step outputs for the workflow; a no-op outside GitHub Actions. */
 async function output(values: Record<string, string>) {
-  if (!process.env.GITHUB_OUTPUT) return;
-  const lines = Object.entries(values).map(([k, v]) => `${k}=${v}\n`);
-  await appendFile(process.env.GITHUB_OUTPUT, lines.join(""));
+  if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, stepOutputs(values));
+}
+
+/** Logs the whole message and annotates the run with its first line. */
+function report(message: string) {
+  console.error(message);
+  console.error(errorAnnotation(message));
 }
 
 const name = process.argv[2] ?? "";
@@ -161,7 +188,8 @@ if (!step) {
   step().then(
     (code) => (process.exitCode = code),
     (error: unknown) => {
-      console.error(error instanceof Error ? `::error::${error.message}` : error);
+      if (error instanceof Error) report(error.message);
+      else console.error(error);
       process.exitCode = 1;
     },
   );

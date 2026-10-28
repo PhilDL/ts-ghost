@@ -1,4 +1,5 @@
 import type { Manifest, ManifestRoute } from "../manifest/manifest.ts";
+import { renderCoverage, type Coverage } from "../route-coverage/coverage.ts";
 import type { DriftPlan, GhostRelease } from "./plan.ts";
 
 export type ManifestDiff = {
@@ -43,6 +44,8 @@ export type VitestJsonReport = {
 };
 
 const ACCESS = ["public", "integration", "staff", "session"] as const;
+/** The one branch the drift PR comes from; every run force-pushes it. */
+export const DRIFT_BRANCH = "conformance/drift";
 const key = (r: ManifestRoute) => `${r.method} ${r.path}`;
 
 export function diffManifests(before: Manifest, after: Manifest): ManifestDiff {
@@ -109,8 +112,10 @@ export function renderPrTitle(
   plan: Pick<DriftPlan, "from" | "to">,
   suite: SuiteSummary,
   client: SuiteSummary,
+  manifestFailed = false,
 ): string {
   const title = `chore(conformance): bump Ghost pin ${plan.from} → ${plan.to}`;
+  if (manifestFailed) return `${title} (manifest generation failing)`;
   if (suite.notRun) return `${title} (not supported by the client yet)`;
   const failing = [...(suite.ok ? [] : ["live suite"]), ...(client.ok ? [] : ["client check"])];
   return failing.length ? `${title} (${failing.join(" and ")} failing)` : title;
@@ -125,12 +130,22 @@ export function renderPrBody(input: {
   client: SuiteSummary;
   /** Client resources, so the reviewer knows which release notes matter. */
   resources: string[];
+  /** Route coverage at the pin, then at the new Ghost (left out when its manifest failed). */
+  coverage: Coverage[];
+  /** Regenerating the manifest failed, so `diff` and the client check saw the old manifest. */
+  manifestFailed?: boolean;
   runUrl?: string;
 }): string {
-  const { plan, releases, diff, suite, client, resources, runUrl } = input;
+  const { plan, releases, diff, suite, client, resources, coverage, manifestFailed, runUrl } = input;
   const run = runUrl ? ` ([run](${runUrl}))` : "";
   const covered = resources.length ? resources.map((r) => `\`${r}\``).join(", ") : "none found";
   return [
+    ...(manifestFailed
+      ? [
+          `> ❌ **Manifest generation failed against Ghost ${plan.to}**${run}. Do not merge until it is fixed.`,
+          "",
+        ]
+      : []),
     ...(suite.notRun
       ? [`> ❌ **${suite.notRun}** The live suite did not run. Do not merge.`, ""]
       : suite.ok
@@ -144,6 +159,8 @@ export function renderPrBody(input: {
         ]),
     `Weekly drift check: bumps the pinned Ghost from \`${plan.from}\` → \`${plan.to}\` and regenerates \`manifest.json\`.`,
     "",
+    ...HOW_IT_WORKS,
+    "",
     "## Live suite",
     "",
     ...renderSuite("live suite", suite, run),
@@ -154,8 +171,13 @@ export function renderPrBody(input: {
     "",
     "## Manifest diff",
     "",
-    ...renderDiff(diff),
+    ...(manifestFailed
+      ? [`❌ The manifest was not regenerated; see the manifest step's log${run}.`]
+      : renderDiff(diff)),
     "",
+    "## Client coverage",
+    "",
+    renderCoverage(coverage),
     "## Ghost release notes",
     "",
     "The suite can't see changes to query options (includes, filters, order, formats) or to behaviour the",
@@ -169,6 +191,15 @@ export function renderPrBody(input: {
     "",
   ].join("\n");
 }
+
+const HOW_IT_WORKS = [
+  `There is one drift PR, from \`${DRIFT_BRANCH}\`. Every weekly run force-pushes it and rewrites this description, always from the default branch's pin to the newest Ghost. Merging it bumps the pin.`,
+  "",
+  "- If nothing is fixed, it stays open and accumulates the releases that come out meanwhile.",
+  "- To bump the pin without fixing everything, mark what fails before merging: `test.fails` (or `EXPECTED_FAILURES` in the client check) and pending keys, each with a one-line reason.",
+  "- The next run overwrites commits pushed here: merge soon after pushing, or fix on another branch.",
+  "- A PR opened with the workflow's default `GITHUB_TOKEN` starts no other workflows: close and reopen it to run CI. A `CONFORMANCE_PR_TOKEN` secret (GitHub App or fine-grained token) avoids that.",
+];
 
 function renderSuite(name: string, suite: SuiteSummary, run: string): string[] {
   if (suite.notRun) return [`❌ Not run: ${suite.notRun}`];
