@@ -81,6 +81,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: 🚦 Fail when the live suite failed
+      - name: 🚦 Fail when the client check or live suite failed
         if: steps.plan.outputs.bump == 'true'
         run: pnpm drift verdict
