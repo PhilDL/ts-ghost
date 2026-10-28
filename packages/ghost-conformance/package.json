@@ -11,13 +11,15 @@
     "lint": "eslint ./src --fix",
     "typecheck": "tsc --project ./tsconfig.json --noEmit",
     "manifest": "node src/manifest/generate.ts",
-    "drift": "node src/drift/cli.ts"
+    "drift": "node src/drift/cli.ts",
+    "clean": "rimraf .turbo .drift"
   },
   "devDependencies": {
     "@ts-ghost/admin-api": "workspace:*",
     "@ts-ghost/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "eslint": "catalog:eslint",
+    "rimraf": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
