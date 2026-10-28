@@ -107,7 +107,7 @@ function wrap(value: unknown): unknown {
 }
 
 /** Unknown keys of every recorded response a tracked client parsed, as `<resource>[].<path>`. */
-export function unknownKeysOfResponses(responses: RecordedResponse[], ignore: string[]): string[] {
+export function unknownKeysOfResponses(responses: RecordedResponse[], ignore: string[] = []): string[] {
   const found = new Set<string>();
   for (const { url, body, parsed } of responses) {
     if (parsed === undefined || !isObject(body)) continue;

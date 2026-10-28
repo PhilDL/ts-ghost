@@ -6,11 +6,8 @@ import { adminApi, liveResponses } from "./ghost.ts";
 // Title the bootstrap gives the site at first-run setup.
 const BLOG_TITLE = "ts-ghost conformance";
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 describe("settings", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
 
   // Expected failure: the settings schema only allows scalar values; Ghost sends list values (all_blocked_email_domains).
   test.fails("GET /settings/ returns every setting as key and value", async () => {
@@ -20,7 +17,7 @@ describe("settings", () => {
     expect(result.data.find((s) => s.key === "title")?.value).toBe(BLOG_TITLE);
     expect(result.data.some((s) => s.value === null)).toBe(true);
     const raw = responses.last("/settings/") as { settings: unknown };
-    expect(unknownKeys(raw.settings, result.data, { at: "settings", ignore: IGNORED })).toEqual([]);
+    expect(unknownKeys(raw.settings, result.data, { at: "settings" })).toEqual([]);
   });
 });
 

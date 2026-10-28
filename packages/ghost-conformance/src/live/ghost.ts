@@ -23,7 +23,7 @@ export function adminApi(
  * Records raw responses for each test in the calling `describe`, and fails a test whose parsed responses
  * carry keys neither in `ignore` (deliberately unmodelled) nor in PENDING_KEYS.
  */
-export function liveResponses(keys: { ignore: string[] }): Pick<ResponseRecorder, "all" | "last"> {
+export function liveResponses(keys: { ignore?: string[] } = {}): Pick<ResponseRecorder, "all" | "last"> {
   let current: ResponseRecorder | undefined;
   beforeEach(() => {
     current = recordResponses();
@@ -31,7 +31,7 @@ export function liveResponses(keys: { ignore: string[] }): Pick<ResponseRecorder
   afterEach(() => {
     const recorder = current;
     recorder?.restore();
-    const unknown = unknownKeysOfResponses(recorder?.all() ?? [], [...keys.ignore, ...PENDING_KEYS]);
+    const unknown = unknownKeysOfResponses(recorder?.all() ?? [], [...(keys.ignore ?? []), ...PENDING_KEYS]);
     if (unknown.length)
       throw new Error(`Keys Ghost sent that the client's schema lacks:\n${unknown.join("\n")}`);
   });

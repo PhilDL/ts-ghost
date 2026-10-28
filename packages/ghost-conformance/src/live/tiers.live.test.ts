@@ -9,11 +9,8 @@ beforeAll(async () => {
   seed = await seedTiers(inject("ghost"));
 });
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 describe("tiers", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
 
   test("browse returns the free tier, active paid tiers and an archived one", async () => {
     const result = await adminApi().tiers.browse({ limit: "all" }).fetch();

@@ -14,11 +14,8 @@ async function memberId(email: string): Promise<string> {
   return result.data[0].id;
 }
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 describe("paid members", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
 
   test("a paid member reads with an active Stripe subscription on the paid tier", async () => {
     const result = await adminApi()

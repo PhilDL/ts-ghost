@@ -12,11 +12,8 @@ beforeAll(async () => {
 
 const ISO_MS = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 describe("offers", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
 
   test("add creates a fixed signup offer on a tier; edits read back", async () => {
     const api = adminApi();

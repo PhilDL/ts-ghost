@@ -11,7 +11,7 @@ beforeAll(async () => {
 });
 
 describe("pages", () => {
-  liveResponses({ ignore: IGNORED });
+  liveResponses();
 
   test("browse returns the seeded pages", async () => {
     const result = await adminApi().pages.browse({ limit: "all" }).fetch();
@@ -149,7 +149,7 @@ describe("pages", () => {
 });
 
 describe("pages: unknown keys", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
   const unknownAfterEveryOperation = async () => {
     const api = adminApi();
     const browsed = await api.pages
@@ -168,7 +168,7 @@ describe("pages: unknown keys", () => {
       updated_at: new Date(added.data.updated_at ?? ""),
     });
     assert(edited.success);
-    return unknownKeysOfResponses(responses.all(), IGNORED);
+    return unknownKeysOfResponses(responses.all());
   };
   const isAuthorKey = (k: string) => /^pages\[\]\.(authors\[\]|primary_author)\./.test(k);
 
@@ -182,9 +182,6 @@ describe("pages: unknown keys", () => {
     expect((await unknownAfterEveryOperation()).filter((k) => !isAuthorKey(k))).toEqual([]);
   });
 });
-
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
 
 // Every nullable field a page output has that the client's inputs can set.
 const NULLABLE = [

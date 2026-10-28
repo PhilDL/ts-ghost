@@ -6,9 +6,6 @@ import { conformanceIntegration, WEBHOOK_TARGET } from "../seeds/webhooks.ts";
 import { unknownKeys } from "../unknown-keys.ts";
 import { adminApi, liveResponses } from "./ghost.ts";
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 // Events no other test file fires: a concurrent delivery writes the old webhook back over an edit.
 const newWebhook = () => ({
   event: "page.rescheduled" as const,
@@ -22,14 +19,14 @@ async function readBack(id: string) {
 }
 
 describe("webhooks", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
 
   test("POST /webhooks/ ties the webhook to the calling integration and stores what it was sent", async () => {
     const input = newWebhook();
     const added = await adminApi().webhooks.add(input);
     if (!added.success) throw new Error(JSON.stringify(added.errors));
     const raw = responses.last("/webhooks/") as { webhooks: unknown[] };
-    expect(unknownKeys(raw.webhooks[0], added.data, { at: "webhook", ignore: IGNORED })).toEqual([]);
+    expect(unknownKeys(raw.webhooks[0], added.data, { at: "webhook" })).toEqual([]);
 
     const integration = await conformanceIntegration();
     expect(added.data).toMatchObject({ ...input, integration_id: integration.id });
@@ -46,7 +43,7 @@ describe("webhooks", () => {
     const edited = await api.webhooks.edit(added.data.id, edit);
     if (!edited.success) throw new Error(JSON.stringify(edited.errors));
     const raw = responses.last(`/webhooks/${added.data.id}/`) as { webhooks: unknown[] };
-    expect(unknownKeys(raw.webhooks[0], edited.data, { at: "webhook", ignore: IGNORED })).toEqual([]);
+    expect(unknownKeys(raw.webhooks[0], edited.data, { at: "webhook" })).toEqual([]);
 
     expect(await readBack(added.data.id)).toMatchObject(edit);
   });
@@ -67,7 +64,7 @@ describe("webhooks", () => {
     expect(edited.data.last_triggered_at).toEqual(expect.any(String));
     expect(edited.data.last_triggered_error).toEqual(expect.any(String));
     const raw = responses.last(`/webhooks/${added.data.id}/`) as { webhooks: unknown[] };
-    expect(unknownKeys(raw.webhooks[0], edited.data, { at: "webhook", ignore: IGNORED })).toEqual([]);
+    expect(unknownKeys(raw.webhooks[0], edited.data, { at: "webhook" })).toEqual([]);
   });
 
   // Expected failure: the webhook update schema drops secret, so a secret-only edit throws "No data to edit".

@@ -5,11 +5,8 @@ import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeys } from "../unknown-keys.ts";
 import { adminApi, liveResponses } from "./ghost.ts";
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 describe("newsletters", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
   let seeded: Awaited<ReturnType<typeof seedNewsletters>>;
   beforeAll(async () => {
     seeded = await seedNewsletters();
@@ -98,10 +95,10 @@ describe("newsletters", () => {
       throw new Error("request failed");
 
     expect([
-      ...unknownKeys(browseRaw.newsletters, browsed.data, { at: "browse.newsletters", ignore: IGNORED }),
-      ...unknownKeys(readRaw.newsletters[0], read.data, { at: "read.newsletter", ignore: IGNORED }),
-      ...unknownKeys(editRaw.newsletters[0], edited.data, { at: "edit.newsletter", ignore: IGNORED }),
-      ...unknownKeys(addRaw.newsletters[0], added.data, { at: "add.newsletter", ignore: IGNORED }),
+      ...unknownKeys(browseRaw.newsletters, browsed.data, { at: "browse.newsletters" }),
+      ...unknownKeys(readRaw.newsletters[0], read.data, { at: "read.newsletter" }),
+      ...unknownKeys(editRaw.newsletters[0], edited.data, { at: "edit.newsletter" }),
+      ...unknownKeys(addRaw.newsletters[0], added.data, { at: "add.newsletter" }),
     ]).toEqual([]);
   });
 });

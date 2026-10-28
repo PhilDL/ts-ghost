@@ -15,7 +15,7 @@ const seededOnly = (): `id:[${string}]` =>
   `id:[${[seed.full, seed.bare, seed.scheduled, seed.paid, seed.emailed].map((p) => p.id).join(",")}]`;
 
 describe("posts", () => {
-  liveResponses({ ignore: IGNORED });
+  liveResponses();
 
   test("browse returns every status and a paid post", async () => {
     const result = await adminApi().posts.browse({ limit: "all", filter: seededOnly() }).fetch();
@@ -212,7 +212,7 @@ describe("posts", () => {
 });
 
 describe("posts: unknown keys", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
 
   // Expected failure: the author schema lacks Ghost 6.72's socials, tour and notification flags.
   test.fails("authors carry no key the client's schema lacks", async () => {
@@ -231,27 +231,24 @@ describe("posts: unknown keys", () => {
     });
     assert(edited.success);
 
-    const unknown = unknownKeysOfResponses(responses.all(), IGNORED);
+    const unknown = unknownKeysOfResponses(responses.all());
     expect(unknown.filter((k) => /^posts\[\]\.(authors\[\]|primary_author)\./.test(k))).toEqual([]);
   });
 
   // Expected failure: the post email schema lacks csd_email_count, post_id, newsletter_id, source_type and more.
   test.fails("a sent post's email carries no key the client's schema lacks", async () => {
     assert((await adminApi().posts.read({ id: seed.emailed.id }).fetch()).success);
-    const unknown = unknownKeysOfResponses(responses.all(), IGNORED);
+    const unknown = unknownKeysOfResponses(responses.all());
     expect(unknown.filter((k) => k.startsWith("posts[].email."))).toEqual([]);
   });
 
   // Expected failure: the post newsletter schema lacks its design and feedback fields.
   test.fails("a sent post's newsletter carries no key the client's schema lacks", async () => {
     assert((await adminApi().posts.read({ id: seed.emailed.id }).fetch()).success);
-    const unknown = unknownKeysOfResponses(responses.all(), IGNORED);
+    const unknown = unknownKeysOfResponses(responses.all());
     expect(unknown.filter((k) => k.startsWith("posts[].newsletter."))).toEqual([]);
   });
 });
-
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
 
 const MOBILEDOC = JSON.stringify({
   version: "0.3.1",

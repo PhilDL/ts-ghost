@@ -5,11 +5,8 @@ import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeys } from "../unknown-keys.ts";
 import { adminApi, liveResponses } from "./ghost.ts";
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 describe("tags", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
   let seeded: Awaited<ReturnType<typeof seedTags>>;
   beforeAll(async () => {
     seeded = await seedTags();
@@ -29,7 +26,7 @@ describe("tags", () => {
       expect(counted.data.find((t) => t.id === tag.id)?.count?.posts).toBe(seeded.postsPerTag);
     }
     const raw = responses.last("/tags/") as { tags: unknown };
-    expect(unknownKeys(raw.tags, counted.data, { at: "tags", ignore: IGNORED })).toEqual([]);
+    expect(unknownKeys(raw.tags, counted.data, { at: "tags" })).toEqual([]);
   });
 
   test("GET /tags/:id/ and /tags/slug/:slug/ return the same tag, with null and set fields", async () => {
@@ -41,7 +38,7 @@ describe("tags", () => {
       if (!byId.success || !bySlug.success) throw new Error("tag read failed");
 
       expect(bySlug.data).toEqual(byId.data);
-      expect(unknownKeys(raw.tags[0], byId.data, { at: "tag", ignore: IGNORED })).toEqual([]);
+      expect(unknownKeys(raw.tags[0], byId.data, { at: "tag" })).toEqual([]);
     }
     expect(seeded.bare.description).toBeNull();
     expect(seeded.full.description).not.toBeNull();
@@ -53,7 +50,7 @@ describe("tags", () => {
     const added = await api.tags.add(input);
     if (!added.success) throw new Error(JSON.stringify(added.errors));
     const raw = responses.last("/tags/") as { tags: unknown[] };
-    expect(unknownKeys(raw.tags[0], added.data, { at: "tag", ignore: IGNORED })).toEqual([]);
+    expect(unknownKeys(raw.tags[0], added.data, { at: "tag" })).toEqual([]);
 
     const read = await api.tags.read({ id: added.data.id }).fetch();
     if (!read.success) throw new Error("tag read failed");
@@ -69,7 +66,7 @@ describe("tags", () => {
     const edited = await api.tags.edit(added.data.id, edit);
     if (!edited.success) throw new Error(JSON.stringify(edited.errors));
     const raw = responses.last(`/tags/${added.data.id}/`) as { tags: unknown[] };
-    expect(unknownKeys(raw.tags[0], edited.data, { at: "tag", ignore: IGNORED })).toEqual([]);
+    expect(unknownKeys(raw.tags[0], edited.data, { at: "tag" })).toEqual([]);
 
     const read = await api.tags.read({ id: added.data.id }).fetch();
     if (!read.success) throw new Error("tag read failed");

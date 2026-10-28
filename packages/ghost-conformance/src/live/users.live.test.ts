@@ -4,11 +4,8 @@ import { seedUsers, STAFF_PROFILE, TOUR } from "../seeds/users.ts";
 import { unknownKeys } from "../unknown-keys.ts";
 import { adminApi, liveResponses } from "./ghost.ts";
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 describe("users", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
   let seeded: Awaited<ReturnType<typeof seedUsers>>;
   beforeAll(async () => {
     seeded = await seedUsers();
@@ -65,8 +62,8 @@ describe("users", () => {
     if (!read.success || !byEmail.success) throw new Error("user read failed");
 
     expect([
-      ...unknownKeys(readRaw.users[0], read.data, { at: "read.user", ignore: IGNORED }),
-      ...unknownKeys(emailRaw.users[0], byEmail.data, { at: "email.user", ignore: IGNORED }),
+      ...unknownKeys(readRaw.users[0], read.data, { at: "read.user" }),
+      ...unknownKeys(emailRaw.users[0], byEmail.data, { at: "email.user" }),
     ]).toEqual([]);
   });
 });

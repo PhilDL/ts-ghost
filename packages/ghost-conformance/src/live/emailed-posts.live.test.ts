@@ -4,13 +4,10 @@ import { EMAIL_SEED } from "../seeds/emails.ts";
 import { unknownKeys } from "../unknown-keys.ts";
 import { adminApi, liveResponses } from "./ghost.ts";
 
-// Keys Ghost sends that the client deliberately doesn't model.
-const IGNORED: string[] = [];
-
 const { failed, submitted } = EMAIL_SEED.posts;
 
 describe("emailed posts", () => {
-  const responses = liveResponses({ ignore: IGNORED });
+  const responses = liveResponses();
 
   // Expected failure: core email schema requires `from`, `source` and `updated_at`; Ghost sends null.
   test.fails("a post whose email has a null from and source parses", async () => {
@@ -59,9 +56,7 @@ describe("emailed posts", () => {
     const result = await adminApi().posts.read({ slug: submitted }).fetch();
     if (!result.success) throw new Error("read failed");
     const raw = responses.last("/posts/") as { posts: { email: unknown }[] };
-    expect(
-      unknownKeys(raw.posts[0]!.email, result.data.email, { at: "post.email", ignore: IGNORED }),
-    ).toEqual([]);
+    expect(unknownKeys(raw.posts[0]!.email, result.data.email, { at: "post.email" })).toEqual([]);
   });
 
   // Expected failure: the post newsletter schema lacks feedback_enabled, show_* flags and more.
@@ -70,8 +65,6 @@ describe("emailed posts", () => {
     if (!result.success) throw new Error("read failed");
     const raw = responses.last("/posts/") as { posts: { newsletter: unknown }[] };
     const post = raw.posts[0]!;
-    expect(
-      unknownKeys(post.newsletter, result.data.newsletter, { at: "post.newsletter", ignore: IGNORED }),
-    ).toEqual([]);
+    expect(unknownKeys(post.newsletter, result.data.newsletter, { at: "post.newsletter" })).toEqual([]);
   });
 });
