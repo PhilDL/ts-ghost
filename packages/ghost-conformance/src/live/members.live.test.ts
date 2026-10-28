@@ -1,10 +1,11 @@
-import { beforeAll, describe, expect, inject } from "vitest";
+import { beforeAll, describe, expect, inject, onTestFinished } from "vitest";
 import { adminMembersSchema } from "@ts-ghost/admin-api";
 
 import { EMAIL_SEED } from "../seeds/emails.ts";
 import { MEMBER_SEED, seedMembers } from "../seeds/members.ts";
+import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, assertOk, liveTest } from "./ghost.ts";
+import { adminApi, assertOk, liveTest, type LiveContext } from "./ghost.ts";
 
 type Seeded = Awaited<ReturnType<typeof seedMembers>>;
 let seeded: Seeded;
@@ -42,30 +43,46 @@ describe("members", () => {
     expect(read.data).toEqual(browsed.data[0]);
   });
 
-  liveTest("add, edit and delete a member, reading back each write", async ({ api }) => {
+  /** Adds a member with a unique email, deleted again when the test finishes. */
+  async function addMember(api: LiveContext["api"]) {
+    const email = `member-crud-${uniqueSuffix()}@conformance.test`;
     const added = await api.members.add({
-      email: "member-crud@conformance.test",
+      email,
       name: "Crud Member",
       note: "first",
       labels: [{ name: "Conformance crud" }],
     });
     assertOk(added);
-    expect(added.data).toMatchObject({ status: "free", name: "Crud Member", note: "first" });
-
-    const edited = await api.members.edit(added.data.id, { name: "Renamed Member", note: "second" });
-    assertOk(edited);
-
-    const read = await api.members.read({ id: added.data.id }).fetch();
-    assertOk(read);
-    expect(read.data).toMatchObject({
-      email: "member-crud@conformance.test",
-      name: "Renamed Member",
-      note: "second",
+    onTestFinished(async () => {
+      await adminApi().members.delete(added.data.id);
     });
-    expect(read.data.labels.map((label) => label.name)).toEqual(["Conformance crud"]);
+    return added.data;
+  }
 
-    expect(await api.members.delete(added.data.id)).toEqual({ success: true });
-    const gone = await api.members.read({ id: added.data.id }).fetch();
+  liveTest("add creates a free member that reads back with its note and labels", async ({ api }) => {
+    const added = await addMember(api);
+    expect(added).toMatchObject({ status: "free", name: "Crud Member", note: "first" });
+
+    const read = await api.members.read({ id: added.id }).fetch();
+    assertOk(read);
+    expect(read.data).toMatchObject({ email: added.email, name: "Crud Member", note: "first" });
+    expect(read.data.labels.map((label) => label.name)).toEqual(["Conformance crud"]);
+  });
+
+  liveTest("edit persists the name and note", async ({ api }) => {
+    const added = await addMember(api);
+
+    assertOk(await api.members.edit(added.id, { name: "Renamed Member", note: "second" }));
+    const read = await api.members.read({ id: added.id }).fetch();
+    assertOk(read);
+    expect(read.data).toMatchObject({ email: added.email, name: "Renamed Member", note: "second" });
+  });
+
+  liveTest("delete removes the member", async ({ api }) => {
+    const added = await addMember(api);
+
+    expect(await api.members.delete(added.id)).toEqual({ success: true });
+    const gone = await api.members.read({ id: added.id }).fetch();
     expect(gone.success).toBe(false);
   });
 
