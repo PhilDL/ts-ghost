@@ -3,7 +3,7 @@ import { beforeAll, describe, expect } from "vitest";
 import { fullNewsletterInput, seedNewsletters } from "../seeds/newsletters.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./ghost.ts";
 
 describe("newsletters", () => {
   let seeded: Awaited<ReturnType<typeof seedNewsletters>>;
@@ -15,7 +15,7 @@ describe("newsletters", () => {
     "GET /newsletters/ lists active and archived newsletters, with null and set fields",
     async ({ api }) => {
       const result = await api.newsletters.browse({ limit: "all" }).fetch();
-      if (!result.success) throw new Error(JSON.stringify(result.errors));
+      assertOk(result);
 
       expect(new Set(result.data.map((n) => n.status))).toEqual(new Set(["active", "archived"]));
       expect(result.data.some((n) => n.description === null && n.header_image === null)).toBe(true);
@@ -28,7 +28,7 @@ describe("newsletters", () => {
 
   liveTest("GET /newsletters/:id/ returns the newsletter", async ({ api }) => {
     const result = await api.newsletters.read({ id: seeded.archived.id }).fetch();
-    if (!result.success) throw new Error(JSON.stringify(result.errors));
+    assertOk(result);
 
     expect(result.data).toEqual(seeded.archived);
   });
@@ -36,16 +36,16 @@ describe("newsletters", () => {
   // Expected failure: the client offers slug reads, but Ghost has no /newsletters/slug/:slug/ route.
   liveTest.fails("GET /newsletters/slug/:slug/ returns the newsletter", async ({ api }) => {
     const result = await api.newsletters.read({ slug: seeded.full.slug }).fetch();
-    expect(result.success).toBe(true);
+    assertOk(result);
   });
 
   liveTest("POST /newsletters/ stores every field it was sent", async ({ api }) => {
     const input = fullNewsletterInput(uniqueSuffix());
     const added = await api.newsletters.add(input, { opt_in_existing: false });
-    if (!added.success) throw new Error(JSON.stringify(added.errors));
+    assertOk(added);
 
     const read = await api.newsletters.read({ id: added.data.id }).fetch();
-    if (!read.success) throw new Error(JSON.stringify(read.errors));
+    assertOk(read);
     expect(read.data).toMatchObject(input);
   });
 
@@ -54,10 +54,10 @@ describe("newsletters", () => {
     const name = `Name only ${uniqueSuffix()}`;
     // @ts-expect-error the create schema makes sender_name required
     const added = await api.newsletters.add({ name });
-    if (!added.success) throw new Error(JSON.stringify(added.errors));
+    assertOk(added);
 
     const read = await api.newsletters.read({ id: added.data.id }).fetch();
-    if (!read.success) throw new Error(JSON.stringify(read.errors));
+    assertOk(read);
     expect(read.data.name).toBe(name);
   });
 
@@ -66,14 +66,14 @@ describe("newsletters", () => {
       name: `Edit me ${uniqueSuffix()}`,
       sender_name: "Before",
     });
-    if (!added.success) throw new Error(JSON.stringify(added.errors));
+    assertOk(added);
 
     const edit = { name: `${added.data.name} edited`, sender_name: "After", description: "Edited" };
     const edited = await api.newsletters.edit(added.data.id, edit);
-    if (!edited.success) throw new Error(JSON.stringify(edited.errors));
+    assertOk(edited);
 
     const read = await api.newsletters.read({ id: added.data.id }).fetch();
-    if (!read.success) throw new Error(JSON.stringify(read.errors));
+    assertOk(read);
     expect(read.data).toMatchObject(edit);
   });
 
@@ -91,8 +91,10 @@ describe("newsletters", () => {
       const name = `Key check ${uniqueSuffix()}`;
       const added = await api.newsletters.add({ name, sender_name: "Key check" });
       const addRaw = responses.last("/newsletters/") as { newsletters: unknown[] };
-      if (!browsed.success || !read.success || !edited.success || !added.success)
-        throw new Error("request failed");
+      assertOk(browsed);
+      assertOk(read);
+      assertOk(edited);
+      assertOk(added);
 
       expect([
         ...unknownKeys(browseRaw.newsletters, browsed.data, { at: "browse.newsletters" }),

@@ -1,9 +1,9 @@
-import { assert, beforeAll, describe, expect, inject, onTestFinished } from "vitest";
+import { beforeAll, describe, expect, inject, onTestFinished } from "vitest";
 
 import { FULL_HTML, fullScalars, seedPosts, seedPostWithInactiveAuthor } from "../seeds/posts-and-pages.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeysOfResponses } from "../unknown-keys.ts";
-import { adminApi, liveTest } from "./ghost.ts";
+import { adminApi, assertOk, liveTest } from "./ghost.ts";
 
 let seed: Awaited<ReturnType<typeof seedPosts>>;
 beforeAll(async () => {
@@ -18,7 +18,7 @@ describe("posts", () => {
   liveTest("browse returns every status and a paid post", async ({ api }) => {
     const result = await api.posts.browse({ limit: "all", filter: seededOnly() }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     const byId = new Map(result.data.map((post) => [post.id, post]));
     expect(byId.get(seed.full.id)?.status).toBe("published");
     expect(byId.get(seed.bare.id)?.status).toBe("draft");
@@ -32,7 +32,7 @@ describe("posts", () => {
       .include({ authors: true, tags: true, tiers: true })
       .fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.every((post) => post.authors.length > 0)).toBe(true);
     const full = result.data.find((post) => post.id === seed.full.id);
     expect(full?.tags?.map((tag) => tag.name)).toEqual([`Post tag ${seed.suffix}`]);
@@ -46,7 +46,7 @@ describe("posts", () => {
       .formats({ html: true })
       .fetch();
 
-    assert(result.success);
+    assertOk(result);
     const full = result.data.find((post) => post.id === seed.full.id);
     expect(full?.html).toBe("<p>Hello <strong>world</strong></p>");
   });
@@ -58,7 +58,7 @@ describe("posts", () => {
       .formats({ plaintext: true })
       .fetch();
 
-    assert(result.success);
+    assertOk(result);
     const full = result.data.find((post) => post.id === seed.full.id);
     expect(full?.plaintext).toBe("Hello world");
   });
@@ -66,7 +66,7 @@ describe("posts", () => {
   liveTest("read with the plaintext format returns content", async ({ api }) => {
     const result = await api.posts.read({ id: seed.full.id }).formats({ plaintext: true }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.plaintext).toBe("Hello world");
   });
 
@@ -74,7 +74,9 @@ describe("posts", () => {
     const byId = await api.posts.read({ id: seed.full.id }).fetch();
     const bySlug = await api.posts.read({ slug: seed.full.slug }).fetch();
 
-    assert(byId.success && bySlug.success);
+    assertOk(byId);
+
+    assertOk(bySlug);
     expect(byId.data.id).toBe(seed.full.id);
     expect(bySlug.data).toEqual(byId.data);
   });
@@ -83,7 +85,9 @@ describe("posts", () => {
     const bare = await api.posts.read({ id: seed.bare.id }).fetch();
     const full = await api.posts.read({ id: seed.full.id }).fetch();
 
-    assert(bare.success && full.success);
+    assertOk(bare);
+
+    assertOk(full);
     for (const key of NULLABLE) {
       expect.soft(bare.data[key], `bare ${key}`).toBeNull();
       expect.soft(full.data[key], `full ${key}`).not.toBeNull();
@@ -93,7 +97,7 @@ describe("posts", () => {
   liveTest("a post sent as a newsletter reads back its email and newsletter", async ({ api }) => {
     const result = await api.posts.read({ id: seed.emailed.id }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.newsletter?.slug).toBe("default-newsletter");
     expect(result.data.email?.subject).toBe(`Emailed ${seed.suffix}`);
   });
@@ -112,10 +116,10 @@ describe("posts", () => {
       },
       { source: "html" },
     );
-    assert(added.success);
+    assertOk(added);
 
     const read = await api.posts.read({ id: added.data.id }).formats({ html: true }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({ ...fullScalars(suffix), email_subject: "Email subject" });
     expect(read.data.visibility).toBe("tiers");
     expect(read.data.tiers?.map((tier) => tier.id)).toEqual([seed.tierId]);
@@ -131,37 +135,37 @@ describe("posts", () => {
       status: "scheduled",
       published_at: publishedAt,
     });
-    assert(added.success);
+    assertOk(added);
 
     const read = await api.posts.read({ id: added.data.id }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({ status: "scheduled", published_at: publishedAt.toISOString() });
   });
 
   // Expected failure: Ghost 6 ignores mobiledoc input and stores lexical only, so it never reads back.
   liveTest.fails("add reads back mobiledoc", async ({ api }) => {
     const added = await api.posts.add({ title: `Mobiledoc ${uniqueSuffix()}`, mobiledoc: MOBILEDOC });
-    assert(added.success);
+    assertOk(added);
 
     const read = await api.posts.read({ id: added.data.id }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data.mobiledoc).toBe(MOBILEDOC);
   });
 
   // Expected failure: posts have no locale in Ghost; the client's input accepts one that Ghost drops.
   liveTest.fails("add reads back locale", async ({ api }) => {
     const added = await api.posts.add({ title: `Locale ${uniqueSuffix()}`, locale: "de" });
-    assert(added.success);
+    assertOk(added);
 
     const read = await api.posts.read({ id: added.data.id }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({ locale: "de" });
   });
 
   liveTest("edit persists every value sent", async ({ api }) => {
     const suffix = uniqueSuffix();
     const added = await api.posts.add({ title: `To edit ${suffix}` });
-    assert(added.success);
+    assertOk(added);
 
     const edited = await api.posts.edit(
       added.data.id,
@@ -175,10 +179,10 @@ describe("posts", () => {
       },
       { source: "html" },
     );
-    assert(edited.success);
+    assertOk(edited);
 
     const read = await api.posts.read({ id: added.data.id }).formats({ html: true }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({
       ...fullScalars(suffix),
       email_subject: "Edited subject",
@@ -190,7 +194,7 @@ describe("posts", () => {
 
   liveTest("delete removes the post", async ({ api }) => {
     const added = await api.posts.add({ title: `To delete ${uniqueSuffix()}` });
-    assert(added.success);
+    assertOk(added);
 
     expect(await api.posts.delete(added.data.id)).toEqual({ success: true });
     const read = await api.posts.read({ id: added.data.id }).fetch();
@@ -203,7 +207,7 @@ describe("posts", () => {
     onTestFinished(remove);
 
     const result = await api.posts.read({ id: post.id }).fetch();
-    assert(result.success);
+    assertOk(result);
     expect(result.data.primary_author.status).toBe("inactive");
     expect(result.data.authors.map((author) => author.status)).toEqual(["inactive"]);
   });
@@ -219,12 +223,14 @@ describe("posts: unknown keys", () => {
       .fetch();
     const read = await api.posts.read({ id: seed.full.id }).fetch();
     const added = await api.posts.add({ title: `Unknown keys ${uniqueSuffix()}` });
-    assert(browsed.success && read.success && added.success);
+    assertOk(browsed);
+    assertOk(read);
+    assertOk(added);
     const edited = await api.posts.edit(added.data.id, {
       title: "Edited",
       updated_at: new Date(added.data.updated_at ?? ""),
     });
-    assert(edited.success);
+    assertOk(edited);
 
     const unknown = unknownKeysOfResponses(responses.all());
     expect(unknown.filter((k) => /^posts\[\]\.(authors\[\]|primary_author)\./.test(k))).toEqual([]);
@@ -234,7 +240,7 @@ describe("posts: unknown keys", () => {
   liveTest.fails(
     "a sent post's email carries no key the client's schema lacks",
     async ({ api, responses }) => {
-      assert((await api.posts.read({ id: seed.emailed.id }).fetch()).success);
+      assertOk(await api.posts.read({ id: seed.emailed.id }).fetch());
       const unknown = unknownKeysOfResponses(responses.all());
       expect(unknown.filter((k) => k.startsWith("posts[].email."))).toEqual([]);
     },
@@ -244,7 +250,7 @@ describe("posts: unknown keys", () => {
   liveTest.fails(
     "a sent post's newsletter carries no key the client's schema lacks",
     async ({ api, responses }) => {
-      assert((await api.posts.read({ id: seed.emailed.id }).fetch()).success);
+      assertOk(await api.posts.read({ id: seed.emailed.id }).fetch());
       const unknown = unknownKeysOfResponses(responses.all());
       expect(unknown.filter((k) => k.startsWith("posts[].newsletter."))).toEqual([]);
     },

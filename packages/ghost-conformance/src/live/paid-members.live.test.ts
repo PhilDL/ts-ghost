@@ -1,8 +1,8 @@
-import { assert, describe, expect } from "vitest";
+import { describe, expect } from "vitest";
 
 import { STRIPE_SEED } from "../seeds/stripe.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, liveTest } from "./ghost.ts";
+import { adminApi, assertOk, liveTest } from "./ghost.ts";
 
 /** Id of a member by email; selects only `id` so members the client can't parse still resolve. */
 async function memberId(email: string): Promise<string> {
@@ -18,7 +18,7 @@ describe("paid members", () => {
   liveTest("a paid member reads with an active Stripe subscription on the paid tier", async ({ api }) => {
     const result = await api.members.read({ id: await memberId(STRIPE_SEED.members.paid) }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data).toMatchObject({ status: "paid", comped: false });
     expect(result.data.subscriptions).toEqual([
       expect.objectContaining({
@@ -44,7 +44,7 @@ describe("paid members", () => {
   liveTest.fails("a subscription with a null customer email and price nickname parses", async ({ api }) => {
     const result = await api.members.read({ id: await memberId(STRIPE_SEED.members.nulls) }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.subscriptions).toEqual([
       expect.objectContaining({
         id: STRIPE_SEED.subscriptions.nulls,
@@ -62,7 +62,7 @@ describe("paid members", () => {
   liveTest.fails("browsing paid members parses", async ({ api }) => {
     const result = await api.members.browse({ filter: "status:paid" }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.map((member) => member.email).sort()).toEqual(
       [STRIPE_SEED.members.nulls, STRIPE_SEED.members.paid].sort(),
     );
@@ -76,7 +76,7 @@ describe("paid members", () => {
       .include({ tiers: true })
       .fetch();
 
-    assert(result.success);
+    assertOk(result);
     // @ts-expect-error the client's member schema lacks `tiers`
     expect(result.data.tiers).toEqual([expect.objectContaining({ slug: "default-product", type: "paid" })]);
   });
@@ -86,7 +86,7 @@ describe("paid members", () => {
   liveTest.fails("a subscription carries no key the client's schema lacks", async ({ api, responses }) => {
     const result = await api.members.read({ id: await memberId(STRIPE_SEED.members.paid) }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     const raw = responses.last("/members/") as { members: { subscriptions: unknown }[] };
     expect(
       unknownKeys(raw.members[0]?.subscriptions, result.data.subscriptions, { at: "subscriptions" }),

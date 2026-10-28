@@ -1,9 +1,9 @@
-import { assert, beforeAll, describe, expect, inject } from "vitest";
+import { beforeAll, describe, expect, inject } from "vitest";
 
 import { FULL_HTML, fullScalars, seedPages } from "../seeds/posts-and-pages.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeysOfResponses } from "../unknown-keys.ts";
-import { adminApi, liveTest, type LiveContext } from "./ghost.ts";
+import { adminApi, assertOk, liveTest, type LiveContext } from "./ghost.ts";
 
 let seed: Awaited<ReturnType<typeof seedPages>>;
 beforeAll(async () => {
@@ -14,7 +14,7 @@ describe("pages", () => {
   liveTest("browse returns the seeded pages", async ({ api }) => {
     const result = await api.pages.browse({ limit: "all" }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     const byId = new Map(result.data.map((page) => [page.id, page]));
     expect(byId.get(seed.full.id)?.status).toBe("published");
     expect(byId.get(seed.bare.id)?.status).toBe("draft");
@@ -26,7 +26,7 @@ describe("pages", () => {
       .include({ authors: true, tags: true, tiers: true })
       .fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.every((page) => page.authors.length > 0)).toBe(true);
     const full = result.data.find((page) => page.id === seed.full.id);
     expect(full?.tags?.map((tag) => tag.name)).toEqual([`Page tag ${seed.suffix}`]);
@@ -37,7 +37,7 @@ describe("pages", () => {
   liveTest("browse with the html format returns content", async ({ api }) => {
     const result = await api.pages.browse({ limit: "all" }).formats({ html: true }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.find((page) => page.id === seed.full.id)?.html).toBe(FULL_HTML);
   });
 
@@ -45,14 +45,14 @@ describe("pages", () => {
   liveTest.fails("browse with the plaintext format returns content", async ({ api }) => {
     const result = await api.pages.browse({ limit: "all" }).formats({ plaintext: true }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.find((page) => page.id === seed.full.id)?.plaintext).toBe("Hello world");
   });
 
   liveTest("read with the plaintext format returns content", async ({ api }) => {
     const result = await api.pages.read({ id: seed.full.id }).formats({ plaintext: true }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data.plaintext).toBe("Hello world");
   });
 
@@ -60,7 +60,9 @@ describe("pages", () => {
     const byId = await api.pages.read({ id: seed.full.id }).fetch();
     const bySlug = await api.pages.read({ slug: seed.full.slug }).fetch();
 
-    assert(byId.success && bySlug.success);
+    assertOk(byId);
+
+    assertOk(bySlug);
     expect(byId.data.id).toBe(seed.full.id);
     expect(bySlug.data).toEqual(byId.data);
   });
@@ -69,7 +71,9 @@ describe("pages", () => {
     const bare = await api.pages.read({ id: seed.bare.id }).fetch();
     const full = await api.pages.read({ id: seed.full.id }).fetch();
 
-    assert(bare.success && full.success);
+    assertOk(bare);
+
+    assertOk(full);
     for (const key of NULLABLE) {
       expect.soft(bare.data[key], `bare ${key}`).toBeNull();
       expect.soft(full.data[key], `full ${key}`).not.toBeNull();
@@ -90,10 +94,10 @@ describe("pages", () => {
       },
       { source: "html" },
     );
-    assert(added.success);
+    assertOk(added);
 
     const read = await api.pages.read({ id: added.data.id }).formats({ html: true }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({ ...fullScalars(suffix), visibility: "tiers" });
     expect(read.data.tiers?.map((tier) => tier.id)).toEqual([seed.tierId]);
     expect(read.data.tags?.map((tag) => tag.name)).toEqual([`Added tag ${suffix}`]);
@@ -104,17 +108,17 @@ describe("pages", () => {
   // Expected failure: pages have no locale in Ghost; the client's input accepts one that Ghost drops.
   liveTest.fails("add reads back locale", async ({ api }) => {
     const added = await api.pages.add({ title: `Locale ${uniqueSuffix()}`, locale: "de" });
-    assert(added.success);
+    assertOk(added);
 
     const read = await api.pages.read({ id: added.data.id }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({ locale: "de" });
   });
 
   liveTest("edit persists every value sent", async ({ api }) => {
     const suffix = uniqueSuffix();
     const added = await api.pages.add({ title: `To edit ${suffix}` });
-    assert(added.success);
+    assertOk(added);
 
     const edited = await api.pages.edit(
       added.data.id,
@@ -127,10 +131,10 @@ describe("pages", () => {
       },
       { source: "html" },
     );
-    assert(edited.success);
+    assertOk(edited);
 
     const read = await api.pages.read({ id: added.data.id }).formats({ html: true }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({ ...fullScalars(suffix), visibility: "members" });
     expect(read.data.tags?.map((tag) => tag.name)).toEqual([`Edited tag ${suffix}`]);
     expect(read.data.html).toBe(FULL_HTML);
@@ -138,7 +142,7 @@ describe("pages", () => {
 
   liveTest("delete removes the page", async ({ api }) => {
     const added = await api.pages.add({ title: `To delete ${uniqueSuffix()}` });
-    assert(added.success);
+    assertOk(added);
 
     expect(await api.pages.delete(added.data.id)).toEqual({ success: true });
     const read = await api.pages.read({ id: added.data.id }).fetch();
@@ -158,12 +162,14 @@ describe("pages: unknown keys", () => {
       title: `Unknown keys ${uniqueSuffix()}`,
       tags: [{ name: "Unknown keys" }],
     });
-    assert(browsed.success && read.success && added.success);
+    assertOk(browsed);
+    assertOk(read);
+    assertOk(added);
     const edited = await api.pages.edit(added.data.id, {
       title: "Edited",
       updated_at: new Date(added.data.updated_at ?? ""),
     });
-    assert(edited.success);
+    assertOk(edited);
     return unknownKeysOfResponses(responses.all());
   };
   const isAuthorKey = (k: string) => /^pages\[\]\.(authors\[\]|primary_author)\./.test(k);

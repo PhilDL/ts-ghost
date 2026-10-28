@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, inject } from "vitest";
 
 import { seedUsers, STAFF_PROFILE, TOUR } from "../seeds/users.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./ghost.ts";
 
 describe("users", () => {
   let seeded: Awaited<ReturnType<typeof seedUsers>>;
@@ -12,12 +12,13 @@ describe("users", () => {
 
   liveTest("GET /users/:id/ and /users/email/:email/ return the same user", async ({ api }) => {
     const owner = await api.users.read({ email: inject("ghost").owner.email }).fetch();
-    if (!owner.success) throw new Error(JSON.stringify(owner.errors));
+    assertOk(owner);
 
     for (const { id, email } of [{ id: owner.data.id, email: owner.data.email! }, seeded.staff]) {
       const byId = await api.users.read({ id }).fetch();
       const byEmail = await api.users.read({ email }).fetch();
-      if (!byId.success || !byEmail.success) throw new Error("user read failed");
+      assertOk(byId);
+      assertOk(byEmail);
       expect(byEmail.data).toEqual(byId.data);
     }
   });
@@ -25,7 +26,8 @@ describe("users", () => {
   liveTest("GET /users/:id/ returns profile fields both null and set", async ({ api }) => {
     const owner = await api.users.read({ email: inject("ghost").owner.email }).fetch();
     const staff = await api.users.read({ id: seeded.staff.id }).fetch();
-    if (!owner.success || !staff.success) throw new Error("user read failed");
+    assertOk(owner);
+    assertOk(staff);
 
     expect(owner.data.bio).toBeNull();
     expect(staff.data).toMatchObject({ ...STAFF_PROFILE, status: "active" });
@@ -35,7 +37,7 @@ describe("users", () => {
   // Expected failure: the users schema types tour as boolean; Ghost sends the stored JSON string.
   liveTest.fails("GET /users/:id/ returns a user's tour", async ({ api }) => {
     const result = await api.users.read({ id: seeded.toured.id }).fetch();
-    if (!result.success) throw new Error(JSON.stringify(result.errors));
+    assertOk(result);
     expect(result.data.tour).toBe(TOUR);
   });
 
@@ -43,7 +45,7 @@ describe("users", () => {
   liveTest.fails("GET /users/ lists an inactive user", async ({ api }) => {
     const filter = `slug:[${seeded.suspended.slug},${seeded.staff.slug}]` as const;
     const result = await api.users.browse({ filter }).fetch();
-    if (!result.success) throw new Error(JSON.stringify(result.errors));
+    assertOk(result);
 
     expect(result.data.find((u) => u.id === seeded.suspended.id)?.status).toBe("inactive");
     expect(result.data.map((u) => u.id)).toEqual(expect.arrayContaining([seeded.staff.id]));
@@ -55,7 +57,8 @@ describe("users", () => {
     const readRaw = responses.last(`/users/${seeded.staff.id}/`) as { users: unknown[] };
     const byEmail = await api.users.read({ email: seeded.staff.email }).fetch();
     const emailRaw = responses.last(`/users/email/`) as { users: unknown[] };
-    if (!read.success || !byEmail.success) throw new Error("user read failed");
+    assertOk(read);
+    assertOk(byEmail);
 
     expect([
       ...unknownKeys(readRaw.users[0], read.data, { at: "read.user" }),

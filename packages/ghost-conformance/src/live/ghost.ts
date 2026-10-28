@@ -1,4 +1,4 @@
-import { inject, test, type ProvidedContext } from "vitest";
+import { assert, inject, test, type ProvidedContext } from "vitest";
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 import { clientVersion } from "../ghost/pin.ts";
@@ -49,3 +49,10 @@ export const liveTest = test.extend<LiveFixtures>({
     await use(responses.track(adminApi()));
   },
 });
+
+/** Narrows a client result to success; on failure, the message carries the result's errors. */
+export function assertOk<R extends { success: boolean }>(
+  result: R,
+): asserts result is Extract<R, { success: true }> {
+  assert(result.success, `Expected success, got ${JSON.stringify((result as { errors?: unknown }).errors)}`);
+}

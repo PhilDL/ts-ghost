@@ -1,7 +1,7 @@
-import { assert, describe, expect } from "vitest";
+import { describe, expect } from "vitest";
 
 import { EMAIL_SEED } from "../seeds/emails.ts";
-import { liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./ghost.ts";
 
 const { failed, submitted } = EMAIL_SEED.posts;
 
@@ -10,7 +10,7 @@ describe("emailed posts", () => {
   // Expected failure: core email schema requires `from`, `source` and `updated_at`; Ghost sends null.
   liveTest.fails("a post whose email has a null from and source parses", async ({ api }) => {
     const result = await api.posts.read({ slug: failed }).fetch();
-    assert(result.success);
+    assertOk(result);
     expect(result.data.email).toMatchObject({ status: "failed", from: null, source: null, reply_to: null });
     expect(result.data.newsletter).toBeNull();
   });
@@ -19,7 +19,7 @@ describe("emailed posts", () => {
     "a post with a fully sent email parses with its email and newsletter",
     async ({ api, responses }) => {
       const result = await api.posts.read({ slug: submitted }).fetch();
-      assert(result.success);
+      assertOk(result);
       expect(result.data.email).toMatchObject({
         status: "submitted",
         from: EMAIL_SEED.from,
@@ -34,9 +34,9 @@ describe("emailed posts", () => {
 
   liveTest("reading the emailed post by id equals reading it by slug", async ({ api }) => {
     const bySlug = await api.posts.read({ slug: submitted }).fetch();
-    assert(bySlug.success);
+    assertOk(bySlug);
     const byId = await api.posts.read({ id: bySlug.data.id }).fetch();
-    assert(byId.success);
+    assertOk(byId);
     // A public post lists every paid tier, and other test files add tiers in parallel.
     const withoutTiers = ({ tiers: _, ...post }: typeof byId.data) => post;
     expect(withoutTiers(byId.data)).toEqual(withoutTiers(bySlug.data));
@@ -45,7 +45,7 @@ describe("emailed posts", () => {
   // Expected failure: the failed email's null `from`/`source`/`updated_at` break the whole browse.
   liveTest.fails("browse returns both emailed posts with their email status", async ({ api }) => {
     const result = await api.posts.browse({ filter: `slug:[${failed},${submitted}]` }).fetch();
-    assert(result.success);
+    assertOk(result);
     expect(result.data.map((post) => post.email?.status).sort()).toEqual(["failed", "submitted"]);
   });
 });

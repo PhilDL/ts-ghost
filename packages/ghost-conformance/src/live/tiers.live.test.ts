@@ -1,8 +1,8 @@
-import { assert, beforeAll, describe, expect, inject } from "vitest";
+import { beforeAll, describe, expect, inject } from "vitest";
 
 import { seedTiers } from "../seeds/tiers.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./ghost.ts";
 
 let seed: Awaited<ReturnType<typeof seedTiers>>;
 beforeAll(async () => {
@@ -13,7 +13,7 @@ describe("tiers", () => {
   liveTest("browse returns the free tier, active paid tiers and an archived one", async ({ api }) => {
     const result = await api.tiers.browse({ limit: "all" }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     const bySlug = new Map(result.data.map((tier) => [tier.slug, tier]));
     expect(bySlug.get("free")).toMatchObject({ type: "free", active: true });
     expect(bySlug.get("default-product")).toMatchObject({ type: "paid", active: true });
@@ -24,7 +24,7 @@ describe("tiers", () => {
   liveTest("read by id returns Ghost's default paid tier with its prices", async ({ api }) => {
     const result = await api.tiers.read({ id: seed.defaultTierId }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data).toMatchObject({
       slug: "default-product",
       currency: "USD",
@@ -38,7 +38,7 @@ describe("tiers", () => {
   liveTest("an edited tier reads back with every value it was given", async ({ api }) => {
     const result = await api.tiers.read({ id: seed.full.id }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data).toMatchObject({
       name: seed.full.editedName,
       description: "A tier with every field set",
@@ -55,7 +55,7 @@ describe("tiers", () => {
   liveTest("a tier never edited has its nullable fields null", async ({ api }) => {
     const result = await api.tiers.read({ id: seed.bare.id }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data).toMatchObject({
       description: null,
       welcome_page_url: null,
@@ -70,7 +70,7 @@ describe("tiers", () => {
     async ({ api, responses }) => {
       const result = await api.tiers.browse({ limit: "all" }).fetch();
 
-      assert(result.success);
+      assertOk(result);
       const bySlug = new Map(result.data.map((tier) => [tier.slug, tier]));
       expect(bySlug.get("free")).toMatchObject({ benefits: [], monthly_price: null, yearly_price: null });
       expect(bySlug.get("default-product")).toMatchObject({
@@ -88,7 +88,9 @@ describe("tiers", () => {
     const browsed = await api.tiers.browse({ limit: "all" }).include(include).fetch();
     const read = await api.tiers.read({ id: seed.full.id }).include(include).fetch();
 
-    assert(browsed.success && read.success);
+    assertOk(browsed);
+
+    assertOk(read);
     expect(responses.all().map((r) => new URL(r.url).searchParams.has("include"))).toEqual([false, false]);
   });
 
@@ -96,13 +98,13 @@ describe("tiers", () => {
   liveTest.fails("GET /tiers/slug/:slug/ returns the tier", async ({ api }) => {
     const result = await api.tiers.read({ slug: "default-product" }).fetch();
 
-    assert(result.success);
+    assertOk(result);
   });
 
   liveTest("tiers carry no key the client's schema lacks", async ({ api, responses }) => {
     const result = await api.tiers.browse({ limit: "all" }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     const raw = responses.last("/tiers/") as { tiers: unknown[] };
     expect(unknownKeys(raw.tiers, result.data, { at: "tiers" })).toEqual([]);
   });

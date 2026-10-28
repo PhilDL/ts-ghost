@@ -1,9 +1,9 @@
-import { assert, beforeAll, describe, expect, inject } from "vitest";
+import { beforeAll, describe, expect, inject } from "vitest";
 
 import { seedOffers } from "../seeds/offers.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./ghost.ts";
 
 let seed: Awaited<ReturnType<typeof seedOffers>>;
 beforeAll(async () => {
@@ -28,16 +28,16 @@ describe("offers", () => {
       tier: { id: seed.tierId },
     } as const;
     const added = await api.offers.add(sent);
-    assert(added.success);
+    assertOk(added);
 
     const edited = await api.offers.edit(added.data.id, {
       name: `Renamed ${code}`,
       display_title: "Still five off",
     });
-    expect(edited.success).toBe(true);
+    assertOk(edited);
 
     const read = await api.offers.read({ id: added.data.id }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({
       ...sent,
       name: `Renamed ${code}`,
@@ -52,7 +52,7 @@ describe("offers", () => {
   liveTest("a percent offer repeats for its months", async ({ api }) => {
     const result = await api.offers.read({ id: seed.repeating.id }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data).toMatchObject({
       type: "percent",
       duration: "repeating",
@@ -67,7 +67,7 @@ describe("offers", () => {
   liveTest.fails("a retention offer reads with no tier", async ({ api }) => {
     const result = await api.offers.read({ id: seed.retention.id }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data).toMatchObject({ code: seed.retention.code, type: "percent", tier: null });
   });
 
@@ -75,7 +75,7 @@ describe("offers", () => {
   liveTest.fails("browse lists the retention and the trial offer", async ({ api }) => {
     const result = await api.offers.browse({ limit: "all" }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     const byCode = new Map(result.data.map((offer) => [offer.code, offer]));
     expect(byCode.get(seed.retention.code)).toMatchObject({ tier: null });
     expect(byCode.get(seed.trial.code)).toMatchObject({ tier: { id: seed.tierId } });
@@ -97,9 +97,9 @@ describe("offers", () => {
     // @ts-expect-error the client's offer create schema has no trial type
     const added = await api.offers.add(trial);
 
-    assert(added.success);
+    assertOk(added);
     const read = await api.offers.read({ id: added.data.id }).fetch();
-    assert(read.success);
+    assertOk(read);
     expect(read.data).toMatchObject({ ...trial, tier: { id: seed.tierId } });
   });
 
@@ -123,7 +123,7 @@ describe("offers", () => {
   liveTest("a trial offer reads back with its trial days and tier", async ({ api, responses }) => {
     const result = await api.offers.read({ id: seed.trial.id }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     expect(result.data).toMatchObject({
       type: "trial",
       duration: "trial",
@@ -142,14 +142,14 @@ describe("offers", () => {
   liveTest.fails("GET /offers/slug/:slug/ returns the offer", async ({ api }) => {
     const result = await api.offers.read({ slug: seed.trial.code }).fetch();
 
-    assert(result.success);
+    assertOk(result);
   });
 
   // Expected failure: the client's offers schema lacks redemption_type, created_at and last_redeemed.
   liveTest.fails("an offer carries no key the client's schema lacks", async ({ api, responses }) => {
     const result = await api.offers.read({ id: seed.trial.id }).fetch();
 
-    assert(result.success);
+    assertOk(result);
     const raw = responses.last("/offers/") as { offers: unknown[] };
     expect(unknownKeys(raw.offers[0], result.data, { at: "offer" })).toEqual([]);
   });

@@ -4,7 +4,7 @@ import { describe, expect } from "vitest";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { conformanceIntegration, WEBHOOK_TARGET } from "../seeds/webhooks.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./ghost.ts";
 
 // Events no other test file fires: a concurrent delivery writes the old webhook back over an edit.
 const newWebhook = () => ({
@@ -24,7 +24,7 @@ describe("webhooks", () => {
     async ({ api, responses }) => {
       const input = newWebhook();
       const added = await api.webhooks.add(input);
-      if (!added.success) throw new Error(JSON.stringify(added.errors));
+      assertOk(added);
       const raw = responses.last("/webhooks/") as { webhooks: unknown[] };
       expect(unknownKeys(raw.webhooks[0], added.data, { at: "webhook" })).toEqual([]);
 
@@ -36,12 +36,12 @@ describe("webhooks", () => {
 
   liveTest("PUT /webhooks/:id/ persists the edit", async ({ api, responses }) => {
     const added = await api.webhooks.add(newWebhook());
-    if (!added.success) throw new Error(JSON.stringify(added.errors));
+    assertOk(added);
 
     const { name, target_url } = newWebhook();
     const edit = { event: "post.rescheduled" as const, name, target_url };
     const edited = await api.webhooks.edit(added.data.id, edit);
-    if (!edited.success) throw new Error(JSON.stringify(edited.errors));
+    assertOk(edited);
     const raw = responses.last(`/webhooks/${added.data.id}/`) as { webhooks: unknown[] };
     expect(unknownKeys(raw.webhooks[0], edited.data, { at: "webhook" })).toEqual([]);
 
@@ -50,7 +50,7 @@ describe("webhooks", () => {
 
   liveTest("PUT /webhooks/:id/ parses a webhook whose last delivery failed", async ({ api, responses }) => {
     const added = await api.webhooks.add({ ...newWebhook(), event: "tag.added" });
-    if (!added.success) throw new Error(JSON.stringify(added.errors));
+    assertOk(added);
     expect(added.data.last_triggered_at).toBeNull();
 
     await api.tags.add({ name: `Webhook trigger ${uniqueSuffix()}` });
@@ -59,7 +59,7 @@ describe("webhooks", () => {
       .toBeTruthy();
 
     const edited = await api.webhooks.edit(added.data.id, { name: "Triggered" });
-    if (!edited.success) throw new Error(JSON.stringify(edited.errors));
+    assertOk(edited);
     expect(edited.data.last_triggered_at).toEqual(expect.any(String));
     expect(edited.data.last_triggered_error).toEqual(expect.any(String));
     const raw = responses.last(`/webhooks/${added.data.id}/`) as { webhooks: unknown[] };
@@ -69,19 +69,19 @@ describe("webhooks", () => {
   // Expected failure: the webhook update schema drops secret, so a secret-only edit throws "No data to edit".
   liveTest.fails("PUT /webhooks/:id/ rotates the secret on its own", async ({ api }) => {
     const added = await api.webhooks.add(newWebhook());
-    if (!added.success) throw new Error(JSON.stringify(added.errors));
+    assertOk(added);
 
     const secret = `rotated-${randomBytes(8).toString("hex")}`;
     // @ts-expect-error the update schema has no secret
     const edited = await api.webhooks.edit(added.data.id, { secret });
-    if (!edited.success) throw new Error(JSON.stringify(edited.errors));
+    assertOk(edited);
     expect(edited.data.secret).toBe(secret);
     expect((await readBack(added.data.id))?.secret).toBe(secret);
   });
 
   liveTest("DELETE /webhooks/:id/ removes the webhook", async ({ api }) => {
     const added = await api.webhooks.add(newWebhook());
-    if (!added.success) throw new Error(JSON.stringify(added.errors));
+    assertOk(added);
 
     expect(await api.webhooks.delete(added.data.id)).toEqual({ success: true });
     expect(await readBack(added.data.id)).toBeUndefined();

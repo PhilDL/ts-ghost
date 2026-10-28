@@ -4,7 +4,7 @@ import { adminMembersSchema } from "@ts-ghost/admin-api";
 import { EMAIL_SEED } from "../seeds/emails.ts";
 import { MEMBER_SEED, seedMembers } from "../seeds/members.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, liveTest } from "./ghost.ts";
+import { adminApi, assertOk, liveTest } from "./ghost.ts";
 
 type Seeded = Awaited<ReturnType<typeof seedMembers>>;
 let seeded: Seeded;
@@ -25,8 +25,7 @@ async function memberId(email: string): Promise<string> {
 describe("members", () => {
   liveTest("browse returns the seeded member with its labels and newsletters", async ({ api }) => {
     const result = await api.members.browse({ filter: `email:'${MEMBER_SEED.plain}'` }).fetch();
-    expect(result.success).toBe(true);
-    if (!result.success) return;
+    assertOk(result);
     expect(result.data).toHaveLength(1);
     const [member] = result.data;
     expect(member).toMatchObject({ status: "free", subscribed: true, name: "Plain Member", note: "seeded" });
@@ -37,10 +36,9 @@ describe("members", () => {
 
   liveTest("reading by id equals the browse entry", async ({ api }) => {
     const browsed = await api.members.browse({ filter: `email:'${MEMBER_SEED.plain}'` }).fetch();
-    if (!browsed.success) throw new Error("browse failed");
+    assertOk(browsed);
     const read = await api.members.read({ id: seeded.plain.id }).fetch();
-    expect(read.success).toBe(true);
-    if (!read.success) return;
+    assertOk(read);
     expect(read.data).toEqual(browsed.data[0]);
   });
 
@@ -51,15 +49,14 @@ describe("members", () => {
       note: "first",
       labels: [{ name: "Conformance crud" }],
     });
-    expect(added.success).toBe(true);
-    if (!added.success) return;
+    assertOk(added);
     expect(added.data).toMatchObject({ status: "free", name: "Crud Member", note: "first" });
 
     const edited = await api.members.edit(added.data.id, { name: "Renamed Member", note: "second" });
-    expect(edited.success).toBe(true);
+    assertOk(edited);
 
     const read = await api.members.read({ id: added.data.id }).fetch();
-    if (!read.success) throw new Error("read back failed");
+    assertOk(read);
     expect(read.data).toMatchObject({
       email: "member-crud@conformance.test",
       name: "Renamed Member",
@@ -74,7 +71,7 @@ describe("members", () => {
 
   liveTest("an unsuppressed member has no suppression info", async ({ api }) => {
     const result = await api.members.read({ id: seeded.plain.id }).fetch();
-    if (!result.success) throw new Error("read failed");
+    assertOk(result);
     expect(result.data.email_suppression).toEqual({ suppressed: false, info: null });
   });
 
@@ -85,7 +82,7 @@ describe("members", () => {
       [EMAIL_SEED.members.bounced, "fail"],
     ] as const) {
       const result = await api.members.read({ id: await memberId(email) }).fetch();
-      if (!result.success) throw new Error("read failed");
+      assertOk(result);
       expect(result.data.email_suppression).toEqual({
         suppressed: true,
         info: { reason, timestamp: expect.any(String) },
@@ -97,19 +94,19 @@ describe("members", () => {
   liveTest.fails("browsing suppressed members parses", async ({ api }) => {
     const { spam, bounced } = EMAIL_SEED.members;
     const result = await api.members.browse({ filter: `email:['${spam}','${bounced}']` }).fetch();
-    expect(result.success).toBe(true);
+    assertOk(result);
   });
 
   // Expected failure: subscriptions[].current_period_end is typed as a string; Ghost sends null when comped.
   liveTest.fails("browsing a comped member parses", async ({ api }) => {
     const result = await api.members.browse({ filter: `email:'${MEMBER_SEED.comped}'` }).fetch();
-    expect(result.success).toBe(true);
+    assertOk(result);
   });
 
   // Expected failure: subscriptions[].current_period_end is typed as a string; Ghost sends null when comped.
   liveTest.fails("a comped member carries Ghost's stand-in subscription", async ({ api }) => {
     const result = await api.members.read({ id: seeded.comped.id }).fetch();
-    if (!result.success) throw new Error("read failed");
+    assertOk(result);
     expect(result.data).toMatchObject({ status: "comped", comped: true });
     expect(result.data.subscriptions).toEqual([
       expect.objectContaining({ id: "", current_period_end: null, default_payment_card_last4: "****" }),
@@ -121,12 +118,12 @@ describe("members", () => {
   liveTest.fails("browse sends tiers only when they are included", async ({ api, responses }) => {
     const filter = `email:'${MEMBER_SEED.plain}'` as const;
     const plain = await api.members.browse({ filter }).fields({ id: true }).fetch();
-    expect(plain.success).toBe(true);
+    assertOk(plain);
     expect((responses.last("/members/") as { members: object[] }).members[0]).not.toHaveProperty("tiers");
 
     // @ts-expect-error the client's member include schema is empty
     const included = await api.members.browse({ filter }).include({ tiers: true }).fetch();
-    if (!included.success) throw new Error("browse failed");
+    assertOk(included);
     // @ts-expect-error the client's member schema lacks `tiers`
     expect(included.data[0]?.tiers).toEqual([]);
   });
@@ -134,7 +131,7 @@ describe("members", () => {
   // Expected failure: Ghost always sends `tiers` on read, but the client's member schema strips it.
   liveTest.fails("read returns tiers with or without the include", async ({ api, responses }) => {
     const result = await api.members.read({ id: seeded.plain.id }).fetch();
-    if (!result.success) throw new Error("read failed");
+    assertOk(result);
     expect((responses.last("/members/") as { members: { tiers: unknown }[] }).members[0]?.tiers).toEqual([]);
     // @ts-expect-error the client's member schema lacks `tiers`
     expect(result.data.tiers).toEqual([]);
@@ -150,7 +147,7 @@ describe("members", () => {
         // @ts-expect-error the client's member include schema is empty
         .include({ email_recipients: true })
         .fetch();
-      if (!result.success) throw new Error("read failed");
+      assertOk(result);
       // @ts-expect-error the client's member schema lacks `email_recipients`
       const recipients = result.data.email_recipients as Record<string, unknown>[];
       expect(recipients).toHaveLength(2);
@@ -175,7 +172,7 @@ describe("members", () => {
         // @ts-expect-error the client's member include schema is empty
         .include({ metafields: true })
         .fetch();
-      if (!result.success) throw new Error("browse failed");
+      assertOk(result);
       expect(new URL(responses.all().at(-1)!.url).searchParams.get("include")).toBe("metafields");
       const byEmail = Object.fromEntries(result.data.map((member) => [member.email, member]));
       // @ts-expect-error the client's member schema lacks `metafields`
@@ -196,7 +193,7 @@ describe("members", () => {
   // current_subscription, unsubscribe_url and the notification flags (Ghost 6.72).
   liveTest.fails("a member carries no key the client's schema lacks", async ({ api, responses }) => {
     const result = await api.members.read({ id: seeded.plain.id }).fetch();
-    if (!result.success) throw new Error("read failed");
+    assertOk(result);
     const raw = responses.last("/members/") as { members: unknown[] };
     expect(unknownKeys(raw.members[0], result.data, { at: "member" })).toEqual([]);
   });
