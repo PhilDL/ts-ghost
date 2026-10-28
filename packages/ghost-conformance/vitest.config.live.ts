@@ -12,5 +12,7 @@ export default defineConfig({
     globalSetup: ["./src/live/global-setup.ts"],
     setupFiles: ["./src/expected-failures.ts"],
     testTimeout: 30_000,
+    // Seeding runs in beforeAll hooks, with every file hitting one Ghost at once.
+    hookTimeout: 60_000,
   },
 });
