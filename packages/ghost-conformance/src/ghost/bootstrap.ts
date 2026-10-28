@@ -12,6 +12,9 @@ export type GhostCredentials = {
   owner: { email: string; password: string };
 };
 
+/** Title the first-run setup gives the site. */
+export const BLOG_TITLE = "ts-ghost conformance";
+
 /** Turns a fresh Ghost into one with an Owner and three credentials, using only public Admin API endpoints. */
 export async function bootstrapGhost(url: string): Promise<GhostCredentials> {
   const admin = adminApiUrl(url);
@@ -19,7 +22,7 @@ export async function bootstrapGhost(url: string): Promise<GhostCredentials> {
 
   await call("first-run setup", `${admin}/authentication/setup/`, {
     method: "POST",
-    body: { setup: [{ name: "Conformance Owner", ...owner, blogTitle: "ts-ghost conformance" }] },
+    body: { setup: [{ name: "Conformance Owner", ...owner, blogTitle: BLOG_TITLE }] },
   });
 
   const sessionCookie = await signIn(url, owner);
