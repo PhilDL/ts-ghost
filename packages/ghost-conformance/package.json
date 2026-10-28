@@ -12,6 +12,7 @@
     "typecheck": "tsc --project ./tsconfig.json --noEmit",
     "manifest": "node src/manifest/generate.ts",
     "drift": "node src/drift/cli.ts",
+    "coverage": "node src/route-coverage/cli.ts",
     "clean": "rimraf .turbo .drift"
   },
   "devDependencies": {

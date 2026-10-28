@@ -9,6 +9,8 @@ declare module "vitest" {
   interface TaskMeta {
     /** The client resource a call belongs to; the drift PR body lists them. */
     clientResource?: string;
+    /** The request it sends, params erased; the coverage report counts the routes these hit. */
+    clientCall?: { method: string; path: string };
   }
 }
 
@@ -28,6 +30,7 @@ describe(`admin-api client against the Ghost ${manifest.ghost} manifest`, () => 
     const title = `${call.name}: ${call.method} ${call.path}${reason ? ` (expected failure: ${reason})` : ""}`;
     (reason ? test.fails : test)(title, ({ task }) => {
       task.meta.clientResource = call.name.split(".")[0];
+      task.meta.clientCall = { method: call.method, path: call.path };
       expect(checkCall(manifest.routes, call)).toBeUndefined();
     });
   }

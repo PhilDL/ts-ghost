@@ -33,7 +33,11 @@ export type VitestJsonReport = {
     assertionResults: {
       fullName: string;
       status: string;
-      meta?: { expectedFailure?: boolean; clientResource?: string };
+      meta?: {
+        expectedFailure?: boolean;
+        clientResource?: string;
+        clientCall?: { method: string; path: string };
+      };
     }[];
   }[];
 };
