@@ -98,6 +98,7 @@ function recorder() {
 export async function recordClientCalls(): Promise<ClientCall[]> {
   const api = new TSGhostAdminAPI(BASE, KEY, "v6.0");
   const { calls, fetch, send } = recorder();
+  // A manual swap, not vi.spyOn: the coverage CLI calls this outside Vitest.
   const realFetch = globalThis.fetch;
   globalThis.fetch = fetch;
   try {

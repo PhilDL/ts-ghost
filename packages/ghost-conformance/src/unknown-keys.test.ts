@@ -13,11 +13,10 @@ const KEY = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231
 const site = { title: "T", description: "D", logo: null, version: "6.72", url: "http://localhost/" };
 
 function ghostReturns(body: unknown) {
+  // A plain function, not vi.fn(): recordResponses() spies on whatever fetch it finds.
   vi.stubGlobal(
     "fetch",
-    vi.fn(
-      async () => new Response(JSON.stringify(body), { headers: { "content-type": "application/json" } }),
-    ),
+    async () => new Response(JSON.stringify(body), { headers: { "content-type": "application/json" } }),
   );
 }
 
