@@ -48,6 +48,14 @@ Trying to run these tests locally without having the correct `.env` values will 
 pnpm test:integration:watch
 ```
 
+### Conformance suite against a real Ghost in Docker
+
+`packages/ghost-conformance` checks `@ts-ghost/admin-api` against the official Ghost Docker image at a pinned version. It needs Docker; see its [README](./packages/ghost-conformance/README.md).
+
+```bash
+pnpm --filter @ts-ghost/ghost-conformance test:live
+```
+
 ### Linting, typecheck
 
 ```bash
@@ -76,6 +84,7 @@ This project is a monorepo of packages with well-defined purposes. It is compose
 
 - The `ghost-blog-buster` CLI is located in the `apps` directory.
 - Client API Packages are located in the `packages` directory.
+- `packages/ghost-conformance` is a private test package: the admin-api client against a real Ghost in Docker.
 
 ### `@ts-ghost/ghost-blog-buster`
 
