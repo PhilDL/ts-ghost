@@ -73,7 +73,7 @@ Every place where the client and Ghost currently disagree is an expected failure
 - **`test.fails`**: the test is expected to fail. When the client is fixed, it passes, so Vitest fails it until the marker is removed. Each one has a single cause.
 - **`// @ts-expect-error <reason>`**: the test calls the client in a way its types don't allow yet (a missing input key, include or method). Once the type allows it, the typecheck fails until the comment is removed.
 - **Pending keys** ([`src/live/pending-keys.ts`](./src/live/pending-keys.ts)): unknown keys Ghost sends that are waiting for a schema fix. Each group belongs to a resource's "carries no key the client's schema lacks" `test.fails`. Remove the keys when that test turns green.
-- **Ignored keys**: keys the client deliberately doesn't model. Pass them to the file's `liveResponses({ ignore: [...] })` (and to any direct `unknownKeys` call), e.g. `ignore: ["posts[].frontmatter"]`. These are permanent, unlike pending keys; no file needs any yet.
+- **Ignored keys**: keys the client deliberately doesn't model. Set them in the describe with `liveTest.override({ ignore: [...] })` (and pass them to any direct `unknownKeys` call), e.g. `ignore: ["posts[].frontmatter"]`. These are permanent, unlike pending keys; no file needs any yet.
 - **`EXPECTED_FAILURES`** in [`client-manifest.test.ts`](./src/client-routes/client-manifest.test.ts): client calls to routes the manifest doesn't have.
 
 The Vitest reporter counts expected failures separately (`N expected fail`), and the drift PR body does too.
