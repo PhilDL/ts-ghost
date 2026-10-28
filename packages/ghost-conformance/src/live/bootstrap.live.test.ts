@@ -1,7 +1,8 @@
 import { describe, expect, inject } from "vitest";
 
 import { adminApiUrl } from "../ghost/admin-api.ts";
-import { adminApi, assertOk, liveTest } from "./ghost.ts";
+import { adminApi } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 describe("bootstrap credentials", () => {
   liveTest.for(["integration", "staff"] as const)(

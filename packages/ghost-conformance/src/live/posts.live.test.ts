@@ -3,7 +3,8 @@ import { beforeAll, describe, expect, inject, onTestFinished } from "vitest";
 import { FULL_HTML, fullScalars, seedPosts, seedPostWithInactiveAuthor } from "../seeds/posts-and-pages.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeysOfResponses } from "../unknown-keys.ts";
-import { adminApi, assertOk, liveTest } from "./ghost.ts";
+import { adminApi } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 let seed: Awaited<ReturnType<typeof seedPosts>>;
 beforeAll(async () => {

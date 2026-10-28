@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, inject } from "vitest";
 import { seedOffers } from "../seeds/offers.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { assertOk, liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 let seed: Awaited<ReturnType<typeof seedOffers>>;
 beforeAll(async () => {

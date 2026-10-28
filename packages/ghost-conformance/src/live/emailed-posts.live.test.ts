@@ -1,7 +1,7 @@
 import { describe, expect } from "vitest";
 
 import { EMAIL_SEED } from "../seeds/emails.ts";
-import { assertOk, liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 const { failed, submitted } = EMAIL_SEED.posts;
 

@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, inject } from "vitest";
 
 import { seedUsers, STAFF_PROFILE, TOUR } from "../seeds/users.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { assertOk, liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 describe("users", () => {
   let seeded: Awaited<ReturnType<typeof seedUsers>>;

@@ -2,7 +2,7 @@ import { describe, expect, inject } from "vitest";
 
 import { BLOG_TITLE } from "../ghost/bootstrap.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { assertOk, liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 describe("site", () => {
   liveTest("GET /site/ succeeds and parses with the client's schema", async ({ api }) => {

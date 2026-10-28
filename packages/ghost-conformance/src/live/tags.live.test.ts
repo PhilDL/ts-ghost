@@ -3,7 +3,7 @@ import { beforeAll, describe, expect } from "vitest";
 import { fullTagInput, seedTags } from "../seeds/tags.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeysOfResponses } from "../unknown-keys.ts";
-import { assertOk, liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 describe("tags", () => {
   let seeded: Awaited<ReturnType<typeof seedTags>>;

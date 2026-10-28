@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, vi } from "vitest";
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
-import { liveTest } from "./ghost.ts";
+import { liveTest } from "./live-test.ts";
 
 const KEY = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
 const site = { title: "T", description: "D", logo: null, version: "6.72", url: "http://localhost/" };

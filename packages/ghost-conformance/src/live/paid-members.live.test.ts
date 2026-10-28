@@ -2,7 +2,8 @@ import { describe, expect } from "vitest";
 
 import { STRIPE_SEED } from "../seeds/stripe.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, assertOk, liveTest } from "./ghost.ts";
+import { adminApi } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 /** Id of a member by email; selects only `id` so members the client can't parse still resolve. */
 async function memberId(email: string): Promise<string> {

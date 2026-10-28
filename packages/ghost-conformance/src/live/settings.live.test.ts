@@ -1,7 +1,7 @@
 import { describe, expect } from "vitest";
 
 import { BLOG_TITLE } from "../ghost/bootstrap.ts";
-import { assertOk, liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 describe("settings", () => {
   // Expected failure: the settings schema only allows scalar values; Ghost sends list values (all_blocked_email_domains).

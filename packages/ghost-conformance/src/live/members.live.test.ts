@@ -5,7 +5,8 @@ import { EMAIL_SEED } from "../seeds/emails.ts";
 import { MEMBER_SEED, seedMembers } from "../seeds/members.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, assertOk, liveTest, type LiveContext } from "./ghost.ts";
+import { adminApi } from "./ghost.ts";
+import { assertOk, liveTest, type LiveContext } from "./live-test.ts";
 
 type Seeded = Awaited<ReturnType<typeof seedMembers>>;
 let seeded: Seeded;

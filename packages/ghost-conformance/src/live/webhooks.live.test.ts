@@ -4,7 +4,7 @@ import { describe, expect } from "vitest";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { conformanceIntegration, WEBHOOK_TARGET } from "../seeds/webhooks.ts";
 import { unknownKeysOfResponses } from "../unknown-keys.ts";
-import { assertOk, liveTest } from "./ghost.ts";
+import { assertOk, liveTest } from "./live-test.ts";
 
 // Events no other test file fires: a concurrent delivery writes the old webhook back over an edit.
 const newWebhook = () => ({
