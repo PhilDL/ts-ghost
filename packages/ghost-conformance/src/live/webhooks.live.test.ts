@@ -3,7 +3,7 @@ import { describe, expect } from "vitest";
 
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { conformanceIntegration, WEBHOOK_TARGET } from "../seeds/webhooks.ts";
-import { unknownKeys } from "../unknown-keys.ts";
+import { unknownKeysOfResponses } from "../unknown-keys.ts";
 import { assertOk, liveTest } from "./ghost.ts";
 
 // Events no other test file fires: a concurrent delivery writes the old webhook back over an edit.
@@ -21,12 +21,10 @@ async function readBack(id: string) {
 describe("webhooks", () => {
   liveTest(
     "POST /webhooks/ ties the webhook to the calling integration and stores what it was sent",
-    async ({ api, responses }) => {
+    async ({ api }) => {
       const input = newWebhook();
       const added = await api.webhooks.add(input);
       assertOk(added);
-      const raw = responses.last("/webhooks/") as { webhooks: unknown[] };
-      expect(unknownKeys(raw.webhooks[0], added.data, { at: "webhook" })).toEqual([]);
 
       const integration = await conformanceIntegration();
       expect(added.data).toMatchObject({ ...input, integration_id: integration.id });
@@ -34,7 +32,7 @@ describe("webhooks", () => {
     },
   );
 
-  liveTest("PUT /webhooks/:id/ persists the edit", async ({ api, responses }) => {
+  liveTest("PUT /webhooks/:id/ persists the edit", async ({ api }) => {
     const added = await api.webhooks.add(newWebhook());
     assertOk(added);
 
@@ -42,13 +40,11 @@ describe("webhooks", () => {
     const edit = { event: "post.rescheduled" as const, name, target_url };
     const edited = await api.webhooks.edit(added.data.id, edit);
     assertOk(edited);
-    const raw = responses.last(`/webhooks/${added.data.id}/`) as { webhooks: unknown[] };
-    expect(unknownKeys(raw.webhooks[0], edited.data, { at: "webhook" })).toEqual([]);
 
     expect(await readBack(added.data.id)).toMatchObject(edit);
   });
 
-  liveTest("PUT /webhooks/:id/ parses a webhook whose last delivery failed", async ({ api, responses }) => {
+  liveTest("PUT /webhooks/:id/ parses a webhook whose last delivery failed", async ({ api }) => {
     const added = await api.webhooks.add({ ...newWebhook(), event: "tag.added" });
     assertOk(added);
     expect(added.data.last_triggered_at).toBeNull();
@@ -62,8 +58,6 @@ describe("webhooks", () => {
     assertOk(edited);
     expect(edited.data.last_triggered_at).toEqual(expect.any(String));
     expect(edited.data.last_triggered_error).toEqual(expect.any(String));
-    const raw = responses.last(`/webhooks/${added.data.id}/`) as { webhooks: unknown[] };
-    expect(unknownKeys(raw.webhooks[0], edited.data, { at: "webhook" })).toEqual([]);
   });
 
   // Expected failure: the webhook update schema drops secret, so a secret-only edit throws "No data to edit".
@@ -85,5 +79,13 @@ describe("webhooks", () => {
 
     expect(await api.webhooks.delete(added.data.id)).toEqual({ success: true });
     expect(await readBack(added.data.id)).toBeUndefined();
+  });
+
+  liveTest("webhook responses carry no key the client's schema lacks", async ({ api, responses }) => {
+    const added = await api.webhooks.add(newWebhook());
+    assertOk(added);
+    assertOk(await api.webhooks.edit(added.data.id, { name: `Key check ${uniqueSuffix()}` }));
+
+    expect(unknownKeysOfResponses(responses.all())).toEqual([]);
   });
 });
