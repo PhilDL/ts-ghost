@@ -1,6 +1,7 @@
 import { createHmac } from "node:crypto";
 
-import { signIn, type GhostCredentials } from "../ghost/bootstrap.ts";
+import { adminApiUrl } from "../ghost/admin-api.ts";
+import { readStaffToken, signIn, type GhostCredentials } from "../ghost/bootstrap.ts";
 import {
   classifyRoute,
   CREDENTIALS,
@@ -19,7 +20,7 @@ const HAZARDS: Hazard[] = [
   // Regenerates the Owner's staff token; the session reads the new one.
   {
     route: "PUT /users/:id/token",
-    repair: async (creds, url) => void (creds.staffToken = await staffToken(creds, url)),
+    repair: async (creds, url) => void (creds.staffToken = await readStaffToken(url, creds.sessionCookie)),
   },
   // Logs the probing session out.
   {
@@ -69,7 +70,7 @@ export async function probeRoutes(
 
 async function probe(url: string, route: RouteDefinition, auth: Record<string, string> | null) {
   try {
-    const response = await fetch(`${url}/ghost/api/admin${probePath(route.path)}`, {
+    const response = await fetch(`${adminApiUrl(url)}${probePath(route.path)}`, {
       method: route.method,
       headers: auth ?? {},
       // Ghost's media upload validation crashes the whole process on a non-multipart request.
@@ -115,19 +116,10 @@ function adminJwt(key: string): string {
   return `${unsigned}.${signature}`;
 }
 
-async function staffToken(creds: GhostCredentials, url: string): Promise<string> {
-  const response = await fetch(`${url}/ghost/api/admin/users/me/token/`, {
-    headers: { cookie: creds.sessionCookie },
-  });
-  if (!response.ok) throw new Error(`Reading the staff token failed: ${response.status}`);
-  const { apiKey } = (await response.json()) as { apiKey: { id: string; secret: string } };
-  return `${apiKey.id}:${apiKey.secret}`;
-}
-
 /** A credential that silently died would turn every later probe into a refusal. */
 async function assertCredentialsWork(url: string, creds: GhostCredentials, after: string) {
   for (const credential of CREDENTIALS) {
-    const response = await fetch(`${url}/ghost/api/admin/posts/?limit=1`, {
+    const response = await fetch(`${adminApiUrl(url)}/posts/?limit=1`, {
       headers: header(credential, creds),
     });
     await response.body?.cancel();

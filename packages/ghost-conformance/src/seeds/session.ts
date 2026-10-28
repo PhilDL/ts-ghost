@@ -1,5 +1,7 @@
 import type { ProvidedContext } from "vitest";
 
+import { adminApiUrl } from "../ghost/admin-api.ts";
+
 /** Calls the Admin API with the Owner's session, for writes the client has no method for. */
 export async function sessionRequest<T>(
   ghost: Pick<ProvidedContext["ghost"], "url" | "sessionCookie">,
@@ -7,7 +9,7 @@ export async function sessionRequest<T>(
   path: string,
   body?: unknown,
 ): Promise<T> {
-  const response = await fetch(`${ghost.url}/ghost/api/admin${path}`, {
+  const response = await fetch(`${adminApiUrl(ghost.url)}${path}`, {
     method,
     headers: { cookie: ghost.sessionCookie, "content-type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),

@@ -1,10 +1,10 @@
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
+import { ADMIN_API_PATH } from "../ghost/admin-api.ts";
 import type { ClientCall } from "./route-check.ts";
 
 const KEY = "1efedd9db174adee2d23d982:4b74dca0219bad629852191af326a45037346c2231240e0f7aec1f9371cc14e8";
 const BASE = "http://ghost.test";
-const PREFIX = "/ghost/api/admin";
 /** Stands in for every id, slug and email, so its path segments can be erased to `:`. */
 const PARAM = "tsghostparam";
 const IDENTITY_VALUES = { id: PARAM, slug: PARAM, email: `${PARAM}@example.com` };
@@ -73,7 +73,7 @@ function recorder() {
   const calls: ClientCall[] = [];
   const fetch: typeof globalThis.fetch = async (input, init) => {
     const path = new URL(String(input)).pathname
-      .slice(PREFIX.length)
+      .slice(ADMIN_API_PATH.length)
       .split("/")
       .map((segment) => (decodeURIComponent(segment).includes(PARAM) ? ":" : segment))
       .join("/");

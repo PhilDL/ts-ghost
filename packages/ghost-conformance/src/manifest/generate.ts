@@ -1,6 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import { adminApiUrl } from "../ghost/admin-api.ts";
 import { bootstrapGhost } from "../ghost/bootstrap.ts";
 import { startGhost, type GhostInstance } from "../ghost/instance.ts";
 import { OUTPUT_MARKER, type RouteDefinition } from "./ghost-router.ts";
@@ -21,7 +22,7 @@ export async function generateManifest(ghost: GhostInstance): Promise<Manifest> 
 }
 
 async function assertFresh(url: string) {
-  const response = await fetch(`${url}/ghost/api/admin/authentication/setup/`);
+  const response = await fetch(`${adminApiUrl(url)}/authentication/setup/`);
   const body = (await response.json()) as { setup?: { status: boolean }[] };
   if (body.setup?.[0]?.status !== false)
     throw new Error(
