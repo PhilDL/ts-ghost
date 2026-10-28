@@ -35,7 +35,10 @@ describe("emailed posts", () => {
     const bySlug = await adminApi().posts.read({ slug: submitted }).fetch();
     assert(bySlug.success);
     const byId = await adminApi().posts.read({ id: bySlug.data.id }).fetch();
-    expect(byId).toEqual(bySlug);
+    assert(byId.success);
+    // A public post lists every paid tier, and other test files add tiers in parallel.
+    const withoutTiers = ({ tiers: _, ...post }: typeof byId.data) => post;
+    expect(withoutTiers(byId.data)).toEqual(withoutTiers(bySlug.data));
   });
 
   // Expected failure: the failed email's null `from`/`source`/`updated_at` break the whole browse.
