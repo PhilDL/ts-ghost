@@ -4,15 +4,18 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
-import { GHOST_VERSION_FILE, ghostVersion } from "../ghost/pin.ts";
+import { GHOST_VERSION_FILE, ghostVersion, unsupportedGhost } from "../ghost/pin.ts";
 import { MANIFEST_FILE, parseManifest } from "../manifest/manifest.ts";
 import { openDriftPr } from "./open-pr.ts";
 import { planDrift, resolveNewestGhost, type GhostRelease } from "./plan.ts";
 import {
+  clientResources,
   diffManifests,
   renderPrBody,
   renderPrTitle,
+  suiteNotRun,
   summariseSuite,
+  verdictErrors,
   type VitestJsonReport,
 } from "./pr-body.ts";
 
@@ -49,7 +52,12 @@ const steps: Record<string, () => Promise<number>> = {
   },
 
   /** Runs the live suite against the (bumped) pin, keeping Vitest's JSON report; exits with its code. */
-  suite: () => vitest("suite.json", ["-c", "./vitest.config.live.ts"]),
+  async suite() {
+    const unsupported = unsupportedGhost(ghostVersion());
+    if (!unsupported) return vitest("suite.json", ["-c", "./vitest.config.live.ts"]);
+    console.error(`::error::${unsupported} Not running the live suite.`);
+    return 1;
+  },
 
   /** Runs the Docker-free unit tests, incl. the client → manifest check, against the new manifest. */
   client: () => vitest("client.json", ["--typecheck"]),
@@ -59,8 +67,9 @@ const steps: Record<string, () => Promise<number>> = {
     const plan = JSON.parse(await readFile(file("plan.json"), "utf8")) as SavedPlan;
     const before = parseManifest(await readFile(file("manifest.before.json"), "utf8"));
     const after = parseManifest(await readFile(MANIFEST_FILE, "utf8"));
-    const suite = summariseSuite(await readReport("suite.json"));
-    const client = summariseSuite(await readReport("client.json"));
+    const suite = await liveSuite(plan);
+    const clientReport = await readReport("client.json");
+    const client = summariseSuite(clientReport);
     const { GITHUB_SERVER_URL: server, GITHUB_REPOSITORY: repo, GITHUB_RUN_ID: runId } = process.env;
     const runUrl = server && repo && runId ? `${server}/${repo}/actions/runs/${runId}` : undefined;
     const body = renderPrBody({
@@ -69,6 +78,7 @@ const steps: Record<string, () => Promise<number>> = {
       diff: diffManifests(before, after),
       suite,
       client,
+      resources: clientResources(clientReport),
       runUrl,
     });
     await writeFile(file("pr-title.txt"), renderPrTitle(plan, suite, client));
@@ -98,21 +108,21 @@ const steps: Record<string, () => Promise<number>> = {
 
   /** Fails the job when the live suite or client check failed or never reported, after the PR shows it. */
   async verdict() {
-    const runs = { "live suite": "suite.json", "client check": "client.json" };
-    let code = 0;
-    for (const [name, report] of Object.entries(runs)) {
-      const result = summariseSuite(await readReport(report));
-      if (result.ok) continue;
-      code = 1;
-      console.error(
-        result.crashed
-          ? `::error::The ${name} crashed before reporting; see its step's log.`
-          : `::error::The ${name} failed ${result.failed} of ${result.total} tests:\n${result.failures.join("\n")}`,
-      );
-    }
-    return code;
+    const plan = JSON.parse(await readFile(file("plan.json"), "utf8")) as SavedPlan;
+    const errors = verdictErrors({
+      "live suite": await liveSuite(plan),
+      "client check": summariseSuite(await readReport("client.json")),
+    });
+    for (const error of errors) console.error(`::error::${error}`);
+    return errors.length ? 1 : 0;
   },
 };
+
+/** The live suite's result, or why it didn't run against `plan.to`. */
+async function liveSuite(plan: SavedPlan) {
+  const unsupported = unsupportedGhost(plan.to);
+  return unsupported ? suiteNotRun(unsupported) : summariseSuite(await readReport("suite.json"));
+}
 
 /** Runs Vitest in the package with `args`, keeping its JSON report as `report`; resolves to its exit code. */
 async function vitest(report: string, args: string[]): Promise<number> {

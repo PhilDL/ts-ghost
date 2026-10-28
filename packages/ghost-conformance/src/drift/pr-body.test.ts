@@ -1,7 +1,15 @@
 import { describe, expect, test } from "vitest";
 
 import type { Manifest, ManifestRoute } from "../manifest/manifest.ts";
-import { diffManifests, renderPrBody, renderPrTitle, summariseSuite } from "./pr-body.ts";
+import {
+  clientResources,
+  diffManifests,
+  renderPrBody,
+  renderPrTitle,
+  suiteNotRun,
+  summariseSuite,
+  verdictErrors,
+} from "./pr-body.ts";
 
 const route = (method: string, path: string, over: Partial<ManifestRoute> = {}): ManifestRoute => ({
   method,
@@ -28,7 +36,11 @@ const after: Manifest = {
 };
 
 /** Shape of Vitest's JSON reporter output, trimmed to what the summary reads. */
-type Result = { fullName: string; status: string; meta?: { expectedFailure?: boolean } };
+type Result = {
+  fullName: string;
+  status: string;
+  meta?: { expectedFailure?: boolean; clientResource?: string };
+};
 const report = (results: Result[]) => ({
   numTotalTests: results.length,
   numPassedTests: results.filter((r) => r.status === "passed").length,
@@ -114,6 +126,13 @@ describe("renderPrTitle", () => {
     );
   });
 
+  test("says when the client doesn't support the new Ghost", () => {
+    const passing = summariseSuite(report([{ fullName: "a", status: "passed" }]));
+    expect(renderPrTitle({ from: "6.72.0", to: "7.0.0" }, suiteNotRun("no"), passing)).toBe(
+      "chore(conformance): bump Ghost pin 6.72.0 → 7.0.0 (not supported by the client yet)",
+    );
+  });
+
   test("flags a failing client → manifest check", () => {
     const passing = summariseSuite(report([{ fullName: "a", status: "passed" }]));
     const failing = summariseSuite(report([{ fullName: "a", status: "failed" }]));
@@ -138,6 +157,7 @@ describe("renderPrBody", () => {
       diff,
       suite,
       client,
+      resources: ["posts", "tags"],
       runUrl: "https://github.com/owner/repo/actions/runs/1",
     });
 
@@ -161,6 +181,16 @@ describe("renderPrBody", () => {
     expect(text).toContain("[6.72.1](https://github.com/TryGhost/Ghost/releases/tag/v6.72.1)");
     expect(text).toContain("[6.73.0](https://github.com/TryGhost/Ghost/releases/tag/v6.73.0)");
     expect(text).toMatch(/query options/);
+  });
+
+  test("names the client's resources next to the release notes", () => {
+    expect(body()).toMatch(/## Ghost release notes[\s\S]*Client resources: `posts`, `tags`\./);
+  });
+
+  test("puts an unsupported Ghost up front and says the live suite didn't run", () => {
+    const text = body(suiteNotRun("Ghost 7 isn't supported by the client yet."));
+    expect(text.split("\n")[0]).toContain("Ghost 7 isn't supported by the client yet.");
+    expect(text).toMatch(/## Live suite\n\n❌ Not run: Ghost 7 isn't supported/);
   });
 
   test("reports a passing suite with its counts and the run link", () => {
@@ -200,5 +230,43 @@ describe("renderPrBody", () => {
 
   test("a crashed suite is reported as failing, not as zero failures", () => {
     expect(body(summariseSuite(undefined)).split("\n")[0]).toMatch(/live suite fails/i);
+  });
+});
+
+describe("clientResources", () => {
+  test("lists each resource the client check called once, sorted", () => {
+    const meta = (clientResource: string) => ({ clientResource });
+    const client = report([
+      { fullName: "tags.browse", status: "passed", meta: meta("tags") },
+      { fullName: "posts.add", status: "passed", meta: meta("posts") },
+      { fullName: "posts.browse", status: "failed", meta: meta("posts") },
+    ]);
+    expect(clientResources(client)).toEqual(["posts", "tags"]);
+  });
+
+  test("is empty without a report", () => {
+    expect(clientResources(undefined)).toEqual([]);
+  });
+});
+
+describe("verdictErrors", () => {
+  const passing = summariseSuite(report([{ fullName: "a", status: "passed" }]));
+
+  test("passes when every suite passed", () => {
+    expect(verdictErrors({ "live suite": passing, "client check": passing })).toEqual([]);
+  });
+
+  test("names failing tests, crashes and suites that didn't run", () => {
+    const failing = summariseSuite(report([{ fullName: "posts > edits", status: "failed" }]));
+    const errors = verdictErrors({
+      "live suite": suiteNotRun("Ghost 7 isn't supported by the client yet."),
+      "client check": failing,
+      other: summariseSuite(undefined),
+    });
+    expect(errors).toEqual([
+      "The live suite did not run: Ghost 7 isn't supported by the client yet.",
+      "The client check failed 1 of 1 tests:\nposts > edits",
+      "The other crashed before reporting; see its step's log.",
+    ]);
   });
 });

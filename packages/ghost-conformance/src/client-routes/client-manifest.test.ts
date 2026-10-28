@@ -5,6 +5,13 @@ import { MANIFEST_FILE, parseManifest } from "../manifest/manifest.ts";
 import { recordClientCalls } from "./client-calls.ts";
 import { checkCall } from "./route-check.ts";
 
+declare module "vitest" {
+  interface TaskMeta {
+    /** The client resource a call belongs to; the drift PR body lists them. */
+    clientResource?: string;
+  }
+}
+
 const manifest = parseManifest(readFileSync(MANIFEST_FILE, "utf8"));
 const calls = await recordClientCalls();
 
@@ -19,7 +26,8 @@ describe(`admin-api client against the Ghost ${manifest.ghost} manifest`, () => 
   for (const call of calls) {
     const reason = EXPECTED_FAILURES[call.name];
     const title = `${call.name}: ${call.method} ${call.path}${reason ? ` (expected failure: ${reason})` : ""}`;
-    (reason ? test.fails : test)(title, () => {
+    (reason ? test.fails : test)(title, ({ task }) => {
+      task.meta.clientResource = call.name.split(".")[0];
       expect(checkCall(manifest.routes, call)).toBeUndefined();
     });
   }

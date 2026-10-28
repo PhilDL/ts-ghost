@@ -18,6 +18,8 @@ export type SuiteSummary = {
   failures: string[];
   /** The suite produced no report, e.g. Ghost never became healthy. */
   crashed?: true;
+  /** Why the suite was not run at all. */
+  notRun?: string;
 };
 
 /** The subset of Vitest's JSON reporter output the summary reads. */
@@ -28,7 +30,11 @@ export type VitestJsonReport = {
   numPendingTests: number;
   numTodoTests: number;
   testResults: {
-    assertionResults: { fullName: string; status: string; meta?: { expectedFailure?: boolean } }[];
+    assertionResults: {
+      fullName: string;
+      status: string;
+      meta?: { expectedFailure?: boolean; clientResource?: string };
+    }[];
   }[];
 };
 
@@ -74,12 +80,34 @@ export function summariseSuite(report: VitestJsonReport | undefined): SuiteSumma
   };
 }
 
+/** A suite that was deliberately not run, e.g. because the client doesn't support the Ghost. */
+export function suiteNotRun(reason: string): SuiteSummary {
+  return { ...summariseSuite(undefined), crashed: undefined, notRun: reason };
+}
+
+/** Resources the client check called, from the client → manifest check's report. */
+export function clientResources(report: VitestJsonReport | undefined): string[] {
+  const tests = report?.testResults.flatMap((file) => file.assertionResults) ?? [];
+  return [...new Set(tests.flatMap((t) => t.meta?.clientResource ?? []))].sort();
+}
+
+/** One error per suite that failed, crashed or didn't run; empty when the job should pass. */
+export function verdictErrors(suites: Record<string, SuiteSummary>): string[] {
+  return Object.entries(suites).flatMap(([name, result]) => {
+    if (result.ok) return [];
+    if (result.notRun) return [`The ${name} did not run: ${result.notRun}`];
+    if (result.crashed) return [`The ${name} crashed before reporting; see its step's log.`];
+    return [`The ${name} failed ${result.failed} of ${result.total} tests:\n${result.failures.join("\n")}`];
+  });
+}
+
 export function renderPrTitle(
   plan: Pick<DriftPlan, "from" | "to">,
   suite: SuiteSummary,
   client: SuiteSummary,
 ): string {
   const title = `chore(conformance): bump Ghost pin ${plan.from} → ${plan.to}`;
+  if (suite.notRun) return `${title} (not supported by the client yet)`;
   const failing = [...(suite.ok ? [] : ["live suite"]), ...(client.ok ? [] : ["client check"])];
   return failing.length ? `${title} (${failing.join(" and ")} failing)` : title;
 }
@@ -91,14 +119,19 @@ export function renderPrBody(input: {
   suite: SuiteSummary;
   /** The Docker-free unit tests, incl. the client → manifest check, against the new manifest. */
   client: SuiteSummary;
+  /** Client resources, so the reviewer knows which release notes matter. */
+  resources: string[];
   runUrl?: string;
 }): string {
-  const { plan, releases, diff, suite, client, runUrl } = input;
+  const { plan, releases, diff, suite, client, resources, runUrl } = input;
   const run = runUrl ? ` ([run](${runUrl}))` : "";
+  const covered = resources.length ? resources.map((r) => `\`${r}\``).join(", ") : "none found";
   return [
-    ...(suite.ok
-      ? []
-      : [`> ❌ **The live suite fails against Ghost ${plan.to}.** Do not merge until it is green.`, ""]),
+    ...(suite.notRun
+      ? [`> ❌ **${suite.notRun}** The live suite did not run. Do not merge.`, ""]
+      : suite.ok
+        ? []
+        : [`> ❌ **The live suite fails against Ghost ${plan.to}.** Do not merge until it is green.`, ""]),
     ...(client.ok
       ? []
       : [
@@ -122,7 +155,9 @@ export function renderPrBody(input: {
     "## Ghost release notes",
     "",
     "The suite can't see changes to query options (includes, filters, order, formats) or to behaviour the",
-    "client doesn't exercise. Read these notes for resources the client covers:",
+    "client doesn't exercise. Read these notes for the resources the client covers:",
+    "",
+    `Client resources: ${covered}.`,
     "",
     ...(releases.length
       ? releases.map((r) => `- [${r.version}](${r.url})`)
@@ -132,6 +167,7 @@ export function renderPrBody(input: {
 }
 
 function renderSuite(name: string, suite: SuiteSummary, run: string): string[] {
+  if (suite.notRun) return [`❌ Not run: ${suite.notRun}`];
   if (suite.crashed) return [`❌ The ${name} crashed before reporting any test${run}.`];
   const counts = [
     `${suite.passed} passed, ${suite.expectedFailures} expected failures, ${suite.failed} failed`,
