@@ -1,17 +1,18 @@
-import { describe, expect, inject, test } from "vitest";
+import { describe, expect, inject } from "vitest";
 
 import { adminApiUrl } from "../ghost/admin-api.ts";
-import { adminApi, liveResponses } from "./ghost.ts";
+import { adminApi, liveTest } from "./ghost.ts";
 
 describe("bootstrap credentials", () => {
-  liveResponses();
+  liveTest.for(["integration", "staff"] as const)(
+    "the %s key authenticates the public client",
+    async (key, { responses }) => {
+      const result = await responses.track(adminApi(key)).tags.browse({ limit: 1 }).fetch();
+      expect(result.success).toBe(true);
+    },
+  );
 
-  test.each(["integration", "staff"] as const)("the %s key authenticates the public client", async (key) => {
-    const result = await adminApi(key).tags.browse({ limit: 1 }).fetch();
-    expect(result.success).toBe(true);
-  });
-
-  test("the session cookie authenticates as the Owner", async () => {
+  liveTest("the session cookie authenticates as the Owner", async () => {
     const ghost = inject("ghost");
     const response = await fetch(`${adminApiUrl(ghost.url)}/users/me/`, {
       headers: { cookie: ghost.sessionCookie },

@@ -3,7 +3,6 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 
 import {
   recordResponses,
-  trackParsed,
   unknownKeys,
   unknownKeysOfResponses,
   type ResponseRecorder,
@@ -80,7 +79,7 @@ describe("unknown keys of captured responses", () => {
   test("checks each tracked client result against the response it parsed", async () => {
     ghostReturns({ site: { ...site, locale: "en" } });
     responses = recordResponses();
-    const api = trackParsed(new TSGhostAdminAPI("http://localhost:2368", KEY, "v6.0"));
+    const api = responses.track(new TSGhostAdminAPI("http://localhost:2368", KEY, "v6.0"));
     expect((await api.site.fetch()).success).toBe(true);
     expect(unknownKeysOfResponses(responses.all(), [])).toEqual(["site.locale"]);
   });
@@ -98,7 +97,7 @@ describe("unknown keys of captured responses", () => {
         }),
       },
     };
-    await trackParsed(fakeClient).tags.browse().fetch();
+    await responses.track(fakeClient).tags.browse().fetch();
     expect(unknownKeysOfResponses(responses.all(), ["tags[].other"])).toEqual(["tags[].extra"]);
   });
 
@@ -111,7 +110,7 @@ describe("unknown keys of captured responses", () => {
         return { success: true, data: { id: "1" } };
       },
     };
-    await trackParsed(fakeClient).read();
+    await responses.track(fakeClient).read();
     expect(unknownKeysOfResponses(responses.all(), [])).toEqual(["tags[].extra"]);
   });
 
@@ -124,7 +123,7 @@ describe("unknown keys of captured responses", () => {
         return { success: true, data: { id: "1" } };
       },
     };
-    await trackParsed(fakeClient).read();
+    await responses.track(fakeClient).read();
     expect(unknownKeysOfResponses(responses.all(), [])).toEqual([]);
   });
 

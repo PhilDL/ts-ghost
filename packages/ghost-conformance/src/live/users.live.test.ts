@@ -1,18 +1,16 @@
-import { beforeAll, describe, expect, inject, test } from "vitest";
+import { beforeAll, describe, expect, inject } from "vitest";
 
 import { seedUsers, STAFF_PROFILE, TOUR } from "../seeds/users.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, liveResponses } from "./ghost.ts";
+import { liveTest } from "./ghost.ts";
 
 describe("users", () => {
-  const responses = liveResponses();
   let seeded: Awaited<ReturnType<typeof seedUsers>>;
   beforeAll(async () => {
     seeded = await seedUsers();
   });
 
-  test("GET /users/:id/ and /users/email/:email/ return the same user", async () => {
-    const api = adminApi();
+  liveTest("GET /users/:id/ and /users/email/:email/ return the same user", async ({ api }) => {
     const owner = await api.users.read({ email: inject("ghost").owner.email }).fetch();
     if (!owner.success) throw new Error(JSON.stringify(owner.errors));
 
@@ -24,8 +22,7 @@ describe("users", () => {
     }
   });
 
-  test("GET /users/:id/ returns profile fields both null and set", async () => {
-    const api = adminApi();
+  liveTest("GET /users/:id/ returns profile fields both null and set", async ({ api }) => {
     const owner = await api.users.read({ email: inject("ghost").owner.email }).fetch();
     const staff = await api.users.read({ id: seeded.staff.id }).fetch();
     if (!owner.success || !staff.success) throw new Error("user read failed");
@@ -36,16 +33,16 @@ describe("users", () => {
   });
 
   // Expected failure: the users schema types tour as boolean; Ghost sends the stored JSON string.
-  test.fails("GET /users/:id/ returns a user's tour", async () => {
-    const result = await adminApi().users.read({ id: seeded.toured.id }).fetch();
+  liveTest.fails("GET /users/:id/ returns a user's tour", async ({ api }) => {
+    const result = await api.users.read({ id: seeded.toured.id }).fetch();
     if (!result.success) throw new Error(JSON.stringify(result.errors));
     expect(result.data.tour).toBe(TOUR);
   });
 
   // Expected failure: the users schema rejects status inactive, which Ghost sends for a suspended user.
-  test.fails("GET /users/ lists an inactive user", async () => {
+  liveTest.fails("GET /users/ lists an inactive user", async ({ api }) => {
     const filter = `slug:[${seeded.suspended.slug},${seeded.staff.slug}]` as const;
-    const result = await adminApi().users.browse({ filter }).fetch();
+    const result = await api.users.browse({ filter }).fetch();
     if (!result.success) throw new Error(JSON.stringify(result.errors));
 
     expect(result.data.find((u) => u.id === seeded.suspended.id)?.status).toBe("inactive");
@@ -53,8 +50,7 @@ describe("users", () => {
   });
 
   // Expected failure: the users schema lacks Ghost 6.72's socials (bluesky, threads...) and notification flags.
-  test.fails("user responses send no key the client's schema lacks", async () => {
-    const api = adminApi();
+  liveTest.fails("user responses send no key the client's schema lacks", async ({ api, responses }) => {
     const read = await api.users.read({ id: seeded.staff.id }).fetch();
     const readRaw = responses.last(`/users/${seeded.staff.id}/`) as { users: unknown[] };
     const byEmail = await api.users.read({ email: seeded.staff.email }).fetch();

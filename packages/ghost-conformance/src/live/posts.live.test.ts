@@ -1,9 +1,9 @@
-import { assert, beforeAll, describe, expect, inject, onTestFinished, test } from "vitest";
+import { assert, beforeAll, describe, expect, inject, onTestFinished } from "vitest";
 
 import { FULL_HTML, fullScalars, seedPosts, seedPostWithInactiveAuthor } from "../seeds/posts-and-pages.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeysOfResponses } from "../unknown-keys.ts";
-import { adminApi, liveResponses } from "./ghost.ts";
+import { adminApi, liveTest } from "./ghost.ts";
 
 let seed: Awaited<ReturnType<typeof seedPosts>>;
 beforeAll(async () => {
@@ -15,10 +15,8 @@ const seededOnly = (): `id:[${string}]` =>
   `id:[${[seed.full, seed.bare, seed.scheduled, seed.paid, seed.emailed].map((p) => p.id).join(",")}]`;
 
 describe("posts", () => {
-  liveResponses();
-
-  test("browse returns every status and a paid post", async () => {
-    const result = await adminApi().posts.browse({ limit: "all", filter: seededOnly() }).fetch();
+  liveTest("browse returns every status and a paid post", async ({ api }) => {
+    const result = await api.posts.browse({ limit: "all", filter: seededOnly() }).fetch();
 
     assert(result.success);
     const byId = new Map(result.data.map((post) => [post.id, post]));
@@ -28,9 +26,9 @@ describe("posts", () => {
     expect(byId.get(seed.paid.id)?.visibility).toBe("paid");
   });
 
-  test("browse with authors, tags and tiers included populates every relation", async () => {
-    const result = await adminApi()
-      .posts.browse({ limit: "all", filter: seededOnly() })
+  liveTest("browse with authors, tags and tiers included populates every relation", async ({ api }) => {
+    const result = await api.posts
+      .browse({ limit: "all", filter: seededOnly() })
       .include({ authors: true, tags: true, tiers: true })
       .fetch();
 
@@ -42,9 +40,9 @@ describe("posts", () => {
     expect(full?.primary_tag?.name).toBe(`Post tag ${seed.suffix}`);
   });
 
-  test("browse with the html format returns content", async () => {
-    const result = await adminApi()
-      .posts.browse({ limit: "all", filter: seededOnly() })
+  liveTest("browse with the html format returns content", async ({ api }) => {
+    const result = await api.posts
+      .browse({ limit: "all", filter: seededOnly() })
       .formats({ html: true })
       .fetch();
 
@@ -54,9 +52,9 @@ describe("posts", () => {
   });
 
   // Expected failure: formats({ plaintext }) makes plaintext required, but Ghost omits it on empty posts.
-  test.fails("browse with the plaintext format returns content", async () => {
-    const result = await adminApi()
-      .posts.browse({ limit: "all", filter: seededOnly() })
+  liveTest.fails("browse with the plaintext format returns content", async ({ api }) => {
+    const result = await api.posts
+      .browse({ limit: "all", filter: seededOnly() })
       .formats({ plaintext: true })
       .fetch();
 
@@ -65,25 +63,25 @@ describe("posts", () => {
     expect(full?.plaintext).toBe("Hello world");
   });
 
-  test("read with the plaintext format returns content", async () => {
-    const result = await adminApi().posts.read({ id: seed.full.id }).formats({ plaintext: true }).fetch();
+  liveTest("read with the plaintext format returns content", async ({ api }) => {
+    const result = await api.posts.read({ id: seed.full.id }).formats({ plaintext: true }).fetch();
 
     assert(result.success);
     expect(result.data.plaintext).toBe("Hello world");
   });
 
-  test("read by slug equals read by id", async () => {
-    const byId = await adminApi().posts.read({ id: seed.full.id }).fetch();
-    const bySlug = await adminApi().posts.read({ slug: seed.full.slug }).fetch();
+  liveTest("read by slug equals read by id", async ({ api }) => {
+    const byId = await api.posts.read({ id: seed.full.id }).fetch();
+    const bySlug = await api.posts.read({ slug: seed.full.slug }).fetch();
 
     assert(byId.success && bySlug.success);
     expect(byId.data.id).toBe(seed.full.id);
     expect(bySlug.data).toEqual(byId.data);
   });
 
-  test("nullable fields come back null on a bare post and set on a full post", async () => {
-    const bare = await adminApi().posts.read({ id: seed.bare.id }).fetch();
-    const full = await adminApi().posts.read({ id: seed.full.id }).fetch();
+  liveTest("nullable fields come back null on a bare post and set on a full post", async ({ api }) => {
+    const bare = await api.posts.read({ id: seed.bare.id }).fetch();
+    const full = await api.posts.read({ id: seed.full.id }).fetch();
 
     assert(bare.success && full.success);
     for (const key of NULLABLE) {
@@ -92,17 +90,17 @@ describe("posts", () => {
     }
   });
 
-  test("a post sent as a newsletter reads back its email and newsletter", async () => {
-    const result = await adminApi().posts.read({ id: seed.emailed.id }).fetch();
+  liveTest("a post sent as a newsletter reads back its email and newsletter", async ({ api }) => {
+    const result = await api.posts.read({ id: seed.emailed.id }).fetch();
 
     assert(result.success);
     expect(result.data.newsletter?.slug).toBe("default-newsletter");
     expect(result.data.email?.subject).toBe(`Emailed ${seed.suffix}`);
   });
 
-  test("add reads back every value sent", async () => {
+  liveTest("add reads back every value sent", async ({ api }) => {
     const suffix = uniqueSuffix();
-    const added = await adminApi().posts.add(
+    const added = await api.posts.add(
       {
         ...fullScalars(suffix),
         email_subject: "Email subject",
@@ -116,7 +114,7 @@ describe("posts", () => {
     );
     assert(added.success);
 
-    const read = await adminApi().posts.read({ id: added.data.id }).formats({ html: true }).fetch();
+    const read = await api.posts.read({ id: added.data.id }).formats({ html: true }).fetch();
     assert(read.success);
     expect(read.data).toMatchObject({ ...fullScalars(suffix), email_subject: "Email subject" });
     expect(read.data.visibility).toBe("tiers");
@@ -126,46 +124,46 @@ describe("posts", () => {
     expect(read.data.html).toBe(FULL_HTML);
   });
 
-  test("add reads back a scheduled post's publish date", async () => {
+  liveTest("add reads back a scheduled post's publish date", async ({ api }) => {
     const publishedAt = new Date("2099-01-02T03:04:05.000Z");
-    const added = await adminApi().posts.add({
+    const added = await api.posts.add({
       title: `Scheduled ${uniqueSuffix()}`,
       status: "scheduled",
       published_at: publishedAt,
     });
     assert(added.success);
 
-    const read = await adminApi().posts.read({ id: added.data.id }).fetch();
+    const read = await api.posts.read({ id: added.data.id }).fetch();
     assert(read.success);
     expect(read.data).toMatchObject({ status: "scheduled", published_at: publishedAt.toISOString() });
   });
 
   // Expected failure: Ghost 6 ignores mobiledoc input and stores lexical only, so it never reads back.
-  test.fails("add reads back mobiledoc", async () => {
-    const added = await adminApi().posts.add({ title: `Mobiledoc ${uniqueSuffix()}`, mobiledoc: MOBILEDOC });
+  liveTest.fails("add reads back mobiledoc", async ({ api }) => {
+    const added = await api.posts.add({ title: `Mobiledoc ${uniqueSuffix()}`, mobiledoc: MOBILEDOC });
     assert(added.success);
 
-    const read = await adminApi().posts.read({ id: added.data.id }).fetch();
+    const read = await api.posts.read({ id: added.data.id }).fetch();
     assert(read.success);
     expect(read.data.mobiledoc).toBe(MOBILEDOC);
   });
 
   // Expected failure: posts have no locale in Ghost; the client's input accepts one that Ghost drops.
-  test.fails("add reads back locale", async () => {
-    const added = await adminApi().posts.add({ title: `Locale ${uniqueSuffix()}`, locale: "de" });
+  liveTest.fails("add reads back locale", async ({ api }) => {
+    const added = await api.posts.add({ title: `Locale ${uniqueSuffix()}`, locale: "de" });
     assert(added.success);
 
-    const read = await adminApi().posts.read({ id: added.data.id }).fetch();
+    const read = await api.posts.read({ id: added.data.id }).fetch();
     assert(read.success);
     expect(read.data).toMatchObject({ locale: "de" });
   });
 
-  test("edit persists every value sent", async () => {
+  liveTest("edit persists every value sent", async ({ api }) => {
     const suffix = uniqueSuffix();
-    const added = await adminApi().posts.add({ title: `To edit ${suffix}` });
+    const added = await api.posts.add({ title: `To edit ${suffix}` });
     assert(added.success);
 
-    const edited = await adminApi().posts.edit(
+    const edited = await api.posts.edit(
       added.data.id,
       {
         ...fullScalars(suffix),
@@ -179,7 +177,7 @@ describe("posts", () => {
     );
     assert(edited.success);
 
-    const read = await adminApi().posts.read({ id: added.data.id }).formats({ html: true }).fetch();
+    const read = await api.posts.read({ id: added.data.id }).formats({ html: true }).fetch();
     assert(read.success);
     expect(read.data).toMatchObject({
       ...fullScalars(suffix),
@@ -190,21 +188,21 @@ describe("posts", () => {
     expect(read.data.html).toBe(FULL_HTML);
   });
 
-  test("delete removes the post", async () => {
-    const added = await adminApi().posts.add({ title: `To delete ${uniqueSuffix()}` });
+  liveTest("delete removes the post", async ({ api }) => {
+    const added = await api.posts.add({ title: `To delete ${uniqueSuffix()}` });
     assert(added.success);
 
-    expect(await adminApi().posts.delete(added.data.id)).toEqual({ success: true });
-    const read = await adminApi().posts.read({ id: added.data.id }).fetch();
+    expect(await api.posts.delete(added.data.id)).toEqual({ success: true });
+    const read = await api.posts.read({ id: added.data.id }).fetch();
     expect(read.success).toBe(false);
   });
 
   // Expected failure: the client's author status allows active, invited and locked, not inactive.
-  test.fails("read reports a post's inactive author", async () => {
-    const { post, remove } = await seedPostWithInactiveAuthor(adminApi());
+  liveTest.fails("read reports a post's inactive author", async ({ api }) => {
+    const { post, remove } = await seedPostWithInactiveAuthor(api);
     onTestFinished(remove);
 
-    const result = await adminApi().posts.read({ id: post.id }).fetch();
+    const result = await api.posts.read({ id: post.id }).fetch();
     assert(result.success);
     expect(result.data.primary_author.status).toBe("inactive");
     expect(result.data.authors.map((author) => author.status)).toEqual(["inactive"]);
@@ -212,11 +210,8 @@ describe("posts", () => {
 });
 
 describe("posts: unknown keys", () => {
-  const responses = liveResponses();
-
   // Expected failure: the author schema lacks Ghost 6.72's socials, tour and notification flags.
-  test.fails("authors carry no key the client's schema lacks", async () => {
-    const api = adminApi();
+  liveTest.fails("authors carry no key the client's schema lacks", async ({ api, responses }) => {
     const browsed = await api.posts
       .browse({ limit: "all", filter: seededOnly() })
       .include({ authors: true, tags: true, tiers: true })
@@ -236,18 +231,24 @@ describe("posts: unknown keys", () => {
   });
 
   // Expected failure: the post email schema lacks csd_email_count, post_id, newsletter_id, source_type and more.
-  test.fails("a sent post's email carries no key the client's schema lacks", async () => {
-    assert((await adminApi().posts.read({ id: seed.emailed.id }).fetch()).success);
-    const unknown = unknownKeysOfResponses(responses.all());
-    expect(unknown.filter((k) => k.startsWith("posts[].email."))).toEqual([]);
-  });
+  liveTest.fails(
+    "a sent post's email carries no key the client's schema lacks",
+    async ({ api, responses }) => {
+      assert((await api.posts.read({ id: seed.emailed.id }).fetch()).success);
+      const unknown = unknownKeysOfResponses(responses.all());
+      expect(unknown.filter((k) => k.startsWith("posts[].email."))).toEqual([]);
+    },
+  );
 
   // Expected failure: the post newsletter schema lacks its design and feedback fields.
-  test.fails("a sent post's newsletter carries no key the client's schema lacks", async () => {
-    assert((await adminApi().posts.read({ id: seed.emailed.id }).fetch()).success);
-    const unknown = unknownKeysOfResponses(responses.all());
-    expect(unknown.filter((k) => k.startsWith("posts[].newsletter."))).toEqual([]);
-  });
+  liveTest.fails(
+    "a sent post's newsletter carries no key the client's schema lacks",
+    async ({ api, responses }) => {
+      assert((await api.posts.read({ id: seed.emailed.id }).fetch()).success);
+      const unknown = unknownKeysOfResponses(responses.all());
+      expect(unknown.filter((k) => k.startsWith("posts[].newsletter."))).toEqual([]);
+    },
+  );
 });
 
 const MOBILEDOC = JSON.stringify({

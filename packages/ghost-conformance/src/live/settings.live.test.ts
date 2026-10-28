@@ -1,17 +1,15 @@
-import { describe, expect, inject, test } from "vitest";
+import { describe, expect, inject } from "vitest";
 
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, liveResponses } from "./ghost.ts";
+import { liveTest } from "./ghost.ts";
 
 // Title the bootstrap gives the site at first-run setup.
 const BLOG_TITLE = "ts-ghost conformance";
 
 describe("settings", () => {
-  const responses = liveResponses();
-
   // Expected failure: the settings schema only allows scalar values; Ghost sends list values (all_blocked_email_domains).
-  test.fails("GET /settings/ returns every setting as key and value", async () => {
-    const result = await adminApi().settings.fetch();
+  liveTest.fails("GET /settings/ returns every setting as key and value", async ({ api, responses }) => {
+    const result = await api.settings.fetch();
     if (!result.success) throw new Error(JSON.stringify(result.errors));
 
     expect(result.data.find((s) => s.key === "title")?.value).toBe(BLOG_TITLE);
@@ -22,8 +20,8 @@ describe("settings", () => {
 });
 
 describe("site", () => {
-  test("GET /site/ returns the site's title and url", async () => {
-    const result = await adminApi().site.fetch();
+  liveTest("GET /site/ returns the site's title and url", async ({ api }) => {
+    const result = await api.site.fetch();
     if (!result.success) throw new Error(JSON.stringify(result.errors));
 
     expect(result.data.title).toBe(BLOG_TITLE);

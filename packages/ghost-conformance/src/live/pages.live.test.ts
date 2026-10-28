@@ -1,9 +1,9 @@
-import { assert, beforeAll, describe, expect, inject, test } from "vitest";
+import { assert, beforeAll, describe, expect, inject } from "vitest";
 
 import { FULL_HTML, fullScalars, seedPages } from "../seeds/posts-and-pages.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeysOfResponses } from "../unknown-keys.ts";
-import { adminApi, liveResponses } from "./ghost.ts";
+import { adminApi, liveTest, type LiveContext } from "./ghost.ts";
 
 let seed: Awaited<ReturnType<typeof seedPages>>;
 beforeAll(async () => {
@@ -11,10 +11,8 @@ beforeAll(async () => {
 });
 
 describe("pages", () => {
-  liveResponses();
-
-  test("browse returns the seeded pages", async () => {
-    const result = await adminApi().pages.browse({ limit: "all" }).fetch();
+  liveTest("browse returns the seeded pages", async ({ api }) => {
+    const result = await api.pages.browse({ limit: "all" }).fetch();
 
     assert(result.success);
     const byId = new Map(result.data.map((page) => [page.id, page]));
@@ -22,9 +20,9 @@ describe("pages", () => {
     expect(byId.get(seed.bare.id)?.status).toBe("draft");
   });
 
-  test("browse with authors, tags and tiers included populates every relation", async () => {
-    const result = await adminApi()
-      .pages.browse({ limit: "all" })
+  liveTest("browse with authors, tags and tiers included populates every relation", async ({ api }) => {
+    const result = await api.pages
+      .browse({ limit: "all" })
       .include({ authors: true, tags: true, tiers: true })
       .fetch();
 
@@ -36,40 +34,40 @@ describe("pages", () => {
     expect(full?.primary_tag?.name).toBe(`Page tag ${seed.suffix}`);
   });
 
-  test("browse with the html format returns content", async () => {
-    const result = await adminApi().pages.browse({ limit: "all" }).formats({ html: true }).fetch();
+  liveTest("browse with the html format returns content", async ({ api }) => {
+    const result = await api.pages.browse({ limit: "all" }).formats({ html: true }).fetch();
 
     assert(result.success);
     expect(result.data.find((page) => page.id === seed.full.id)?.html).toBe(FULL_HTML);
   });
 
   // Expected failure: formats({ plaintext }) makes plaintext required, but Ghost omits it on empty pages.
-  test.fails("browse with the plaintext format returns content", async () => {
-    const result = await adminApi().pages.browse({ limit: "all" }).formats({ plaintext: true }).fetch();
+  liveTest.fails("browse with the plaintext format returns content", async ({ api }) => {
+    const result = await api.pages.browse({ limit: "all" }).formats({ plaintext: true }).fetch();
 
     assert(result.success);
     expect(result.data.find((page) => page.id === seed.full.id)?.plaintext).toBe("Hello world");
   });
 
-  test("read with the plaintext format returns content", async () => {
-    const result = await adminApi().pages.read({ id: seed.full.id }).formats({ plaintext: true }).fetch();
+  liveTest("read with the plaintext format returns content", async ({ api }) => {
+    const result = await api.pages.read({ id: seed.full.id }).formats({ plaintext: true }).fetch();
 
     assert(result.success);
     expect(result.data.plaintext).toBe("Hello world");
   });
 
-  test("read by slug equals read by id", async () => {
-    const byId = await adminApi().pages.read({ id: seed.full.id }).fetch();
-    const bySlug = await adminApi().pages.read({ slug: seed.full.slug }).fetch();
+  liveTest("read by slug equals read by id", async ({ api }) => {
+    const byId = await api.pages.read({ id: seed.full.id }).fetch();
+    const bySlug = await api.pages.read({ slug: seed.full.slug }).fetch();
 
     assert(byId.success && bySlug.success);
     expect(byId.data.id).toBe(seed.full.id);
     expect(bySlug.data).toEqual(byId.data);
   });
 
-  test("nullable fields come back null on a bare page and set on a full page", async () => {
-    const bare = await adminApi().pages.read({ id: seed.bare.id }).fetch();
-    const full = await adminApi().pages.read({ id: seed.full.id }).fetch();
+  liveTest("nullable fields come back null on a bare page and set on a full page", async ({ api }) => {
+    const bare = await api.pages.read({ id: seed.bare.id }).fetch();
+    const full = await api.pages.read({ id: seed.full.id }).fetch();
 
     assert(bare.success && full.success);
     for (const key of NULLABLE) {
@@ -78,10 +76,10 @@ describe("pages", () => {
     }
   });
 
-  test("add reads back every value sent", async () => {
+  liveTest("add reads back every value sent", async ({ api }) => {
     const suffix = uniqueSuffix();
     const owner = inject("ghost").owner.email;
-    const added = await adminApi().pages.add(
+    const added = await api.pages.add(
       {
         ...fullScalars(suffix),
         visibility: "tiers",
@@ -94,7 +92,7 @@ describe("pages", () => {
     );
     assert(added.success);
 
-    const read = await adminApi().pages.read({ id: added.data.id }).formats({ html: true }).fetch();
+    const read = await api.pages.read({ id: added.data.id }).formats({ html: true }).fetch();
     assert(read.success);
     expect(read.data).toMatchObject({ ...fullScalars(suffix), visibility: "tiers" });
     expect(read.data.tiers?.map((tier) => tier.id)).toEqual([seed.tierId]);
@@ -104,21 +102,21 @@ describe("pages", () => {
   });
 
   // Expected failure: pages have no locale in Ghost; the client's input accepts one that Ghost drops.
-  test.fails("add reads back locale", async () => {
-    const added = await adminApi().pages.add({ title: `Locale ${uniqueSuffix()}`, locale: "de" });
+  liveTest.fails("add reads back locale", async ({ api }) => {
+    const added = await api.pages.add({ title: `Locale ${uniqueSuffix()}`, locale: "de" });
     assert(added.success);
 
-    const read = await adminApi().pages.read({ id: added.data.id }).fetch();
+    const read = await api.pages.read({ id: added.data.id }).fetch();
     assert(read.success);
     expect(read.data).toMatchObject({ locale: "de" });
   });
 
-  test("edit persists every value sent", async () => {
+  liveTest("edit persists every value sent", async ({ api }) => {
     const suffix = uniqueSuffix();
-    const added = await adminApi().pages.add({ title: `To edit ${suffix}` });
+    const added = await api.pages.add({ title: `To edit ${suffix}` });
     assert(added.success);
 
-    const edited = await adminApi().pages.edit(
+    const edited = await api.pages.edit(
       added.data.id,
       {
         ...fullScalars(suffix),
@@ -131,27 +129,25 @@ describe("pages", () => {
     );
     assert(edited.success);
 
-    const read = await adminApi().pages.read({ id: added.data.id }).formats({ html: true }).fetch();
+    const read = await api.pages.read({ id: added.data.id }).formats({ html: true }).fetch();
     assert(read.success);
     expect(read.data).toMatchObject({ ...fullScalars(suffix), visibility: "members" });
     expect(read.data.tags?.map((tag) => tag.name)).toEqual([`Edited tag ${suffix}`]);
     expect(read.data.html).toBe(FULL_HTML);
   });
 
-  test("delete removes the page", async () => {
-    const added = await adminApi().pages.add({ title: `To delete ${uniqueSuffix()}` });
+  liveTest("delete removes the page", async ({ api }) => {
+    const added = await api.pages.add({ title: `To delete ${uniqueSuffix()}` });
     assert(added.success);
 
-    expect(await adminApi().pages.delete(added.data.id)).toEqual({ success: true });
-    const read = await adminApi().pages.read({ id: added.data.id }).fetch();
+    expect(await api.pages.delete(added.data.id)).toEqual({ success: true });
+    const read = await api.pages.read({ id: added.data.id }).fetch();
     expect(read.success).toBe(false);
   });
 });
 
 describe("pages: unknown keys", () => {
-  const responses = liveResponses();
-  const unknownAfterEveryOperation = async () => {
-    const api = adminApi();
+  const unknownAfterEveryOperation = async ({ api, responses }: LiveContext) => {
     const browsed = await api.pages
       .browse({ limit: "all" })
       .include({ authors: true, tags: true, tiers: true })
@@ -173,13 +169,13 @@ describe("pages: unknown keys", () => {
   const isAuthorKey = (k: string) => /^pages\[\]\.(authors\[\]|primary_author)\./.test(k);
 
   // Expected failure: the author schema lacks Ghost 6.72's socials, tour and notification flags.
-  test.fails("authors carry no key the client's schema lacks", async () => {
-    expect((await unknownAfterEveryOperation()).filter(isAuthorKey)).toEqual([]);
+  liveTest.fails("authors carry no key the client's schema lacks", async (context) => {
+    expect((await unknownAfterEveryOperation(context)).filter(isAuthorKey)).toEqual([]);
   });
 
   // Expected failure: the pages schema lacks show_title_and_feature_image.
-  test.fails("pages carry no key the client's schema lacks", async () => {
-    expect((await unknownAfterEveryOperation()).filter((k) => !isAuthorKey(k))).toEqual([]);
+  liveTest.fails("pages carry no key the client's schema lacks", async (context) => {
+    expect((await unknownAfterEveryOperation(context)).filter((k) => !isAuthorKey(k))).toEqual([]);
   });
 });
 

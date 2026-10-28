@@ -1,51 +1,56 @@
-import { beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, describe, expect } from "vitest";
 
 import { fullTagInput, seedTags } from "../seeds/tags.ts";
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, liveResponses } from "./ghost.ts";
+import { liveTest } from "./ghost.ts";
 
 describe("tags", () => {
-  const responses = liveResponses();
   let seeded: Awaited<ReturnType<typeof seedTags>>;
   beforeAll(async () => {
     seeded = await seedTags();
   });
 
-  test("GET /tags/?include=count.posts returns real post counts and the same tags as a plain browse", async () => {
-    const api = adminApi();
-    // Filtered to the seed, since other test files add tags concurrently.
-    const filter: `slug:[${string}]` = `slug:[${seeded.full.slug},${seeded.bare.slug}]`;
-    const plain = await api.tags.browse({ limit: "all", filter }).fetch();
-    const counted = await api.tags.browse({ limit: "all", filter }).include({ "count.posts": true }).fetch();
-    if (!plain.success || !counted.success) throw new Error("tags browse failed");
+  liveTest(
+    "GET /tags/?include=count.posts returns real post counts and the same tags as a plain browse",
+    async ({ api, responses }) => {
+      // Filtered to the seed, since other test files add tags concurrently.
+      const filter: `slug:[${string}]` = `slug:[${seeded.full.slug},${seeded.bare.slug}]`;
+      const plain = await api.tags.browse({ limit: "all", filter }).fetch();
+      const counted = await api.tags
+        .browse({ limit: "all", filter })
+        .include({ "count.posts": true })
+        .fetch();
+      if (!plain.success || !counted.success) throw new Error("tags browse failed");
 
-    expect(plain.data).toHaveLength(2);
-    expect(counted.data.map((t) => t.slug)).toEqual(plain.data.map((t) => t.slug));
-    for (const tag of [seeded.full, seeded.bare]) {
-      expect(counted.data.find((t) => t.id === tag.id)?.count?.posts).toBe(seeded.postsPerTag);
-    }
-    const raw = responses.last("/tags/") as { tags: unknown };
-    expect(unknownKeys(raw.tags, counted.data, { at: "tags" })).toEqual([]);
-  });
+      expect(plain.data).toHaveLength(2);
+      expect(counted.data.map((t) => t.slug)).toEqual(plain.data.map((t) => t.slug));
+      for (const tag of [seeded.full, seeded.bare]) {
+        expect(counted.data.find((t) => t.id === tag.id)?.count?.posts).toBe(seeded.postsPerTag);
+      }
+      const raw = responses.last("/tags/") as { tags: unknown };
+      expect(unknownKeys(raw.tags, counted.data, { at: "tags" })).toEqual([]);
+    },
+  );
 
-  test("GET /tags/:id/ and /tags/slug/:slug/ return the same tag, with null and set fields", async () => {
-    const api = adminApi();
-    for (const tag of [seeded.full, seeded.bare]) {
-      const byId = await api.tags.read({ id: tag.id }).fetch();
-      const raw = responses.last(`/tags/${tag.id}/`) as { tags: unknown[] };
-      const bySlug = await api.tags.read({ slug: tag.slug }).fetch();
-      if (!byId.success || !bySlug.success) throw new Error("tag read failed");
+  liveTest(
+    "GET /tags/:id/ and /tags/slug/:slug/ return the same tag, with null and set fields",
+    async ({ api, responses }) => {
+      for (const tag of [seeded.full, seeded.bare]) {
+        const byId = await api.tags.read({ id: tag.id }).fetch();
+        const raw = responses.last(`/tags/${tag.id}/`) as { tags: unknown[] };
+        const bySlug = await api.tags.read({ slug: tag.slug }).fetch();
+        if (!byId.success || !bySlug.success) throw new Error("tag read failed");
 
-      expect(bySlug.data).toEqual(byId.data);
-      expect(unknownKeys(raw.tags[0], byId.data, { at: "tag" })).toEqual([]);
-    }
-    expect(seeded.bare.description).toBeNull();
-    expect(seeded.full.description).not.toBeNull();
-  });
+        expect(bySlug.data).toEqual(byId.data);
+        expect(unknownKeys(raw.tags[0], byId.data, { at: "tag" })).toEqual([]);
+      }
+      expect(seeded.bare.description).toBeNull();
+      expect(seeded.full.description).not.toBeNull();
+    },
+  );
 
-  test("POST /tags/ stores every field it was sent", async () => {
-    const api = adminApi();
+  liveTest("POST /tags/ stores every field it was sent", async ({ api, responses }) => {
     const input = fullTagInput(uniqueSuffix());
     const added = await api.tags.add(input);
     if (!added.success) throw new Error(JSON.stringify(added.errors));
@@ -57,8 +62,7 @@ describe("tags", () => {
     expect(read.data).toMatchObject(input);
   });
 
-  test("PUT /tags/:id/ persists the edit", async () => {
-    const api = adminApi();
+  liveTest("PUT /tags/:id/ persists the edit", async ({ api, responses }) => {
     const added = await api.tags.add({ name: `Edit me ${uniqueSuffix()}` });
     if (!added.success) throw new Error(JSON.stringify(added.errors));
 
@@ -73,8 +77,7 @@ describe("tags", () => {
     expect(read.data).toMatchObject(edit);
   });
 
-  test("DELETE /tags/:id/ removes the tag", async () => {
-    const api = adminApi();
+  liveTest("DELETE /tags/:id/ removes the tag", async ({ api }) => {
     const added = await api.tags.add({ name: `Delete me ${uniqueSuffix()}` });
     if (!added.success) throw new Error(JSON.stringify(added.errors));
 

@@ -5,16 +5,16 @@ export type RecordedResponse = {
   url: string;
   status: number;
   body: unknown;
-  /** What a tracked client returned from this body, set by `trackParsed`. */
+  /** What a tracked client returned from this body, set by `track`. */
   parsed?: unknown;
 };
-
-let active: RecordedResponse[] | undefined;
 
 export type ResponseRecorder = {
   all(): RecordedResponse[];
   /** Raw JSON body of the latest response whose URL path contains `pathPart`. */
   last(pathPart: string): unknown;
+  /** Wraps a client so each successful result is stored as `parsed` on the response it came from. */
+  track<T extends object>(client: T): T;
   restore(): void;
 };
 
@@ -24,7 +24,6 @@ export function recordResponses(): ResponseRecorder {
   assert(!vi.isMockFunction(globalThis.fetch), "recordResponses() needs an unmocked fetch to wrap");
   const original = globalThis.fetch;
   const recorded: RecordedResponse[] = [];
-  active = recorded;
   const spy = vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
     const fetched = await original(input, init);
     const url = input instanceof Request ? input.url : input.toString();
@@ -49,10 +48,8 @@ export function recordResponses(): ResponseRecorder {
       if (!hit) throw new Error(`No response recorded for a path containing "${pathPart}"`);
       return hit.body;
     },
-    restore() {
-      spy.mockRestore();
-      if (active === recorded) active = undefined;
-    },
+    track: (client) => wrap(client, recorded) as typeof client,
+    restore: () => spy.mockRestore(),
   };
 }
 
@@ -84,23 +81,18 @@ export function unknownKeys(
   return [...found].filter((path) => !ignored.has(path)).sort();
 }
 
-/** Wraps a client so each successful result is stored as `parsed` on the response it came from. */
-export function trackParsed<T extends object>(client: T): T {
-  return wrap(client) as T;
-}
-
-function wrap(value: unknown): unknown {
+function wrap(value: unknown, log: RecordedResponse[]): unknown {
   if (typeof value !== "object" || value === null || value instanceof Promise) return value;
   return new Proxy(value, {
     get(target, prop) {
       const member: unknown = Reflect.get(target, prop, target);
-      if (typeof member !== "function") return wrap(member);
+      if (typeof member !== "function") return wrap(member, log);
       return (...args: unknown[]) => {
-        const [log, from] = [active, active?.length ?? 0];
+        const from = log.length;
         const out: unknown = member.apply(target, args);
-        if (!(out instanceof Promise)) return wrap(out);
+        if (!(out instanceof Promise)) return wrap(out, log);
         return out.then((result: unknown) => {
-          const response = log?.slice(from).findLast((r) => isObject(r.body));
+          const response = log.slice(from).findLast((r) => isObject(r.body));
           if (response && isObject(result) && result.success === true && "data" in result)
             response.parsed = result.data;
           return result;

@@ -1,10 +1,10 @@
 import { randomBytes } from "node:crypto";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { uniqueSuffix } from "../seeds/unique-suffix.ts";
 import { conformanceIntegration, WEBHOOK_TARGET } from "../seeds/webhooks.ts";
 import { unknownKeys } from "../unknown-keys.ts";
-import { adminApi, liveResponses } from "./ghost.ts";
+import { liveTest } from "./ghost.ts";
 
 // Events no other test file fires: a concurrent delivery writes the old webhook back over an edit.
 const newWebhook = () => ({
@@ -19,22 +19,22 @@ async function readBack(id: string) {
 }
 
 describe("webhooks", () => {
-  const responses = liveResponses();
+  liveTest(
+    "POST /webhooks/ ties the webhook to the calling integration and stores what it was sent",
+    async ({ api, responses }) => {
+      const input = newWebhook();
+      const added = await api.webhooks.add(input);
+      if (!added.success) throw new Error(JSON.stringify(added.errors));
+      const raw = responses.last("/webhooks/") as { webhooks: unknown[] };
+      expect(unknownKeys(raw.webhooks[0], added.data, { at: "webhook" })).toEqual([]);
 
-  test("POST /webhooks/ ties the webhook to the calling integration and stores what it was sent", async () => {
-    const input = newWebhook();
-    const added = await adminApi().webhooks.add(input);
-    if (!added.success) throw new Error(JSON.stringify(added.errors));
-    const raw = responses.last("/webhooks/") as { webhooks: unknown[] };
-    expect(unknownKeys(raw.webhooks[0], added.data, { at: "webhook" })).toEqual([]);
+      const integration = await conformanceIntegration();
+      expect(added.data).toMatchObject({ ...input, integration_id: integration.id });
+      expect(await readBack(added.data.id)).toMatchObject({ ...input, integration_id: integration.id });
+    },
+  );
 
-    const integration = await conformanceIntegration();
-    expect(added.data).toMatchObject({ ...input, integration_id: integration.id });
-    expect(await readBack(added.data.id)).toMatchObject({ ...input, integration_id: integration.id });
-  });
-
-  test("PUT /webhooks/:id/ persists the edit", async () => {
-    const api = adminApi();
+  liveTest("PUT /webhooks/:id/ persists the edit", async ({ api, responses }) => {
     const added = await api.webhooks.add(newWebhook());
     if (!added.success) throw new Error(JSON.stringify(added.errors));
 
@@ -48,8 +48,7 @@ describe("webhooks", () => {
     expect(await readBack(added.data.id)).toMatchObject(edit);
   });
 
-  test("PUT /webhooks/:id/ parses a webhook whose last delivery failed", async () => {
-    const api = adminApi();
+  liveTest("PUT /webhooks/:id/ parses a webhook whose last delivery failed", async ({ api, responses }) => {
     const added = await api.webhooks.add({ ...newWebhook(), event: "tag.added" });
     if (!added.success) throw new Error(JSON.stringify(added.errors));
     expect(added.data.last_triggered_at).toBeNull();
@@ -68,8 +67,7 @@ describe("webhooks", () => {
   });
 
   // Expected failure: the webhook update schema drops secret, so a secret-only edit throws "No data to edit".
-  test.fails("PUT /webhooks/:id/ rotates the secret on its own", async () => {
-    const api = adminApi();
+  liveTest.fails("PUT /webhooks/:id/ rotates the secret on its own", async ({ api }) => {
     const added = await api.webhooks.add(newWebhook());
     if (!added.success) throw new Error(JSON.stringify(added.errors));
 
@@ -81,8 +79,7 @@ describe("webhooks", () => {
     expect((await readBack(added.data.id))?.secret).toBe(secret);
   });
 
-  test("DELETE /webhooks/:id/ removes the webhook", async () => {
-    const api = adminApi();
+  liveTest("DELETE /webhooks/:id/ removes the webhook", async ({ api }) => {
     const added = await api.webhooks.add(newWebhook());
     if (!added.success) throw new Error(JSON.stringify(added.errors));
 
