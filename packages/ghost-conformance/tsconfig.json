@@ -1,0 +1,19 @@
+{
+  "extends": "@ts-ghost/tsconfig/node16.json",
+  "include": ["**/*.ts"],
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": ["vitest/globals", "node"],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@ts-ghost/admin-api": ["../ts-ghost-admin-api/src/index"],
+      "@ts-ghost/core-api/*": ["../ts-ghost-core-api/src/*"],
+      "@ts-ghost/core-api": ["../ts-ghost-core-api/src/index"]
+    }
+  },
+  "exclude": ["node_modules"]
+}

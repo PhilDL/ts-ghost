@@ -1,0 +1,36 @@
+name: 🔁 Conformance (live Ghost)
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: {}
+permissions:
+  contents: read
+
+concurrency:
+  group: conformance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  live:
+    name: 👻 Live suite against pinned Ghost
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4.2.0
+
+      - name: ⎔ Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          check-latest: true
+          cache: "pnpm"
+
+      - name: 📥 Download deps
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: 🧪 Live conformance suite
+        run: pnpm --filter @ts-ghost/ghost-conformance test:live

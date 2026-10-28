@@ -1,0 +1,24 @@
+{
+  "name": "@ts-ghost/ghost-conformance",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Live conformance suite: the public admin-api client against a pinned, official Ghost in Docker.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest --typecheck run",
+    "test:watch": "vitest --typecheck",
+    "test:live": "vitest run -c ./vitest.config.live.ts",
+    "lint": "eslint ./src --fix",
+    "typecheck": "tsc --project ./tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@ts-ghost/admin-api": "workspace:*",
+    "@ts-ghost/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "eslint": "catalog:eslint",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:"
+  }
+}

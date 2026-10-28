@@ -322,6 +322,33 @@ importers:
         specifier: 16.2.2
         version: 16.2.2(@typescript-eslint/parser@8.58.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
+  packages/ghost-conformance:
+    devDependencies:
+      '@ts-ghost/admin-api':
+        specifier: workspace:*
+        version: link:../ts-ghost-admin-api
+      '@ts-ghost/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.18.12
+      eslint:
+        specifier: catalog:eslint
+        version: 9.39.2(jiti@2.6.1)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vite:
+        specifier: 'catalog:'
+        version: 7.3.1(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0)
+      vite-tsconfig-paths:
+        specifier: 'catalog:'
+        version: 6.1.1(typescript@5.9.3)(vite@7.3.1(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0))
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.2(@types/node@22.18.12)(vite@7.3.1(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0))
+
   packages/ts-ghost-admin-api:
     dependencies:
       '@ts-ghost/core-api':

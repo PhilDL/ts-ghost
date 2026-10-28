@@ -1,0 +1,48 @@
+# Official Ghost + MySQL 8, throwaway (tmpfs). GHOST_VERSION and GHOST_PORT come from src/ghost/instance.ts.
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: conformance
+      MYSQL_DATABASE: ghost
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -pconformance --silent"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  ghost:
+    image: ghost:${GHOST_VERSION:?GHOST_VERSION is required}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${GHOST_PORT:?GHOST_PORT is required}:2368"
+    environment:
+      url: http://localhost:${GHOST_PORT}
+      database__client: mysql
+      database__connection__host: mysql
+      database__connection__user: root
+      database__connection__password: conformance
+      database__connection__database: ghost
+      # Production defaults to emailed device codes on sign-in; the bootstrap signs in headless.
+      security__staffDeviceVerification: "false"
+      logging__transports: '["stdout"]'
+      # Rate limiters behind auth that the manifest probe hits once per credential; 429 hides auth.
+      spam__email_preview_block__freeRetries: "1000"
+      spam__upgrade_block__freeRetries: "1000"
+      spam__support_request_block__freeRetries: "1000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:2368/ghost/api/admin/site/').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 150
+      start_period: 10s
