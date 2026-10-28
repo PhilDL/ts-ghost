@@ -32,7 +32,13 @@ export async function resolveNewestGhost(opts: {
     .sort((a, b) => compareVersions(b.version, a.version));
 
   let version = opts.target;
-  if (!version) {
+  if (version !== undefined) {
+    // Comes from the manual dispatch input; it ends up in the pin file and step outputs.
+    if (!/^\d+\.\d+\.\d+$/.test(version))
+      throw new Error(`${JSON.stringify(version)} is not a Ghost version like 6.73.0`);
+    if (!(await fetchFn(imageUrl(version))).ok)
+      throw new Error(`There is no official Docker image ghost:${version}`);
+  } else {
     for (const candidate of stable) {
       if ((await fetchFn(imageUrl(candidate.version))).ok) {
         version = candidate.version;

@@ -60,6 +60,21 @@ describe("resolveNewestGhost", () => {
     expect(newest.releases.map((r) => r.version)).toEqual(["6.73.0"]);
   });
 
+  test("refuses a target version that isn't major.minor.patch", async () => {
+    const { fetch } = stubFetch([release("v6.73.0")], ["6.73.0", "latest"]);
+    for (const target of ["latest", "6.73", "6.73.0\nbump=true", "v6.73.0"])
+      await expect(resolveNewestGhost({ pin: "6.72.0", fetch, target })).rejects.toThrow(
+        /not a Ghost version/,
+      );
+  });
+
+  test("refuses a target version without an official Docker image", async () => {
+    const { fetch } = stubFetch([release("v6.74.0"), release("v6.73.0")], ["6.73.0"]);
+    await expect(resolveNewestGhost({ pin: "6.72.0", fetch, target: "6.74.0" })).rejects.toThrow(
+      /no official Docker image ghost:6\.74\.0/,
+    );
+  });
+
   test("fails, naming the source, when GitHub doesn't answer", async () => {
     const fetch = async () => new Response("rate limited", { status: 403 });
     await expect(resolveNewestGhost({ pin: "6.72.0", fetch })).rejects.toThrow(/GitHub releases.*403/);
