@@ -9,7 +9,8 @@
     "test:watch": "vitest --typecheck",
     "test:live": "vitest run -c ./vitest.config.live.ts",
     "lint": "eslint ./src --fix",
-    "typecheck": "tsc --project ./tsconfig.json --noEmit"
+    "typecheck": "tsc --project ./tsconfig.json --noEmit",
+    "manifest": "node src/manifest/generate.ts"
   },
   "devDependencies": {
     "@ts-ghost/admin-api": "workspace:*",
